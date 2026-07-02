@@ -1083,8 +1083,8 @@ for (const group of winResultLineGroups) {
 }
 label("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", "", {
   anchor: "middle-right",
-  pos: [-20, 0],
-  rect_size: [82, 24],
+  pos: [-50, 0],
+  rect_size: [60, 24],
   alignment: 5,
   size: 18,
   bold: true,

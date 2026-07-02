@@ -96,7 +96,7 @@ for (let index = 1; index <= 3; index += 1) {
   expectRect(`Panel_LeftSlotMachine/Panel_WinResult/Line_${index}/Icon`, 22, 22);
   expectRect(`Panel_LeftSlotMachine/Panel_WinResult/Line_${index}/Text`, 62, 24);
 }
-expectRect("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", 82, 24);
+expectRect("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", 60, 24);
 expectRect("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Divider_BaseBetMultiplier", 28, 88);
 expectRect("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Ornament_BaseBetTitle", 270, 28);
 expectRect("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Backdrop_BaseBetTitle", 122, 28);
@@ -119,7 +119,7 @@ expectPosition("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Divider_BaseBetMult
 expectPosition("Panel_LeftSlotMachine/Panel_WinResult/Line_1", -256, 0);
 expectPosition("Panel_LeftSlotMachine/Panel_WinResult/Line_2", -160, 0);
 expectPosition("Panel_LeftSlotMachine/Panel_WinResult/Line_3", -64, 0);
-expectPosition("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", -20, 0);
+expectPosition("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", -50, 0);
 expectTextAlignment("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Dropdown_BaseBet/Text_BaseBetValue", 4);
 expectTextAlignment("Panel_LeftSlotMachine/Panel_WinResult/Text_Total", 5);
 
