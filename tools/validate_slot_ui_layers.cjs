@@ -365,7 +365,7 @@ if (!runtime.includes("self.textTemplates = self:BuildTextTemplates()")) {
 if (!runtime.includes('MultiplierLabel = "x{0}"')) {
   fail("Runtime multiplier label format string is missing");
 }
-if (!runtime.includes('WinLineFormula = "x {0} = {1}"') || !runtime.includes('WinTotalFormula = "= {0}"')) {
+if (!runtime.includes('WinLineFormula = "x {0}"') || !runtime.includes('WinTotalFormula = "= {0}"')) {
   fail("Runtime win result formula strings are missing");
 }
 if (!runtime.includes("if selectedBaseBet ~= self.baseBet then") || !runtime.includes("self:ResetWinHighlights()")) {

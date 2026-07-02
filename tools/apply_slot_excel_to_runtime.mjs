@@ -23,7 +23,7 @@ const fallbackStrings = new Map([
   [205, "Not enough coins"],
   [206, "x{0}"],
   [207, "Apply new Base Bet? Lock starts for {0}."],
-  [208, "x {0} = {1}"],
+  [208, "x {0}"],
   [209, "= {0}"],
 ]);
 
@@ -708,7 +708,7 @@ function makeSetWinResultLine() {
     "            icon.Color = Color(1.0, 1.0, 1.0, 1.0)",
     "        end",
     "        if lineText ~= nil then",
-    "            lineText.Text = self:FormatTemplate(self.textTemplates.WinLineFormula, { tostring(lineWin.runLength), self:FormatUnits(lineWin.payoutUnits) })",
+    "            lineText.Text = self:FormatTemplate(self.textTemplates.WinLineFormula, { tostring(lineWin.runLength) })",
     "        end",
     "        group.Enable = true",
     "    end",
@@ -801,10 +801,17 @@ function patchWinResultFlow(runtime) {
     /        self:SetBaseBetListOpen\(false\)\r?\n        self:ResetWinHighlights\(\)/,
     "        self:SetBaseBetListOpen(false)\n        self:HideWinResult()\n        self:ResetWinHighlights()",
   );
+  const baseBetResetBlock = "        if selectedBaseBet ~= self.baseBet then\n            self:HideWinResult()\n            self:ResetWinHighlights()\n        end\n";
   runtime = runtime.replace(
-    /        self\.baseBet = selectedBaseBet\r?\n        self\.reelVisualIndex = self:BuildInitialReelVisualIndex\(\)/,
-    "        if selectedBaseBet ~= self.baseBet then\n            self:HideWinResult()\n            self:ResetWinHighlights()\n        end\n        self.baseBet = selectedBaseBet\n        self.reelVisualIndex = self:BuildInitialReelVisualIndex()",
+    /(        if selectedBaseBet ~= self\.baseBet then\r?\n            self:HideWinResult\(\)\r?\n            self:ResetWinHighlights\(\)\r?\n        end\r?\n){2,}/g,
+    baseBetResetBlock,
   );
+  if (!runtime.includes(`${baseBetResetBlock}        self.baseBet = selectedBaseBet`)) {
+    runtime = runtime.replace(
+      /        self\.baseBet = selectedBaseBet\r?\n        self\.reelVisualIndex = self:BuildInitialReelVisualIndex\(\)/,
+      `${baseBetResetBlock}        self.baseBet = selectedBaseBet\n        self.reelVisualIndex = self:BuildInitialReelVisualIndex()`,
+    );
+  }
   return runtime;
 }
 

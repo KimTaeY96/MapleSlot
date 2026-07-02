@@ -670,7 +670,7 @@ script SlotMachineRuntime extends Logic
             NotEnoughCoins = "\236\189\148\236\157\184\236\157\180 \235\182\128\236\161\177\237\149\169\235\139\136\235\139\164",
             MultiplierLabel = "x{0}",
             BaseBetConfirmLock = "Base Bet \235\179\128\234\178\189? {0} \235\143\153\236\149\136 \236\158\160\234\184\136\235\144\169\235\139\136\235\139\164.",
-            WinLineFormula = "x {0} = {1}",
+            WinLineFormula = "x {0}",
             WinTotalFormula = "= {0}",
         }
     end
@@ -3076,7 +3076,7 @@ script SlotMachineRuntime extends Logic
             icon.Color = Color(1.0, 1.0, 1.0, 1.0)
         end
         if lineText ~= nil then
-            lineText.Text = self:FormatTemplate(self.textTemplates.WinLineFormula, { tostring(lineWin.runLength), self:FormatUnits(lineWin.payoutUnits) })
+            lineText.Text = self:FormatTemplate(self.textTemplates.WinLineFormula, { tostring(lineWin.runLength) })
         end
         group.Enable = true
     end
