@@ -23,7 +23,7 @@ const fallbackStrings = new Map([
   [205, "Not enough coins"],
   [206, "x{0}"],
   [207, "Apply new Base Bet? Lock starts for {0}."],
-  [208, "x{0} {1}"],
+  [208, "x {0} = {1}"],
   [209, "= {0}"],
 ]);
 
@@ -800,6 +800,10 @@ function patchWinResultFlow(runtime) {
   runtime = runtime.replace(
     /        self:SetBaseBetListOpen\(false\)\r?\n        self:ResetWinHighlights\(\)/,
     "        self:SetBaseBetListOpen(false)\n        self:HideWinResult()\n        self:ResetWinHighlights()",
+  );
+  runtime = runtime.replace(
+    /        self\.baseBet = selectedBaseBet\r?\n        self\.reelVisualIndex = self:BuildInitialReelVisualIndex\(\)/,
+    "        if selectedBaseBet ~= self.baseBet then\n            self:HideWinResult()\n            self:ResetWinHighlights()\n        end\n        self.baseBet = selectedBaseBet\n        self.reelVisualIndex = self:BuildInitialReelVisualIndex()",
   );
   return runtime;
 }

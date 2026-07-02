@@ -281,7 +281,7 @@ const gameStringRows = [
   [gs.NOT_ENOUGH_COINS, "\uCF54\uC778\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4"],
   [gs.MULTIPLIER_LABEL, "x{0}"],
   [gs.BASE_BET_CONFIRM_LOCK, "Base Bet \uBCC0\uACBD? {0} \uB3D9\uC548 \uC7A0\uAE08\uB429\uB2C8\uB2E4."],
-  [gs.WIN_LINE_FORMULA, "x{0} {1}"],
+  [gs.WIN_LINE_FORMULA, "x {0} = {1}"],
   [gs.WIN_TOTAL_FORMULA, " = {0}"],
 ];
 const gameStringIndexByRegionIndex = new Map([
