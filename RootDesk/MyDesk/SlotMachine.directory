@@ -1,0 +1,23 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "directory://dd0216ff38754343b3e80c4741fe9305",
+  "ContentType": "x-mod/directory",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.5.0.0",
+  "StudioVersion": "0.1.0.0",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "entry_id": "directory://dd0216ff38754343b3e80c4741fe9305",
+      "name": "SlotMachine",
+      "lock": false,
+      "folding": false,
+      "nameEditable": true
+    }
+  }
+}

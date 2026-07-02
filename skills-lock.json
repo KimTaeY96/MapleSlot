@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "firecrawl": {
+      "source": "firecrawl/cli",
+      "sourceType": "github",
+      "skillPath": "skills/firecrawl-cli/SKILL.md",
+      "computedHash": "f6d0f199ff10480f9ba20e4977c05fadaa4b922dc72755453c7ade2f17f47170"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "daf64ca15f4fa081a6747766db538e2dbd1131725ed4fcdd3d538dc62c7035ba"
+    },
+    "morph-warpgrep": {
+      "source": "letta-ai/skills",
+      "sourceType": "github",
+      "skillPath": "tools/morph-warpgrep/SKILL.md",
+      "computedHash": "272119e759d73d88492d2dd093713d755f61be0eaaa85ca47fdd6ed10b5592ae"
+    }
+  }
+}

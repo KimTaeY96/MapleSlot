@@ -1,0 +1,7 @@
+[mcp_servers.msw-maker-mcp]
+command = "cmd.exe"
+args = ["/c", "call", "C:\\Users\\ghddj\\AppData\\Local\\Nexon\\MapleStory Worlds\\MakerMCP\\msw-maker-mcp.bat"]
+
+[mcp_servers.msw-mcp]
+url = "https://msw-mcp.nexon.com/mcp"
+http_headers = { "Authorization" = "Bearer 12419ac70ca54d5e9de243fb619ede20" }

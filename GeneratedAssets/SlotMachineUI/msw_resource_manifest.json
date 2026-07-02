@@ -1,0 +1,314 @@
+{
+  "mainPanel": {
+    "key": "mainPanel",
+    "fileName": "casino_slot_ui_main_panel.png",
+    "ruid": "637248687ada4e45b2ab4882f4763257",
+    "size": 412390
+  },
+  "reelFrame": {
+    "key": "reelFrame",
+    "fileName": "casino_slot_ui_reel_frame.png",
+    "ruid": "48a496fc054542eebf9c177f0b38a229",
+    "size": 230455
+  },
+  "hudPanel": {
+    "key": "hudPanel",
+    "fileName": "casino_slot_ui_hud_panel.png",
+    "ruid": "747efdda9e98478cb54c7aac431da554",
+    "size": 90775
+  },
+  "currencyBar": {
+    "key": "currencyBar",
+    "fileName": "casino_slot_ui_currency_bar.png",
+    "ruid": "f3e3b3f00fc34012bab90aecb84a8a54",
+    "size": 51486
+  },
+  "dropdown": {
+    "key": "dropdown",
+    "fileName": "casino_slot_ui_dropdown.png",
+    "ruid": "54d92389927a4acd817173cc7c7bfd8e",
+    "size": 31218
+  },
+  "dropdownList": {
+    "key": "dropdownList",
+    "fileName": "casino_slot_ui_dropdown_list.png",
+    "ruid": "f322a2f674b54448a2481008b6b8f4a9",
+    "size": 75965
+  },
+  "cellBlue": {
+    "key": "cellBlue",
+    "fileName": "casino_slot_ui_cell_blue.png",
+    "ruid": "1cd9fefcb2be4824a94bfd317ae14796",
+    "size": 39452
+  },
+  "cellGold": {
+    "key": "cellGold",
+    "fileName": "casino_slot_ui_cell_gold.png",
+    "ruid": "bfcf94b32aad48c7bc9397ad1e4b9b2b",
+    "size": 43016
+  },
+  "buttonBlue": {
+    "key": "buttonBlue",
+    "fileName": "casino_slot_ui_button_blue.png",
+    "ruid": "43d1ee446e5f4acdb177552304a7510c",
+    "size": 33522
+  },
+  "buttonBlueSelected": {
+    "key": "buttonBlueSelected",
+    "fileName": "casino_slot_ui_button_blue_selected.png",
+    "ruid": "1789926c39df416ab73a52a888288440",
+    "size": 44468
+  },
+  "buttonBlueDisabled": {
+    "key": "buttonBlueDisabled",
+    "fileName": "casino_slot_ui_button_blue_disabled.png",
+    "ruid": "4e17250041bf4edcb8d7b9af137cbb2d",
+    "size": 30915
+  },
+  "buttonGreen": {
+    "key": "buttonGreen",
+    "fileName": "casino_slot_ui_button_green.png",
+    "ruid": "7717c567dd3242a580e75973c2c5a617",
+    "size": 34490
+  },
+  "winGlow": {
+    "key": "winGlow",
+    "fileName": "casino_slot_ui_win_glow.png",
+    "ruid": "c57e42b4256c4816ad2d6fa657f67185",
+    "size": 188318
+  },
+  "controlsPanel": {
+    "key": "controlsPanel",
+    "fileName": "casino_slot_ui_controls_panel.png",
+    "ruid": "c9a80ebd798344cc854634e404c6731e",
+    "size": 3775
+  },
+  "mainPanelV2": {
+    "key": "mainPanelV2",
+    "fileName": "casino_slot_ui_main_panel_v2.png",
+    "ruid": "fa3d7850f80640dba810b800203942f7",
+    "size": 67052
+  },
+  "reelFrameV2": {
+    "key": "reelFrameV2",
+    "fileName": "casino_slot_ui_reel_frame_v2.png",
+    "ruid": "0335e5faa2b246ccb8f4b81da0b47509",
+    "size": 12376
+  },
+  "controlsPanelV2": {
+    "key": "controlsPanelV2",
+    "fileName": "casino_slot_ui_controls_panel_v2.png",
+    "ruid": "ae28613773a2486e9f7d285e6ef47ffa",
+    "size": 10464
+  },
+  "integratedCabinet": {
+    "key": "integratedCabinet",
+    "fileName": "casino_slot_ui_integrated_cabinet.png",
+    "ruid": "c27b175134964fff934c66823381ffef",
+    "size": 2309142
+  },
+  "cabinetBackplateRectsafe": {
+    "key": "cabinetBackplateRectsafe",
+    "fileName": "casino_slot_ui_cabinet_backplate_rectsafe.png",
+    "ruid": "ca824a7986924ee19f000c0a56ec3d32",
+    "size": 611495
+  },
+  "reelFrameRectsafe": {
+    "key": "reelFrameRectsafe",
+    "fileName": "casino_slot_ui_reel_frame_rectsafe.png",
+    "ruid": "2decb65569a743b4bfc3e99d15e03688",
+    "size": 316132
+  },
+  "controlsPanelRectsafe": {
+    "key": "controlsPanelRectsafe",
+    "fileName": "casino_slot_ui_controls_panel_rectsafe.png",
+    "ruid": "5421cf8d66234665a3d9d906b74c3b0e",
+    "size": 114969
+  },
+  "buttonGreenRectsafe": {
+    "key": "buttonGreenRectsafe",
+    "fileName": "casino_slot_ui_button_green_rectsafe.png",
+    "ruid": "a90a1b76261a44c49fcffec45bce238a",
+    "size": 38927
+  },
+  "reelFrameCleanRectsafe": {
+    "key": "reelFrameCleanRectsafe",
+    "fileName": "casino_slot_ui_reel_frame_clean_rectsafe.png",
+    "ruid": "027db355dd3d45eda5ca3f64b70867a2",
+    "size": 129616
+  },
+  "controlsPanelCleanRectsafe": {
+    "key": "controlsPanelCleanRectsafe",
+    "fileName": "casino_slot_ui_controls_panel_clean_rectsafe.png",
+    "ruid": "71251f6aad01447a8e751c94b5fe038c",
+    "size": 51444
+  },
+  "slotLayerCabinetFrame": {
+    "key": "slotLayerCabinetFrame",
+    "fileName": "slot_layer_cabinet_frame.png",
+    "ruid": "8d8b42c0e8ea422fb4772ba082a8cd17",
+    "size": 436092
+  },
+  "slotLayerTopEmblem": {
+    "key": "slotLayerTopEmblem",
+    "fileName": "slot_layer_top_emblem.png",
+    "ruid": "f07924c49aef4ec784bf78fedb5db171",
+    "size": 111152
+  },
+  "slotLayerReelWindowFrame": {
+    "key": "slotLayerReelWindowFrame",
+    "fileName": "slot_layer_reel_window_frame.png",
+    "ruid": "cabfe5deca2441e79939e3d022e2ce2f",
+    "size": 91224
+  },
+  "slotLayerReelColumnBackground": {
+    "key": "slotLayerReelColumnBackground",
+    "fileName": "slot_layer_reel_column_background.png",
+    "ruid": "218270d334d44505a6742bcb0fa5046c",
+    "size": 20952
+  },
+  "slotLayerInfoPanel": {
+    "key": "slotLayerInfoPanel",
+    "fileName": "slot_layer_info_panel.png",
+    "ruid": "1b9b158503e34a17a6b2f5d8a85a1501",
+    "size": 135126
+  },
+  "slotSpinButtonNormal": {
+    "key": "slotSpinButtonNormal",
+    "fileName": "slot_spin_button_normal.png",
+    "ruid": "21c3db529e6f4767aeed182cd8a768ea",
+    "size": 33113
+  },
+  "slotSpinButtonHoverPressed": {
+    "key": "slotSpinButtonHoverPressed",
+    "fileName": "slot_spin_button_hover_pressed.png",
+    "ruid": "fe4de3dadc6548469973fd1431dc086c",
+    "size": 33678
+  },
+  "slotSpinButtonDisabled": {
+    "key": "slotSpinButtonDisabled",
+    "fileName": "slot_spin_button_disabled.png",
+    "ruid": "63f37a859ddb4c97be2c75108447e600",
+    "size": 36010
+  },
+  "slotBottomPanelEmpty": {
+    "key": "slotBottomPanelEmpty",
+    "fileName": "slot_bottom_panel_empty.png",
+    "ruid": "3d25147d25d240c98bbb6ba2d56c512f",
+    "size": 120856
+  },
+  "slotBottomPanelWideBox": {
+    "key": "slotBottomPanelWideBox",
+    "fileName": "slot_bottom_panel_wide_box.png",
+    "ruid": "f3b730b69cb4421a9bab5ef248770d16",
+    "size": 14501
+  },
+  "slotBottomPanelSmallBox": {
+    "key": "slotBottomPanelSmallBox",
+    "fileName": "slot_bottom_panel_small_box.png",
+    "ruid": "af0ba853b036483486fc5d7f327357ce",
+    "size": 3394
+  },
+  "slotWideCabinetFrame": {
+    "key": "slotWideCabinetFrame",
+    "fileName": "slot_wide_cabinet_frame.png",
+    "ruid": "0fe2a97d51d44e1d9e0ae97653e541e8",
+    "size": 482090
+  },
+  "slotWideReelWindowFrame": {
+    "key": "slotWideReelWindowFrame",
+    "fileName": "slot_wide_reel_window_frame.png",
+    "ruid": "5638e0c6a0f94ec2b9d131c2d730aa5e",
+    "size": 124822
+  },
+  "slotWideBottomPanelEmpty": {
+    "key": "slotWideBottomPanelEmpty",
+    "fileName": "slot_wide_bottom_panel_empty.png",
+    "ruid": "84dd16d9fbab4f22b6ca69d5bfcb2b0e",
+    "size": 145055
+  },
+  "slotWideBottomPanelWideBox": {
+    "key": "slotWideBottomPanelWideBox",
+    "fileName": "slot_wide_bottom_panel_wide_box.png",
+    "ruid": "451613558bbd4f8a9dc8651ed0031c76",
+    "size": 16980
+  },
+  "slotWideDropdownList": {
+    "key": "slotWideDropdownList",
+    "fileName": "slot_wide_dropdown_list.png",
+    "ruid": "4979bf3c4fc14196b90c2c460c53b5d4",
+    "size": 78039
+  },
+  "slotWideTitleOrnament": {
+    "key": "slotWideTitleOrnament",
+    "fileName": "slot_wide_title_ornament_imagegen_v3.png",
+    "ruid": "48c74d48ed33463fb0b34bdd64cc5c6b",
+    "size": 57988
+  },
+  "slotWideBaseBetMultiplierDivider": {
+    "key": "slotWideBaseBetMultiplierDivider",
+    "fileName": "slot_wide_basebet_multiplier_divider_imagegen_v3.png",
+    "ruid": "7b778ad5da854a8abf2b1434a55992de",
+    "size": 9987
+  },
+  "slotWideMultiplierSelectedGlow": {
+    "key": "slotWideMultiplierSelectedGlow",
+    "fileName": "slot_wide_multiplier_selected_glow.png",
+    "ruid": "83459ccba6d94fd793ea15d611e3b071",
+    "size": 3478
+  },
+  "winGlowLoop": {
+    "key": "winGlowLoop",
+    "fileName": "casino_slot_ui_win_glow_loop_8f.png",
+    "ruid": "6b923578513c46bebefe76c3d0fdb8e1",
+    "size": 269394
+  },
+  "winGlowLoopFrame01": {
+    "key": "winGlowLoopFrame01",
+    "fileName": "casino_slot_ui_win_glow_loop_frame1.png",
+    "ruid": "049276fed4944dc3bca74339a2b13e3c",
+    "size": 33830
+  },
+  "winGlowLoopFrame02": {
+    "key": "winGlowLoopFrame02",
+    "fileName": "casino_slot_ui_win_glow_loop_frame2.png",
+    "ruid": "510388002ed04e53ae3f1efb584e4ca5",
+    "size": 33718
+  },
+  "winGlowLoopFrame03": {
+    "key": "winGlowLoopFrame03",
+    "fileName": "casino_slot_ui_win_glow_loop_frame3.png",
+    "ruid": "36636a1cea60443081c956c9cabb32be",
+    "size": 33736
+  },
+  "winGlowLoopFrame04": {
+    "key": "winGlowLoopFrame04",
+    "fileName": "casino_slot_ui_win_glow_loop_frame4.png",
+    "ruid": "9d67b274f59d4781a58bb250f51360f0",
+    "size": 33774
+  },
+  "winGlowLoopFrame05": {
+    "key": "winGlowLoopFrame05",
+    "fileName": "casino_slot_ui_win_glow_loop_frame5.png",
+    "ruid": "9f0b2fb2358a4ec59478104845eec4ed",
+    "size": 33928
+  },
+  "winGlowLoopFrame06": {
+    "key": "winGlowLoopFrame06",
+    "fileName": "casino_slot_ui_win_glow_loop_frame6.png",
+    "ruid": "d103b7f426cc457ebe33ce1b17bc37b0",
+    "size": 33175
+  },
+  "winGlowLoopFrame07": {
+    "key": "winGlowLoopFrame07",
+    "fileName": "casino_slot_ui_win_glow_loop_frame7.png",
+    "ruid": "491850e52a7a47888987f3724379b646",
+    "size": 33404
+  },
+  "winGlowLoopFrame08": {
+    "key": "winGlowLoopFrame08",
+    "fileName": "casino_slot_ui_win_glow_loop_frame8.png",
+    "ruid": "c01ede8df67f4da69121619c7842854e",
+    "size": 33792
+  }
+}
