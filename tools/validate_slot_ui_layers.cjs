@@ -10,7 +10,7 @@ const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRunti
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
-const screenSprayAnimationRuid = "49f7b6c23fc645e798f7ce0458b356bc";
+const screenSprayAnimationRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
 const entities = ui.ContentProto.Entities;
 const entityRecordByPath = new Map(entities.map((entity) => [entity.path, entity]));
 const byPath = new Map(entities.map((entity) => [entity.path, entity.jsonString]));
@@ -445,7 +445,7 @@ if (!runtime.includes("self:ShowWinResult(result.lineWins, result.payoutUnits)")
 if (!runtime.includes("method table BuildScreenSprayVfxConfig")) {
   fail("Runtime screen spray VFX config builder is missing");
 }
-if (!runtime.includes("49f7b6c23fc645e798f7ce0458b356bc")) {
+if (!runtime.includes("b21f6d1b6d8d4c5ebe36b6d5b4503553")) {
   fail("Runtime screen spray animation RUID is missing");
 }
 if (!runtime.includes("fourPlusLineWinCount") || !runtime.includes("fivePlusLineWinCount")) {

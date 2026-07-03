@@ -2564,7 +2564,7 @@ script SlotMachineRuntime extends Logic
     method table BuildScreenSprayVfxConfig()
         return {
             triggerKey = "BIG_MATCH_SCREEN_SPRAY",
-            animationClipRuid = "49f7b6c23fc645e798f7ce0458b356bc",
+            animationClipRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553",
             minFourPlusLineWins = 2,
             minFivePlusLineWins = 1,
             playRate = 1,

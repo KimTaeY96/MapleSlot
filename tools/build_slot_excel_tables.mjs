@@ -9,7 +9,7 @@ const artifactToolPath = require.resolve("@oai/artifact-tool", { paths: [depende
 const { FileBlob, SpreadsheetFile, Workbook } = await import(pathToFileURL(artifactToolPath).href);
 
 const outputDir = "C:/Users/ghddj/Desktop/AI/MSW/ExcelTable";
-const screenSprayVfxRuid = "49f7b6c23fc645e798f7ce0458b356bc";
+const screenSprayVfxRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
 
 const kr = {
   henesys: "\uD5E4\uB124\uC2DC\uC2A4",
