@@ -9,6 +9,7 @@ const artifactToolPath = require.resolve("@oai/artifact-tool", { paths: [depende
 const { FileBlob, SpreadsheetFile, Workbook } = await import(pathToFileURL(artifactToolPath).href);
 
 const outputDir = "C:/Users/ghddj/Desktop/AI/MSW/ExcelTable";
+const screenSprayVfxRuid = "49f7b6c23fc645e798f7ce0458b356bc";
 
 const kr = {
   henesys: "\uD5E4\uB124\uC2DC\uC2A4",
@@ -617,12 +618,12 @@ async function loadExistingSheetRows(filename, sheetName) {
 }
 
 const existingSlotSymbols = new Map(
-  (await loadExistingSheetRows("Core.xlsx", "SlotSymbols"))
+  (await loadExistingSheetRows("SlotMachine.xlsx", "SlotSymbols"))
     .filter((row) => row.SlotSymbolsIndex !== null && row.SlotSymbolsIndex !== "")
     .map((row) => [normalizeEnumRef(row.SymbolEnumId), row]),
 );
 
-const existingPaytableRows = await loadExistingSheetRows("Core.xlsx", "Paytable");
+const existingPaytableRows = await loadExistingSheetRows("SlotMachine.xlsx", "Paytable");
 const existingPaytableByScopedKey = new Map();
 const existingPaytableByGlobalKey = new Map();
 for (const row of existingPaytableRows) {
@@ -636,6 +637,9 @@ for (const row of existingPaytableRows) {
   }
   existingPaytableByGlobalKey.set(globalKey, row);
 }
+
+const existingScreenSprayVfxRows = await loadExistingSheetRows("SlotMachine.xlsx", "ScreenSprayVfx");
+const existingScreenSprayVfx = existingScreenSprayVfxRows[0] ?? {};
 
 const existingReelStripRows = new Map(
   (await loadExistingSheetRows("SpinPresentation.xlsx", "ReelStrips"))
@@ -658,6 +662,11 @@ function existingPaytableValue(baseBetRegionIndex, symbolId, matchCount, lineTyp
 
 function existingReelStripValue(baseBetRegionIndex, reelNo, stopIndex, key, fallback) {
   const value = existingReelStripRows.get(`${baseBetRegionIndex}:${reelNo}:${stopIndex}`)?.[key];
+  return value === null || value === undefined || value === "" ? fallback : value;
+}
+
+function existingScreenSprayVfxValue(key, fallback) {
+  const value = existingScreenSprayVfx?.[key];
   return value === null || value === undefined || value === "" ? fallback : value;
 }
 
@@ -719,7 +728,7 @@ outputs.push(await saveWorkbook("Enum.xlsx", (workbook) => {
   ], [110, 180, 100, 180, 130, 180]);
 }));
 
-outputs.push(await saveWorkbook("Core.xlsx", (workbook) => {
+outputs.push(await saveWorkbook("SlotMachine.xlsx", (workbook) => {
   const regions = baseBetRegionTable.map(([index, regionName, betCoins]) => [
     index,
     gameStringIndexByRegionIndex.get(index),
@@ -846,6 +855,26 @@ outputs.push(await saveWorkbook("Core.xlsx", (workbook) => {
     [4, 4, gs.MULTIPLIER_LABEL, false],
     [5, 5, gs.MULTIPLIER_LABEL, false],
   ], [130, 130, 190, 170]);
+
+  addDataSheet(workbook, "ScreenSprayVfx", [
+    { name: "ScreenSprayVfxIndex", scope: "all", desc: "Unique row index for screen-wide slot VFX triggers.", type: "int" },
+    { name: "TriggerKey", scope: "client", desc: "Stable runtime trigger key for this screen-wide VFX.", type: "string" },
+    { name: "AnimationClipRuid", scope: "client", desc: "MSW animationclip RUID played over the full screen.", type: "string" },
+    { name: "MinFourPlusLineWins", scope: "client", desc: "Play when at least this many winning paylines have MatchCount >= 4.", type: "int" },
+    { name: "MinFivePlusLineWins", scope: "client", desc: "Play when at least this many winning paylines have MatchCount >= 5.", type: "int" },
+    { name: "PlayRate", scope: "client", desc: "Playback speed multiplier for the animationclip.", type: "float" },
+    { name: "FallbackHideSeconds", scope: "client", desc: "Safety delay to hide the full-screen VFX after one play.", type: "float" },
+    { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
+  ], [[
+    1,
+    existingScreenSprayVfxValue("TriggerKey", "BIG_MATCH_SCREEN_SPRAY"),
+    existingScreenSprayVfxValue("AnimationClipRuid", screenSprayVfxRuid),
+    Number(existingScreenSprayVfxValue("MinFourPlusLineWins", 2)),
+    Number(existingScreenSprayVfxValue("MinFivePlusLineWins", 1)),
+    Number(existingScreenSprayVfxValue("PlayRate", 1.0)),
+    Number(existingScreenSprayVfxValue("FallbackHideSeconds", 1.25)),
+    existingScreenSprayVfxValue("Notes", "2+ four-match winning paylines or 1+ five-match win plays a full-screen spray animation once."),
+  ]], [170, 210, 280, 190, 190, 100, 150, 360]);
 }));
 
 outputs.push(await saveWorkbook("Config.xlsx", (workbook) => {

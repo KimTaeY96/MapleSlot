@@ -25,6 +25,7 @@ This document is for the 아트 디렉터 UI lane and 테크 디렉터. It shoul
 | `Panel_WinResult` | Icon + formula result strip above the Spin button | Shows only winning lines as `{symbol icon} x{count} {line payout}` plus `= {total}`. |
 | `Text_SlotStatus` | Text summary for errors and neutral spin state | No longer used for normal win formulas. |
 | `Text_CommonCoinAmount` | Final balance display | No count-up tween yet. |
+| `ScreenSprayVFX_Fullscreen` | Full-screen one-shot spray animation holder | Hidden by default; runtime enables it once for configured big match triggers. |
 | `Button_Spin` | Spin input and disabled state | No quick-stop or skip-presentation input yet. |
 
 ## Phase1 Hook Direction
@@ -35,7 +36,7 @@ This document is for the 아트 디렉터 UI lane and 테크 디렉터. It shoul
 | Symbol-specific win animation | `lineWins[].cells[]`, `slotSymbols[symbol].winAnimation` | Implemented with symbol overlays. Wild cells animate as Wild while the payout formula uses the substituted target symbol. |
 | Win result formula | `lineWins[].symbol`, `runLength`, `payoutUnits`, total `payoutUnits` | Implemented through `Panel_WinResult`; GameString keys 208 and 209 own the format strings. |
 | Payout count-up | `payoutUnits`, starting Common Coin, ending Common Coin | Count text from previous balance to final balance after reels stop. |
-| Big win trigger | payout multiple or payoutUnits / spin cost | Trigger only text/glow first; imagegen effect assets can come later. |
+| Big win trigger | `lineWins[].runLength`, `fourPlusLineWinCount`, `fivePlusLineWinCount` | Implemented with `SlotMachine.xlsx/ScreenSprayVfx`: 2+ wins with MatchCount >= 4 or 1+ win with MatchCount >= 5 plays a full-screen spray animation once. |
 | Jackpot-ready trigger | 5-of-kind high-tier symbol or high payout multiple | Stub event only; do not add jackpot reward logic yet. |
 
 ## Recommended UI Additions

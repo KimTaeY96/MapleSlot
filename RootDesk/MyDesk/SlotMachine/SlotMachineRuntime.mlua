@@ -186,6 +186,9 @@ script SlotMachineRuntime extends Logic
     property TextComponent winResultText3 = "44706179-4029-4ff6-8c59-2a5ed058c0ba"
     property TextComponent winResultTotalText = "8394b87a-9949-40a9-b63c-54138c19bf60"
 
+    property Entity screenSprayVfxEntity = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
+    property SpriteGUIRendererComponent screenSprayVfxRenderer = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
+
     property UITransformComponent topHudTransform = "b2f45edf-580b-4aef-a379-870581ccceb1"
     property UITransformComponent slotPanelTransform = "da94c227-6ceb-4737-bd9d-56fee867af02"
     property UITransformComponent battleHudTransform = "6c9db0e9-ccfe-45f9-b12e-c812dde6b44d"
@@ -475,6 +478,8 @@ script SlotMachineRuntime extends Logic
     property any paytableTenths = nil
     property any paylines = nil
     property any spinProfiles = nil
+    property any screenSprayVfxConfig = nil
+    property any screenSprayVfxTimerId = nil
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
@@ -564,6 +569,9 @@ script SlotMachineRuntime extends Logic
         self.paytableTenths = self:BuildPaytableTenths()
         self.paylines = self:BuildPaylines()
         self.spinProfiles = self:BuildSpinProfiles()
+        self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()
+        self.screenSprayVfxTimerId = nil
+        self:HideScreenSprayVfx()
         self:ApplyResponsiveLayout()
 
         self.multiplierHandlers = {}
@@ -638,6 +646,7 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method void OnEndPlay()
         self:StopWinVfxFrameLoop()
+        self:HideScreenSprayVfx()
         if self.baseBetHandler ~= nil then
             self.baseBetButton:DisconnectEvent(ButtonClickEvent, self.baseBetHandler)
             self.baseBetHandler = nil
@@ -2552,6 +2561,18 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method table BuildScreenSprayVfxConfig()
+        return {
+            triggerKey = "BIG_MATCH_SCREEN_SPRAY",
+            animationClipRuid = "49f7b6c23fc645e798f7ce0458b356bc",
+            minFourPlusLineWins = 2,
+            minFivePlusLineWins = 1,
+            playRate = 1,
+            fallbackHideSeconds = 1.25,
+        }
+    end
+
+    @ExecSpace("ClientOnly")
     method table BuildSpinProfiles()
         return {
             { id = "NORMAL", weight = 70, firstMin = 1.55, firstMax = 1.9, staggerMin = 0.18, staggerMax = 0.36 },
@@ -2636,6 +2657,9 @@ script SlotMachineRuntime extends Logic
         if result.payoutUnits > 0 then
             self:ShowWinResult(result.lineWins, result.payoutUnits)
             self:ApplyWinPresentation(result.lineWins)
+            if self:ShouldPlayScreenSprayVfx(result) then
+                self:PlayScreenSprayVfxOnce()
+            end
         else
             self.statusText.Text = ""
             self:HideWinResult()
@@ -2697,6 +2721,8 @@ script SlotMachineRuntime extends Logic
         local totalPayoutUnits = 0
         local winLineCount = 0
         local maxRunLength = 0
+        local fourPlusLineWinCount = 0
+        local fivePlusLineWinCount = 0
         local lineWins = {}
 
         for _, payline in ipairs(self.paylines) do
@@ -2708,6 +2734,12 @@ script SlotMachineRuntime extends Logic
                     if lineResult.runLength > maxRunLength then
                         maxRunLength = lineResult.runLength
                     end
+                    if lineResult.runLength >= 4 then
+                        fourPlusLineWinCount = fourPlusLineWinCount + 1
+                    end
+                    if lineResult.runLength >= 5 then
+                        fivePlusLineWinCount = fivePlusLineWinCount + 1
+                    end
                     table.insert(lineWins, lineResult)
                 end
             end
@@ -2717,6 +2749,8 @@ script SlotMachineRuntime extends Logic
             payoutUnits = totalPayoutUnits,
             winLineCount = winLineCount,
             maxRunLength = maxRunLength,
+            fourPlusLineWinCount = fourPlusLineWinCount,
+            fivePlusLineWinCount = fivePlusLineWinCount,
             lineWins = lineWins,
         }
     end
@@ -3155,6 +3189,64 @@ script SlotMachineRuntime extends Logic
             _TimerService:ClearTimer(self.winVfxTimerId)
             self.winVfxTimerId = nil
         end
+    end
+
+    @ExecSpace("ClientOnly")
+    method boolean ShouldPlayScreenSprayVfx(table result)
+        if result == nil or self.screenSprayVfxConfig == nil then
+            return false
+        end
+        local config = self.screenSprayVfxConfig
+        if config.animationClipRuid == nil or config.animationClipRuid == "" then
+            return false
+        end
+        local fourPlusLineWins = result.fourPlusLineWinCount or 0
+        local fivePlusLineWins = result.fivePlusLineWinCount or 0
+        if config.minFourPlusLineWins ~= nil and config.minFourPlusLineWins > 0 and fourPlusLineWins >= config.minFourPlusLineWins then
+            return true
+        end
+        if config.minFivePlusLineWins ~= nil and config.minFivePlusLineWins > 0 and fivePlusLineWins >= config.minFivePlusLineWins then
+            return true
+        end
+        return false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void HideScreenSprayVfx()
+        if self.screenSprayVfxTimerId ~= nil then
+            _TimerService:ClearTimer(self.screenSprayVfxTimerId)
+            self.screenSprayVfxTimerId = nil
+        end
+        if self.screenSprayVfxEntity ~= nil then
+            self.screenSprayVfxEntity.Enable = false
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void PlayScreenSprayVfxOnce()
+        if self.screenSprayVfxEntity == nil or self.screenSprayVfxRenderer == nil or self.screenSprayVfxConfig == nil then
+            return
+        end
+        local animationRuid = self.screenSprayVfxConfig.animationClipRuid
+        if animationRuid == nil or animationRuid == "" then
+            return
+        end
+
+        self:HideScreenSprayVfx()
+        self.screenSprayVfxRenderer.ImageRUID = animationRuid
+        self.screenSprayVfxRenderer.AnimClipPlayType = SpriteAnimClipPlayType.Onetime
+        self.screenSprayVfxRenderer.StartFrameIndex = 0
+        self.screenSprayVfxRenderer.EndFrameIndex = 2147483647
+        self.screenSprayVfxRenderer.PlayRate = self.screenSprayVfxConfig.playRate or 1.0
+        self.screenSprayVfxRenderer.Color = Color(1.0, 1.0, 1.0, 1.0)
+        self.screenSprayVfxEntity.Enable = false
+        self.screenSprayVfxEntity.Enable = true
+
+        local hideDelay = self.screenSprayVfxConfig.fallbackHideSeconds or 1.25
+        self.screenSprayVfxTimerId = _TimerService:SetTimerOnce(function()
+            self.screenSprayVfxTimerId = nil
+            self:HideScreenSprayVfx()
+        end, hideDelay)
     end
 
     @ExecSpace("ClientOnly")

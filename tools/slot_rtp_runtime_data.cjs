@@ -111,11 +111,11 @@ function validateReelGroups(reelGroups) {
 async function loadRuntimeSlotData(options = {}) {
   const projectRoot = options.projectRoot ?? defaultProjectRoot;
   const enumResolver = buildEnumResolver(await workbookRows(projectRoot, "Enum.xlsx", "Enums"));
-  const paytableGroups = makePaytableGroups(await workbookRows(projectRoot, "Core.xlsx", "Paytable"), enumResolver);
+  const paytableGroups = makePaytableGroups(await workbookRows(projectRoot, "SlotMachine.xlsx", "Paytable"), enumResolver);
   const defaultPaytableIndex = Math.min(...paytableGroups.keys());
   const paytable = paytableGroups.get(defaultPaytableIndex);
 
-  const slotSymbolRows = (await workbookRows(projectRoot, "Core.xlsx", "SlotSymbols"))
+  const slotSymbolRows = (await workbookRows(projectRoot, "SlotMachine.xlsx", "SlotSymbols"))
     .sort((a, b) => num(a.SlotSymbolsIndex, "SlotSymbolsIndex") - num(b.SlotSymbolsIndex, "SlotSymbolsIndex"))
     .map((row) => {
       const symbolId = enumResolver.resolve("SlotSymbol", row.SymbolEnumId);
@@ -127,7 +127,7 @@ async function loadRuntimeSlotData(options = {}) {
     });
 
   const slotSymbols = new Map(slotSymbolRows.map((row) => [row.id, row]));
-  const paylines = (await workbookRows(projectRoot, "Core.xlsx", "Paylines"))
+  const paylines = (await workbookRows(projectRoot, "SlotMachine.xlsx", "Paylines"))
     .sort((a, b) => num(a.PaylinesIndex, "PaylinesIndex") - num(b.PaylinesIndex, "PaylinesIndex"))
     .map((row) => ({
       id: enumResolver.resolve("LineType", row.LineTypeEnumId),
@@ -136,14 +136,14 @@ async function loadRuntimeSlotData(options = {}) {
       costCountsAsLine: bool(row.CostCountsAsLine),
     }));
 
-  const baseBetRows = (await workbookRows(projectRoot, "Core.xlsx", "BaseBetRegions"))
+  const baseBetRows = (await workbookRows(projectRoot, "SlotMachine.xlsx", "BaseBetRegions"))
     .sort((a, b) => num(a.BaseBetRegionsIndex, "BaseBetRegionsIndex") - num(b.BaseBetRegionsIndex, "BaseBetRegionsIndex"))
     .map((row) => ({
       index: num(row.BaseBetRegionsIndex, "BaseBetRegionsIndex"),
       betCoins: num(row.BetCoins, "BetCoins"),
     }));
 
-  const multiplierRows = (await workbookRows(projectRoot, "Core.xlsx", "Multipliers"))
+  const multiplierRows = (await workbookRows(projectRoot, "SlotMachine.xlsx", "Multipliers"))
     .sort((a, b) => num(a.MultipliersIndex, "MultipliersIndex") - num(b.MultipliersIndex, "MultipliersIndex"))
     .map((row) => ({
       index: num(row.MultipliersIndex, "MultipliersIndex"),

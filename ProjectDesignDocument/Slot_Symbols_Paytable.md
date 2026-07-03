@@ -28,7 +28,7 @@ P0.5 evaluates the 3 horizontal rows only. Diagonal, V-shaped, scatter, and ways
 | 5 | `PINK_BEAN` | Pink Bean | Jackpot boss monster icon | Very rare |
 
 ## Current Symbol Data Contract
-The prototype now keeps symbol visuals and win animation keys table-driven. The runtime still uses local table builders until the later Excel import pipeline is wired, but the same values are exported to `ExcelTable/Core.xlsx` and `ExcelTable/SpinPresentation.xlsx`.
+The prototype now keeps symbol visuals and win animation keys table-driven. The runtime still uses local table builders until the later Excel import pipeline is wired, but the same values are exported to `ExcelTable/SlotMachine.xlsx` and `ExcelTable/SpinPresentation.xlsx`.
 
 | Symbol ID | Default Idle Resource RUID | Default Win Animation RUID | Win Animation |
 |---|---|---|---|
@@ -39,7 +39,7 @@ The prototype now keeps symbol visuals and win animation keys table-driven. The 
 | `PINK_BEAN` | `00b055cd1b1141f9bee48a4e9ce0534c` | `00b055cd1b1141f9bee48a4e9ce0534c` | `FLASH` |
 
 ### Excel Table Mapping
-- `Core.xlsx / SlotSymbols`: owns each symbol's default `SymbolResourceRuid`, default `WinAnimationRuid`, and `WinAnimationEnumId`.
+- `SlotMachine.xlsx / SlotSymbols`: owns each symbol's default `SymbolResourceRuid`, default `WinAnimationRuid`, and `WinAnimationEnumId`.
 - `SpinPresentation.xlsx / ReelStrips`: owns cell-level reel stop data grouped by `BaseBetRegionIndex`. Each row can override `IdleSpriteRuid` and `WinAnimationRuid` per BaseBet type, reel, and stop index.
 - `Enum.xlsx / Enums`: includes `SymbolWinAnimation` values `BOUNCE`, `POP`, `WOBBLE`, `SHAKE`, and `FLASH`.
 - `ProjectDesignDocument/Slot_Resource_Table_Input_Prompt.md`: prompt for finding MSW sprite or animationclip RUIDs and filling the cell-level resource table.
@@ -53,7 +53,7 @@ ReelStrips[BaseBetRegionIndex][ReelNo][StopIndex] -> SymbolEnumId
 
 Required table shape:
 
-- `BaseBetRegionIndex`: references `Core.xlsx / BaseBetRegions`.
+- `BaseBetRegionIndex`: references `SlotMachine.xlsx / BaseBetRegions`.
 - `ReelNo`: 1 to 5.
 - `StopIndex`: 1 to 30 per reel.
 - Total row count: `BaseBet region count * 5 reels * 30 stops`.

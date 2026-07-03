@@ -10,6 +10,7 @@ const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRunti
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
+const screenSprayAnimationRuid = "49f7b6c23fc645e798f7ce0458b356bc";
 const entities = ui.ContentProto.Entities;
 const entityRecordByPath = new Map(entities.map((entity) => [entity.path, entity]));
 const byPath = new Map(entities.map((entity) => [entity.path, entity.jsonString]));
@@ -141,6 +142,25 @@ expectSpriteOrder("Panel_LeftSlotMachine/Bg_CabinetFrame", 20);
 expectSpriteOrder("Panel_LeftSlotMachine/ReelFrame_BG", 40);
 expectSpriteOrder("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Bg", 60);
 expectSpriteOrder("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Panel_BaseBetList_Above_Hidden/Bg", 200);
+expectRect("ScreenSprayVFX_Fullscreen", 1920, 1080);
+expectPosition("ScreenSprayVFX_Fullscreen", 0, 0);
+const screenSprayEntity = getEntity("ScreenSprayVFX_Fullscreen");
+const screenSprayRenderer = getComponent("ScreenSprayVFX_Fullscreen", "MOD.Core.SpriteGUIRendererComponent");
+if (screenSprayEntity.enable !== false) {
+  fail("ScreenSprayVFX_Fullscreen must start hidden and only be enabled by runtime trigger");
+}
+if (screenSprayRenderer.ImageRUID?.DataId !== screenSprayAnimationRuid) {
+  fail(`Unexpected screen spray RUID: ${screenSprayRenderer.ImageRUID?.DataId}; expected ${screenSprayAnimationRuid}`);
+}
+if (screenSprayRenderer.AnimClipPlayType !== 0 || screenSprayRenderer.PlayRate !== 1) {
+  fail("ScreenSprayVFX_Fullscreen must be configured as a one-time sprite animation");
+}
+if (screenSprayRenderer.OrderInLayer !== 420 || screenSprayRenderer.OverrideSorting !== true) {
+  fail(`Unexpected screen spray sorting: order=${screenSprayRenderer.OrderInLayer}, override=${screenSprayRenderer.OverrideSorting}; expected 420/true`);
+}
+if (screenSprayRenderer.RaycastTarget !== false) {
+  fail("ScreenSprayVFX_Fullscreen must not block slot controls while hidden or playing");
+}
 for (let index = 1; index <= 5; index += 1) {
   expectPosition(`Panel_LeftSlotMachine/Panel_BetMultiplierRow/Button_Multiplier_x${index}`, 420 + (index - 1) * 58, -22);
   expectRect(`Panel_LeftSlotMachine/Panel_BetMultiplierRow/Button_Multiplier_x${index}`, 55, 55);
@@ -422,6 +442,24 @@ if (!runtime.includes("method boolean IsWildSymbol") || !runtime.includes("symbo
 if (!runtime.includes("self:ShowWinResult(result.lineWins, result.payoutUnits)")) {
   fail("Runtime formatted win result UI flow is missing");
 }
+if (!runtime.includes("method table BuildScreenSprayVfxConfig")) {
+  fail("Runtime screen spray VFX config builder is missing");
+}
+if (!runtime.includes("49f7b6c23fc645e798f7ce0458b356bc")) {
+  fail("Runtime screen spray animation RUID is missing");
+}
+if (!runtime.includes("fourPlusLineWinCount") || !runtime.includes("fivePlusLineWinCount")) {
+  fail("Runtime does not expose MatchCount >= 4/5 win counters");
+}
+if (!runtime.includes("method boolean ShouldPlayScreenSprayVfx") || !runtime.includes("self:PlayScreenSprayVfxOnce()")) {
+  fail("Runtime screen spray trigger flow is missing");
+}
+if (!runtime.includes("SpriteAnimClipPlayType.Onetime")) {
+  fail("Runtime screen spray VFX must play once, not loop");
+}
+if (!runtime.includes("_TimerService:SetTimerOnce(function()") || !runtime.includes("_TimerService:ClearTimer(self.screenSprayVfxTimerId)")) {
+  fail("Runtime screen spray VFX timer cleanup is missing");
+}
 if (runtime.includes("if row[index] ~= first then")) {
   fail("Runtime line evaluation still requires strict same-symbol matches and cannot handle Wild substitution");
 }
@@ -489,6 +527,8 @@ const requiredBindings = [
   "winResultText1",
   "winResultText3",
   "winResultTotalText",
+  "screenSprayVfxEntity",
+  "screenSprayVfxRenderer",
   "spinButton",
   "multiplierButton1",
   "multiplierButton5",
@@ -541,6 +581,8 @@ for (let index = 1; index <= 3; index += 1) {
   expectBinding(`winResultText${index}`, `Panel_LeftSlotMachine/Panel_WinResult/Line_${index}/Text`, "TextComponent");
 }
 expectBinding("winResultTotalText", "Panel_LeftSlotMachine/Panel_WinResult/Text_Total", "TextComponent");
+expectBinding("screenSprayVfxEntity", "ScreenSprayVFX_Fullscreen", "Entity");
+expectBinding("screenSprayVfxRenderer", "ScreenSprayVFX_Fullscreen", "SpriteGUIRendererComponent");
 expectBinding("topHudTransform", "TopHUD_Currency");
 expectBinding("slotPanelTransform", "Panel_LeftSlotMachine");
 expectBinding("battleHudTransform", "BattleHUD_Right");
@@ -610,6 +652,6 @@ for (let row = 1; row <= 3; row += 1) {
 
 console.log(`Validated ${entities.length} UI entities.`);
 console.log(`Validated 5 reel columns, ${reelCells.length} reel-strip cells, and ${reelSymbolSprites.length} monster symbol sprites.`);
-console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites and ${winSymbolOverlayEntities.length} symbol animation overlays.`);
+console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, and screen spray VFX.`);
 console.log("Validated layered RUIDs, split bottom-panel RUIDs, and Spin SpriteSwap states.");
 console.log("Validated responsive dimensions, runtime cell height, and current runtime bindings.");

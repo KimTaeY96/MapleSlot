@@ -75,7 +75,7 @@ async function main() {
   }));
 
   console.log(JSON.stringify({
-    source: "ExcelTable/Core.xlsx + current WILD substitute rule",
+    source: "ExcelTable/SlotMachine.xlsx + current WILD substitute rule",
     costRule: "baseBet * multiplier",
     note: "Weighted candidates are pre-strip estimates only; explicit ReelStrips simulation is authoritative for current runtime data.",
     candidates: result,

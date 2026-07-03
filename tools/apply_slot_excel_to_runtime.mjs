@@ -145,14 +145,14 @@ async function loadData() {
 
   const text = (index) => gameString.get(Number(index)) ?? fallbackStrings.get(Number(index)) ?? "";
 
-  const baseBetRows = (await workbookRows("Core.xlsx", "BaseBetRegions"))
+  const baseBetRows = (await workbookRows("SlotMachine.xlsx", "BaseBetRegions"))
     .sort((a, b) => num(a.BaseBetRegionsIndex, "BaseBetRegionsIndex") - num(b.BaseBetRegionsIndex, "BaseBetRegionsIndex"));
 
-  const multiplierRows = (await workbookRows("Core.xlsx", "Multipliers"))
+  const multiplierRows = (await workbookRows("SlotMachine.xlsx", "Multipliers"))
     .sort((a, b) => num(a.MultipliersIndex, "MultipliersIndex") - num(b.MultipliersIndex, "MultipliersIndex"));
 
   const paytableGroups = new Map();
-  for (const row of await workbookRows("Core.xlsx", "Paytable")) {
+  for (const row of await workbookRows("SlotMachine.xlsx", "Paytable")) {
     const baseBetIndex = hasValue(row, "BaseBetRegionIndex") ? num(row.BaseBetRegionIndex, "BaseBetRegionIndex") : 1;
     const symbolId = enumResolver.resolve("SlotSymbol", row.SymbolEnumId);
     const matchCount = num(row.MatchCount, "MatchCount");
@@ -165,7 +165,7 @@ async function loadData() {
   const defaultPaytableIndex = Math.min(...paytableGroups.keys());
   const defaultPaytable = paytableGroups.get(defaultPaytableIndex);
 
-  const slotSymbolRows = (await workbookRows("Core.xlsx", "SlotSymbols"))
+  const slotSymbolRows = (await workbookRows("SlotMachine.xlsx", "SlotSymbols"))
     .sort((a, b) => num(a.SlotSymbolsIndex, "SlotSymbolsIndex") - num(b.SlotSymbolsIndex, "SlotSymbolsIndex"))
     .map((row) => {
       const symbolId = enumResolver.resolve("SlotSymbol", row.SymbolEnumId);
@@ -219,7 +219,7 @@ async function loadData() {
       staggerMax: num(row.StaggerMaxSec, "StaggerMaxSec"),
     }));
 
-  const paylineRows = (await workbookRows("Core.xlsx", "Paylines"))
+  const paylineRows = (await workbookRows("SlotMachine.xlsx", "Paylines"))
     .sort((a, b) => num(a.PaylinesIndex, "PaylinesIndex") - num(b.PaylinesIndex, "PaylinesIndex"))
     .map((row) => ({
       id: enumResolver.resolve("LineType", row.LineTypeEnumId),
@@ -227,6 +227,18 @@ async function loadData() {
       enabled: bool(row.IsEnabled),
       costCountsAsLine: bool(row.CostCountsAsLine),
     }));
+
+  const screenSprayRows = (await workbookRows("SlotMachine.xlsx", "ScreenSprayVfx"))
+    .sort((a, b) => num(a.ScreenSprayVfxIndex, "ScreenSprayVfxIndex") - num(b.ScreenSprayVfxIndex, "ScreenSprayVfxIndex"));
+  const screenSprayRow = screenSprayRows[0] ?? null;
+  const screenSprayVfx = screenSprayRow == null ? null : {
+    triggerKey: clean(screenSprayRow.TriggerKey) || "BIG_MATCH_SCREEN_SPRAY",
+    animationClipRuid: clean(screenSprayRow.AnimationClipRuid),
+    minFourPlusLineWins: hasValue(screenSprayRow, "MinFourPlusLineWins") ? num(screenSprayRow.MinFourPlusLineWins, "MinFourPlusLineWins") : 2,
+    minFivePlusLineWins: hasValue(screenSprayRow, "MinFivePlusLineWins") ? num(screenSprayRow.MinFivePlusLineWins, "MinFivePlusLineWins") : 1,
+    playRate: hasValue(screenSprayRow, "PlayRate") ? num(screenSprayRow.PlayRate, "PlayRate") : 1.0,
+    fallbackHideSeconds: hasValue(screenSprayRow, "FallbackHideSeconds") ? num(screenSprayRow.FallbackHideSeconds, "FallbackHideSeconds") : 1.25,
+  };
 
   return {
     text,
@@ -238,6 +250,7 @@ async function loadData() {
     reelCellGroups,
     spinProfileRows,
     paylineRows,
+    screenSprayVfx,
   };
 }
 
@@ -562,8 +575,177 @@ function makeSpinProfiles(data) {
   ].join("\n");
 }
 
+function makeScreenSprayVfxConfig(data) {
+  const config = data.screenSprayVfx ?? {};
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildScreenSprayVfxConfig()",
+    "        return {",
+    `            triggerKey = ${luaString(config.triggerKey ?? "BIG_MATCH_SCREEN_SPRAY")},`,
+    `            animationClipRuid = ${luaString(config.animationClipRuid ?? "")},`,
+    `            minFourPlusLineWins = ${Number(config.minFourPlusLineWins ?? 2)},`,
+    `            minFivePlusLineWins = ${Number(config.minFivePlusLineWins ?? 1)},`,
+    `            playRate = ${Number(config.playRate ?? 1.0)},`,
+    `            fallbackHideSeconds = ${Number(config.fallbackHideSeconds ?? 1.25)},`,
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeEvaluatePaylines() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table EvaluatePaylines(table grid)",
+    "        local totalPayoutUnits = 0",
+    "        local winLineCount = 0",
+    "        local maxRunLength = 0",
+    "        local fourPlusLineWinCount = 0",
+    "        local fivePlusLineWinCount = 0",
+    "        local lineWins = {}",
+    "",
+    "        for _, payline in ipairs(self.paylines) do",
+    "            if payline.enabled then",
+    "                local lineResult = self:EvaluateLine(grid[payline.rowIndex], payline.id, payline.rowIndex)",
+    "                if lineResult.payoutUnits > 0 then",
+    "                    totalPayoutUnits = totalPayoutUnits + lineResult.payoutUnits",
+    "                    winLineCount = winLineCount + 1",
+    "                    if lineResult.runLength > maxRunLength then",
+    "                        maxRunLength = lineResult.runLength",
+    "                    end",
+    "                    if lineResult.runLength >= 4 then",
+    "                        fourPlusLineWinCount = fourPlusLineWinCount + 1",
+    "                    end",
+    "                    if lineResult.runLength >= 5 then",
+    "                        fivePlusLineWinCount = fivePlusLineWinCount + 1",
+    "                    end",
+    "                    table.insert(lineWins, lineResult)",
+    "                end",
+    "            end",
+    "        end",
+    "",
+    "        return {",
+    "            payoutUnits = totalPayoutUnits,",
+    "            winLineCount = winLineCount,",
+    "            maxRunLength = maxRunLength,",
+    "            fourPlusLineWinCount = fourPlusLineWinCount,",
+    "            fivePlusLineWinCount = fivePlusLineWinCount,",
+    "            lineWins = lineWins,",
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeShouldPlayScreenSprayVfx() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method boolean ShouldPlayScreenSprayVfx(table result)",
+    "        if result == nil or self.screenSprayVfxConfig == nil then",
+    "            return false",
+    "        end",
+    "        local config = self.screenSprayVfxConfig",
+    "        if config.animationClipRuid == nil or config.animationClipRuid == \"\" then",
+    "            return false",
+    "        end",
+    "        local fourPlusLineWins = result.fourPlusLineWinCount or 0",
+    "        local fivePlusLineWins = result.fivePlusLineWinCount or 0",
+    "        if config.minFourPlusLineWins ~= nil and config.minFourPlusLineWins > 0 and fourPlusLineWins >= config.minFourPlusLineWins then",
+    "            return true",
+    "        end",
+    "        if config.minFivePlusLineWins ~= nil and config.minFivePlusLineWins > 0 and fivePlusLineWins >= config.minFivePlusLineWins then",
+    "            return true",
+    "        end",
+    "        return false",
+    "    end",
+  ].join("\n");
+}
+
+function makeHideScreenSprayVfx() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void HideScreenSprayVfx()",
+    "        if self.screenSprayVfxTimerId ~= nil then",
+    "            _TimerService:ClearTimer(self.screenSprayVfxTimerId)",
+    "            self.screenSprayVfxTimerId = nil",
+    "        end",
+    "        if self.screenSprayVfxEntity ~= nil then",
+    "            self.screenSprayVfxEntity.Enable = false",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makePlayScreenSprayVfxOnce() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void PlayScreenSprayVfxOnce()",
+    "        if self.screenSprayVfxEntity == nil or self.screenSprayVfxRenderer == nil or self.screenSprayVfxConfig == nil then",
+    "            return",
+    "        end",
+    "        local animationRuid = self.screenSprayVfxConfig.animationClipRuid",
+    "        if animationRuid == nil or animationRuid == \"\" then",
+    "            return",
+    "        end",
+    "",
+    "        self:HideScreenSprayVfx()",
+    "        self.screenSprayVfxRenderer.ImageRUID = animationRuid",
+    "        self.screenSprayVfxRenderer.AnimClipPlayType = SpriteAnimClipPlayType.Onetime",
+    "        self.screenSprayVfxRenderer.StartFrameIndex = 0",
+    "        self.screenSprayVfxRenderer.EndFrameIndex = 2147483647",
+    "        self.screenSprayVfxRenderer.PlayRate = self.screenSprayVfxConfig.playRate or 1.0",
+    "        self.screenSprayVfxRenderer.Color = Color(1.0, 1.0, 1.0, 1.0)",
+    "        self.screenSprayVfxEntity.Enable = false",
+    "        self.screenSprayVfxEntity.Enable = true",
+    "",
+    "        local hideDelay = self.screenSprayVfxConfig.fallbackHideSeconds or 1.25",
+    "        self.screenSprayVfxTimerId = _TimerService:SetTimerOnce(function()",
+    "            self.screenSprayVfxTimerId = nil",
+    "            self:HideScreenSprayVfx()",
+    "        end, hideDelay)",
+    "    end",
+  ].join("\n");
+}
+
+function patchScreenSprayVfxProperties(runtime) {
+  if (!runtime.includes("property any screenSprayVfxConfig = nil")) {
+    runtime = runtime.replace(
+      /    property any spinProfiles = nil\r?\n/,
+      (match) => `${match}    property any screenSprayVfxConfig = nil\n    property any screenSprayVfxTimerId = nil\n`,
+    );
+  }
+  return runtime;
+}
+
+function patchScreenSprayVfxFlow(runtime) {
+  runtime = upsertTypedMethod(runtime, "boolean", "ShouldPlayScreenSprayVfx", makeShouldPlayScreenSprayVfx(), "ApplyWinPresentation");
+  runtime = upsertTypedMethod(runtime, "void", "HideScreenSprayVfx", makeHideScreenSprayVfx(), "ApplyWinPresentation");
+  runtime = upsertTypedMethod(runtime, "void", "PlayScreenSprayVfxOnce", makePlayScreenSprayVfxOnce(), "ApplyWinPresentation");
+
+  if (!runtime.includes("self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()")) {
+    runtime = runtime.replace(
+      /        self\.spinProfiles = self:BuildSpinProfiles\(\)\r?\n/,
+      (match) => `${match}        self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()\n        self.screenSprayVfxTimerId = nil\n        self:HideScreenSprayVfx()\n`,
+    );
+  }
+
+  if (!runtime.includes("self:HideScreenSprayVfx()\n        if self.baseBetHandler")) {
+    runtime = runtime.replace(
+      /    method void OnEndPlay\(\)\r?\n        self:StopWinVfxFrameLoop\(\)\r?\n/,
+      "    method void OnEndPlay()\n        self:StopWinVfxFrameLoop()\n        self:HideScreenSprayVfx()\n",
+    );
+  }
+
+  if (!runtime.includes("self:PlayScreenSprayVfxOnce()")) {
+    runtime = runtime.replace(
+      /            self:ApplyWinPresentation\(result\.lineWins\)\r?\n/,
+      "            self:ApplyWinPresentation(result.lineWins)\n            if self:ShouldPlayScreenSprayVfx(result) then\n                self:PlayScreenSprayVfxOnce()\n            end\n",
+    );
+  }
+
+  return runtime;
+}
+
 function replaceMethod(runtime, methodName, replacement) {
-  const pattern = new RegExp(`    @ExecSpace\\("ClientOnly"\\)\\r?\\n    method table ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
+  const pattern = new RegExp(`[ \\t]*@ExecSpace\\("ClientOnly"\\)\\r?\\n    method table ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
   if (!pattern.test(runtime)) {
     throw new Error(`Missing method to replace: ${methodName}`);
   }
@@ -571,7 +753,7 @@ function replaceMethod(runtime, methodName, replacement) {
 }
 
 function replaceVoidMethod(runtime, methodName, replacement) {
-  const pattern = new RegExp(`    @ExecSpace\\("ClientOnly"\\)\\r?\\n    method void ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
+  const pattern = new RegExp(`[ \\t]*@ExecSpace\\("ClientOnly"\\)\\r?\\n    method void ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
   if (!pattern.test(runtime)) {
     throw new Error(`Missing void method to replace: ${methodName}`);
   }
@@ -579,7 +761,7 @@ function replaceVoidMethod(runtime, methodName, replacement) {
 }
 
 function upsertTypedMethod(runtime, returnType, methodName, replacement, beforeMethodName = "ApplyWinPresentation") {
-  const pattern = new RegExp(`    @ExecSpace\\("ClientOnly"\\)\\r?\\n    method ${returnType} ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
+  const pattern = new RegExp(`[ \\t]*@ExecSpace\\("ClientOnly"\\)\\r?\\n    method ${returnType} ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end`);
   if (pattern.test(runtime)) {
     return runtime.replace(pattern, replacement);
   }
@@ -774,6 +956,7 @@ function makeApplyWinPresentation() {
 
 function patchWinResultFlow(runtime) {
   runtime = upsertTypedMethod(runtime, "boolean", "IsWildSymbol", makeIsWildSymbol(), "EvaluatePaylines");
+  runtime = replaceMethod(runtime, "EvaluatePaylines", makeEvaluatePaylines());
   runtime = upsertTypedMethod(runtime, "table", "GetCurrentPaytableTenths", makeGetCurrentPaytableTenths(), "EvaluateLine");
   runtime = replaceMethod(runtime, "EvaluateLine", makeEvaluateLine());
   runtime = upsertTypedMethod(runtime, "void", "HideWinResult", makeHideWinResult(), "ApplyWinPresentation");
@@ -803,10 +986,10 @@ function patchWinResultFlow(runtime) {
   );
   const baseBetResetBlock = "        if selectedBaseBet ~= self.baseBet then\n            self:HideWinResult()\n            self:ResetWinHighlights()\n        end\n";
   runtime = runtime.replace(
-    /(        if selectedBaseBet ~= self\.baseBet then\r?\n            self:HideWinResult\(\)\r?\n            self:ResetWinHighlights\(\)\r?\n        end\r?\n){2,}/g,
+    /(        if selectedBaseBet ~= self\.baseBet then\r?\n            self:HideWinResult\(\)\r?\n            self:ResetWinHighlights\(\)\r?\n        end\r?\n)+(?=        self\.baseBet = selectedBaseBet)/g,
     baseBetResetBlock,
   );
-  if (!runtime.includes(`${baseBetResetBlock}        self.baseBet = selectedBaseBet`)) {
+  if (!/        if selectedBaseBet ~= self\.baseBet then\r?\n            self:HideWinResult\(\)\r?\n            self:ResetWinHighlights\(\)\r?\n        end\r?\n        self\.baseBet = selectedBaseBet/.test(runtime)) {
     runtime = runtime.replace(
       /        self\.baseBet = selectedBaseBet\r?\n        self\.reelVisualIndex = self:BuildInitialReelVisualIndex\(\)/,
       `${baseBetResetBlock}        self.baseBet = selectedBaseBet\n        self.reelVisualIndex = self:BuildInitialReelVisualIndex()`,
@@ -1186,6 +1369,7 @@ async function main() {
   const data = await loadData();
   let runtime = await fs.readFile(runtimePath, "utf8");
   runtime = patchRuntimeDataProperties(runtime);
+  runtime = patchScreenSprayVfxProperties(runtime);
   runtime = replaceMethod(runtime, "BuildTextTemplates", makeTextTemplates(data));
   runtime = replaceMethod(runtime, "BuildBaseBetOptions", makeBaseBetOptions(data));
   runtime = replaceMethod(runtime, "BuildMultiplierOptions", makeMultiplierOptions(data));
@@ -1200,8 +1384,10 @@ async function main() {
   runtime = replaceMethod(runtime, "BuildPaytableTenths", makePaytableTenths(data));
   runtime = replaceMethod(runtime, "BuildPaylines", makePaylines(data));
   runtime = replaceMethod(runtime, "BuildSpinProfiles", makeSpinProfiles(data));
+  runtime = upsertTypedMethod(runtime, "table", "BuildScreenSprayVfxConfig", makeScreenSprayVfxConfig(data), "BuildSpinProfiles");
   runtime = patchWinPresentation(runtime);
   runtime = patchWinResultFlow(runtime);
+  runtime = patchScreenSprayVfxFlow(runtime);
 
   await fs.writeFile(runtimePath, runtime, "utf8");
   try {
@@ -1211,7 +1397,7 @@ async function main() {
     // Staging path is optional in fresh checkouts.
   }
 
-  console.log(`Applied ${data.slotSymbolRows.length} slot symbols from Core.xlsx/SlotSymbols.`);
+  console.log(`Applied ${data.slotSymbolRows.length} slot symbols from SlotMachine.xlsx/SlotSymbols.`);
   console.log(`Applied ${data.reelGroups.size} BaseBet reel groups from SpinPresentation.xlsx/ReelStrips.`);
   console.log(`Updated runtime: ${runtimePath}`);
 }

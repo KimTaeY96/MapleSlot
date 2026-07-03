@@ -128,7 +128,7 @@ Freeze the current payline shape and symbol hierarchy for the first runtime pass
 - Local validation runner: `tools/check_slot_rtp_simulator.cjs`
 - Weighted candidate runner: `tools/check_slot_rtp_candidates.cjs`
 - The simulator uses `TOP_LINE`, `MAIN_LINE`, and `BOTTOM_LINE` left-to-right consecutive evaluation from column 1.
-- The simulator reads `Enum.xlsx`, `Core.xlsx`, and `SpinPresentation.xlsx` to match runtime symbols, paylines, paytable, and explicit reel strips.
+- The simulator reads `Enum.xlsx`, `SlotMachine.xlsx`, and `SpinPresentation.xlsx` to match runtime symbols, paylines, paytable, and explicit reel strips.
 - Payouts are represented in tenths of Base Bet (`0.4x = 4`, `100.0x = 1000`) to avoid fractional payout drift during RTP calculation.
 - Validation status on 2026-07-01: `node tools/check_slot_rtp_simulator.cjs` passed all required validation cases.
 - Current explicit reel strip result range: RTP about `70.5%-75.6%`, hit rate about `22%-23%`, multi-line win rate about `2.3%`.
