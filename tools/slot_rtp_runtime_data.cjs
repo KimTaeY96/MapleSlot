@@ -53,6 +53,17 @@ async function workbookRows(projectRoot, filename, sheetName) {
     .map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]])));
 }
 
+async function optionalWorkbookRows(projectRoot, filename, sheetName) {
+  try {
+    return await workbookRows(projectRoot, filename, sheetName);
+  } catch (error) {
+    if (String(error?.message ?? "").includes(`Missing sheet: ${filename}/${sheetName}`)) {
+      return [];
+    }
+    throw error;
+  }
+}
+
 function buildEnumResolver(enumRows) {
   const byId = new Map();
   const byKo = new Map();
@@ -150,6 +161,40 @@ async function loadRuntimeSlotData(options = {}) {
       value: num(row.MultiplierValue, "MultiplierValue"),
     }));
 
+  const bonusSlotRuleRows = (await optionalWorkbookRows(projectRoot, "SlotMachine.xlsx", "BonusSlotRules"))
+    .sort((a, b) => num(a.BonusSlotRulesIndex, "BonusSlotRulesIndex") - num(b.BonusSlotRulesIndex, "BonusSlotRulesIndex"));
+  const bonusSlotRuleRow = bonusSlotRuleRows[0] ?? null;
+  const bonusSlotRules = bonusSlotRuleRow == null ? null : {
+    triggerKey: clean(bonusSlotRuleRow.TriggerKey) || "WILD_5_BONUS_SLOT",
+    requiredSymbolId: enumResolver.resolve("SlotSymbol", bonusSlotRuleRow.RequiredSymbolId),
+    requiredMatchCount: num(bonusSlotRuleRow.RequiredMatchCount, "RequiredMatchCount"),
+    minTriggerLineCount: num(bonusSlotRuleRow.MinTriggerLineCount, "MinTriggerLineCount"),
+    initialChanceCount: num(bonusSlotRuleRow.InitialChanceCount, "InitialChanceCount"),
+    reelCount: num(bonusSlotRuleRow.ReelCount, "ReelCount"),
+    requiredSameCount: num(bonusSlotRuleRow.RequiredSameCount, "RequiredSameCount"),
+    digitMin: num(bonusSlotRuleRow.DigitMin, "DigitMin"),
+    digitMax: num(bonusSlotRuleRow.DigitMax, "DigitMax"),
+    maxTotalSpinCount: num(bonusSlotRuleRow.MaxTotalSpinCount, "MaxTotalSpinCount"),
+    enabled: clean(bonusSlotRuleRow.Enabled) ? bool(bonusSlotRuleRow.Enabled) : true,
+    testCheatEnabled: clean(bonusSlotRuleRow.TestCheatEnabled) ? bool(bonusSlotRuleRow.TestCheatEnabled) : false,
+    testCheatForceTrigger: clean(bonusSlotRuleRow.TestCheatForceTrigger) ? bool(bonusSlotRuleRow.TestCheatForceTrigger) : false,
+    testCheatForceResultKey: clean(bonusSlotRuleRow.TestCheatForceResultKey) || "777",
+    testCheatUseCount: clean(bonusSlotRuleRow.TestCheatUseCount) ? num(bonusSlotRuleRow.TestCheatUseCount, "TestCheatUseCount") : 0,
+    testCheatRequiredRuntimeKind: clean(bonusSlotRuleRow.TestCheatRequiredRuntimeKind) || "TEST_SANDBOX",
+  };
+  const bonusSlotPaytableRows = (await optionalWorkbookRows(projectRoot, "SlotMachine.xlsx", "BonusSlotPaytable"))
+    .sort((a, b) => num(a.BonusSlotPaytableIndex, "BonusSlotPaytableIndex") - num(b.BonusSlotPaytableIndex, "BonusSlotPaytableIndex"))
+    .map((row) => ({
+      digit: num(row.Digit, "Digit"),
+      resultKey: clean(row.ResultKey),
+      rewardMultiplier: num(row.RewardMultiplier, "RewardMultiplier"),
+      extraChanceCount: num(row.ExtraChanceCount, "ExtraChanceCount"),
+      rollWeight: num(row.RollWeight, "RollWeight"),
+    }));
+  const bonusSlotPaytable = new Map(bonusSlotPaytableRows.map((row) => [row.digit, row]));
+  const bonusSlotDigits = bonusSlotPaytableRows.map((row) => row.digit);
+  const bonusSlotTotalWeight = bonusSlotPaytableRows.reduce((sum, row) => sum + row.rollWeight, 0);
+
   const reelGroups = new Map();
   for (const row of await workbookRows(projectRoot, "SpinPresentation.xlsx", "ReelStrips")) {
     const baseBetIndex = num(row.BaseBetRegionIndex, "BaseBetRegionIndex");
@@ -178,6 +223,10 @@ async function loadRuntimeSlotData(options = {}) {
     baseBetRows,
     multiplierRows,
     reelGroups,
+    bonusSlotRules,
+    bonusSlotPaytable,
+    bonusSlotDigits,
+    bonusSlotTotalWeight,
   };
 }
 
@@ -247,20 +296,121 @@ function evaluateLine(row, data, lineId = "TEST_LINE", rowIndex = 1) {
   };
 }
 
-function evaluateSpin(grid, data) {
+function isBonusSlotLineTrigger(lineResult, data) {
+  const config = data.bonusSlotRules;
+  if (!config?.enabled || !lineResult?.cells) return false;
+  if (lineResult.runLength < config.requiredMatchCount) return false;
+  for (let index = 0; index < config.requiredMatchCount; index += 1) {
+    if (lineResult.cells[index] !== config.requiredSymbolId) return false;
+  }
+  return true;
+}
+
+function rollBonusSlotDigit(data, rng) {
+  if (!data.bonusSlotDigits?.length || data.bonusSlotTotalWeight <= 0) return 0;
+  let roll = rng() * data.bonusSlotTotalWeight;
+  for (const digit of data.bonusSlotDigits) {
+    const row = data.bonusSlotPaytable.get(digit);
+    roll -= row?.rollWeight ?? 0;
+    if (roll < 0) return digit;
+  }
+  return data.bonusSlotDigits[0] ?? 0;
+}
+
+function isBonusSlotTestCheatAllowed(data, options = {}) {
+  const config = data.bonusSlotRules;
+  if (!options.enableTestCheat || !config?.testCheatEnabled) return false;
+  if ((options.testCheatUseCount ?? config.testCheatUseCount) <= 0) return false;
+  const runtimeBuildKind = options.runtimeBuildKind ?? "RELEASE";
+  return runtimeBuildKind === (config.testCheatRequiredRuntimeKind || "TEST_SANDBOX");
+}
+
+function forcedBonusSlotDigits(resultKey, data, rng) {
+  const config = data.bonusSlotRules;
+  const normalized = clean(resultKey);
+  return Array.from({ length: config.reelCount }, (_, index) => {
+    const digit = Number(normalized[index]);
+    return Number.isFinite(digit) && digit > 0 ? digit : rollBonusSlotDigit(data, rng);
+  });
+}
+
+function resolveBonusSlot(triggerLineCount, data, rng, options = {}) {
+  const config = data.bonusSlotRules;
+  const testCheatAllowed = isBonusSlotTestCheatAllowed(data, options);
+  if (testCheatAllowed && config.testCheatForceTrigger) {
+    triggerLineCount = Math.max(triggerLineCount, config.minTriggerLineCount);
+  }
+  if (!config?.enabled || triggerLineCount < config.minTriggerLineCount) {
+    return { triggered: false, payoutTenths: 0, spinCount: 0, hitCount: 0 };
+  }
+
+  let chances = config.initialChanceCount;
+  const maxTotalSpinCount = config.maxTotalSpinCount || chances;
+  let spinCount = 0;
+  let hitCount = 0;
+  let extraChanceCount = 0;
+  let payoutTenths = 0;
+  const spins = [];
+
+  while (chances > 0 && spinCount < maxTotalSpinCount) {
+    chances -= 1;
+    spinCount += 1;
+    const digits = testCheatAllowed && spinCount === 1 && config.testCheatForceResultKey
+      ? forcedBonusSlotDigits(config.testCheatForceResultKey, data, rng)
+      : Array.from({ length: config.reelCount }, () => rollBonusSlotDigit(data, rng));
+    const matchedDigit = digits.slice(0, config.requiredSameCount).every((digit) => digit === digits[0])
+      ? digits[0]
+      : 0;
+    const paytableRow = matchedDigit > 0 ? data.bonusSlotPaytable.get(matchedDigit) : null;
+    const rewardMultiplier = paytableRow?.rewardMultiplier ?? 0;
+    const extraChance = paytableRow?.extraChanceCount ?? 0;
+    if (paytableRow) {
+      payoutTenths += rewardMultiplier * data.coinUnitPerCoin;
+      chances += extraChance;
+      extraChanceCount += extraChance;
+      hitCount += 1;
+    }
+    spins.push({
+      resultKey: digits.join(""),
+      matchedDigit,
+      rewardMultiplier,
+      extraChanceCount: extraChance,
+    });
+  }
+
+  return {
+    triggered: true,
+    payoutTenths,
+    spinCount,
+    hitCount,
+    extraChanceCount,
+    spins,
+    testCheatUsed: testCheatAllowed,
+  };
+}
+
+function evaluateSpin(grid, data, rng = Math.random, options = {}) {
   let payoutTenths = 0;
   const lineWins = [];
+  let bonusSlotTriggerLineCount = 0;
   for (const payline of data.paylines) {
     if (!payline.enabled) continue;
     const lineResult = evaluateLine(grid[payline.rowIndex - 1], data, payline.id, payline.rowIndex);
-    if (lineResult.payoutTenths > 0) {
+    const bonusSlotTrigger = isBonusSlotLineTrigger(lineResult, data);
+    lineResult.bonusSlotTrigger = bonusSlotTrigger;
+    if (lineResult.payoutTenths > 0 || bonusSlotTrigger) {
       payoutTenths += lineResult.payoutTenths;
+      if (bonusSlotTrigger) bonusSlotTriggerLineCount += 1;
       lineWins.push(lineResult);
     }
   }
+  const bonusSlot = resolveBonusSlot(bonusSlotTriggerLineCount, data, rng, options);
+  payoutTenths += bonusSlot.payoutTenths;
   return {
     payoutTenths,
     lineWins,
+    bonusSlot,
+    bonusSlotTriggerLineCount,
   };
 }
 
@@ -294,7 +444,9 @@ function collectMetrics({ spinCount, baseBetCoins, multiplier, data, spin }) {
     if (result.payoutTenths > 0) hitCount += 1;
     if (result.lineWins.length > 1) multiLineHitCount += 1;
     for (const win of result.lineWins) {
-      bySymbolTenths[win.symbol] = (bySymbolTenths[win.symbol] ?? 0) + win.payoutTenths;
+      if (win.symbol) {
+        bySymbolTenths[win.symbol] = (bySymbolTenths[win.symbol] ?? 0) + win.payoutTenths;
+      }
       byLineTenths[win.lineId] = (byLineTenths[win.lineId] ?? 0) + win.payoutTenths;
     }
   }
@@ -328,7 +480,7 @@ function simulateExplicitReelGroup({ data, baseBetIndex, spinCount = 100000, see
       for (let col = 1; col <= 5; col += 1) {
         stopIndexes[col - 1] = Math.floor(rng() * reels.get(col).length) + 1;
       }
-      return evaluateSpin(buildVisibleGrid(reels, stopIndexes), scopedData);
+      return evaluateSpin(buildVisibleGrid(reels, stopIndexes), scopedData, rng);
     },
   });
 }
@@ -345,7 +497,7 @@ function simulateWeightedSymbols({ data, weights, spinCount = 100000, seed = 123
       const grid = Array.from({ length: 3 }, () =>
         Array.from({ length: 5 }, () => sampleSymbol(symbols, weights, rng)),
       );
-      return evaluateSpin(grid, data);
+      return evaluateSpin(grid, data, rng);
     },
   });
 }
@@ -357,6 +509,9 @@ module.exports = {
   buildVisibleGrid,
   evaluateLine,
   evaluateSpin,
+  isBonusSlotLineTrigger,
+  isBonusSlotTestCheatAllowed,
+  resolveBonusSlot,
   simulateExplicitReelGroup,
   simulateWeightedSymbols,
 };

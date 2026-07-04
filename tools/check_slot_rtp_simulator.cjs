@@ -3,6 +3,7 @@
 const {
   evaluateLine,
   evaluateSpin,
+  makeRng,
   loadRuntimeSlotData,
   simulateExplicitReelGroup,
   simulateWeightedSymbols,
@@ -79,8 +80,28 @@ function runValidationCases(data) {
   assertEqual(
     evaluateLine(["WILD", "WILD", "WILD", "WILD", "WILD"], data).payoutTenths,
     0,
-    "All-Wild line is substitute-only and pays 0",
+    "All-Wild line has no normal payline payout",
   );
+  const allWildBonus = evaluateSpin(makeGrid("WILD"), data, makeRng(777001));
+  assertEqual(allWildBonus.bonusSlot.triggered, true, "All-Wild line triggers 777 bonus slot");
+  assertEqual(allWildBonus.bonusSlotTriggerLineCount, 3, "All-Wild grid triggers one bonus candidate on each horizontal line");
+  assertEqual(data.bonusSlotRules.initialChanceCount, 5, "777 bonus initial chance count is data-driven");
+  assertEqual(data.bonusSlotPaytable.get(7).extraChanceCount, 1, "777 grants one extra chance from the paytable");
+  assertEqual(data.bonusSlotRules.testCheatUseCount, 1, "777 test cheat is limited by data-driven use count");
+
+  const forced777 = evaluateSpin(makeGrid(lowSymbol), data, makeRng(777002), {
+    enableTestCheat: true,
+    runtimeBuildKind: "TEST_SANDBOX",
+  });
+  assertEqual(forced777.bonusSlot.triggered, true, "777 test cheat can force bonus entry in test sandbox");
+  assertEqual(forced777.bonusSlot.spins[0]?.resultKey, "777", "777 test cheat forces the first bonus result to 777");
+  assertEqual(forced777.bonusSlot.testCheatUsed, true, "777 test cheat marks the result as cheat-driven");
+
+  const releaseBlocked = evaluateSpin(makeGrid(lowSymbol), data, makeRng(777003), {
+    enableTestCheat: true,
+    runtimeBuildKind: "RELEASE",
+  });
+  assertEqual(releaseBlocked.bonusSlot.triggered, false, "777 test cheat is blocked outside TEST_SANDBOX runtime kind");
 }
 
 function summarize(metric) {
@@ -119,7 +140,17 @@ async function main() {
     paylineMode: data.paylines.filter((line) => line.enabled).map((line) => `${line.id}:row${line.rowIndex}`),
     costRule: "baseBet * multiplier",
     payoutRule: "baseBet * multiplier * paytableTenths / 10 displayed coins",
-    wildRule: "WILD substitutes for the first non-WILD target; all-WILD has no payout",
+    wildRule: "WILD substitutes for the first non-WILD target; all-WILD has no normal payline payout and triggers the 777 bonus slot",
+    bonusSlotRule: {
+      trigger: `${data.bonusSlotRules.requiredSymbolId} x${data.bonusSlotRules.requiredMatchCount}`,
+      initialChanceCount: data.bonusSlotRules.initialChanceCount,
+      reelCount: data.bonusSlotRules.reelCount,
+      requiredSameCount: data.bonusSlotRules.requiredSameCount,
+      jackpotResult: "777",
+      jackpotExtraChanceCount: data.bonusSlotPaytable.get(7)?.extraChanceCount,
+      testCheatUseCount: data.bonusSlotRules.testCheatUseCount,
+      testCheatRequiredRuntimeKind: data.bonusSlotRules.testCheatRequiredRuntimeKind,
+    },
     multiplierNeutrality: {
       x1Rtp: Number(equalX1.rtp.toFixed(6)),
       x5Rtp: Number(equalX5.rtp.toFixed(6)),

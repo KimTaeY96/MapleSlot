@@ -13,6 +13,7 @@ const excelDir = `${projectRoot}/ExcelTable`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
 const stagingRuntimePath = "C:/Users/ghddj/Documents/MSW/staging/slot_ui_layers/SlotMachineRuntime.mlua";
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
+const runtimeBuildKind = process.env.MSW_SLOT_RUNTIME_KIND || "RELEASE";
 const resourceManifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
 
 const fallbackStrings = new Map([
@@ -25,6 +26,7 @@ const fallbackStrings = new Map([
   [207, "Apply new Base Bet? Lock starts for {0}."],
   [208, "x {0}"],
   [209, "= {0}"],
+  [210, "777 BONUS {0} spins +{1}"],
 ]);
 
 function clean(value) {
@@ -107,6 +109,17 @@ async function workbookRows(filename, sheetName) {
   return values.slice(4)
     .filter((row) => row.some((value) => value !== null && value !== ""))
     .map((row) => Object.fromEntries(headers.map((header, index) => [header, row[index]])));
+}
+
+async function optionalWorkbookRows(filename, sheetName) {
+  try {
+    return await workbookRows(filename, sheetName);
+  } catch (error) {
+    if (String(error?.message ?? "").includes(`Missing sheet: ${filename}/${sheetName}`)) {
+      return [];
+    }
+    throw error;
+  }
 }
 
 function buildEnumResolver(enumRows) {
@@ -240,6 +253,38 @@ async function loadData() {
     fallbackHideSeconds: hasValue(screenSprayRow, "FallbackHideSeconds") ? num(screenSprayRow.FallbackHideSeconds, "FallbackHideSeconds") : 1.25,
   };
 
+  const bonusSlotRuleRows = (await optionalWorkbookRows("SlotMachine.xlsx", "BonusSlotRules"))
+    .sort((a, b) => num(a.BonusSlotRulesIndex, "BonusSlotRulesIndex") - num(b.BonusSlotRulesIndex, "BonusSlotRulesIndex"));
+  const bonusSlotRuleRow = bonusSlotRuleRows[0] ?? null;
+  const bonusSlotRules = bonusSlotRuleRow == null ? null : {
+    triggerKey: clean(bonusSlotRuleRow.TriggerKey) || "WILD_5_BONUS_SLOT",
+    requiredSymbolId: enumResolver.resolve("SlotSymbol", bonusSlotRuleRow.RequiredSymbolId),
+    requiredMatchCount: num(bonusSlotRuleRow.RequiredMatchCount, "RequiredMatchCount"),
+    minTriggerLineCount: num(bonusSlotRuleRow.MinTriggerLineCount, "MinTriggerLineCount"),
+    initialChanceCount: num(bonusSlotRuleRow.InitialChanceCount, "InitialChanceCount"),
+    reelCount: num(bonusSlotRuleRow.ReelCount, "ReelCount"),
+    requiredSameCount: num(bonusSlotRuleRow.RequiredSameCount, "RequiredSameCount"),
+    digitMin: num(bonusSlotRuleRow.DigitMin, "DigitMin"),
+    digitMax: num(bonusSlotRuleRow.DigitMax, "DigitMax"),
+    maxTotalSpinCount: num(bonusSlotRuleRow.MaxTotalSpinCount, "MaxTotalSpinCount"),
+    enabled: hasValue(bonusSlotRuleRow, "Enabled") ? bool(bonusSlotRuleRow.Enabled) : true,
+    testCheatEnabled: hasValue(bonusSlotRuleRow, "TestCheatEnabled") ? bool(bonusSlotRuleRow.TestCheatEnabled) : false,
+    testCheatForceTrigger: hasValue(bonusSlotRuleRow, "TestCheatForceTrigger") ? bool(bonusSlotRuleRow.TestCheatForceTrigger) : false,
+    testCheatForceResultKey: clean(bonusSlotRuleRow.TestCheatForceResultKey) || "777",
+    testCheatUseCount: hasValue(bonusSlotRuleRow, "TestCheatUseCount") ? num(bonusSlotRuleRow.TestCheatUseCount, "TestCheatUseCount") : 0,
+    testCheatRequiredRuntimeKind: clean(bonusSlotRuleRow.TestCheatRequiredRuntimeKind) || "TEST_SANDBOX",
+  };
+
+  const bonusSlotPaytableRows = (await optionalWorkbookRows("SlotMachine.xlsx", "BonusSlotPaytable"))
+    .sort((a, b) => num(a.BonusSlotPaytableIndex, "BonusSlotPaytableIndex") - num(b.BonusSlotPaytableIndex, "BonusSlotPaytableIndex"))
+    .map((row) => ({
+      digit: num(row.Digit, "Digit"),
+      resultKey: clean(row.ResultKey),
+      rewardMultiplier: num(row.RewardMultiplier, "RewardMultiplier"),
+      extraChanceCount: num(row.ExtraChanceCount, "ExtraChanceCount"),
+      rollWeight: num(row.RollWeight, "RollWeight"),
+    }));
+
   return {
     text,
     slotSymbolRows,
@@ -251,6 +296,8 @@ async function loadData() {
     spinProfileRows,
     paylineRows,
     screenSprayVfx,
+    bonusSlotRules,
+    bonusSlotPaytableRows,
   };
 }
 
@@ -270,6 +317,7 @@ function makeTextTemplates(data) {
     `            BaseBetConfirmLock = ${luaString(data.text(207))},`,
     `            WinLineFormula = ${luaString(data.text(208))},`,
     `            WinTotalFormula = ${luaString(winTotalFormula)},`,
+    `            BonusSlotStatus = ${luaString(data.text(210) || fallbackStrings.get(210))},`,
     "        }",
     "    end",
   ].join("\n");
@@ -592,6 +640,314 @@ function makeScreenSprayVfxConfig(data) {
   ].join("\n");
 }
 
+function makeBonusSlotRules(data) {
+  const config = data.bonusSlotRules ?? {};
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonusSlotRules()",
+    "        return {",
+    `            triggerKey = ${luaString(config.triggerKey ?? "WILD_5_BONUS_SLOT")},`,
+    `            requiredSymbolId = ${luaString(config.requiredSymbolId ?? "WILD")},`,
+    `            requiredMatchCount = ${Number(config.requiredMatchCount ?? 5)},`,
+    `            minTriggerLineCount = ${Number(config.minTriggerLineCount ?? 1)},`,
+    `            initialChanceCount = ${Number(config.initialChanceCount ?? 0)},`,
+    `            reelCount = ${Number(config.reelCount ?? 3)},`,
+    `            requiredSameCount = ${Number(config.requiredSameCount ?? 3)},`,
+    `            digitMin = ${Number(config.digitMin ?? 1)},`,
+    `            digitMax = ${Number(config.digitMax ?? 7)},`,
+    `            maxTotalSpinCount = ${Number(config.maxTotalSpinCount ?? 0)},`,
+    `            enabled = ${luaValue(config.enabled === true)},`,
+    `            runtimeBuildKind = ${luaString(runtimeBuildKind)},`,
+    `            testCheatEnabled = ${luaValue(config.testCheatEnabled === true)},`,
+    `            testCheatForceTrigger = ${luaValue(config.testCheatForceTrigger === true)},`,
+    `            testCheatForceResultKey = ${luaString(config.testCheatForceResultKey ?? "777")},`,
+    `            testCheatUseCount = ${Number(config.testCheatUseCount ?? 0)},`,
+    `            testCheatRequiredRuntimeKind = ${luaString(config.testCheatRequiredRuntimeKind ?? "TEST_SANDBOX")},`,
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeBonusSlotPaytable(data) {
+  const rows = data.bonusSlotPaytableRows ?? [];
+  const digits = rows.map((row) => row.digit);
+  const totalWeight = rows.reduce((sum, row) => sum + row.rollWeight, 0);
+  const rowLines = rows.map((row) =>
+    `            [${row.digit}] = { resultKey = ${luaString(row.resultKey)}, rewardMultiplier = ${row.rewardMultiplier}, extraChanceCount = ${row.extraChanceCount}, rollWeight = ${row.rollWeight} },`
+  );
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonusSlotPaytable()",
+    "        return {",
+    `            digits = { ${digits.join(", ")} },`,
+    `            totalWeight = ${totalWeight},`,
+    "            rows = {",
+    ...rowLines,
+    "            },",
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeIsBonusSlotLineTrigger() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method boolean IsBonusSlotLineTrigger(table matchedCells, integer runLength)",
+    "        local config = self.bonusSlotRules",
+    "        if config == nil or config.enabled ~= true then",
+    "            return false",
+    "        end",
+    "        if matchedCells == nil or runLength < (config.requiredMatchCount or 5) then",
+    "            return false",
+    "        end",
+    "        for index = 1, config.requiredMatchCount do",
+    "            if matchedCells[index] ~= config.requiredSymbolId then",
+    "                return false",
+    "            end",
+    "        end",
+    "        return true",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonusSlotPaytableRow() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table GetBonusSlotPaytableRow(integer digit)",
+    "        if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.rows == nil then",
+    "            return nil",
+    "        end",
+    "        return self.bonusSlotPaytable.rows[digit]",
+    "    end",
+  ].join("\n");
+}
+
+function makeRollBonusSlotDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer RollBonusSlotDigit()",
+    "        if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.digits == nil then",
+    "            return 0",
+    "        end",
+    "        local totalWeight = self.bonusSlotPaytable.totalWeight or 0",
+    "        if totalWeight <= 0 then",
+    "            return 0",
+    "        end",
+    "        local roll = _UtilLogic:RandomIntegerRange(1, totalWeight)",
+    "        for _, digit in ipairs(self.bonusSlotPaytable.digits) do",
+    "            local row = self:GetBonusSlotPaytableRow(digit)",
+    "            if row ~= nil then",
+    "                roll = roll - (row.rollWeight or 0)",
+    "                if roll <= 0 then",
+    "                    return digit",
+    "                end",
+    "            end",
+    "        end",
+    "        return self.bonusSlotPaytable.digits[1] or 0",
+    "    end",
+  ].join("\n");
+}
+
+function makeIsBonusSlotTestCheatAllowed() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method boolean IsBonusSlotTestCheatAllowed()",
+    "        local config = self.bonusSlotRules",
+    "        if config == nil or config.testCheatEnabled ~= true then",
+    "            return false",
+    "        end",
+    "        if self.bonusSlotTestCheatRemaining == nil or self.bonusSlotTestCheatRemaining <= 0 then",
+    "            return false",
+    "        end",
+    "        local requiredRuntimeKind = config.testCheatRequiredRuntimeKind or \"TEST_SANDBOX\"",
+    "        if (config.runtimeBuildKind or \"\") ~= requiredRuntimeKind then",
+    "            return false",
+    "        end",
+    "        return true",
+    "    end",
+  ].join("\n");
+}
+
+function makeBuildForcedBonusSlotDigits() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildForcedBonusSlotDigits(string resultKey)",
+    "        local config = self.bonusSlotRules",
+    "        local reelCount = 3",
+    "        if config ~= nil and config.reelCount ~= nil then",
+    "            reelCount = config.reelCount",
+    "        end",
+    "        local digits = {}",
+    "        for reel = 1, reelCount do",
+    "            local digitText = string.sub(resultKey or \"\", reel, reel)",
+    "            local digit = tonumber(digitText)",
+    "            if digit == nil then",
+    "                digit = self:RollBonusSlotDigit()",
+    "            end",
+    "            digits[reel] = digit",
+    "        end",
+    "        return digits",
+    "    end",
+  ].join("\n");
+}
+
+function makeBuildBonusSlotResultKey() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method string BuildBonusSlotResultKey(table digits)",
+    "        local resultKey = \"\"",
+    "        if digits == nil then",
+    "            return resultKey",
+    "        end",
+    "        for _, digit in ipairs(digits) do",
+    "            resultKey = resultKey .. tostring(digit)",
+    "        end",
+    "        return resultKey",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetMatchedBonusSlotDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer GetMatchedBonusSlotDigit(table digits)",
+    "        local config = self.bonusSlotRules",
+    "        if digits == nil or config == nil then",
+    "            return 0",
+    "        end",
+    "        local requiredSameCount = config.requiredSameCount or 3",
+    "        if #digits < requiredSameCount then",
+    "            return 0",
+    "        end",
+    "        local digit = digits[1]",
+    "        for index = 2, requiredSameCount do",
+    "            if digits[index] ~= digit then",
+    "                return 0",
+    "            end",
+    "        end",
+    "        return digit",
+    "    end",
+  ].join("\n");
+}
+
+function makeResolveBonusSlot() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table ResolveBonusSlot(table result)",
+    "        local config = self.bonusSlotRules",
+    "        if result == nil or config == nil or config.enabled ~= true then",
+    "            return { triggered = false, payoutUnits = 0 }",
+    "        end",
+    "        local triggerLineCount = result.bonusSlotTriggerLineCount or 0",
+    "        if triggerLineCount < (config.minTriggerLineCount or 1) then",
+    "            return { triggered = false, payoutUnits = 0 }",
+    "        end",
+    "",
+    "        local chances = config.initialChanceCount or 0",
+    "        local maxTotalSpinCount = config.maxTotalSpinCount or chances",
+    "        local spinCount = 0",
+    "        local hitCount = 0",
+    "        local extraChanceCount = 0",
+    "        local totalPayoutUnits = 0",
+    "        local spins = {}",
+    "        local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()",
+    "        local testCheatForceResultKey = \"\"",
+    "        if testCheatAllowed == true then",
+    "            testCheatForceResultKey = config.testCheatForceResultKey or \"\"",
+    "        end",
+    "",
+    "        while chances > 0 and spinCount < maxTotalSpinCount do",
+    "            chances = chances - 1",
+    "            spinCount = spinCount + 1",
+    "            local digits = {}",
+    "            if spinCount == 1 and testCheatForceResultKey ~= \"\" then",
+    "                digits = self:BuildForcedBonusSlotDigits(testCheatForceResultKey)",
+    "            else",
+    "                for reel = 1, config.reelCount do",
+    "                    digits[reel] = self:RollBonusSlotDigit()",
+    "                end",
+    "            end",
+    "",
+    "            local resultKey = self:BuildBonusSlotResultKey(digits)",
+    "            local matchedDigit = self:GetMatchedBonusSlotDigit(digits)",
+    "            local rewardMultiplier = 0",
+    "            local payoutUnits = 0",
+    "            local extraChance = 0",
+    "            if matchedDigit > 0 then",
+    "                local paytableRow = self:GetBonusSlotPaytableRow(matchedDigit)",
+    "                if paytableRow ~= nil then",
+    "                    rewardMultiplier = paytableRow.rewardMultiplier or 0",
+    "                    extraChance = paytableRow.extraChanceCount or 0",
+    "                    payoutUnits = self.baseBet * self.multiplier * rewardMultiplier * self.coinUnitPerCoin",
+    "                    totalPayoutUnits = totalPayoutUnits + payoutUnits",
+    "                    extraChanceCount = extraChanceCount + extraChance",
+    "                    chances = chances + extraChance",
+    "                    hitCount = hitCount + 1",
+    "                end",
+    "            end",
+    "",
+    "            table.insert(spins, {",
+    "                resultKey = resultKey,",
+    "                matchedDigit = matchedDigit,",
+    "                rewardMultiplier = rewardMultiplier,",
+    "                payoutUnits = payoutUnits,",
+    "                extraChanceCount = extraChance,",
+    "            })",
+    "        end",
+    "",
+    "        return {",
+    "            triggered = true,",
+    "            triggerLineCount = triggerLineCount,",
+    "            spinCount = spinCount,",
+    "            hitCount = hitCount,",
+    "            extraChanceCount = extraChanceCount,",
+    "            payoutUnits = totalPayoutUnits,",
+    "            spins = spins,",
+    "            testCheatUsed = testCheatAllowed,",
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeApplyBonusSlotResult() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void ApplyBonusSlotResult(table result)",
+    "        if result == nil then",
+    "            return",
+    "        end",
+    "        local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()",
+    "        if testCheatAllowed == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then",
+    "            local minTriggerLineCount = self.bonusSlotRules.minTriggerLineCount or 1",
+    "            if result.bonusSlotTriggerLineCount == nil or result.bonusSlotTriggerLineCount < minTriggerLineCount then",
+    "                result.bonusSlotTriggerLineCount = minTriggerLineCount",
+    "            end",
+    "            result.bonusSlotTestCheatUsed = true",
+    "        end",
+    "        local bonusSlotResult = self:ResolveBonusSlot(result)",
+    "        result.bonusSlotResult = bonusSlotResult",
+    "        if bonusSlotResult ~= nil and bonusSlotResult.triggered == true then",
+    "            result.payoutUnits = result.payoutUnits + (bonusSlotResult.payoutUnits or 0)",
+    "            if testCheatAllowed == true and (result.bonusSlotTestCheatUsed == true or bonusSlotResult.testCheatUsed == true) then",
+    "                self.bonusSlotTestCheatRemaining = math.max(0, (self.bonusSlotTestCheatRemaining or 0) - 1)",
+    "            end",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeFormatBonusSlotStatus() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method string FormatBonusSlotStatus(table bonusSlotResult)",
+    "        if bonusSlotResult == nil or bonusSlotResult.triggered ~= true then",
+    "            return \"\"",
+    "        end",
+    "        return self:FormatTemplate(self.textTemplates.BonusSlotStatus, { tostring(bonusSlotResult.spinCount or 0), self:FormatUnits(bonusSlotResult.payoutUnits or 0) })",
+    "    end",
+  ].join("\n");
+}
+
 function makeEvaluatePaylines() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -601,13 +957,21 @@ function makeEvaluatePaylines() {
     "        local maxRunLength = 0",
     "        local fourPlusLineWinCount = 0",
     "        local fivePlusLineWinCount = 0",
+    "        local bonusSlotTriggerLineCount = 0",
     "        local lineWins = {}",
     "",
     "        for _, payline in ipairs(self.paylines) do",
     "            if payline.enabled then",
     "                local lineResult = self:EvaluateLine(grid[payline.rowIndex], payline.id, payline.rowIndex)",
-    "                if lineResult.payoutUnits > 0 then",
-    "                    totalPayoutUnits = totalPayoutUnits + lineResult.payoutUnits",
+    "                local isBonusSlotTrigger = self:IsBonusSlotLineTrigger(lineResult.cells, lineResult.runLength)",
+    "                lineResult.bonusSlotTrigger = isBonusSlotTrigger",
+    "                if lineResult.payoutUnits > 0 or isBonusSlotTrigger then",
+    "                    if lineResult.payoutUnits > 0 then",
+    "                        totalPayoutUnits = totalPayoutUnits + lineResult.payoutUnits",
+    "                    end",
+    "                    if isBonusSlotTrigger then",
+    "                        bonusSlotTriggerLineCount = bonusSlotTriggerLineCount + 1",
+    "                    end",
     "                    winLineCount = winLineCount + 1",
     "                    if lineResult.runLength > maxRunLength then",
     "                        maxRunLength = lineResult.runLength",
@@ -629,6 +993,7 @@ function makeEvaluatePaylines() {
     "            maxRunLength = maxRunLength,",
     "            fourPlusLineWinCount = fourPlusLineWinCount,",
     "            fivePlusLineWinCount = fivePlusLineWinCount,",
+    "            bonusSlotTriggerLineCount = bonusSlotTriggerLineCount,",
     "            lineWins = lineWins,",
     "        }",
     "    end",
@@ -1016,6 +1381,73 @@ function patchRuntimeDataProperties(runtime) {
   return runtime;
 }
 
+function patchBonusSlotProperties(runtime) {
+  if (!runtime.includes("property any bonusSlotRules = nil")) {
+    runtime = runtime.replace(
+      /    property any paytableTenths = nil\r?\n/,
+      (match) => `${match}    property any bonusSlotRules = nil\n    property any bonusSlotPaytable = nil\n    property integer bonusSlotTestCheatRemaining = 0\n`,
+    );
+  }
+  if (!runtime.includes("property integer bonusSlotTestCheatRemaining = 0")) {
+    runtime = runtime.replace(
+      /    property any bonusSlotPaytable = nil\r?\n/,
+      (match) => `${match}    property integer bonusSlotTestCheatRemaining = 0\n`,
+    );
+  }
+
+  if (!runtime.includes("self.bonusSlotRules = self:BuildBonusSlotRules()")) {
+    runtime = runtime.replace(
+      /        self\.paytableTenths = self:BuildPaytableTenths\(\)\r?\n/,
+      (match) => `${match}        self.bonusSlotRules = self:BuildBonusSlotRules()\n        self.bonusSlotPaytable = self:BuildBonusSlotPaytable()\n        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0\n`,
+    );
+  }
+  if (!runtime.includes("self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0")) {
+    runtime = runtime.replace(
+      /        self\.bonusSlotPaytable = self:BuildBonusSlotPaytable\(\)\r?\n/,
+      (match) => `${match}        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0\n`,
+    );
+  }
+
+  return runtime;
+}
+
+function patchBonusSlotFlow(runtime, data) {
+  runtime = patchBonusSlotProperties(runtime);
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonusSlotRules", makeBonusSlotRules(data), "BuildPaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonusSlotPaytable", makeBonusSlotPaytable(data), "BuildPaylines");
+  runtime = upsertTypedMethod(runtime, "boolean", "IsBonusSlotLineTrigger", makeIsBonusSlotLineTrigger(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "GetBonusSlotPaytableRow", makeGetBonusSlotPaytableRow(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "RollBonusSlotDigit", makeRollBonusSlotDigit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "boolean", "IsBonusSlotTestCheatAllowed", makeIsBonusSlotTestCheatAllowed(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildForcedBonusSlotDigits", makeBuildForcedBonusSlotDigits(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "string", "BuildBonusSlotResultKey", makeBuildBonusSlotResultKey(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "GetMatchedBonusSlotDigit", makeGetMatchedBonusSlotDigit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "ResolveBonusSlot", makeResolveBonusSlot(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "ApplyBonusSlotResult", makeApplyBonusSlotResult(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "string", "FormatBonusSlotStatus", makeFormatBonusSlotStatus(), "ShowWinResult");
+
+  if (!runtime.includes("self:ApplyBonusSlotResult(result)")) {
+    runtime = runtime.replace(
+      /        local result = self:EvaluatePaylines\(spinResult\.grid\)\r?\n/,
+      (match) => `${match}        self:ApplyBonusSlotResult(result)\n`,
+    );
+  }
+
+  runtime = runtime.replace(
+    /        if result\.payoutUnits > 0 then\r?\n/,
+    "        if result.payoutUnits > 0 or (result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true) then\n",
+  );
+
+  if (!runtime.includes("self.statusText.Text = self:FormatBonusSlotStatus(result.bonusSlotResult)")) {
+    runtime = runtime.replace(
+      /            self:ShowWinResult\(result\.lineWins, result\.payoutUnits\)\r?\n            self:ApplyWinPresentation\(result\.lineWins\)\r?\n/,
+      "            self:ShowWinResult(result.lineWins, result.payoutUnits)\n            self:ApplyWinPresentation(result.lineWins)\n            if result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true and self.statusText ~= nil then\n                self.statusText.Text = self:FormatBonusSlotStatus(result.bonusSlotResult)\n            end\n",
+    );
+  }
+
+  return runtime;
+}
+
 function makeWinSymbolProperties() {
   const lines = [];
   for (let row = 1; row <= 3; row += 1) {
@@ -1382,6 +1814,7 @@ async function main() {
   runtime = upsertTypedMethod(runtime, "table", "GetVisibleCellData", makeGetVisibleCellData(), "RefreshReelStripResources");
   runtime = replaceVoidMethod(runtime, "RefreshReelStripResources", makeRefreshReelStripResources());
   runtime = replaceMethod(runtime, "BuildPaytableTenths", makePaytableTenths(data));
+  runtime = patchBonusSlotFlow(runtime, data);
   runtime = replaceMethod(runtime, "BuildPaylines", makePaylines(data));
   runtime = replaceMethod(runtime, "BuildSpinProfiles", makeSpinProfiles(data));
   runtime = upsertTypedMethod(runtime, "table", "BuildScreenSprayVfxConfig", makeScreenSprayVfxConfig(data), "BuildSpinProfiles");

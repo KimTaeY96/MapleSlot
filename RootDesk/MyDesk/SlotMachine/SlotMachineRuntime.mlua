@@ -476,6 +476,9 @@ script SlotMachineRuntime extends Logic
     property any winVfxTimerId = nil
     property integer winVfxFrameIndex = 1
     property any paytableTenths = nil
+    property any bonusSlotRules = nil
+    property any bonusSlotPaytable = nil
+    property integer bonusSlotTestCheatRemaining = 0
     property any paylines = nil
     property any spinProfiles = nil
     property any screenSprayVfxConfig = nil
@@ -567,6 +570,9 @@ script SlotMachineRuntime extends Logic
         self.reelStripCellData = self:BuildReelStripCellData()
         self.reelVisualIndex = self:BuildInitialReelVisualIndex()
         self.paytableTenths = self:BuildPaytableTenths()
+        self.bonusSlotRules = self:BuildBonusSlotRules()
+        self.bonusSlotPaytable = self:BuildBonusSlotPaytable()
+        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0
         self.paylines = self:BuildPaylines()
         self.spinProfiles = self:BuildSpinProfiles()
         self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()
@@ -681,6 +687,7 @@ script SlotMachineRuntime extends Logic
             BaseBetConfirmLock = "Base Bet \235\179\128\234\178\189? {0} \235\143\153\236\149\136 \236\158\160\234\184\136\235\144\169\235\139\136\235\139\164.",
             WinLineFormula = "x {0}",
             WinTotalFormula = "= {0}",
+            BonusSlotStatus = "777 \235\179\180\235\132\136\236\138\164 {0}\237\154\140 / +{1}",
         }
     end
 
@@ -2552,6 +2559,46 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method table BuildBonusSlotRules()
+        return {
+            triggerKey = "WILD_5_BONUS_SLOT",
+            requiredSymbolId = "WILD",
+            requiredMatchCount = 5,
+            minTriggerLineCount = 1,
+            initialChanceCount = 5,
+            reelCount = 3,
+            requiredSameCount = 3,
+            digitMin = 1,
+            digitMax = 7,
+            maxTotalSpinCount = 25,
+            enabled = true,
+            runtimeBuildKind = "TEST_SANDBOX",
+            testCheatEnabled = true,
+            testCheatForceTrigger = true,
+            testCheatForceResultKey = "777",
+            testCheatUseCount = 1,
+            testCheatRequiredRuntimeKind = "TEST_SANDBOX",
+        }
+    end
+
+    @ExecSpace("ClientOnly")
+    method table BuildBonusSlotPaytable()
+        return {
+            digits = { 1, 2, 3, 4, 5, 6, 7 },
+            totalWeight = 7,
+            rows = {
+            [1] = { resultKey = "111", rewardMultiplier = 111, extraChanceCount = 0, rollWeight = 1 },
+            [2] = { resultKey = "222", rewardMultiplier = 222, extraChanceCount = 0, rollWeight = 1 },
+            [3] = { resultKey = "333", rewardMultiplier = 333, extraChanceCount = 0, rollWeight = 1 },
+            [4] = { resultKey = "444", rewardMultiplier = 444, extraChanceCount = 0, rollWeight = 1 },
+            [5] = { resultKey = "555", rewardMultiplier = 555, extraChanceCount = 0, rollWeight = 1 },
+            [6] = { resultKey = "666", rewardMultiplier = 666, extraChanceCount = 0, rollWeight = 1 },
+            [7] = { resultKey = "777", rewardMultiplier = 777, extraChanceCount = 1, rollWeight = 1 },
+            },
+        }
+    end
+
+    @ExecSpace("ClientOnly")
     method table BuildPaylines()
         return {
             { id = "TOP_LINE", rowIndex = 1, enabled = true, costCountsAsLine = false },
@@ -2565,7 +2612,7 @@ script SlotMachineRuntime extends Logic
         return {
             triggerKey = "BIG_MATCH_SCREEN_SPRAY",
             animationClipRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553",
-            minFourPlusLineWins = 2,
+            minFourPlusLineWins = 1,
             minFivePlusLineWins = 1,
             playRate = 1,
             fallbackHideSeconds = 1.25,
@@ -2648,15 +2695,19 @@ script SlotMachineRuntime extends Logic
 
         local spinResult = self:ResolveSpinResult()
         local result = self:EvaluatePaylines(spinResult.grid)
+        self:ApplyBonusSlotResult(result)
         log("[SlotMachineRuntime] Spin resolved first: lines=" .. tostring(result.winLineCount) .. ", payoutUnits=" .. tostring(result.payoutUnits))
 
         self:PlaySpinPresentation(spinResult.stopIndexes)
 
         self.commonUnits = self.commonUnits + result.payoutUnits
         self:RefreshCurrency()
-        if result.payoutUnits > 0 then
+        if result.payoutUnits > 0 or (result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true) then
             self:ShowWinResult(result.lineWins, result.payoutUnits)
             self:ApplyWinPresentation(result.lineWins)
+            if result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true and self.statusText ~= nil then
+                self.statusText.Text = self:FormatBonusSlotStatus(result.bonusSlotResult)
+            end
             if self:ShouldPlayScreenSprayVfx(result) then
                 self:PlayScreenSprayVfxOnce()
             end
@@ -2717,19 +2768,238 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method boolean IsBonusSlotLineTrigger(table matchedCells, integer runLength)
+        local config = self.bonusSlotRules
+        if config == nil or config.enabled ~= true then
+            return false
+        end
+        if matchedCells == nil or runLength < (config.requiredMatchCount or 5) then
+            return false
+        end
+        for index = 1, config.requiredMatchCount do
+            if matchedCells[index] ~= config.requiredSymbolId then
+                return false
+            end
+        end
+        return true
+    end
+
+    @ExecSpace("ClientOnly")
+    method table GetBonusSlotPaytableRow(integer digit)
+        if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.rows == nil then
+            return nil
+        end
+        return self.bonusSlotPaytable.rows[digit]
+    end
+
+    @ExecSpace("ClientOnly")
+    method integer RollBonusSlotDigit()
+        if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.digits == nil then
+            return 0
+        end
+        local totalWeight = self.bonusSlotPaytable.totalWeight or 0
+        if totalWeight <= 0 then
+            return 0
+        end
+        local roll = _UtilLogic:RandomIntegerRange(1, totalWeight)
+        for _, digit in ipairs(self.bonusSlotPaytable.digits) do
+            local row = self:GetBonusSlotPaytableRow(digit)
+            if row ~= nil then
+                roll = roll - (row.rollWeight or 0)
+                if roll <= 0 then
+                    return digit
+                end
+            end
+        end
+        return self.bonusSlotPaytable.digits[1] or 0
+    end
+
+    @ExecSpace("ClientOnly")
+    method boolean IsBonusSlotTestCheatAllowed()
+        local config = self.bonusSlotRules
+        if config == nil or config.testCheatEnabled ~= true then
+            return false
+        end
+        if self.bonusSlotTestCheatRemaining == nil or self.bonusSlotTestCheatRemaining <= 0 then
+            return false
+        end
+        local requiredRuntimeKind = config.testCheatRequiredRuntimeKind or "TEST_SANDBOX"
+        if (config.runtimeBuildKind or "") ~= requiredRuntimeKind then
+            return false
+        end
+        return true
+    end
+
+    @ExecSpace("ClientOnly")
+    method table BuildForcedBonusSlotDigits(string resultKey)
+        local config = self.bonusSlotRules
+        local reelCount = 3
+        if config ~= nil and config.reelCount ~= nil then
+            reelCount = config.reelCount
+        end
+        local digits = {}
+        for reel = 1, reelCount do
+            local digitText = string.sub(resultKey or "", reel, reel)
+            local digit = tonumber(digitText)
+            if digit == nil then
+                digit = self:RollBonusSlotDigit()
+            end
+            digits[reel] = digit
+        end
+        return digits
+    end
+
+    @ExecSpace("ClientOnly")
+    method string BuildBonusSlotResultKey(table digits)
+        local resultKey = ""
+        if digits == nil then
+            return resultKey
+        end
+        for _, digit in ipairs(digits) do
+            resultKey = resultKey .. tostring(digit)
+        end
+        return resultKey
+    end
+
+    @ExecSpace("ClientOnly")
+    method integer GetMatchedBonusSlotDigit(table digits)
+        local config = self.bonusSlotRules
+        if digits == nil or config == nil then
+            return 0
+        end
+        local requiredSameCount = config.requiredSameCount or 3
+        if #digits < requiredSameCount then
+            return 0
+        end
+        local digit = digits[1]
+        for index = 2, requiredSameCount do
+            if digits[index] ~= digit then
+                return 0
+            end
+        end
+        return digit
+    end
+
+    @ExecSpace("ClientOnly")
+    method table ResolveBonusSlot(table result)
+        local config = self.bonusSlotRules
+        if result == nil or config == nil or config.enabled ~= true then
+            return { triggered = false, payoutUnits = 0 }
+        end
+        local triggerLineCount = result.bonusSlotTriggerLineCount or 0
+        if triggerLineCount < (config.minTriggerLineCount or 1) then
+            return { triggered = false, payoutUnits = 0 }
+        end
+
+        local chances = config.initialChanceCount or 0
+        local maxTotalSpinCount = config.maxTotalSpinCount or chances
+        local spinCount = 0
+        local hitCount = 0
+        local extraChanceCount = 0
+        local totalPayoutUnits = 0
+        local spins = {}
+        local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()
+        local testCheatForceResultKey = ""
+        if testCheatAllowed == true then
+            testCheatForceResultKey = config.testCheatForceResultKey or ""
+        end
+
+        while chances > 0 and spinCount < maxTotalSpinCount do
+            chances = chances - 1
+            spinCount = spinCount + 1
+            local digits = {}
+            if spinCount == 1 and testCheatForceResultKey ~= "" then
+                digits = self:BuildForcedBonusSlotDigits(testCheatForceResultKey)
+            else
+                for reel = 1, config.reelCount do
+                    digits[reel] = self:RollBonusSlotDigit()
+                end
+            end
+
+            local resultKey = self:BuildBonusSlotResultKey(digits)
+            local matchedDigit = self:GetMatchedBonusSlotDigit(digits)
+            local rewardMultiplier = 0
+            local payoutUnits = 0
+            local extraChance = 0
+            if matchedDigit > 0 then
+                local paytableRow = self:GetBonusSlotPaytableRow(matchedDigit)
+                if paytableRow ~= nil then
+                    rewardMultiplier = paytableRow.rewardMultiplier or 0
+                    extraChance = paytableRow.extraChanceCount or 0
+                    payoutUnits = self.baseBet * self.multiplier * rewardMultiplier * self.coinUnitPerCoin
+                    totalPayoutUnits = totalPayoutUnits + payoutUnits
+                    extraChanceCount = extraChanceCount + extraChance
+                    chances = chances + extraChance
+                    hitCount = hitCount + 1
+                end
+            end
+
+            table.insert(spins, {
+                resultKey = resultKey,
+                matchedDigit = matchedDigit,
+                rewardMultiplier = rewardMultiplier,
+                payoutUnits = payoutUnits,
+                extraChanceCount = extraChance,
+            })
+        end
+
+        return {
+            triggered = true,
+            triggerLineCount = triggerLineCount,
+            spinCount = spinCount,
+            hitCount = hitCount,
+            extraChanceCount = extraChanceCount,
+            payoutUnits = totalPayoutUnits,
+            spins = spins,
+            testCheatUsed = testCheatAllowed,
+        }
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ApplyBonusSlotResult(table result)
+        if result == nil then
+            return
+        end
+        local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()
+        if testCheatAllowed == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then
+            local minTriggerLineCount = self.bonusSlotRules.minTriggerLineCount or 1
+            if result.bonusSlotTriggerLineCount == nil or result.bonusSlotTriggerLineCount < minTriggerLineCount then
+                result.bonusSlotTriggerLineCount = minTriggerLineCount
+            end
+            result.bonusSlotTestCheatUsed = true
+        end
+        local bonusSlotResult = self:ResolveBonusSlot(result)
+        result.bonusSlotResult = bonusSlotResult
+        if bonusSlotResult ~= nil and bonusSlotResult.triggered == true then
+            result.payoutUnits = result.payoutUnits + (bonusSlotResult.payoutUnits or 0)
+            if testCheatAllowed == true and (result.bonusSlotTestCheatUsed == true or bonusSlotResult.testCheatUsed == true) then
+                self.bonusSlotTestCheatRemaining = math.max(0, (self.bonusSlotTestCheatRemaining or 0) - 1)
+            end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
     method table EvaluatePaylines(table grid)
         local totalPayoutUnits = 0
         local winLineCount = 0
         local maxRunLength = 0
         local fourPlusLineWinCount = 0
         local fivePlusLineWinCount = 0
+        local bonusSlotTriggerLineCount = 0
         local lineWins = {}
 
         for _, payline in ipairs(self.paylines) do
             if payline.enabled then
                 local lineResult = self:EvaluateLine(grid[payline.rowIndex], payline.id, payline.rowIndex)
-                if lineResult.payoutUnits > 0 then
-                    totalPayoutUnits = totalPayoutUnits + lineResult.payoutUnits
+                local isBonusSlotTrigger = self:IsBonusSlotLineTrigger(lineResult.cells, lineResult.runLength)
+                lineResult.bonusSlotTrigger = isBonusSlotTrigger
+                if lineResult.payoutUnits > 0 or isBonusSlotTrigger then
+                    if lineResult.payoutUnits > 0 then
+                        totalPayoutUnits = totalPayoutUnits + lineResult.payoutUnits
+                    end
+                    if isBonusSlotTrigger then
+                        bonusSlotTriggerLineCount = bonusSlotTriggerLineCount + 1
+                    end
                     winLineCount = winLineCount + 1
                     if lineResult.runLength > maxRunLength then
                         maxRunLength = lineResult.runLength
@@ -2751,6 +3021,7 @@ script SlotMachineRuntime extends Logic
             maxRunLength = maxRunLength,
             fourPlusLineWinCount = fourPlusLineWinCount,
             fivePlusLineWinCount = fivePlusLineWinCount,
+            bonusSlotTriggerLineCount = bonusSlotTriggerLineCount,
             lineWins = lineWins,
         }
     end
@@ -3113,6 +3384,14 @@ script SlotMachineRuntime extends Logic
             lineText.Text = self:FormatTemplate(self.textTemplates.WinLineFormula, { tostring(lineWin.runLength) })
         end
         group.Enable = true
+    end
+
+    @ExecSpace("ClientOnly")
+    method string FormatBonusSlotStatus(table bonusSlotResult)
+        if bonusSlotResult == nil or bonusSlotResult.triggered ~= true then
+            return ""
+        end
+        return self:FormatTemplate(self.textTemplates.BonusSlotStatus, { tostring(bonusSlotResult.spinCount or 0), self:FormatUnits(bonusSlotResult.payoutUnits or 0) })
     end
 
     @ExecSpace("ClientOnly")

@@ -241,6 +241,7 @@ const gs = {
   BASE_BET_CONFIRM_LOCK: 207,
   WIN_LINE_FORMULA: 208,
   WIN_TOTAL_FORMULA: 209,
+  BONUS_SLOT_STATUS: 210,
 };
 
 const gameStringRows = [
@@ -284,6 +285,7 @@ const gameStringRows = [
   [gs.BASE_BET_CONFIRM_LOCK, "Base Bet \uBCC0\uACBD? {0} \uB3D9\uC548 \uC7A0\uAE08\uB429\uB2C8\uB2E4."],
   [gs.WIN_LINE_FORMULA, "x {0}"],
   [gs.WIN_TOTAL_FORMULA, " = {0}"],
+  [gs.BONUS_SLOT_STATUS, "777 \uBCF4\uB108\uC2A4 {0}\uD68C / +{1}"],
 ];
 const gameStringIndexByRegionIndex = new Map([
   [1, gs.HENESYS],
@@ -640,6 +642,13 @@ for (const row of existingPaytableRows) {
 
 const existingScreenSprayVfxRows = await loadExistingSheetRows("SlotMachine.xlsx", "ScreenSprayVfx");
 const existingScreenSprayVfx = existingScreenSprayVfxRows[0] ?? {};
+const existingBonusSlotRuleRows = await loadExistingSheetRows("SlotMachine.xlsx", "BonusSlotRules");
+const existingBonusSlotRule = existingBonusSlotRuleRows[0] ?? {};
+const existingBonusSlotPaytableRows = new Map(
+  (await loadExistingSheetRows("SlotMachine.xlsx", "BonusSlotPaytable"))
+    .filter((row) => row.Digit !== null && row.Digit !== "")
+    .map((row) => [Number(row.Digit), row]),
+);
 
 const existingReelStripRows = new Map(
   (await loadExistingSheetRows("SpinPresentation.xlsx", "ReelStrips"))
@@ -667,6 +676,16 @@ function existingReelStripValue(baseBetRegionIndex, reelNo, stopIndex, key, fall
 
 function existingScreenSprayVfxValue(key, fallback) {
   const value = existingScreenSprayVfx?.[key];
+  return value === null || value === undefined || value === "" ? fallback : value;
+}
+
+function existingBonusSlotRuleValue(key, fallback) {
+  const value = existingBonusSlotRule?.[key];
+  return value === null || value === undefined || value === "" ? fallback : value;
+}
+
+function existingBonusSlotPaytableValue(digit, key, fallback) {
+  const value = existingBonusSlotPaytableRows.get(digit)?.[key];
   return value === null || value === undefined || value === "" ? fallback : value;
 }
 
@@ -875,6 +894,72 @@ outputs.push(await saveWorkbook("SlotMachine.xlsx", (workbook) => {
     Number(existingScreenSprayVfxValue("FallbackHideSeconds", 1.25)),
     existingScreenSprayVfxValue("Notes", "2+ four-match winning paylines or 1+ five-match win plays a full-screen spray animation once."),
   ]], [170, 210, 280, 190, 190, 100, 150, 360]);
+
+  addDataSheet(workbook, "BonusSlotRules", [
+    { name: "BonusSlotRulesIndex", scope: "all", desc: "Unique row index for the 777 bonus slot trigger rule.", type: "int" },
+    { name: "TriggerKey", scope: "client", desc: "Stable runtime trigger key for this bonus slot.", type: "string" },
+    { name: "RequiredSymbolId", scope: "all", desc: "Slot symbol that must fill the line to enter the bonus slot.", type: "ref:Enums.SlotSymbol" },
+    { name: "RequiredMatchCount", scope: "server", desc: "Required consecutive trigger symbol count on a payline.", type: "int" },
+    { name: "MinTriggerLineCount", scope: "server", desc: "Minimum number of trigger paylines needed to start the bonus.", type: "int" },
+    { name: "InitialChanceCount", scope: "server", desc: "Number of bonus slot chances granted on first entry.", type: "int" },
+    { name: "ReelCount", scope: "server", desc: "Number of numeric reels rolled by the bonus slot.", type: "int" },
+    { name: "RequiredSameCount", scope: "server", desc: "Number of equal digits required for a bonus payout.", type: "int" },
+    { name: "DigitMin", scope: "server", desc: "Minimum digit available in the bonus slot.", type: "int" },
+    { name: "DigitMax", scope: "server", desc: "Maximum digit available in the bonus slot.", type: "int" },
+    { name: "MaxTotalSpinCount", scope: "server", desc: "Safety cap for recursive extra chances from 777.", type: "int" },
+    { name: "Enabled", scope: "all", desc: "Whether this bonus slot trigger is active.", type: "bool" },
+    { name: "StatusStringIndex", scope: "client", desc: "References GameString.Index for the bonus status format.", type: "ref:GameString.Index" },
+    { name: "TestCheatEnabled", scope: "client", desc: "Allows the one-shot 777 test cheat only when runtime kind matches.", type: "bool" },
+    { name: "TestCheatForceTrigger", scope: "client", desc: "Forces bonus entry for the one-shot test cheat.", type: "bool" },
+    { name: "TestCheatForceResultKey", scope: "client", desc: "Forced bonus result key for the one-shot test cheat.", type: "string" },
+    { name: "TestCheatUseCount", scope: "client", desc: "Session use count for the one-shot test cheat.", type: "int" },
+    { name: "TestCheatRequiredRuntimeKind", scope: "client", desc: "Runtime build kind required before the test cheat can run.", type: "string" },
+    { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
+  ], [[
+    1,
+    existingBonusSlotRuleValue("TriggerKey", "WILD_5_BONUS_SLOT"),
+    existingBonusSlotRuleValue("RequiredSymbolId", enumRef("WILD")),
+    Number(existingBonusSlotRuleValue("RequiredMatchCount", 5)),
+    Number(existingBonusSlotRuleValue("MinTriggerLineCount", 1)),
+    Number(existingBonusSlotRuleValue("InitialChanceCount", 5)),
+    Number(existingBonusSlotRuleValue("ReelCount", 3)),
+    Number(existingBonusSlotRuleValue("RequiredSameCount", 3)),
+    Number(existingBonusSlotRuleValue("DigitMin", 1)),
+    Number(existingBonusSlotRuleValue("DigitMax", 7)),
+    Number(existingBonusSlotRuleValue("MaxTotalSpinCount", 25)),
+    existingBonusSlotRuleValue("Enabled", true),
+    existingBonusSlotRuleValue("StatusStringIndex", gs.BONUS_SLOT_STATUS),
+    existingBonusSlotRuleValue("TestCheatEnabled", true),
+    existingBonusSlotRuleValue("TestCheatForceTrigger", true),
+    existingBonusSlotRuleValue("TestCheatForceResultKey", "777"),
+    Number(existingBonusSlotRuleValue("TestCheatUseCount", 1)),
+    existingBonusSlotRuleValue("TestCheatRequiredRuntimeKind", "TEST_SANDBOX"),
+    existingBonusSlotRuleValue("Notes", "Wild x5 enters the 777 bonus slot with 5 initial chances."),
+  ]], [170, 220, 150, 160, 160, 160, 110, 150, 100, 100, 160, 100, 150, 150, 160, 170, 150, 230, 360]);
+
+  const bonusSlotPaytableRows = [];
+  for (let digit = 1; digit <= 7; digit += 1) {
+    const resultKey = `${digit}${digit}${digit}`;
+    const defaultRewardMultiplier = digit * 111;
+    bonusSlotPaytableRows.push([
+      digit,
+      digit,
+      existingBonusSlotPaytableValue(digit, "ResultKey", resultKey),
+      Number(existingBonusSlotPaytableValue(digit, "RewardMultiplier", defaultRewardMultiplier)),
+      Number(existingBonusSlotPaytableValue(digit, "ExtraChanceCount", digit === 7 ? 1 : 0)),
+      Number(existingBonusSlotPaytableValue(digit, "RollWeight", 1)),
+      existingBonusSlotPaytableValue(digit, "Notes", digit === 7 ? "777 pays and grants one extra chance." : "Three matching digits pay this multiplier."),
+    ]);
+  }
+  addDataSheet(workbook, "BonusSlotPaytable", [
+    { name: "BonusSlotPaytableIndex", scope: "all", desc: "Unique row index for bonus slot paytable rows.", type: "int" },
+    { name: "Digit", scope: "server", desc: "Bonus slot digit represented by this row.", type: "int" },
+    { name: "ResultKey", scope: "client", desc: "Displayed three-digit result key.", type: "string" },
+    { name: "RewardMultiplier", scope: "server", desc: "Displayed coin payout multiplier when this digit appears three times.", type: "int" },
+    { name: "ExtraChanceCount", scope: "server", desc: "Additional bonus slot chances granted by this result.", type: "int" },
+    { name: "RollWeight", scope: "server", desc: "Per-reel digit selection weight.", type: "int" },
+    { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
+  ], bonusSlotPaytableRows, [170, 90, 110, 160, 160, 110, 320]);
 }));
 
 outputs.push(await saveWorkbook("Config.xlsx", (workbook) => {

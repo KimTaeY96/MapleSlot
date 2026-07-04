@@ -142,6 +142,41 @@ Multiplier 선택지와 비용/보상 배율을 정의합니다.
 
 현재 기본값은 4개 이상 매치 당첨 라인 2개 이상 또는 5개 이상 매치 당첨 라인 1개 이상일 때 전체 화면 뿌리기 애니메이션을 1회 재생합니다.
 
+### BonusSlotRules
+
+Wild 5개 적중 시 진입하는 777 보너스 슬롯의 기본 규칙을 정의합니다. 최초 기회 수, 릴 수, 같은 숫자 요구 개수, 안전 상한처럼 밸런스에 영향을 주는 수치값은 모두 이 테이블의 컬럼으로 관리합니다.
+
+- `BonusSlotRulesIndex`: 행 인덱스입니다.
+- `TriggerKey`: 런타임에서 구분하는 보너스 트리거 키입니다.
+- `RequiredSymbolId`: 보너스 진입에 필요한 슬롯 심볼입니다. 현재 기본값은 `와일드`입니다.
+- `RequiredMatchCount`: 보너스 진입에 필요한 연속 심볼 개수입니다. 현재 기본값은 5입니다.
+- `MinTriggerLineCount`: 보너스 진입에 필요한 최소 트리거 라인 수입니다.
+- `InitialChanceCount`: 최초 보너스 슬롯 진입 시 지급되는 기회 수입니다. 현재 기본값은 5입니다.
+- `ReelCount`: 보너스 슬롯 숫자 릴 개수입니다. 현재 기본값은 3입니다.
+- `RequiredSameCount`: 보너스 배당을 받기 위해 같아야 하는 숫자 개수입니다. 현재 기본값은 3입니다.
+- `DigitMin`, `DigitMax`: 보너스 슬롯 숫자 범위입니다.
+- `MaxTotalSpinCount`: 777 추가 기회가 반복될 때를 대비한 총 보너스 스핀 안전 상한입니다.
+- `Enabled`: 보너스 슬롯 사용 여부입니다.
+- `StatusStringIndex`: 보너스 결과 상태 표시용 `GameString.Index`입니다.
+- `TestCheatEnabled`: 테스트 런타임에서 777 보너스 치트를 허용할지 여부입니다. 실제 빌드에서는 런타임 빌드 종류 가드로 차단됩니다.
+- `TestCheatForceTrigger`: 테스트 치트 사용 시 보너스 진입 자체를 강제할지 여부입니다.
+- `TestCheatForceResultKey`: 테스트 치트가 강제할 보너스 결과 키입니다. 현재 기본값은 `777`입니다.
+- `TestCheatUseCount`: 세션 내 테스트 치트 사용 가능 횟수입니다. 현재 기본값은 `1`입니다.
+- `TestCheatRequiredRuntimeKind`: 치트가 허용되는 런타임 빌드 종류입니다. 현재 기본값은 `TEST_SANDBOX`입니다.
+- `Notes`: 기획 참고 메모입니다.
+
+### BonusSlotPaytable
+
+777 보너스 슬롯에서 3개 숫자가 모두 같을 때의 배율과 추가 기회를 정의합니다.
+
+- `BonusSlotPaytableIndex`: 행 인덱스입니다.
+- `Digit`: 보너스 슬롯 숫자입니다.
+- `ResultKey`: 표시용 결과 키입니다. 예: `111`, `777`.
+- `RewardMultiplier`: 3개 숫자가 모두 같을 때 지급할 배율입니다. 예: `111`은 111배, `777`은 777배입니다.
+- `ExtraChanceCount`: 해당 결과가 지급하는 추가 보너스 기회 수입니다. 현재 기본값은 `777`만 1입니다.
+- `RollWeight`: 각 숫자가 보너스 슬롯 릴에 등장할 가중치입니다.
+- `Notes`: 기획 참고 메모입니다.
+
 ## SpinPresentation.xlsx
 
 ### SpinProfiles

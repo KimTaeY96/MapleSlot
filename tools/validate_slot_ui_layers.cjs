@@ -448,6 +448,30 @@ if (!runtime.includes("method table BuildScreenSprayVfxConfig")) {
 if (!runtime.includes("b21f6d1b6d8d4c5ebe36b6d5b4503553")) {
   fail("Runtime screen spray animation RUID is missing");
 }
+if (!runtime.includes("method table BuildBonusSlotRules") || !runtime.includes("initialChanceCount = 5")) {
+  fail("Runtime 777 bonus slot rules are missing or initial chances are not data-driven");
+}
+if (!runtime.includes("method table BuildBonusSlotPaytable") || !runtime.includes("[7] = { resultKey = \"777\", rewardMultiplier = 777, extraChanceCount = 1")) {
+  fail("Runtime 777 bonus slot paytable is missing the 777 extra chance rule");
+}
+if (!runtime.includes("method boolean IsBonusSlotLineTrigger") || !runtime.includes("bonusSlotTriggerLineCount")) {
+  fail("Runtime does not detect Wild x5 bonus slot triggers");
+}
+if (!runtime.includes("method table ResolveBonusSlot") || !runtime.includes("self.baseBet * self.multiplier * rewardMultiplier * self.coinUnitPerCoin")) {
+  fail("Runtime does not resolve 777 bonus payouts from data multipliers");
+}
+if (!runtime.includes("self:ApplyBonusSlotResult(result)") || !runtime.includes("self:FormatBonusSlotStatus(result.bonusSlotResult)")) {
+  fail("Runtime spin flow does not apply or display the 777 bonus slot result");
+}
+if (!runtime.includes("runtimeBuildKind = \"TEST_SANDBOX\"") || !runtime.includes("method boolean IsBonusSlotTestCheatAllowed")) {
+  fail("Runtime 777 test cheat build-kind guard is missing");
+}
+if (!runtime.includes("testCheatForceResultKey = \"777\"") || !runtime.includes("self:BuildForcedBonusSlotDigits(testCheatForceResultKey)")) {
+  fail("Runtime 777 test cheat does not force the sandbox result through data");
+}
+if (!runtime.includes("bonusSlotTestCheatRemaining") || !runtime.includes("self.bonusSlotTestCheatRemaining = math.max(0")) {
+  fail("Runtime 777 test cheat use count is not consumed");
+}
 if (!runtime.includes("fourPlusLineWinCount") || !runtime.includes("fivePlusLineWinCount")) {
   fail("Runtime does not expose MatchCount >= 4/5 win counters");
 }
