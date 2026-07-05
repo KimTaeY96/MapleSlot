@@ -4,6 +4,7 @@ const {
   evaluateLine,
   evaluateSpin,
   makeRng,
+  buildBonusSlotTestCheatGrid,
   loadRuntimeSlotData,
   simulateExplicitReelGroup,
   simulateWeightedSymbols,
@@ -88,12 +89,30 @@ function runValidationCases(data) {
   assertEqual(data.bonusSlotRules.initialChanceCount, 5, "777 bonus initial chance count is data-driven");
   assertEqual(data.bonusSlotPaytable.get(7).extraChanceCount, 1, "777 grants one extra chance from the paytable");
   assertEqual(data.bonusSlotRules.testCheatUseCount, 1, "777 test cheat is limited by data-driven use count");
+  const force777Cheat = data.cheatCommands.find((command) => command.code === "777");
+  if (!force777Cheat) {
+    throw new Error("Cheat.xlsx must define the 777 development cheat");
+  }
+  assertEqual(force777Cheat.enabled, true, "777 development cheat is enabled by data");
+  assertEqual(force777Cheat.cheatType, "FORCE_777_BONUS_ONCE", "777 development cheat type is data-driven");
+  assertEqual(force777Cheat.forceResultKey, "777", "777 development cheat forces the 777 result key");
+  assertEqual(force777Cheat.useCount, 1, "777 development cheat grants one session use");
+  assertEqual(force777Cheat.requiredRuntimeKind, "TEST_SANDBOX", "777 development cheat is test-sandbox only");
 
-  const forced777 = evaluateSpin(makeGrid(lowSymbol), data, makeRng(777002), {
+  const directTriggerBlocked = evaluateSpin(makeGrid(lowSymbol), data, makeRng(777002), {
     enableTestCheat: true,
     runtimeBuildKind: "TEST_SANDBOX",
   });
-  assertEqual(forced777.bonusSlot.triggered, true, "777 test cheat can force bonus entry in test sandbox");
+  assertEqual(directTriggerBlocked.bonusSlot.triggered, false, "777 test cheat must not bypass the main spin Wild x5 result");
+
+  const forcedWildGrid = buildBonusSlotTestCheatGrid(data, lowSymbol);
+  assertEqual(forcedWildGrid[1].every((symbol) => symbol === "WILD"), true, "777 test cheat builds the next spin as a Wild x5 win");
+  const forced777 = evaluateSpin(forcedWildGrid, data, makeRng(777004), {
+    enableTestCheat: true,
+    runtimeBuildKind: "TEST_SANDBOX",
+  });
+  assertEqual(forced777.bonusSlot.triggered, true, "777 test cheat Wild x5 spin enters the bonus slot");
+  assertEqual(forced777.bonusSlotTriggerLineCount, 1, "777 test cheat forces one visible Wild x5 payline");
   assertEqual(forced777.bonusSlot.spins[0]?.resultKey, "777", "777 test cheat forces the first bonus result to 777");
   assertEqual(forced777.bonusSlot.testCheatUsed, true, "777 test cheat marks the result as cheat-driven");
 
@@ -151,6 +170,11 @@ async function main() {
       testCheatUseCount: data.bonusSlotRules.testCheatUseCount,
       testCheatRequiredRuntimeKind: data.bonusSlotRules.testCheatRequiredRuntimeKind,
     },
+    cheatCommands: data.cheatCommands.map((command) => ({
+      code: command.code,
+      cheatType: command.cheatType,
+      requiredRuntimeKind: command.requiredRuntimeKind,
+    })),
     multiplierNeutrality: {
       x1Rtp: Number(equalX1.rtp.toFixed(6)),
       x5Rtp: Number(equalX5.rtp.toFixed(6)),

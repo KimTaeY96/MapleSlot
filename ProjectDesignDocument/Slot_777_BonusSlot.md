@@ -51,15 +51,18 @@ These values live in `SlotMachine.xlsx / BonusSlotPaytable`. `RollWeight` is als
 This implementation does not add a new framed popup or regenerate the slot UI. It reuses the existing win presentation surface and status text to avoid broad `.ui` churn. A dedicated 777 bonus overlay can be added later once the interaction/visual spec is approved.
 
 ## Test-Only Cheat
-The 777 result is intentionally rare, so the test sandbox supports a one-shot force path:
+The 777 result is intentionally rare, so the test sandbox supports a session-only force path through the development cheat UI.
 
-- `TestCheatEnabled = true`
-- `TestCheatForceTrigger = true`
-- `TestCheatForceResultKey = 777`
-- `TestCheatUseCount = 1`
-- `TestCheatRequiredRuntimeKind = TEST_SANDBOX`
+- Long-press the top-right `...` development button in `TEST_SANDBOX`.
+- Enter a code from `Cheat.xlsx / CheatCommands` in the input field.
+- The default code is `777`.
+- `CheatType = FORCE_777_BONUS_ONCE`.
+- The next spin result is forced to a visible Wild x5 payline, which enters the 777 bonus slot through the normal payline resolver.
+- `ForceResultKey = 777` then forces the first 777 bonus reel result.
+- `UseCount = 1`.
+- `RequiredRuntimeKind = TEST_SANDBOX`.
 
-Runtime generation stamps the current runtime kind into `BuildBonusSlotRules()`. The normal generator defaults to `RELEASE`; the test sandbox wrapper sets `MSW_SLOT_RUNTIME_KIND=TEST_SANDBOX` before importing the generator. The cheat is allowed only when that generated runtime kind matches `TestCheatRequiredRuntimeKind`. Simulator code also defaults to `RELEASE`, so RTP checks never include the cheat unless a test explicitly passes `enableTestCheat: true` and `runtimeBuildKind: "TEST_SANDBOX"`.
+`BonusSlotRules` still carries the low-level force fields used by the resolver, but runtime starts with `bonusSlotTestCheatRemaining = 0`. Submitting a valid `CheatCommands` code grants the configured session use count for the current play only. Runtime generation stamps the current runtime kind into `BuildBonusSlotRules()`. The normal generator defaults to `RELEASE`; the test sandbox wrapper sets `MSW_SLOT_RUNTIME_KIND=TEST_SANDBOX` before importing the generator. The cheat UI and command application are allowed only when the generated runtime kind is `TEST_SANDBOX`. Simulator code also defaults to `RELEASE`, so RTP checks never include the cheat unless a test explicitly passes `enableTestCheat: true`, applies the forced Wild x5 grid, and uses `runtimeBuildKind: "TEST_SANDBOX"`.
 
 ## Validation Contract
 - Runtime must be generated from `SlotMachine.xlsx`, not `Core.xlsx`.

@@ -189,6 +189,24 @@ script SlotMachineRuntime extends Logic
     property Entity screenSprayVfxEntity = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
     property SpriteGUIRendererComponent screenSprayVfxRenderer = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
 
+    property Entity devCheatButton = "17c3571b-ca4f-4546-a259-1a76158be284"
+    property Entity devCheatPanel = "221c8789-421d-4473-bb6c-394db532fea0"
+    property TextInputComponent devCheatInput = "3a7ce550-2a1b-4037-8c71-16e460d112bf"
+    property Entity devCheatApplyButton = "16a2c962-06d5-4d3b-b5b0-73bfd7fe64d3"
+    property TextComponent devCheatStatusText = "8f0150c3-e2dd-4783-906b-778effae5269"
+    property Entity devCheatListItem1 = "26d9e622-cee7-43d8-911c-fbb6aee8ee35"
+    property Entity devCheatListItem2 = "23953e37-49ba-4664-b713-e844761a04bf"
+    property Entity devCheatListItem3 = "4148bf8c-7862-43d6-9261-51f2976fe648"
+    property Entity devCheatListItem4 = "0b28c744-55ac-4e1c-8278-ab40134c2e70"
+    property Entity devCheatListItem5 = "bea574fa-3795-4b4b-9adc-166df3cfabb4"
+    property Entity devCheatListItem6 = "55953f19-0aaf-497f-9569-1ab3865a2a65"
+    property Entity devCheatListItem7 = "defd421c-452f-43cd-8725-66c3a3bd2f69"
+    property Entity devCheatListItem8 = "4e865e2f-ccd0-4b2a-b7a2-9603f53dc50f"
+    property Entity devCheatListItem9 = "7d6fe360-b63f-4ca0-bcf8-e5cf0fb86100"
+    property Entity devCheatListItem10 = "49fd7c40-5f84-4a4e-8d3d-cb744e7c5564"
+    property Entity devCheatListItem11 = "94f4b9cd-657f-4f54-8795-54602dfcf82a"
+    property Entity devCheatListItem12 = "cb748007-d8d1-41d7-aba2-30b7a09c028d"
+
     property UITransformComponent topHudTransform = "b2f45edf-580b-4aef-a379-870581ccceb1"
     property UITransformComponent slotPanelTransform = "da94c227-6ceb-4737-bd9d-56fee867af02"
     property UITransformComponent battleHudTransform = "6c9db0e9-ccfe-45f9-b12e-c812dde6b44d"
@@ -483,6 +501,14 @@ script SlotMachineRuntime extends Logic
     property any spinProfiles = nil
     property any screenSprayVfxConfig = nil
     property any screenSprayVfxTimerId = nil
+    property any devCheatCommands = nil
+    property any devCheatItemRows = nil
+    property any devCheatButtonDownHandler = nil
+    property any devCheatButtonUpHandler = nil
+    property any devCheatApplyHandler = nil
+    property any devCheatSubmitHandler = nil
+    property any devCheatLongPressTimerId = nil
+    property boolean isDevCheatPanelOpen = false
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
@@ -572,13 +598,15 @@ script SlotMachineRuntime extends Logic
         self.paytableTenths = self:BuildPaytableTenths()
         self.bonusSlotRules = self:BuildBonusSlotRules()
         self.bonusSlotPaytable = self:BuildBonusSlotPaytable()
-        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0
+        self.bonusSlotTestCheatRemaining = 0
         self.paylines = self:BuildPaylines()
         self.spinProfiles = self:BuildSpinProfiles()
         self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()
+        self.devCheatCommands = self:BuildCheatCommands()
         self.screenSprayVfxTimerId = nil
         self:HideScreenSprayVfx()
         self:ApplyResponsiveLayout()
+        self:ConnectDevCheatUi()
 
         self.multiplierHandlers = {}
         self.baseBetOptionHandlers = {}
@@ -653,6 +681,8 @@ script SlotMachineRuntime extends Logic
     method void OnEndPlay()
         self:StopWinVfxFrameLoop()
         self:HideScreenSprayVfx()
+        self:HideScreenSprayVfx()
+        self:DisconnectDevCheatUi()
         if self.baseBetHandler ~= nil then
             self.baseBetButton:DisconnectEvent(ButtonClickEvent, self.baseBetHandler)
             self.baseBetHandler = nil
@@ -2559,6 +2589,13 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method table BuildCheatCommands()
+        return {
+            [1] = { code = "777", displayName = "Force 777 Bonus", description = "Force the next spin to Wild x5 and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+        }
+    end
+
+    @ExecSpace("ClientOnly")
     method table BuildBonusSlotRules()
         return {
             triggerKey = "WILD_5_BONUS_SLOT",
@@ -2725,6 +2762,10 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method table ResolveSpinResult()
+        if self:IsBonusSlotTestCheatAllowed() == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then
+            return self:BuildBonusSlotTestCheatSpinResult()
+        end
+
         local grid = { {}, {}, {} }
         local stopIndexes = {}
         local strips = self:GetCurrentReelStrips()
@@ -2739,6 +2780,47 @@ script SlotMachineRuntime extends Logic
             row = grid[2],
             grid = grid,
             stopIndexes = stopIndexes,
+        }
+    end
+
+    @ExecSpace("ClientOnly")
+    method table BuildBonusSlotTestCheatSpinResult()
+        local grid = { {}, {}, {} }
+        local stopIndexes = {}
+        local strips = self:GetCurrentReelStrips()
+        local requiredSymbolId = "WILD"
+        if self.bonusSlotRules ~= nil and self.bonusSlotRules.requiredSymbolId ~= nil and self.bonusSlotRules.requiredSymbolId ~= "" then
+            requiredSymbolId = self.bonusSlotRules.requiredSymbolId
+        end
+
+        for col = 1, 5 do
+            local stripLength = #strips[col]
+            local stopIndex = 1
+            local found = false
+            for index = 1, stripLength do
+                if self:GetStripSymbolAt(col, index) == requiredSymbolId then
+                    stopIndex = index
+                    found = true
+                    break
+                end
+            end
+            if found ~= true then
+                stopIndex = _UtilLogic:RandomIntegerRange(1, stripLength)
+            end
+            stopIndexes[col] = stopIndex
+            grid[1][col] = self:GetStripSymbolAt(col, stopIndex - 1)
+            grid[2][col] = self:GetStripSymbolAt(col, stopIndex)
+            grid[3][col] = self:GetStripSymbolAt(col, stopIndex + 1)
+            if found ~= true then
+                grid[2][col] = requiredSymbolId
+            end
+        end
+
+        return {
+            row = grid[2],
+            grid = grid,
+            stopIndexes = stopIndexes,
+            bonusSlotTestCheatUsed = true,
         }
     end
 
@@ -2961,13 +3043,6 @@ script SlotMachineRuntime extends Logic
             return
         end
         local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()
-        if testCheatAllowed == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then
-            local minTriggerLineCount = self.bonusSlotRules.minTriggerLineCount or 1
-            if result.bonusSlotTriggerLineCount == nil or result.bonusSlotTriggerLineCount < minTriggerLineCount then
-                result.bonusSlotTriggerLineCount = minTriggerLineCount
-            end
-            result.bonusSlotTestCheatUsed = true
-        end
         local bonusSlotResult = self:ResolveBonusSlot(result)
         result.bonusSlotResult = bonusSlotResult
         if bonusSlotResult ~= nil and bonusSlotResult.triggered == true then
@@ -2975,6 +3050,329 @@ script SlotMachineRuntime extends Logic
             if testCheatAllowed == true and (result.bonusSlotTestCheatUsed == true or bonusSlotResult.testCheatUsed == true) then
                 self.bonusSlotTestCheatRemaining = math.max(0, (self.bonusSlotTestCheatRemaining or 0) - 1)
             end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method boolean IsDevCheatRuntime()
+        if self.bonusSlotRules == nil then
+            return false
+        end
+        return (self.bonusSlotRules.runtimeBuildKind or "") == "TEST_SANDBOX"
+    end
+
+    @ExecSpace("ClientOnly")
+    method string NormalizeCheatCode(string text)
+        if text == nil then
+            return ""
+        end
+        local normalized = tostring(text)
+        normalized = string.gsub(normalized, "^%s*(.-)%s*$", "%1")
+        return string.upper(normalized)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetDevCheatStatus(string text)
+        if self.devCheatStatusText ~= nil then
+            self.devCheatStatusText.Text = text or ""
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetDevCheatPanelOpen(boolean isOpen)
+        if self:IsDevCheatRuntime() ~= true then
+            isOpen = false
+        end
+        self.isDevCheatPanelOpen = isOpen
+        if self.devCheatPanel ~= nil then
+            self.devCheatPanel.Enable = isOpen
+        end
+        if isOpen == true then
+            self:RefreshDevCheatList()
+            if self.devCheatInput ~= nil then
+                self.devCheatInput:ActivateInputField()
+            end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshDevCheatList()
+        if self.devCheatItemRows == nil or self.devCheatCommands == nil then
+            return
+        end
+        local row1 = self.devCheatItemRows[1]
+        if row1 ~= nil then
+            row1.Enable = false
+            if row1.TextComponent ~= nil then
+                row1.TextComponent.Text = ""
+            end
+        end
+        local row2 = self.devCheatItemRows[2]
+        if row2 ~= nil then
+            row2.Enable = false
+            if row2.TextComponent ~= nil then
+                row2.TextComponent.Text = ""
+            end
+        end
+        local row3 = self.devCheatItemRows[3]
+        if row3 ~= nil then
+            row3.Enable = false
+            if row3.TextComponent ~= nil then
+                row3.TextComponent.Text = ""
+            end
+        end
+        local row4 = self.devCheatItemRows[4]
+        if row4 ~= nil then
+            row4.Enable = false
+            if row4.TextComponent ~= nil then
+                row4.TextComponent.Text = ""
+            end
+        end
+        local row5 = self.devCheatItemRows[5]
+        if row5 ~= nil then
+            row5.Enable = false
+            if row5.TextComponent ~= nil then
+                row5.TextComponent.Text = ""
+            end
+        end
+        local row6 = self.devCheatItemRows[6]
+        if row6 ~= nil then
+            row6.Enable = false
+            if row6.TextComponent ~= nil then
+                row6.TextComponent.Text = ""
+            end
+        end
+        local row7 = self.devCheatItemRows[7]
+        if row7 ~= nil then
+            row7.Enable = false
+            if row7.TextComponent ~= nil then
+                row7.TextComponent.Text = ""
+            end
+        end
+        local row8 = self.devCheatItemRows[8]
+        if row8 ~= nil then
+            row8.Enable = false
+            if row8.TextComponent ~= nil then
+                row8.TextComponent.Text = ""
+            end
+        end
+        local row9 = self.devCheatItemRows[9]
+        if row9 ~= nil then
+            row9.Enable = false
+            if row9.TextComponent ~= nil then
+                row9.TextComponent.Text = ""
+            end
+        end
+        local row10 = self.devCheatItemRows[10]
+        if row10 ~= nil then
+            row10.Enable = false
+            if row10.TextComponent ~= nil then
+                row10.TextComponent.Text = ""
+            end
+        end
+        local row11 = self.devCheatItemRows[11]
+        if row11 ~= nil then
+            row11.Enable = false
+            if row11.TextComponent ~= nil then
+                row11.TextComponent.Text = ""
+            end
+        end
+        local row12 = self.devCheatItemRows[12]
+        if row12 ~= nil then
+            row12.Enable = false
+            if row12.TextComponent ~= nil then
+                row12.TextComponent.Text = ""
+            end
+        end
+
+        local runtimeKind = ""
+        if self.bonusSlotRules ~= nil then
+            runtimeKind = self.bonusSlotRules.runtimeBuildKind or ""
+        end
+        local visibleIndex = 1
+        for _, command in ipairs(self.devCheatCommands) do
+            local requiredRuntimeKind = command.requiredRuntimeKind or ""
+            local runtimeAllowed = requiredRuntimeKind == "" or requiredRuntimeKind == runtimeKind
+            if command.enabled == true and runtimeAllowed == true then
+                local row = self.devCheatItemRows[visibleIndex]
+                if row ~= nil then
+                    row.Enable = true
+                    if row.TextComponent ~= nil then
+                        row.TextComponent.Text = command.code .. "  " .. command.displayName .. " - " .. command.description
+                    end
+                end
+                visibleIndex = visibleIndex + 1
+            end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method table FindCheatCommand(string code)
+        local normalizedCode = self:NormalizeCheatCode(code)
+        if normalizedCode == "" or self.devCheatCommands == nil then
+            return nil
+        end
+        for _, command in ipairs(self.devCheatCommands) do
+            if self:NormalizeCheatCode(command.code) == normalizedCode then
+                return command
+            end
+        end
+        return nil
+    end
+
+    @ExecSpace("ClientOnly")
+    method boolean ApplyCheatCommand(table command)
+        if command == nil or command.enabled ~= true then
+            self:SetDevCheatStatus("Cheat not found")
+            return false
+        end
+        if self:IsDevCheatRuntime() ~= true then
+            self:SetDevCheatStatus("Cheat blocked")
+            return false
+        end
+        local runtimeKind = self.bonusSlotRules.runtimeBuildKind or ""
+        local requiredRuntimeKind = command.requiredRuntimeKind or ""
+        if requiredRuntimeKind ~= "" and requiredRuntimeKind ~= runtimeKind then
+            self:SetDevCheatStatus("Cheat blocked")
+            return false
+        end
+        if command.cheatType == "FORCE_777_BONUS_ONCE" then
+            local useCount = command.useCount or 1
+            if useCount < 1 then
+                useCount = 1
+            end
+            self.bonusSlotTestCheatRemaining = useCount
+            if self.bonusSlotRules ~= nil then
+                self.bonusSlotRules.testCheatEnabled = true
+                self.bonusSlotRules.testCheatForceTrigger = true
+                self.bonusSlotRules.testCheatForceResultKey = command.forceResultKey or "777"
+                self.bonusSlotRules.testCheatUseCount = useCount
+            end
+            self:SetDevCheatStatus(command.code .. " applied")
+            return true
+        end
+        self:SetDevCheatStatus("Unsupported cheat")
+        return false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ApplyDevCheatInput(string rawText)
+        local code = self:NormalizeCheatCode(rawText)
+        if code == "" then
+            self:SetDevCheatStatus("Enter cheat code")
+            return
+        end
+        local command = self:FindCheatCommand(code)
+        self:ApplyCheatCommand(command)
+        if self.devCheatInput ~= nil then
+            self.devCheatInput.Text = ""
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatButtonDown(UITouchDownEvent event)
+        if self:IsDevCheatRuntime() ~= true then
+            return
+        end
+        if self.devCheatLongPressTimerId ~= nil then
+            _TimerService:ClearTimer(self.devCheatLongPressTimerId)
+            self.devCheatLongPressTimerId = nil
+        end
+        self.devCheatLongPressTimerId = _TimerService:SetTimerOnce(function()
+            self.devCheatLongPressTimerId = nil
+            self:SetDevCheatPanelOpen(true)
+        end, 0.55)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatButtonUp(UITouchUpEvent event)
+        if self.devCheatLongPressTimerId ~= nil then
+            _TimerService:ClearTimer(self.devCheatLongPressTimerId)
+            self.devCheatLongPressTimerId = nil
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatInputSubmit(TextInputSubmitEvent event)
+        if event == nil then
+            self:ApplyDevCheatInput("")
+            return
+        end
+        self:ApplyDevCheatInput(event.Text)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatApplyClicked(ButtonClickEvent event)
+        local text = ""
+        if self.devCheatInput ~= nil then
+            text = self.devCheatInput.Text
+        end
+        self:ApplyDevCheatInput(text)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ConnectDevCheatUi()
+        self.devCheatItemRows = {
+            self.devCheatListItem1,
+            self.devCheatListItem2,
+            self.devCheatListItem3,
+            self.devCheatListItem4,
+            self.devCheatListItem5,
+            self.devCheatListItem6,
+            self.devCheatListItem7,
+            self.devCheatListItem8,
+            self.devCheatListItem9,
+            self.devCheatListItem10,
+            self.devCheatListItem11,
+            self.devCheatListItem12,
+        }
+        if self.devCheatCommands == nil then
+            self.devCheatCommands = self:BuildCheatCommands()
+        end
+        self:SetDevCheatPanelOpen(false)
+        self:RefreshDevCheatList()
+        if self:IsDevCheatRuntime() ~= true then
+            if self.devCheatButton ~= nil then
+                self.devCheatButton.Enable = false
+            end
+            return
+        end
+        if self.devCheatButton ~= nil then
+            self.devCheatButton.Enable = true
+            self.devCheatButtonDownHandler = self.devCheatButton:ConnectEvent(UITouchDownEvent, self.OnDevCheatButtonDown)
+            self.devCheatButtonUpHandler = self.devCheatButton:ConnectEvent(UITouchUpEvent, self.OnDevCheatButtonUp)
+        end
+        if self.devCheatApplyButton ~= nil then
+            self.devCheatApplyHandler = self.devCheatApplyButton:ConnectEvent(ButtonClickEvent, self.OnDevCheatApplyClicked)
+        end
+        if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil then
+            self.devCheatSubmitHandler = self.devCheatInput.Entity:ConnectEvent(TextInputSubmitEvent, self.OnDevCheatInputSubmit)
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void DisconnectDevCheatUi()
+        if self.devCheatLongPressTimerId ~= nil then
+            _TimerService:ClearTimer(self.devCheatLongPressTimerId)
+            self.devCheatLongPressTimerId = nil
+        end
+        if self.devCheatButton ~= nil then
+            if self.devCheatButtonDownHandler ~= nil then
+                self.devCheatButton:DisconnectEvent(UITouchDownEvent, self.devCheatButtonDownHandler)
+                self.devCheatButtonDownHandler = nil
+            end
+            if self.devCheatButtonUpHandler ~= nil then
+                self.devCheatButton:DisconnectEvent(UITouchUpEvent, self.devCheatButtonUpHandler)
+                self.devCheatButtonUpHandler = nil
+            end
+        end
+        if self.devCheatApplyButton ~= nil and self.devCheatApplyHandler ~= nil then
+            self.devCheatApplyButton:DisconnectEvent(ButtonClickEvent, self.devCheatApplyHandler)
+            self.devCheatApplyHandler = nil
+        end
+        if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil and self.devCheatSubmitHandler ~= nil then
+            self.devCheatInput.Entity:DisconnectEvent(TextInputSubmitEvent, self.devCheatSubmitHandler)
+            self.devCheatSubmitHandler = nil
         end
     end
 

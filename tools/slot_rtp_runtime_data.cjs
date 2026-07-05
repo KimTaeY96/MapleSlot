@@ -57,7 +57,8 @@ async function optionalWorkbookRows(projectRoot, filename, sheetName) {
   try {
     return await workbookRows(projectRoot, filename, sheetName);
   } catch (error) {
-    if (String(error?.message ?? "").includes(`Missing sheet: ${filename}/${sheetName}`)) {
+    const message = String(error?.message ?? "");
+    if (error?.code === "ENOENT" || message.includes("ENOENT") || message.includes(`Missing sheet: ${filename}/${sheetName}`)) {
       return [];
     }
     throw error;
@@ -194,6 +195,20 @@ async function loadRuntimeSlotData(options = {}) {
   const bonusSlotPaytable = new Map(bonusSlotPaytableRows.map((row) => [row.digit, row]));
   const bonusSlotDigits = bonusSlotPaytableRows.map((row) => row.digit);
   const bonusSlotTotalWeight = bonusSlotPaytableRows.reduce((sum, row) => sum + row.rollWeight, 0);
+  const cheatCommands = (await optionalWorkbookRows(projectRoot, "Cheat.xlsx", "CheatCommands"))
+    .sort((a, b) => num(a.CheatCommandsIndex, "CheatCommandsIndex") - num(b.CheatCommandsIndex, "CheatCommandsIndex"))
+    .map((row) => ({
+      code: clean(row.CheatCode).toUpperCase(),
+      displayName: clean(row.DisplayName),
+      description: clean(row.Description),
+      cheatType: clean(row.CheatType),
+      targetKey: clean(row.TargetKey),
+      forceResultKey: clean(row.ForceResultKey),
+      useCount: clean(row.UseCount) ? num(row.UseCount, "UseCount") : 1,
+      requiredRuntimeKind: clean(row.RequiredRuntimeKind) || "TEST_SANDBOX",
+      enabled: clean(row.Enabled) ? bool(row.Enabled) : true,
+    }))
+    .filter((row) => row.code);
 
   const reelGroups = new Map();
   for (const row of await workbookRows(projectRoot, "SpinPresentation.xlsx", "ReelStrips")) {
@@ -227,6 +242,7 @@ async function loadRuntimeSlotData(options = {}) {
     bonusSlotPaytable,
     bonusSlotDigits,
     bonusSlotTotalWeight,
+    cheatCommands,
   };
 }
 
@@ -334,12 +350,22 @@ function forcedBonusSlotDigits(resultKey, data, rng) {
   });
 }
 
+function buildBonusSlotTestCheatGrid(data, fillerSymbol = null) {
+  const requiredSymbolId = data.bonusSlotRules?.requiredSymbolId || "WILD";
+  const fallbackSymbol = fillerSymbol
+    || data.symbols.find((symbol) => symbol !== requiredSymbolId && !data.slotSymbols.get(symbol)?.isWild)
+    || data.symbols.find((symbol) => symbol !== requiredSymbolId)
+    || requiredSymbolId;
+  return [
+    Array.from({ length: 5 }, () => fallbackSymbol),
+    Array.from({ length: 5 }, () => requiredSymbolId),
+    Array.from({ length: 5 }, () => fallbackSymbol),
+  ];
+}
+
 function resolveBonusSlot(triggerLineCount, data, rng, options = {}) {
   const config = data.bonusSlotRules;
   const testCheatAllowed = isBonusSlotTestCheatAllowed(data, options);
-  if (testCheatAllowed && config.testCheatForceTrigger) {
-    triggerLineCount = Math.max(triggerLineCount, config.minTriggerLineCount);
-  }
   if (!config?.enabled || triggerLineCount < config.minTriggerLineCount) {
     return { triggered: false, payoutTenths: 0, spinCount: 0, hitCount: 0 };
   }
@@ -511,6 +537,7 @@ module.exports = {
   evaluateSpin,
   isBonusSlotLineTrigger,
   isBonusSlotTestCheatAllowed,
+  buildBonusSlotTestCheatGrid,
   resolveBonusSlot,
   simulateExplicitReelGroup,
   simulateWeightedSymbols,

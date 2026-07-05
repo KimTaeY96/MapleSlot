@@ -455,6 +455,16 @@ function getColumnDescriptionKo(column) {
     ReelNo: "왼쪽부터 몇 번째 릴인지 나타내는 번호입니다.",
     StopIndex: "반복되는 릴 스트립 안에서의 정지 위치입니다.",
     IdleSpriteRuid: "일반 상태에서 이 릴 셀에 표시할 MSW 리소스 RUID입니다.",
+    CheatCommandsIndex: "CheatCommands 테이블 행을 식별하는 정수 인덱스입니다.",
+    CheatCode: "테스트 UI 입력창에 입력할 치트 코드입니다.",
+    DisplayName: "테스트 UI 목록에 표시할 치트 이름입니다.",
+    Description: "치트의 동작을 설명하는 목록 표시 문구입니다.",
+    CheatType: "런타임에서 처리할 치트 동작 타입입니다.",
+    TargetKey: "치트가 대상으로 삼는 슬롯 기능 또는 트리거 키입니다.",
+    ForceResultKey: "강제 결과가 필요한 치트에서 사용할 결과 키입니다.",
+    UseCount: "치트 입력 1회로 현재 플레이 세션에 부여할 사용 가능 횟수입니다.",
+    RequiredRuntimeKind: "치트가 허용되는 런타임 종류입니다.",
+    Enabled: "현재 치트 행을 사용할지 여부입니다.",
     UIBindingsIndex: "UIBindings 테이블 행을 식별하는 정수 인덱스입니다.",
     BindingKey: "UI 코드 또는 수동 매핑에서 사용하는 고정 키입니다.",
     UINode: "Maker UI 계층에서 기대하는 UI 노드 이름입니다.",
@@ -649,6 +659,11 @@ const existingBonusSlotPaytableRows = new Map(
     .filter((row) => row.Digit !== null && row.Digit !== "")
     .map((row) => [Number(row.Digit), row]),
 );
+const existingCheatCommandRows = new Map(
+  (await loadExistingSheetRows("Cheat.xlsx", "CheatCommands"))
+    .filter((row) => row.CheatCode !== null && row.CheatCode !== "")
+    .map((row) => [String(row.CheatCode).trim().toUpperCase(), row]),
+);
 
 const existingReelStripRows = new Map(
   (await loadExistingSheetRows("SpinPresentation.xlsx", "ReelStrips"))
@@ -686,6 +701,11 @@ function existingBonusSlotRuleValue(key, fallback) {
 
 function existingBonusSlotPaytableValue(digit, key, fallback) {
   const value = existingBonusSlotPaytableRows.get(digit)?.[key];
+  return value === null || value === undefined || value === "" ? fallback : value;
+}
+
+function existingCheatCommandValue(code, key, fallback) {
+  const value = existingCheatCommandRows.get(String(code).trim().toUpperCase())?.[key];
   return value === null || value === undefined || value === "" ? fallback : value;
 }
 
@@ -979,6 +999,35 @@ outputs.push(await saveWorkbook("Config.xlsx", (workbook) => {
     { name: "PayoutCurrencyEnumId", scope: "server", desc: "References Enums where EnumTypeName is CurrencyType.", type: "ref:Enums.CurrencyType" },
     { name: "InsufficientBalanceActionEnumId", scope: "server", desc: "Action when balance cannot pay spin cost.", type: "ref:Enums.InsufficientBalanceAction" },
   ], [9999, 0, 10, true, enumRef("COMMON_COIN"), enumRef("REJECT_SPIN")], [160, 160, 140, 170, 190, 250]);
+}));
+
+outputs.push(await saveWorkbook("Cheat.xlsx", (workbook) => {
+  const cheatCode = "777";
+  addDataSheet(workbook, "CheatCommands", [
+    { name: "CheatCommandsIndex", scope: "all", desc: "Unique row index for cheat commands.", type: "int" },
+    { name: "CheatCode", scope: "client", desc: "Code typed into the development cheat input field.", type: "string" },
+    { name: "DisplayName", scope: "client", desc: "Short name shown in the development cheat list.", type: "string" },
+    { name: "Description", scope: "client", desc: "Description shown in the development cheat list.", type: "string" },
+    { name: "CheatType", scope: "client", desc: "Runtime cheat operation type.", type: "string" },
+    { name: "TargetKey", scope: "client", desc: "Slot trigger or feature key targeted by this cheat.", type: "string" },
+    { name: "ForceResultKey", scope: "client", desc: "Forced result key used by result-forcing cheats.", type: "string" },
+    { name: "UseCount", scope: "client", desc: "Session-only use count granted when this code is applied.", type: "int" },
+    { name: "RequiredRuntimeKind", scope: "client", desc: "Runtime build kind required before this cheat can run.", type: "string" },
+    { name: "Enabled", scope: "client", desc: "Whether this cheat is exposed and accepted.", type: "bool" },
+    { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
+  ], [[
+    Number(existingCheatCommandValue(cheatCode, "CheatCommandsIndex", 1)),
+    existingCheatCommandValue(cheatCode, "CheatCode", cheatCode),
+    existingCheatCommandValue(cheatCode, "DisplayName", "Force 777 Bonus"),
+    existingCheatCommandValue(cheatCode, "Description", "Force the next spin to Wild x5 and first 777 result once."),
+    existingCheatCommandValue(cheatCode, "CheatType", "FORCE_777_BONUS_ONCE"),
+    existingCheatCommandValue(cheatCode, "TargetKey", "WILD_5_BONUS_SLOT"),
+    existingCheatCommandValue(cheatCode, "ForceResultKey", "777"),
+    Number(existingCheatCommandValue(cheatCode, "UseCount", 1)),
+    existingCheatCommandValue(cheatCode, "RequiredRuntimeKind", "TEST_SANDBOX"),
+    existingCheatCommandValue(cheatCode, "Enabled", true),
+    existingCheatCommandValue(cheatCode, "Notes", "Development-only session cheat; release runtime cannot apply it."),
+  ]], [170, 130, 190, 360, 210, 190, 130, 110, 190, 100, 360]);
 }));
 
 outputs.push(await saveWorkbook("SpinPresentation.xlsx", (workbook) => {

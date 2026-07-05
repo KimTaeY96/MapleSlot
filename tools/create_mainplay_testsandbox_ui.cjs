@@ -251,6 +251,20 @@ function buildReelCellFrameRuntimeBindingProperties() {
   return lines;
 }
 
+function buildDevCheatRuntimeBindingProperties() {
+  const lines = [
+    '    property Entity devCheatButton = ""',
+    '    property Entity devCheatPanel = ""',
+    '    property TextInputComponent devCheatInput = ""',
+    '    property Entity devCheatApplyButton = ""',
+    '    property TextComponent devCheatStatusText = ""',
+  ];
+  for (let index = 1; index <= 12; index += 1) {
+    lines.push(`    property Entity devCheatListItem${index} = ""`);
+  }
+  return lines;
+}
+
 function formatTemplate(template, values) {
   return values.reduce(
     (result, value, index) => result.replaceAll(`{${index}}`, String(value)),
@@ -272,6 +286,7 @@ function ensureRuntimeBindingProperties() {
     '    property TextComponent winResultText3 = ""',
     '    property TextComponent winResultTotalText = ""',
     ...buildReelCellFrameRuntimeBindingProperties(),
+    ...buildDevCheatRuntimeBindingProperties(),
   ];
   let runtime = fs.readFileSync(runtimePath, "utf8");
   const missingProps = requiredProps.filter((line) => {
@@ -1233,3 +1248,5 @@ b.write(outputPath, {
   },
 });
 console.log(`Created ${outputPath}`);
+
+require("./patch_dev_cheat_ui.cjs");

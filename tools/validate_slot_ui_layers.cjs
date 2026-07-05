@@ -161,6 +161,45 @@ if (screenSprayRenderer.OrderInLayer !== 420 || screenSprayRenderer.OverrideSort
 if (screenSprayRenderer.RaycastTarget !== false) {
   fail("ScreenSprayVFX_Fullscreen must not block slot controls while hidden or playing");
 }
+
+expectRect("Button_DevCheatMenu", 68, 68);
+expectPosition("Button_DevCheatMenu", -40, -40);
+getComponent("Button_DevCheatMenu", "MOD.Core.ButtonComponent");
+getComponent("Button_DevCheatMenu", "MOD.Core.UITouchReceiveComponent");
+const devCheatButtonRenderer = getComponent("Button_DevCheatMenu", "MOD.Core.SpriteGUIRendererComponent");
+if (devCheatButtonRenderer.OrderInLayer !== 430 || devCheatButtonRenderer.OverrideSorting !== true) {
+  fail(`Unexpected dev cheat button sorting: order=${devCheatButtonRenderer.OrderInLayer}, override=${devCheatButtonRenderer.OverrideSorting}; expected 430/true`);
+}
+expectRect("Panel_DevCheat_Hidden", 420, 560);
+expectPosition("Panel_DevCheat_Hidden", -40, -318);
+if (getEntity("Panel_DevCheat_Hidden").enable !== false) {
+  fail("Panel_DevCheat_Hidden must start hidden and only open after the development long-press");
+}
+expectRect("Panel_DevCheat_Hidden/Input_CheatCode", 282, 46);
+expectRect("Panel_DevCheat_Hidden/Button_ApplyCheat", 92, 46);
+expectRect("Panel_DevCheat_Hidden/Text_Status", 380, 30);
+expectRect("Panel_DevCheat_Hidden/Panel_CheatList", 380, 410);
+const cheatScrollTransform = getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.UITransformComponent");
+if (
+  cheatScrollTransform.OffsetMin.x !== 14 || cheatScrollTransform.OffsetMin.y !== 12
+  || cheatScrollTransform.OffsetMax.x !== -14 || cheatScrollTransform.OffsetMax.y !== -12
+) {
+  fail("Cheat command scroll area must keep 14px horizontal and 12px vertical inner padding");
+}
+const cheatInput = getComponent("Panel_DevCheat_Hidden/Input_CheatCode", "MOD.Core.TextInputComponent");
+if (cheatInput.LineType !== 0 || cheatInput.CharacterLimit !== 32) {
+  fail(`Unexpected cheat input config: lineType=${cheatInput.LineType}, charLimit=${cheatInput.CharacterLimit}; expected 0/32`);
+}
+const cheatScroll = getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.ScrollLayoutGroupComponent");
+if (cheatScroll.ScrollBarVisible !== 1 || cheatScroll.ScrollBarThickness !== 12) {
+  fail("Cheat command list must expose a visible 12px scrollbar");
+}
+getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.MaskComponent");
+for (let index = 1; index <= 12; index += 1) {
+  expectRect(`Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands/Item_CheatCommand_${index}`, 348, 42);
+  expectTextAlignment(`Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands/Item_CheatCommand_${index}`, 3);
+}
+
 for (let index = 1; index <= 5; index += 1) {
   expectPosition(`Panel_LeftSlotMachine/Panel_BetMultiplierRow/Button_Multiplier_x${index}`, 420 + (index - 1) * 58, -22);
   expectRect(`Panel_LeftSlotMachine/Panel_BetMultiplierRow/Button_Multiplier_x${index}`, 55, 55);
@@ -466,6 +505,12 @@ if (!runtime.includes("self:ApplyBonusSlotResult(result)") || !runtime.includes(
 if (!runtime.includes("runtimeBuildKind = \"TEST_SANDBOX\"") || !runtime.includes("method boolean IsBonusSlotTestCheatAllowed")) {
   fail("Runtime 777 test cheat build-kind guard is missing");
 }
+if (!runtime.includes("method table BuildBonusSlotTestCheatSpinResult") || !runtime.includes("return self:BuildBonusSlotTestCheatSpinResult()")) {
+  fail("Runtime 777 test cheat must force the next visible spin result to Wild x5");
+}
+if (runtime.includes("result.bonusSlotTriggerLineCount = minTriggerLineCount")) {
+  fail("Runtime 777 test cheat must not bypass Wild x5 by editing the bonus trigger count directly");
+}
 if (!runtime.includes("testCheatForceResultKey = \"777\"") || !runtime.includes("self:BuildForcedBonusSlotDigits(testCheatForceResultKey)")) {
   fail("Runtime 777 test cheat does not force the sandbox result through data");
 }
@@ -607,6 +652,18 @@ for (let index = 1; index <= 3; index += 1) {
 expectBinding("winResultTotalText", "Panel_LeftSlotMachine/Panel_WinResult/Text_Total", "TextComponent");
 expectBinding("screenSprayVfxEntity", "ScreenSprayVFX_Fullscreen", "Entity");
 expectBinding("screenSprayVfxRenderer", "ScreenSprayVFX_Fullscreen", "SpriteGUIRendererComponent");
+expectBinding("devCheatButton", "Button_DevCheatMenu", "Entity");
+expectBinding("devCheatPanel", "Panel_DevCheat_Hidden", "Entity");
+expectBinding("devCheatInput", "Panel_DevCheat_Hidden/Input_CheatCode", "TextInputComponent");
+expectBinding("devCheatApplyButton", "Panel_DevCheat_Hidden/Button_ApplyCheat", "Entity");
+expectBinding("devCheatStatusText", "Panel_DevCheat_Hidden/Text_Status", "TextComponent");
+for (let index = 1; index <= 12; index += 1) {
+  expectBinding(
+    `devCheatListItem${index}`,
+    `Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands/Item_CheatCommand_${index}`,
+    "Entity",
+  );
+}
 expectBinding("topHudTransform", "TopHUD_Currency");
 expectBinding("slotPanelTransform", "Panel_LeftSlotMachine");
 expectBinding("battleHudTransform", "BattleHUD_Right");
@@ -671,6 +728,21 @@ for (let row = 1; row <= 3; row += 1) {
       `Panel_LeftSlotMachine/ReelGrid_3x5/WinSymbol_R${row}_C${col}`,
       "Entity",
     );
+  }
+}
+
+for (const snippet of [
+  "method table BuildCheatCommands()",
+  "method table BuildBonusSlotTestCheatSpinResult()",
+  "method void ConnectDevCheatUi()",
+  "method void OnDevCheatButtonDown(UITouchDownEvent event)",
+  "method void OnDevCheatInputSubmit(TextInputSubmitEvent event)",
+  "method boolean ApplyCheatCommand(table command)",
+  "self.bonusSlotTestCheatRemaining = 0",
+  "command.cheatType == \"FORCE_777_BONUS_ONCE\"",
+]) {
+  if (!runtime.includes(snippet)) {
+    fail(`Runtime missing dev cheat flow snippet: ${snippet}`);
   }
 }
 

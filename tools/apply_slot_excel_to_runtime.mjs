@@ -115,7 +115,8 @@ async function optionalWorkbookRows(filename, sheetName) {
   try {
     return await workbookRows(filename, sheetName);
   } catch (error) {
-    if (String(error?.message ?? "").includes(`Missing sheet: ${filename}/${sheetName}`)) {
+    const message = String(error?.message ?? "");
+    if (error?.code === "ENOENT" || message.includes("ENOENT") || message.includes(`Missing sheet: ${filename}/${sheetName}`)) {
       return [];
     }
     throw error;
@@ -285,6 +286,21 @@ async function loadData() {
       rollWeight: num(row.RollWeight, "RollWeight"),
     }));
 
+  const cheatCommandRows = (await optionalWorkbookRows("Cheat.xlsx", "CheatCommands"))
+    .sort((a, b) => num(a.CheatCommandsIndex, "CheatCommandsIndex") - num(b.CheatCommandsIndex, "CheatCommandsIndex"))
+    .map((row) => ({
+      code: clean(row.CheatCode).toUpperCase(),
+      displayName: clean(row.DisplayName),
+      description: clean(row.Description),
+      cheatType: clean(row.CheatType),
+      targetKey: clean(row.TargetKey),
+      forceResultKey: clean(row.ForceResultKey),
+      useCount: hasValue(row, "UseCount") ? num(row.UseCount, "UseCount") : 1,
+      requiredRuntimeKind: clean(row.RequiredRuntimeKind) || "TEST_SANDBOX",
+      enabled: hasValue(row, "Enabled") ? bool(row.Enabled) : true,
+    }))
+    .filter((row) => row.code !== "");
+
   return {
     text,
     slotSymbolRows,
@@ -298,6 +314,7 @@ async function loadData() {
     screenSprayVfx,
     bonusSlotRules,
     bonusSlotPaytableRows,
+    cheatCommandRows,
   };
 }
 
@@ -689,6 +706,21 @@ function makeBonusSlotPaytable(data) {
   ].join("\n");
 }
 
+function makeBuildCheatCommands(data) {
+  const rows = data.cheatCommandRows ?? [];
+  const rowLines = rows.map((row, index) =>
+    `            [${index + 1}] = { code = ${luaString(row.code)}, displayName = ${luaString(row.displayName)}, description = ${luaString(row.description)}, cheatType = ${luaString(row.cheatType)}, targetKey = ${luaString(row.targetKey)}, forceResultKey = ${luaString(row.forceResultKey)}, useCount = ${Number(row.useCount ?? 1)}, requiredRuntimeKind = ${luaString(row.requiredRuntimeKind || "TEST_SANDBOX")}, enabled = ${luaValue(row.enabled === true)} },`
+  );
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildCheatCommands()",
+    "        return {",
+    ...rowLines,
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
 function makeIsBonusSlotLineTrigger() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -764,6 +796,78 @@ function makeIsBonusSlotTestCheatAllowed() {
     "            return false",
     "        end",
     "        return true",
+    "    end",
+  ].join("\n");
+}
+
+function makeResolveSpinResult() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table ResolveSpinResult()",
+    "        if self:IsBonusSlotTestCheatAllowed() == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then",
+    "            return self:BuildBonusSlotTestCheatSpinResult()",
+    "        end",
+    "",
+    "        local grid = { {}, {}, {} }",
+    "        local stopIndexes = {}",
+    "        local strips = self:GetCurrentReelStrips()",
+    "        for col = 1, 5 do",
+    "            local stopIndex = _UtilLogic:RandomIntegerRange(1, #strips[col])",
+    "            stopIndexes[col] = stopIndex",
+    "            grid[1][col] = self:GetStripSymbolAt(col, stopIndex - 1)",
+    "            grid[2][col] = self:GetStripSymbolAt(col, stopIndex)",
+    "            grid[3][col] = self:GetStripSymbolAt(col, stopIndex + 1)",
+    "        end",
+    "        return {",
+    "            row = grid[2],",
+    "            grid = grid,",
+    "            stopIndexes = stopIndexes,",
+    "        }",
+    "    end",
+  ].join("\n");
+}
+
+function makeBuildBonusSlotTestCheatSpinResult() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonusSlotTestCheatSpinResult()",
+    "        local grid = { {}, {}, {} }",
+    "        local stopIndexes = {}",
+    "        local strips = self:GetCurrentReelStrips()",
+    "        local requiredSymbolId = \"WILD\"",
+    "        if self.bonusSlotRules ~= nil and self.bonusSlotRules.requiredSymbolId ~= nil and self.bonusSlotRules.requiredSymbolId ~= \"\" then",
+    "            requiredSymbolId = self.bonusSlotRules.requiredSymbolId",
+    "        end",
+    "",
+    "        for col = 1, 5 do",
+    "            local stripLength = #strips[col]",
+    "            local stopIndex = 1",
+    "            local found = false",
+    "            for index = 1, stripLength do",
+    "                if self:GetStripSymbolAt(col, index) == requiredSymbolId then",
+    "                    stopIndex = index",
+    "                    found = true",
+    "                    break",
+    "                end",
+    "            end",
+    "            if found ~= true then",
+    "                stopIndex = _UtilLogic:RandomIntegerRange(1, stripLength)",
+    "            end",
+    "            stopIndexes[col] = stopIndex",
+    "            grid[1][col] = self:GetStripSymbolAt(col, stopIndex - 1)",
+    "            grid[2][col] = self:GetStripSymbolAt(col, stopIndex)",
+    "            grid[3][col] = self:GetStripSymbolAt(col, stopIndex + 1)",
+    "            if found ~= true then",
+    "                grid[2][col] = requiredSymbolId",
+    "            end",
+    "        end",
+    "",
+    "        return {",
+    "            row = grid[2],",
+    "            grid = grid,",
+    "            stopIndexes = stopIndexes,",
+    "            bonusSlotTestCheatUsed = true,",
+    "        }",
     "    end",
   ].join("\n");
 }
@@ -917,13 +1021,6 @@ function makeApplyBonusSlotResult() {
     "            return",
     "        end",
     "        local testCheatAllowed = self:IsBonusSlotTestCheatAllowed()",
-    "        if testCheatAllowed == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then",
-    "            local minTriggerLineCount = self.bonusSlotRules.minTriggerLineCount or 1",
-    "            if result.bonusSlotTriggerLineCount == nil or result.bonusSlotTriggerLineCount < minTriggerLineCount then",
-    "                result.bonusSlotTriggerLineCount = minTriggerLineCount",
-    "            end",
-    "            result.bonusSlotTestCheatUsed = true",
-    "        end",
     "        local bonusSlotResult = self:ResolveBonusSlot(result)",
     "        result.bonusSlotResult = bonusSlotResult",
     "        if bonusSlotResult ~= nil and bonusSlotResult.triggered == true then",
@@ -1092,7 +1189,8 @@ function patchScreenSprayVfxFlow(runtime) {
     );
   }
 
-  if (!runtime.includes("self:HideScreenSprayVfx()\n        if self.baseBetHandler")) {
+  const onEndPlayMatch = runtime.match(/    @ExecSpace\("ClientOnly"\)\r?\n    method void OnEndPlay\(\)\r?\n[\s\S]*?\r?\n    end/);
+  if (!onEndPlayMatch || !onEndPlayMatch[0].includes("self:HideScreenSprayVfx()")) {
     runtime = runtime.replace(
       /    method void OnEndPlay\(\)\r?\n        self:StopWinVfxFrameLoop\(\)\r?\n/,
       "    method void OnEndPlay()\n        self:StopWinVfxFrameLoop()\n        self:HideScreenSprayVfx()\n",
@@ -1105,6 +1203,8 @@ function patchScreenSprayVfxFlow(runtime) {
       "            self:ApplyWinPresentation(result.lineWins)\n            if self:ShouldPlayScreenSprayVfx(result) then\n                self:PlayScreenSprayVfxOnce()\n            end\n",
     );
   }
+
+  runtime = runtime.replace(/(        self:HideScreenSprayVfx\(\)\r?\n){2,}/g, "        self:HideScreenSprayVfx()\n");
 
   return runtime;
 }
@@ -1398,16 +1498,399 @@ function patchBonusSlotProperties(runtime) {
   if (!runtime.includes("self.bonusSlotRules = self:BuildBonusSlotRules()")) {
     runtime = runtime.replace(
       /        self\.paytableTenths = self:BuildPaytableTenths\(\)\r?\n/,
-      (match) => `${match}        self.bonusSlotRules = self:BuildBonusSlotRules()\n        self.bonusSlotPaytable = self:BuildBonusSlotPaytable()\n        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0\n`,
+      (match) => `${match}        self.bonusSlotRules = self:BuildBonusSlotRules()\n        self.bonusSlotPaytable = self:BuildBonusSlotPaytable()\n        self.bonusSlotTestCheatRemaining = 0\n`,
     );
   }
-  if (!runtime.includes("self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0")) {
+  if (!runtime.includes("self.bonusSlotTestCheatRemaining = 0")) {
     runtime = runtime.replace(
       /        self\.bonusSlotPaytable = self:BuildBonusSlotPaytable\(\)\r?\n/,
-      (match) => `${match}        self.bonusSlotTestCheatRemaining = self.bonusSlotRules.testCheatUseCount or 0\n`,
+      (match) => `${match}        self.bonusSlotTestCheatRemaining = 0\n`,
     );
   }
+  runtime = runtime.replace(/        self\.bonusSlotTestCheatRemaining = self\.bonusSlotRules\.testCheatUseCount or 0/g, "        self.bonusSlotTestCheatRemaining = 0");
+  runtime = runtime.replace(/(        self\.bonusSlotTestCheatRemaining = 0\r?\n){2,}/g, "        self.bonusSlotTestCheatRemaining = 0\n");
 
+  return runtime;
+}
+
+function makeDevCheatUiProperties() {
+  const rows = [];
+  for (let index = 1; index <= 12; index += 1) {
+    rows.push(`    property Entity devCheatListItem${index} = ""`);
+  }
+  return [
+    '    property Entity devCheatButton = ""',
+    '    property Entity devCheatPanel = ""',
+    '    property TextInputComponent devCheatInput = ""',
+    '    property Entity devCheatApplyButton = ""',
+    '    property TextComponent devCheatStatusText = ""',
+    ...rows,
+  ].join("\n");
+}
+
+function makeDevCheatStateProperties() {
+  return [
+    "    property any devCheatCommands = nil",
+    "    property any devCheatItemRows = nil",
+    "    property any devCheatButtonDownHandler = nil",
+    "    property any devCheatButtonUpHandler = nil",
+    "    property any devCheatApplyHandler = nil",
+    "    property any devCheatSubmitHandler = nil",
+    "    property any devCheatLongPressTimerId = nil",
+    "    property boolean isDevCheatPanelOpen = false",
+  ].join("\n");
+}
+
+function patchDevCheatProperties(runtime) {
+  if (!runtime.includes("property Entity devCheatButton =")) {
+    runtime = runtime.replace(
+      /    property SpriteGUIRendererComponent screenSprayVfxRenderer = "[^"]*"\r?\n/,
+      (match) => `${match}\n${makeDevCheatUiProperties()}\n`,
+    );
+  }
+  if (!runtime.includes("property any devCheatCommands = nil")) {
+    runtime = runtime.replace(
+      /    property any screenSprayVfxTimerId = nil\r?\n/,
+      (match) => `${match}${makeDevCheatStateProperties()}\n`,
+    );
+  }
+  if (!runtime.includes("self.devCheatCommands = self:BuildCheatCommands()")) {
+    runtime = runtime.replace(
+      /        self\.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig\(\)\r?\n/,
+      (match) => `${match}        self.devCheatCommands = self:BuildCheatCommands()\n`,
+    );
+  }
+  if (!runtime.includes("self:ConnectDevCheatUi()")) {
+    runtime = runtime.replace(
+      /        self:ApplyResponsiveLayout\(\)\r?\n/,
+      (match) => `${match}        self:ConnectDevCheatUi()\n`,
+    );
+  }
+  if (!runtime.includes("self:DisconnectDevCheatUi()")) {
+    runtime = runtime.replace(
+      /    method void OnEndPlay\(\)\r?\n        self:StopWinVfxFrameLoop\(\)\r?\n        self:HideScreenSprayVfx\(\)\r?\n/,
+      (match) => `${match}        self:DisconnectDevCheatUi()\n`,
+    );
+  }
+  return runtime;
+}
+
+function makeIsDevCheatRuntime() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method boolean IsDevCheatRuntime()",
+    "        if self.bonusSlotRules == nil then",
+    "            return false",
+    "        end",
+    "        return (self.bonusSlotRules.runtimeBuildKind or \"\") == \"TEST_SANDBOX\"",
+    "    end",
+  ].join("\n");
+}
+
+function makeNormalizeCheatCode() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method string NormalizeCheatCode(string text)",
+    "        if text == nil then",
+    "            return \"\"",
+    "        end",
+    "        local normalized = tostring(text)",
+    "        normalized = string.gsub(normalized, \"^%s*(.-)%s*$\", \"%1\")",
+    "        return string.upper(normalized)",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetDevCheatStatus() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetDevCheatStatus(string text)",
+    "        if self.devCheatStatusText ~= nil then",
+    "            self.devCheatStatusText.Text = text or \"\"",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetDevCheatPanelOpen() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetDevCheatPanelOpen(boolean isOpen)",
+    "        if self:IsDevCheatRuntime() ~= true then",
+    "            isOpen = false",
+    "        end",
+    "        self.isDevCheatPanelOpen = isOpen",
+    "        if self.devCheatPanel ~= nil then",
+    "            self.devCheatPanel.Enable = isOpen",
+    "        end",
+    "        if isOpen == true then",
+    "            self:RefreshDevCheatList()",
+    "            if self.devCheatInput ~= nil then",
+    "                self.devCheatInput:ActivateInputField()",
+    "            end",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeRefreshDevCheatList() {
+  const hideRows = [];
+  for (let index = 1; index <= 12; index += 1) {
+    hideRows.push(`        local row${index} = self.devCheatItemRows[${index}]`);
+    hideRows.push(`        if row${index} ~= nil then`);
+    hideRows.push(`            row${index}.Enable = false`);
+    hideRows.push(`            if row${index}.TextComponent ~= nil then`);
+    hideRows.push(`                row${index}.TextComponent.Text = ""`);
+    hideRows.push("            end");
+    hideRows.push("        end");
+  }
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void RefreshDevCheatList()",
+    "        if self.devCheatItemRows == nil or self.devCheatCommands == nil then",
+    "            return",
+    "        end",
+    ...hideRows,
+    "",
+    "        local runtimeKind = \"\"",
+    "        if self.bonusSlotRules ~= nil then",
+    "            runtimeKind = self.bonusSlotRules.runtimeBuildKind or \"\"",
+    "        end",
+    "        local visibleIndex = 1",
+    "        for _, command in ipairs(self.devCheatCommands) do",
+    "            local requiredRuntimeKind = command.requiredRuntimeKind or \"\"",
+    "            local runtimeAllowed = requiredRuntimeKind == \"\" or requiredRuntimeKind == runtimeKind",
+    "            if command.enabled == true and runtimeAllowed == true then",
+    "                local row = self.devCheatItemRows[visibleIndex]",
+    "                if row ~= nil then",
+    "                    row.Enable = true",
+    "                    if row.TextComponent ~= nil then",
+    "                        row.TextComponent.Text = command.code .. \"  \" .. command.displayName .. \" - \" .. command.description",
+    "                    end",
+    "                end",
+    "                visibleIndex = visibleIndex + 1",
+    "            end",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeFindCheatCommand() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table FindCheatCommand(string code)",
+    "        local normalizedCode = self:NormalizeCheatCode(code)",
+    "        if normalizedCode == \"\" or self.devCheatCommands == nil then",
+    "            return nil",
+    "        end",
+    "        for _, command in ipairs(self.devCheatCommands) do",
+    "            if self:NormalizeCheatCode(command.code) == normalizedCode then",
+    "                return command",
+    "            end",
+    "        end",
+    "        return nil",
+    "    end",
+  ].join("\n");
+}
+
+function makeApplyCheatCommand() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method boolean ApplyCheatCommand(table command)",
+    "        if command == nil or command.enabled ~= true then",
+    "            self:SetDevCheatStatus(\"Cheat not found\")",
+    "            return false",
+    "        end",
+    "        if self:IsDevCheatRuntime() ~= true then",
+    "            self:SetDevCheatStatus(\"Cheat blocked\")",
+    "            return false",
+    "        end",
+    "        local runtimeKind = self.bonusSlotRules.runtimeBuildKind or \"\"",
+    "        local requiredRuntimeKind = command.requiredRuntimeKind or \"\"",
+    "        if requiredRuntimeKind ~= \"\" and requiredRuntimeKind ~= runtimeKind then",
+    "            self:SetDevCheatStatus(\"Cheat blocked\")",
+    "            return false",
+    "        end",
+    "        if command.cheatType == \"FORCE_777_BONUS_ONCE\" then",
+    "            local useCount = command.useCount or 1",
+    "            if useCount < 1 then",
+    "                useCount = 1",
+    "            end",
+    "            self.bonusSlotTestCheatRemaining = useCount",
+    "            if self.bonusSlotRules ~= nil then",
+    "                self.bonusSlotRules.testCheatEnabled = true",
+    "                self.bonusSlotRules.testCheatForceTrigger = true",
+    "                self.bonusSlotRules.testCheatForceResultKey = command.forceResultKey or \"777\"",
+    "                self.bonusSlotRules.testCheatUseCount = useCount",
+    "            end",
+    "            self:SetDevCheatStatus(command.code .. \" applied\")",
+    "            return true",
+    "        end",
+    "        self:SetDevCheatStatus(\"Unsupported cheat\")",
+    "        return false",
+    "    end",
+  ].join("\n");
+}
+
+function makeApplyDevCheatInput() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void ApplyDevCheatInput(string rawText)",
+    "        local code = self:NormalizeCheatCode(rawText)",
+    "        if code == \"\" then",
+    "            self:SetDevCheatStatus(\"Enter cheat code\")",
+    "            return",
+    "        end",
+    "        local command = self:FindCheatCommand(code)",
+    "        self:ApplyCheatCommand(command)",
+    "        if self.devCheatInput ~= nil then",
+    "            self.devCheatInput.Text = \"\"",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeOnDevCheatButtonDown() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void OnDevCheatButtonDown(UITouchDownEvent event)",
+    "        if self:IsDevCheatRuntime() ~= true then",
+    "            return",
+    "        end",
+    "        if self.devCheatLongPressTimerId ~= nil then",
+    "            _TimerService:ClearTimer(self.devCheatLongPressTimerId)",
+    "            self.devCheatLongPressTimerId = nil",
+    "        end",
+    "        self.devCheatLongPressTimerId = _TimerService:SetTimerOnce(function()",
+    "            self.devCheatLongPressTimerId = nil",
+    "            self:SetDevCheatPanelOpen(true)",
+    "        end, 0.55)",
+    "    end",
+  ].join("\n");
+}
+
+function makeOnDevCheatButtonUp() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void OnDevCheatButtonUp(UITouchUpEvent event)",
+    "        if self.devCheatLongPressTimerId ~= nil then",
+    "            _TimerService:ClearTimer(self.devCheatLongPressTimerId)",
+    "            self.devCheatLongPressTimerId = nil",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeOnDevCheatInputSubmit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void OnDevCheatInputSubmit(TextInputSubmitEvent event)",
+    "        if event == nil then",
+    "            self:ApplyDevCheatInput(\"\")",
+    "            return",
+    "        end",
+    "        self:ApplyDevCheatInput(event.Text)",
+    "    end",
+  ].join("\n");
+}
+
+function makeOnDevCheatApplyClicked() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void OnDevCheatApplyClicked(ButtonClickEvent event)",
+    "        local text = \"\"",
+    "        if self.devCheatInput ~= nil then",
+    "            text = self.devCheatInput.Text",
+    "        end",
+    "        self:ApplyDevCheatInput(text)",
+    "    end",
+  ].join("\n");
+}
+
+function makeConnectDevCheatUi() {
+  const itemRows = [];
+  for (let index = 1; index <= 12; index += 1) {
+    itemRows.push(`            self.devCheatListItem${index},`);
+  }
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void ConnectDevCheatUi()",
+    "        self.devCheatItemRows = {",
+    ...itemRows,
+    "        }",
+    "        if self.devCheatCommands == nil then",
+    "            self.devCheatCommands = self:BuildCheatCommands()",
+    "        end",
+    "        self:SetDevCheatPanelOpen(false)",
+    "        self:RefreshDevCheatList()",
+    "        if self:IsDevCheatRuntime() ~= true then",
+    "            if self.devCheatButton ~= nil then",
+    "                self.devCheatButton.Enable = false",
+    "            end",
+    "            return",
+    "        end",
+    "        if self.devCheatButton ~= nil then",
+    "            self.devCheatButton.Enable = true",
+    "            self.devCheatButtonDownHandler = self.devCheatButton:ConnectEvent(UITouchDownEvent, self.OnDevCheatButtonDown)",
+    "            self.devCheatButtonUpHandler = self.devCheatButton:ConnectEvent(UITouchUpEvent, self.OnDevCheatButtonUp)",
+    "        end",
+    "        if self.devCheatApplyButton ~= nil then",
+    "            self.devCheatApplyHandler = self.devCheatApplyButton:ConnectEvent(ButtonClickEvent, self.OnDevCheatApplyClicked)",
+    "        end",
+    "        if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil then",
+    "            self.devCheatSubmitHandler = self.devCheatInput.Entity:ConnectEvent(TextInputSubmitEvent, self.OnDevCheatInputSubmit)",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeDisconnectDevCheatUi() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void DisconnectDevCheatUi()",
+    "        if self.devCheatLongPressTimerId ~= nil then",
+    "            _TimerService:ClearTimer(self.devCheatLongPressTimerId)",
+    "            self.devCheatLongPressTimerId = nil",
+    "        end",
+    "        if self.devCheatButton ~= nil then",
+    "            if self.devCheatButtonDownHandler ~= nil then",
+    "                self.devCheatButton:DisconnectEvent(UITouchDownEvent, self.devCheatButtonDownHandler)",
+    "                self.devCheatButtonDownHandler = nil",
+    "            end",
+    "            if self.devCheatButtonUpHandler ~= nil then",
+    "                self.devCheatButton:DisconnectEvent(UITouchUpEvent, self.devCheatButtonUpHandler)",
+    "                self.devCheatButtonUpHandler = nil",
+    "            end",
+    "        end",
+    "        if self.devCheatApplyButton ~= nil and self.devCheatApplyHandler ~= nil then",
+    "            self.devCheatApplyButton:DisconnectEvent(ButtonClickEvent, self.devCheatApplyHandler)",
+    "            self.devCheatApplyHandler = nil",
+    "        end",
+    "        if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil and self.devCheatSubmitHandler ~= nil then",
+    "            self.devCheatInput.Entity:DisconnectEvent(TextInputSubmitEvent, self.devCheatSubmitHandler)",
+    "            self.devCheatSubmitHandler = nil",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function patchDevCheatFlow(runtime, data) {
+  runtime = patchDevCheatProperties(runtime);
+  runtime = upsertTypedMethod(runtime, "table", "BuildCheatCommands", makeBuildCheatCommands(data), "BuildBonusSlotRules");
+  runtime = upsertTypedMethod(runtime, "boolean", "IsDevCheatRuntime", makeIsDevCheatRuntime(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "string", "NormalizeCheatCode", makeNormalizeCheatCode(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetDevCheatStatus", makeSetDevCheatStatus(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetDevCheatPanelOpen", makeSetDevCheatPanelOpen(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "RefreshDevCheatList", makeRefreshDevCheatList(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "FindCheatCommand", makeFindCheatCommand(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "boolean", "ApplyCheatCommand", makeApplyCheatCommand(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "ApplyDevCheatInput", makeApplyDevCheatInput(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "OnDevCheatButtonDown", makeOnDevCheatButtonDown(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "OnDevCheatButtonUp", makeOnDevCheatButtonUp(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "OnDevCheatInputSubmit", makeOnDevCheatInputSubmit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "OnDevCheatApplyClicked", makeOnDevCheatApplyClicked(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "ConnectDevCheatUi", makeConnectDevCheatUi(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "DisconnectDevCheatUi", makeDisconnectDevCheatUi(), "EvaluatePaylines");
   return runtime;
 }
 
@@ -1419,6 +1902,8 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "table", "GetBonusSlotPaytableRow", makeGetBonusSlotPaytableRow(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "integer", "RollBonusSlotDigit", makeRollBonusSlotDigit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "boolean", "IsBonusSlotTestCheatAllowed", makeIsBonusSlotTestCheatAllowed(), "EvaluatePaylines");
+  runtime = replaceMethod(runtime, "ResolveSpinResult", makeResolveSpinResult());
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonusSlotTestCheatSpinResult", makeBuildBonusSlotTestCheatSpinResult(), "GetStripSymbolAt");
   runtime = upsertTypedMethod(runtime, "table", "BuildForcedBonusSlotDigits", makeBuildForcedBonusSlotDigits(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "string", "BuildBonusSlotResultKey", makeBuildBonusSlotResultKey(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "integer", "GetMatchedBonusSlotDigit", makeGetMatchedBonusSlotDigit(), "EvaluatePaylines");
@@ -1815,6 +2300,7 @@ async function main() {
   runtime = replaceVoidMethod(runtime, "RefreshReelStripResources", makeRefreshReelStripResources());
   runtime = replaceMethod(runtime, "BuildPaytableTenths", makePaytableTenths(data));
   runtime = patchBonusSlotFlow(runtime, data);
+  runtime = patchDevCheatFlow(runtime, data);
   runtime = replaceMethod(runtime, "BuildPaylines", makePaylines(data));
   runtime = replaceMethod(runtime, "BuildSpinProfiles", makeSpinProfiles(data));
   runtime = upsertTypedMethod(runtime, "table", "BuildScreenSprayVfxConfig", makeScreenSprayVfxConfig(data), "BuildSpinProfiles");
