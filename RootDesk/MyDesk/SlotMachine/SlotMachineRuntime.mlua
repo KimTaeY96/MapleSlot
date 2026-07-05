@@ -503,6 +503,8 @@ script SlotMachineRuntime extends Logic
     property any screenSprayVfxTimerId = nil
     property any devCheatCommands = nil
     property any devCheatItemRows = nil
+    property any devCheatVisibleCommands = nil
+    property any devCheatItemClickHandlers = nil
     property any devCheatButtonDownHandler = nil
     property any devCheatButtonUpHandler = nil
     property any devCheatApplyHandler = nil
@@ -681,7 +683,6 @@ script SlotMachineRuntime extends Logic
     method void OnEndPlay()
         self:StopWinVfxFrameLoop()
         self:HideScreenSprayVfx()
-        self:HideScreenSprayVfx()
         self:DisconnectDevCheatUi()
         if self.baseBetHandler ~= nil then
             self.baseBetButton:DisconnectEvent(ButtonClickEvent, self.baseBetHandler)
@@ -785,11 +786,11 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method table BuildBaseReelCellSymbolTable()
         return {
-            { "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD" },
-            { "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM" },
-            { "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME" },
-            { "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM" },
-            { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME" },
+            { "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD" },
+            { "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM" },
+            { "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME" },
+            { "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM" },
+            { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME" },
         }
     end
 
@@ -797,74 +798,74 @@ script SlotMachineRuntime extends Logic
     method table BuildReelStrips()
         return {
             [1] = {
-                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD" },
-                [2] = { "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM" },
-                [3] = { "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME" },
-                [4] = { "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM" },
-                [5] = { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME" },
+                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD" },
+                [2] = { "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM" },
+                [3] = { "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME" },
+                [4] = { "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM" },
+                [5] = { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME" },
             },
             [2] = {
-                [1] = { "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME" },
-                [2] = { "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG" },
-                [3] = { "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM" },
-                [4] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN" },
-                [5] = { "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
+                [1] = { "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME" },
+                [2] = { "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG" },
+                [3] = { "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM" },
+                [4] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN" },
+                [5] = { "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
             },
             [3] = {
-                [1] = { "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM" },
-                [2] = { "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME" },
-                [3] = { "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
-                [4] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG" },
-                [5] = { "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG" },
+                [1] = { "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM" },
+                [2] = { "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME" },
+                [3] = { "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
+                [4] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG" },
+                [5] = { "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG" },
             },
             [4] = {
-                [1] = { "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG" },
-                [2] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN" },
-                [3] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN" },
-                [4] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM" },
-                [5] = { "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM" },
+                [1] = { "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG" },
+                [2] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN" },
+                [3] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN" },
+                [4] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM" },
+                [5] = { "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM" },
             },
             [5] = {
-                [1] = { "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
-                [2] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM" },
-                [3] = { "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG" },
-                [4] = { "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME" },
-                [5] = { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME" },
+                [1] = { "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
+                [2] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM" },
+                [3] = { "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG" },
+                [4] = { "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME" },
+                [5] = { "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME" },
             },
             [6] = {
-                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN" },
-                [2] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM" },
-                [3] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME" },
-                [4] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM" },
-                [5] = { "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
+                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN" },
+                [2] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM" },
+                [3] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME" },
+                [4] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM" },
+                [5] = { "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
             },
             [7] = {
-                [1] = { "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME" },
-                [2] = { "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG" },
-                [3] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM" },
-                [4] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG" },
-                [5] = { "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG" },
+                [1] = { "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME" },
+                [2] = { "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG" },
+                [3] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM" },
+                [4] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG" },
+                [5] = { "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG" },
             },
             [8] = {
-                [1] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM" },
-                [2] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME" },
-                [3] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
-                [4] = { "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
-                [5] = { "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM" },
+                [1] = { "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM" },
+                [2] = { "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME" },
+                [3] = { "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
+                [4] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
+                [5] = { "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM" },
             },
             [9] = {
-                [1] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG" },
-                [2] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM" },
-                [3] = { "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG" },
-                [4] = { "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME" },
-                [5] = { "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME" },
+                [1] = { "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG" },
+                [2] = { "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM" },
+                [3] = { "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG" },
+                [4] = { "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME" },
+                [5] = { "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME" },
             },
             [10] = {
-                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
-                [2] = { "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
-                [3] = { "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME" },
-                [4] = { "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM" },
-                [5] = { "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD", "PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
+                [1] = { "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM" },
+                [2] = { "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD", "MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM" },
+                [3] = { "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME" },
+                [4] = { "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD", "GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM" },
+                [5] = { "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD", "MUSHROOM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM" },
             },
         }
     end
@@ -887,7 +888,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -902,7 +903,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                 },
                 [2] = {
@@ -918,7 +919,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -933,7 +934,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                 },
@@ -949,7 +950,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -964,7 +965,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -980,7 +981,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -995,7 +996,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1011,9 +1012,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1026,9 +1027,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1048,7 +1049,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1063,7 +1064,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                 },
@@ -1079,7 +1080,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1094,7 +1095,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1110,7 +1111,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1125,7 +1126,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1141,7 +1142,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1156,7 +1157,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1172,9 +1173,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1187,9 +1188,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1209,7 +1210,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1224,7 +1225,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1240,7 +1241,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1255,7 +1256,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1271,7 +1272,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1286,7 +1287,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1302,7 +1303,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1317,7 +1318,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1333,9 +1334,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1348,9 +1349,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1370,7 +1371,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1385,7 +1386,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1401,7 +1402,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1416,7 +1417,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1432,7 +1433,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1447,7 +1448,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1463,7 +1464,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1478,7 +1479,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1494,9 +1495,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1509,9 +1510,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1531,7 +1532,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1546,7 +1547,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1562,7 +1563,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1577,7 +1578,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1593,7 +1594,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1608,7 +1609,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1624,7 +1625,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1639,7 +1640,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1655,9 +1656,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1670,9 +1671,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1692,7 +1693,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1707,7 +1708,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1723,7 +1724,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1738,7 +1739,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1754,7 +1755,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1769,7 +1770,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1785,7 +1786,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1800,7 +1801,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1816,9 +1817,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1831,9 +1832,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1853,7 +1854,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1868,7 +1869,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -1884,7 +1885,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1899,7 +1900,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -1915,7 +1916,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1930,7 +1931,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1946,7 +1947,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1961,7 +1962,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1977,9 +1978,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -1992,9 +1993,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2014,7 +2015,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2029,7 +2030,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2045,7 +2046,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2060,7 +2061,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2076,7 +2077,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2091,7 +2092,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2107,7 +2108,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2122,7 +2123,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2138,9 +2139,9 @@ script SlotMachineRuntime extends Logic
                 [5] = {
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2153,9 +2154,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2175,7 +2176,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2190,7 +2191,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2206,7 +2207,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2221,7 +2222,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2237,7 +2238,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2252,7 +2253,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2268,7 +2269,7 @@ script SlotMachineRuntime extends Logic
                 [4] = {
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2283,7 +2284,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2299,9 +2300,9 @@ script SlotMachineRuntime extends Logic
                 },
                 [5] = {
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2314,9 +2315,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2336,7 +2337,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2351,7 +2352,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
@@ -2367,7 +2368,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2382,7 +2383,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
@@ -2398,7 +2399,7 @@ script SlotMachineRuntime extends Logic
                 [3] = {
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2413,7 +2414,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2429,7 +2430,7 @@ script SlotMachineRuntime extends Logic
                 },
                 [4] = {
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2444,7 +2445,7 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2460,9 +2461,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                 },
                 [5] = {
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2475,9 +2476,9 @@ script SlotMachineRuntime extends Logic
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
                     { symbolId = "GOLEM", idleSpriteRuid = "2ef159c2e9f646ae96fcf6c5101c25dc", winAnimationRuid = "736ecda03d4444dea5f9089c02c54eb2", winAnimation = "SHAKE" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "WILD", idleSpriteRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimationRuid = "f07924c49aef4ec784bf78fedb5db171", winAnimation = "FLASH" },
-                    { symbolId = "PINK_BEAN", idleSpriteRuid = "fdb9c7763b5145f78830d98931bc7727", winAnimationRuid = "aa7d5f03ff1d45df9c08faa147b64db1", winAnimation = "FLASH" },
+                    { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "PIG", idleSpriteRuid = "5f9d9ec91b85404bbb5fcc83d26c5c1c", winAnimationRuid = "8baad61512be4b33b2a0879fec7a266e", winAnimation = "WOBBLE" },
                     { symbolId = "MUSHROOM", idleSpriteRuid = "f49d748a481d4dc496148df59b22d90e", winAnimationRuid = "84a6332ed4994e41befad968d38d4255", winAnimation = "POP" },
                     { symbolId = "SLIME", idleSpriteRuid = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE" },
@@ -2591,7 +2592,7 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method table BuildCheatCommands()
         return {
-            [1] = { code = "777", displayName = "Force 777 Bonus", description = "Force the next spin to Wild x5 and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+            [1] = { code = "777", description = "Force Wild x5 bonus entry and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
         }
     end
 
@@ -3100,6 +3101,7 @@ script SlotMachineRuntime extends Logic
         if self.devCheatItemRows == nil or self.devCheatCommands == nil then
             return
         end
+        self.devCheatVisibleCommands = {}
         local row1 = self.devCheatItemRows[1]
         if row1 ~= nil then
             row1.Enable = false
@@ -3197,8 +3199,9 @@ script SlotMachineRuntime extends Logic
                 local row = self.devCheatItemRows[visibleIndex]
                 if row ~= nil then
                     row.Enable = true
+                    self.devCheatVisibleCommands[visibleIndex] = command
                     if row.TextComponent ~= nil then
-                        row.TextComponent.Text = command.code .. "  " .. command.displayName .. " - " .. command.description
+                        row.TextComponent.Text = command.code .. " - " .. command.description
                     end
                 end
                 visibleIndex = visibleIndex + 1
@@ -3311,6 +3314,46 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method integer GetDevCheatListIndex(Entity entity)
+        if entity == nil then
+            return 0
+        end
+        if entity == self.devCheatListItem1 then return 1 end
+        if entity == self.devCheatListItem2 then return 2 end
+        if entity == self.devCheatListItem3 then return 3 end
+        if entity == self.devCheatListItem4 then return 4 end
+        if entity == self.devCheatListItem5 then return 5 end
+        if entity == self.devCheatListItem6 then return 6 end
+        if entity == self.devCheatListItem7 then return 7 end
+        if entity == self.devCheatListItem8 then return 8 end
+        if entity == self.devCheatListItem9 then return 9 end
+        if entity == self.devCheatListItem10 then return 10 end
+        if entity == self.devCheatListItem11 then return 11 end
+        if entity == self.devCheatListItem12 then return 12 end
+        return 0
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatListItemClicked(ButtonClickEvent event)
+        if event == nil or self.devCheatVisibleCommands == nil then
+            return
+        end
+        local index = self:GetDevCheatListIndex(event.Entity)
+        if index <= 0 then
+            return
+        end
+        local command = self.devCheatVisibleCommands[index]
+        if command == nil then
+            return
+        end
+        if self.devCheatInput ~= nil then
+            self.devCheatInput.Text = command.code or ""
+            self.devCheatInput:ActivateInputField()
+        end
+        self:SetDevCheatStatus(command.code .. " selected")
+    end
+
+    @ExecSpace("ClientOnly")
     method void ConnectDevCheatUi()
         self.devCheatItemRows = {
             self.devCheatListItem1,
@@ -3348,6 +3391,12 @@ script SlotMachineRuntime extends Logic
         if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil then
             self.devCheatSubmitHandler = self.devCheatInput.Entity:ConnectEvent(TextInputSubmitEvent, self.OnDevCheatInputSubmit)
         end
+        self.devCheatItemClickHandlers = {}
+        for index, row in ipairs(self.devCheatItemRows) do
+            if row ~= nil then
+                self.devCheatItemClickHandlers[index] = row:ConnectEvent(ButtonClickEvent, self.OnDevCheatListItemClicked)
+            end
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -3373,6 +3422,15 @@ script SlotMachineRuntime extends Logic
         if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil and self.devCheatSubmitHandler ~= nil then
             self.devCheatInput.Entity:DisconnectEvent(TextInputSubmitEvent, self.devCheatSubmitHandler)
             self.devCheatSubmitHandler = nil
+        end
+        if self.devCheatItemRows ~= nil and self.devCheatItemClickHandlers ~= nil then
+            for index, row in ipairs(self.devCheatItemRows) do
+                local handler = self.devCheatItemClickHandlers[index]
+                if row ~= nil and handler ~= nil then
+                    row:DisconnectEvent(ButtonClickEvent, handler)
+                end
+            end
+            self.devCheatItemClickHandlers = nil
         end
     end
 

@@ -65,6 +65,10 @@ async function optionalWorkbookRows(projectRoot, filename, sheetName) {
   }
 }
 
+async function workbookRowsFromSlotMachine(projectRoot, sheetName) {
+  return workbookRows(projectRoot, "SlotMachine.xlsx", sheetName);
+}
+
 function buildEnumResolver(enumRows) {
   const byId = new Map();
   const byKo = new Map();
@@ -199,7 +203,6 @@ async function loadRuntimeSlotData(options = {}) {
     .sort((a, b) => num(a.CheatCommandsIndex, "CheatCommandsIndex") - num(b.CheatCommandsIndex, "CheatCommandsIndex"))
     .map((row) => ({
       code: clean(row.CheatCode).toUpperCase(),
-      displayName: clean(row.DisplayName),
       description: clean(row.Description),
       cheatType: clean(row.CheatType),
       targetKey: clean(row.TargetKey),
@@ -211,7 +214,7 @@ async function loadRuntimeSlotData(options = {}) {
     .filter((row) => row.code);
 
   const reelGroups = new Map();
-  for (const row of await workbookRows(projectRoot, "SpinPresentation.xlsx", "ReelStrips")) {
+  for (const row of await workbookRowsFromSlotMachine(projectRoot, "ReelStrips")) {
     const baseBetIndex = num(row.BaseBetRegionIndex, "BaseBetRegionIndex");
     const reelNo = num(row.ReelNo, "ReelNo");
     const stopIndex = num(row.StopIndex, "StopIndex");

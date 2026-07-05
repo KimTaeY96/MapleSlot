@@ -123,6 +123,36 @@ function runValidationCases(data) {
   assertEqual(releaseBlocked.bonusSlot.triggered, false, "777 test cheat is blocked outside TEST_SANDBOX runtime kind");
 }
 
+function validateReelStripGuards(data) {
+  const pinkBeanWildAdjacency = [];
+  for (const [baseBetIndex, reels] of data.reelGroups) {
+    for (const [reelNo, strip] of reels) {
+      for (let index = 0; index < strip.length; index += 1) {
+        if (strip[index] !== "WILD") continue;
+        const previous = strip[(index - 1 + strip.length) % strip.length];
+        const next = strip[(index + 1) % strip.length];
+        if (previous === "PINK_BEAN" || next === "PINK_BEAN") {
+          pinkBeanWildAdjacency.push({
+            baseBetIndex,
+            reelNo,
+            stopIndex: index + 1,
+            previous,
+            next,
+          });
+        }
+      }
+    }
+  }
+
+  if (pinkBeanWildAdjacency.length > 0) {
+    throw new Error(`ReelStrips must not place PINK_BEAN next to WILD stops: ${JSON.stringify(pinkBeanWildAdjacency.slice(0, 5))}`);
+  }
+
+  return {
+    pinkBeanAdjacentToWildCount: pinkBeanWildAdjacency.length,
+  };
+}
+
 function summarize(metric) {
   return {
     rtp: Number(metric.rtp.toFixed(4)),
@@ -135,6 +165,7 @@ function summarize(metric) {
 async function main() {
   const data = await loadRuntimeSlotData();
   runValidationCases(data);
+  const reelStripGuards = validateReelStripGuards(data);
 
   const equalWeights = Object.fromEntries(data.symbols.map((symbol) => [symbol, 20]));
   const equalX1 = simulateWeightedSymbols({ data, weights: equalWeights, spinCount: 200000, multiplier: 1, seed: 246813579 });
@@ -170,6 +201,7 @@ async function main() {
       testCheatUseCount: data.bonusSlotRules.testCheatUseCount,
       testCheatRequiredRuntimeKind: data.bonusSlotRules.testCheatRequiredRuntimeKind,
     },
+    reelStripGuards,
     cheatCommands: data.cheatCommands.map((command) => ({
       code: command.code,
       cheatType: command.cheatType,

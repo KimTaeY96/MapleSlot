@@ -105,7 +105,6 @@ const workbook = Workbook.create();
 addDataSheet(workbook, "CheatCommands", [
   { name: "CheatCommandsIndex", scope: "all", desc: "CheatCommands 테이블 행을 식별하는 정수 인덱스입니다.", type: "int" },
   { name: "CheatCode", scope: "client", desc: "테스트 UI 입력창에 입력할 치트 코드입니다.", type: "string" },
-  { name: "DisplayName", scope: "client", desc: "테스트 UI 목록에 표시할 치트 이름입니다.", type: "string" },
   { name: "Description", scope: "client", desc: "치트의 동작을 설명하는 목록 표시 문구입니다.", type: "string" },
   { name: "CheatType", scope: "client", desc: "런타임에서 처리할 치트 동작 타입입니다.", type: "string" },
   { name: "TargetKey", scope: "client", desc: "치트가 대상으로 삼는 슬롯 기능 또는 트리거 키입니다.", type: "string" },
@@ -117,8 +116,7 @@ addDataSheet(workbook, "CheatCommands", [
 ], [[
   Number(existingCheatCommandValue(cheatCode, "CheatCommandsIndex", 1)),
   existingCheatCommandValue(cheatCode, "CheatCode", cheatCode),
-  existingCheatCommandValue(cheatCode, "DisplayName", "Force 777 Bonus"),
-  existingCheatCommandValue(cheatCode, "Description", "Force the next spin to Wild x5 and first 777 result once."),
+  existingCheatCommandValue(cheatCode, "Description", "Next spin: Wild x5 -> 777 bonus."),
   existingCheatCommandValue(cheatCode, "CheatType", "FORCE_777_BONUS_ONCE"),
   existingCheatCommandValue(cheatCode, "TargetKey", "WILD_5_BONUS_SLOT"),
   existingCheatCommandValue(cheatCode, "ForceResultKey", "777"),
@@ -126,7 +124,7 @@ addDataSheet(workbook, "CheatCommands", [
   existingCheatCommandValue(cheatCode, "RequiredRuntimeKind", "TEST_SANDBOX"),
   existingCheatCommandValue(cheatCode, "Enabled", true),
   existingCheatCommandValue(cheatCode, "Notes", "Development-only session cheat; release runtime cannot apply it."),
-]], [170, 130, 190, 360, 210, 190, 130, 110, 190, 100, 360]);
+]], [170, 130, 280, 210, 190, 130, 110, 190, 100, 360]);
 
 const errors = await workbook.inspect({
   kind: "match",
@@ -141,4 +139,6 @@ if (errors.ndjson.includes("#REF!") || errors.ndjson.includes("#DIV/0!") || erro
 await fs.mkdir(outputDir, { recursive: true });
 const xlsx = await SpreadsheetFile.exportXlsx(workbook);
 await xlsx.save(outputPath);
+const inspect = await workbook.inspect({ kind: "workbook,sheet,table,region,computedStyle" });
+await fs.writeFile(`${outputPath}.inspect.ndjson`, inspect.ndjson, "utf8");
 console.log(`Created ${outputPath}`);

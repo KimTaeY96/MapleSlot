@@ -457,7 +457,6 @@ function getColumnDescriptionKo(column) {
     IdleSpriteRuid: "일반 상태에서 이 릴 셀에 표시할 MSW 리소스 RUID입니다.",
     CheatCommandsIndex: "CheatCommands 테이블 행을 식별하는 정수 인덱스입니다.",
     CheatCode: "테스트 UI 입력창에 입력할 치트 코드입니다.",
-    DisplayName: "테스트 UI 목록에 표시할 치트 이름입니다.",
     Description: "치트의 동작을 설명하는 목록 표시 문구입니다.",
     CheatType: "런타임에서 처리할 치트 동작 타입입니다.",
     TargetKey: "치트가 대상으로 삼는 슬롯 기능 또는 트리거 키입니다.",
@@ -665,8 +664,9 @@ const existingCheatCommandRows = new Map(
     .map((row) => [String(row.CheatCode).trim().toUpperCase(), row]),
 );
 
+const existingSlotMachineReelStripRows = await loadExistingSheetRows("SlotMachine.xlsx", "ReelStrips");
 const existingReelStripRows = new Map(
-  (await loadExistingSheetRows("SpinPresentation.xlsx", "ReelStrips"))
+  existingSlotMachineReelStripRows
     .filter((row) => row.ReelStripsIndex !== null && row.ReelStripsIndex !== "")
     .map((row) => [`${row.BaseBetRegionIndex}:${row.ReelNo}:${row.StopIndex}`, row]),
 );
@@ -980,6 +980,7 @@ outputs.push(await saveWorkbook("SlotMachine.xlsx", (workbook) => {
     { name: "RollWeight", scope: "server", desc: "Per-reel digit selection weight.", type: "int" },
     { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
   ], bonusSlotPaytableRows, [170, 90, 110, 160, 160, 110, 320]);
+  addSpinPresentationSheets(workbook);
 }));
 
 outputs.push(await saveWorkbook("Config.xlsx", (workbook) => {
@@ -1006,7 +1007,6 @@ outputs.push(await saveWorkbook("Cheat.xlsx", (workbook) => {
   addDataSheet(workbook, "CheatCommands", [
     { name: "CheatCommandsIndex", scope: "all", desc: "Unique row index for cheat commands.", type: "int" },
     { name: "CheatCode", scope: "client", desc: "Code typed into the development cheat input field.", type: "string" },
-    { name: "DisplayName", scope: "client", desc: "Short name shown in the development cheat list.", type: "string" },
     { name: "Description", scope: "client", desc: "Description shown in the development cheat list.", type: "string" },
     { name: "CheatType", scope: "client", desc: "Runtime cheat operation type.", type: "string" },
     { name: "TargetKey", scope: "client", desc: "Slot trigger or feature key targeted by this cheat.", type: "string" },
@@ -1018,8 +1018,7 @@ outputs.push(await saveWorkbook("Cheat.xlsx", (workbook) => {
   ], [[
     Number(existingCheatCommandValue(cheatCode, "CheatCommandsIndex", 1)),
     existingCheatCommandValue(cheatCode, "CheatCode", cheatCode),
-    existingCheatCommandValue(cheatCode, "DisplayName", "Force 777 Bonus"),
-    existingCheatCommandValue(cheatCode, "Description", "Force the next spin to Wild x5 and first 777 result once."),
+    existingCheatCommandValue(cheatCode, "Description", "Next spin: Wild x5 -> 777 bonus."),
     existingCheatCommandValue(cheatCode, "CheatType", "FORCE_777_BONUS_ONCE"),
     existingCheatCommandValue(cheatCode, "TargetKey", "WILD_5_BONUS_SLOT"),
     existingCheatCommandValue(cheatCode, "ForceResultKey", "777"),
@@ -1027,10 +1026,10 @@ outputs.push(await saveWorkbook("Cheat.xlsx", (workbook) => {
     existingCheatCommandValue(cheatCode, "RequiredRuntimeKind", "TEST_SANDBOX"),
     existingCheatCommandValue(cheatCode, "Enabled", true),
     existingCheatCommandValue(cheatCode, "Notes", "Development-only session cheat; release runtime cannot apply it."),
-  ]], [170, 130, 190, 360, 210, 190, 130, 110, 190, 100, 360]);
+  ]], [170, 130, 280, 210, 190, 130, 110, 190, 100, 360]);
 }));
 
-outputs.push(await saveWorkbook("SpinPresentation.xlsx", (workbook) => {
+function addSpinPresentationSheets(workbook) {
   addDataSheet(workbook, "SpinProfiles", [
     { name: "SpinProfilesIndex", scope: "all", desc: "Unique row index for spin profile normalization.", type: "int" },
     { name: "SpinProfileEnumId", scope: "all", desc: "References Enums where EnumTypeName is SpinProfileType.", type: "ref:Enums.SpinProfileType" },
@@ -1062,11 +1061,11 @@ outputs.push(await saveWorkbook("SpinPresentation.xlsx", (workbook) => {
 
   const stripRows = [];
   const strips = [
-    ["SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "WILD"],
-    ["MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PINK_BEAN", "WILD"],
-    ["PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "WILD"],
-    ["GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "PINK_BEAN", "WILD"],
-    ["PINK_BEAN", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PINK_BEAN", "WILD"],
+    ["SLIME", "MUSHROOM", "PIG", "GOLEM", "PINK_BEAN", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "MUSHROOM", "WILD"],
+    ["MUSHROOM", "PIG", "SLIME", "PINK_BEAN", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "PIG", "WILD"],
+    ["PIG", "SLIME", "GOLEM", "MUSHROOM", "PINK_BEAN", "PIG", "SLIME", "GOLEM", "MUSHROOM", "PIG", "SLIME", "GOLEM", "MUSHROOM", "SLIME", "WILD"],
+    ["GOLEM", "SLIME", "MUSHROOM", "PINK_BEAN", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "SLIME", "MUSHROOM", "PIG", "GOLEM", "WILD"],
+    ["SLIME", "PIG", "MUSHROOM", "PINK_BEAN", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "PIG", "MUSHROOM", "SLIME", "GOLEM", "MUSHROOM", "WILD"],
   ];
   let rowIndex = 1;
   for (const [baseBetRegionIndex, regionName] of baseBetRegionTable) {
@@ -1126,7 +1125,7 @@ outputs.push(await saveWorkbook("SpinPresentation.xlsx", (workbook) => {
     { name: "WinAnimationEnumId", scope: "client", desc: "Symbol animation category for filtering or fallback selection.", type: "ref:Enums.SymbolWinAnimation" },
     { name: "Notes", scope: "design", desc: "Designer-only note ignored by runtime import.", type: "string" },
   ], stripRows, [140, 150, 130, 90, 100, 140, 230, 230, 170, 360]);
-}));
+}
 
 outputs.push(await saveWorkbook("UI.xlsx", (workbook) => {
   addDataSheet(workbook, "UIBindings", [

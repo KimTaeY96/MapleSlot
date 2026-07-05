@@ -736,14 +736,21 @@ for (const snippet of [
   "method table BuildBonusSlotTestCheatSpinResult()",
   "method void ConnectDevCheatUi()",
   "method void OnDevCheatButtonDown(UITouchDownEvent event)",
+  "method integer GetDevCheatListIndex(Entity entity)",
+  "method void OnDevCheatListItemClicked(ButtonClickEvent event)",
   "method void OnDevCheatInputSubmit(TextInputSubmitEvent event)",
   "method boolean ApplyCheatCommand(table command)",
+  "self.devCheatVisibleCommands[visibleIndex] = command",
+  "self.devCheatInput.Text = command.code or \"\"",
   "self.bonusSlotTestCheatRemaining = 0",
   "command.cheatType == \"FORCE_777_BONUS_ONCE\"",
 ]) {
   if (!runtime.includes(snippet)) {
     fail(`Runtime missing dev cheat flow snippet: ${snippet}`);
   }
+}
+if (runtime.includes("displayName =")) {
+  fail("Runtime CheatCommands must not carry a DisplayName/displayName field");
 }
 
 console.log(`Validated ${entities.length} UI entities.`);

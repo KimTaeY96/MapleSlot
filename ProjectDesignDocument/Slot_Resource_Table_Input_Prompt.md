@@ -58,7 +58,7 @@ asset_search_resources(cat="animationclip", query="*golem", source="maplestory",
 
 ## Current Table Contract
 
-`ExcelTable/SpinPresentation.xlsx / ReelStrips` is the cell-level source of truth.
+`ExcelTable/SlotMachine.xlsx / ReelStrips` is the cell-level source of truth.
 
 BaseBet is a region/town type. Selecting a different BaseBet should switch to that region's reel strip data.
 

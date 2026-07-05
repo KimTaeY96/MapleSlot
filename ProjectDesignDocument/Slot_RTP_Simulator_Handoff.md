@@ -70,7 +70,7 @@ The later Script Dev simulator should accept data, not hardcoded branching, so D
 
 ### Inputs
 - `symbols`: ordered symbol IDs: `SLIME`, `MUSHROOM`, `PIG`, `GOLEM`, `PINK_BEAN`, `WILD`.
-- `reelStrips`: explicit per-reel symbol stop data from `SpinPresentation.xlsx/ReelStrips`.
+- `reelStrips`: explicit per-reel symbol stop data from `SlotMachine.xlsx/ReelStrips`.
 - `paylines`: ordered coordinate arrays. P0.5 enables only the three horizontal lines, but the format must support additional lines later.
 - `paytable`: symbol ID mapped to 3, 4, and 5 match payout multipliers.
 - `baseBetCost`: integer unit cost for Base Bet Level 1.
@@ -128,8 +128,8 @@ Freeze the current payline shape and symbol hierarchy for the first runtime pass
 - Local validation runner: `tools/check_slot_rtp_simulator.cjs`
 - Weighted candidate runner: `tools/check_slot_rtp_candidates.cjs`
 - The simulator uses `TOP_LINE`, `MAIN_LINE`, and `BOTTOM_LINE` left-to-right consecutive evaluation from column 1.
-- The simulator reads `Enum.xlsx`, `SlotMachine.xlsx`, and `SpinPresentation.xlsx` to match runtime symbols, paylines, paytable, and explicit reel strips.
+- The simulator reads `Enum.xlsx` and `SlotMachine.xlsx` to match runtime symbols, paylines, paytable, and explicit reel strips.
 - Payouts are represented in tenths of Base Bet (`0.4x = 4`, `100.0x = 1000`) to avoid fractional payout drift during RTP calculation.
-- Validation status on 2026-07-01: `node tools/check_slot_rtp_simulator.cjs` passed all required validation cases.
-- Current explicit reel strip result range: RTP about `70.5%-75.6%`, hit rate about `22%-23%`, multi-line win rate about `2.3%`.
+- Validation status on 2026-07-05: `node tools/check_slot_rtp_simulator.cjs` passed all required validation cases.
+- Current explicit reel strip result range: RTP about `64.4%-67.2%`, hit rate about `23.9%-24.5%`, multi-line win rate about `2.9%-3.0%`.
 - Lua runtime status: local `lua`/`luajit` executable was not available in PATH, so runtime validation was performed with the paired Node checker that mirrors the Lua logic.

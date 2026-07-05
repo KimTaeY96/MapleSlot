@@ -123,6 +123,10 @@ async function optionalWorkbookRows(filename, sheetName) {
   }
 }
 
+async function workbookRowsFromSlotMachine(sheetName) {
+  return await workbookRows("SlotMachine.xlsx", sheetName);
+}
+
 function buildEnumResolver(enumRows) {
   const byKo = new Map();
   const byId = new Map();
@@ -198,7 +202,7 @@ async function loadData() {
 
   const reelGroups = new Map();
   const reelCellGroups = new Map();
-  for (const row of await workbookRows("SpinPresentation.xlsx", "ReelStrips")) {
+  for (const row of await workbookRowsFromSlotMachine("ReelStrips")) {
     const baseBetIndex = num(row.BaseBetRegionIndex, "BaseBetRegionIndex");
     const reelNo = num(row.ReelNo, "ReelNo");
     const stopIndex = num(row.StopIndex, "StopIndex");
@@ -222,7 +226,7 @@ async function loadData() {
     };
   }
 
-  const spinProfileRows = (await workbookRows("SpinPresentation.xlsx", "SpinProfiles"))
+  const spinProfileRows = (await workbookRowsFromSlotMachine("SpinProfiles"))
     .sort((a, b) => num(a.SpinProfilesIndex, "SpinProfilesIndex") - num(b.SpinProfilesIndex, "SpinProfilesIndex"))
     .map((row) => ({
       id: enumResolver.resolve("SpinProfileType", row.SpinProfileEnumId),
@@ -290,7 +294,6 @@ async function loadData() {
     .sort((a, b) => num(a.CheatCommandsIndex, "CheatCommandsIndex") - num(b.CheatCommandsIndex, "CheatCommandsIndex"))
     .map((row) => ({
       code: clean(row.CheatCode).toUpperCase(),
-      displayName: clean(row.DisplayName),
       description: clean(row.Description),
       cheatType: clean(row.CheatType),
       targetKey: clean(row.TargetKey),
@@ -709,7 +712,7 @@ function makeBonusSlotPaytable(data) {
 function makeBuildCheatCommands(data) {
   const rows = data.cheatCommandRows ?? [];
   const rowLines = rows.map((row, index) =>
-    `            [${index + 1}] = { code = ${luaString(row.code)}, displayName = ${luaString(row.displayName)}, description = ${luaString(row.description)}, cheatType = ${luaString(row.cheatType)}, targetKey = ${luaString(row.targetKey)}, forceResultKey = ${luaString(row.forceResultKey)}, useCount = ${Number(row.useCount ?? 1)}, requiredRuntimeKind = ${luaString(row.requiredRuntimeKind || "TEST_SANDBOX")}, enabled = ${luaValue(row.enabled === true)} },`
+    `            [${index + 1}] = { code = ${luaString(row.code)}, description = ${luaString(row.description)}, cheatType = ${luaString(row.cheatType)}, targetKey = ${luaString(row.targetKey)}, forceResultKey = ${luaString(row.forceResultKey)}, useCount = ${Number(row.useCount ?? 1)}, requiredRuntimeKind = ${luaString(row.requiredRuntimeKind || "TEST_SANDBOX")}, enabled = ${luaValue(row.enabled === true)} },`
   );
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1532,6 +1535,8 @@ function makeDevCheatStateProperties() {
   return [
     "    property any devCheatCommands = nil",
     "    property any devCheatItemRows = nil",
+    "    property any devCheatVisibleCommands = nil",
+    "    property any devCheatItemClickHandlers = nil",
     "    property any devCheatButtonDownHandler = nil",
     "    property any devCheatButtonUpHandler = nil",
     "    property any devCheatApplyHandler = nil",
@@ -1650,6 +1655,7 @@ function makeRefreshDevCheatList() {
     "        if self.devCheatItemRows == nil or self.devCheatCommands == nil then",
     "            return",
     "        end",
+    "        self.devCheatVisibleCommands = {}",
     ...hideRows,
     "",
     "        local runtimeKind = \"\"",
@@ -1664,8 +1670,9 @@ function makeRefreshDevCheatList() {
     "                local row = self.devCheatItemRows[visibleIndex]",
     "                if row ~= nil then",
     "                    row.Enable = true",
+    "                    self.devCheatVisibleCommands[visibleIndex] = command",
     "                    if row.TextComponent ~= nil then",
-    "                        row.TextComponent.Text = command.code .. \"  \" .. command.displayName .. \" - \" .. command.description",
+    "                        row.TextComponent.Text = command.code .. \" - \" .. command.description",
     "                    end",
     "                end",
     "                visibleIndex = visibleIndex + 1",
@@ -1807,6 +1814,47 @@ function makeOnDevCheatApplyClicked() {
   ].join("\n");
 }
 
+function makeGetDevCheatListIndex() {
+  const rows = [];
+  for (let index = 1; index <= 12; index += 1) {
+    rows.push(`        if entity == self.devCheatListItem${index} then return ${index} end`);
+  }
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer GetDevCheatListIndex(Entity entity)",
+    "        if entity == nil then",
+    "            return 0",
+    "        end",
+    ...rows,
+    "        return 0",
+    "    end",
+  ].join("\n");
+}
+
+function makeOnDevCheatListItemClicked() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void OnDevCheatListItemClicked(ButtonClickEvent event)",
+    "        if event == nil or self.devCheatVisibleCommands == nil then",
+    "            return",
+    "        end",
+    "        local index = self:GetDevCheatListIndex(event.Entity)",
+    "        if index <= 0 then",
+    "            return",
+    "        end",
+    "        local command = self.devCheatVisibleCommands[index]",
+    "        if command == nil then",
+    "            return",
+    "        end",
+    "        if self.devCheatInput ~= nil then",
+    "            self.devCheatInput.Text = command.code or \"\"",
+    "            self.devCheatInput:ActivateInputField()",
+    "        end",
+    "        self:SetDevCheatStatus(command.code .. \" selected\")",
+    "    end",
+  ].join("\n");
+}
+
 function makeConnectDevCheatUi() {
   const itemRows = [];
   for (let index = 1; index <= 12; index += 1) {
@@ -1840,6 +1888,12 @@ function makeConnectDevCheatUi() {
     "        if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil then",
     "            self.devCheatSubmitHandler = self.devCheatInput.Entity:ConnectEvent(TextInputSubmitEvent, self.OnDevCheatInputSubmit)",
     "        end",
+    "        self.devCheatItemClickHandlers = {}",
+    "        for index, row in ipairs(self.devCheatItemRows) do",
+    "            if row ~= nil then",
+    "                self.devCheatItemClickHandlers[index] = row:ConnectEvent(ButtonClickEvent, self.OnDevCheatListItemClicked)",
+    "            end",
+    "        end",
     "    end",
   ].join("\n");
 }
@@ -1870,6 +1924,15 @@ function makeDisconnectDevCheatUi() {
     "            self.devCheatInput.Entity:DisconnectEvent(TextInputSubmitEvent, self.devCheatSubmitHandler)",
     "            self.devCheatSubmitHandler = nil",
     "        end",
+    "        if self.devCheatItemRows ~= nil and self.devCheatItemClickHandlers ~= nil then",
+    "            for index, row in ipairs(self.devCheatItemRows) do",
+    "                local handler = self.devCheatItemClickHandlers[index]",
+    "                if row ~= nil and handler ~= nil then",
+    "                    row:DisconnectEvent(ButtonClickEvent, handler)",
+    "                end",
+    "            end",
+    "            self.devCheatItemClickHandlers = nil",
+    "        end",
     "    end",
   ].join("\n");
 }
@@ -1889,6 +1952,8 @@ function patchDevCheatFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "void", "OnDevCheatButtonUp", makeOnDevCheatButtonUp(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "OnDevCheatInputSubmit", makeOnDevCheatInputSubmit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "OnDevCheatApplyClicked", makeOnDevCheatApplyClicked(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "GetDevCheatListIndex", makeGetDevCheatListIndex(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "OnDevCheatListItemClicked", makeOnDevCheatListItemClicked(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "ConnectDevCheatUi", makeConnectDevCheatUi(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "DisconnectDevCheatUi", makeDisconnectDevCheatUi(), "EvaluatePaylines");
   return runtime;
@@ -2317,7 +2382,7 @@ async function main() {
   }
 
   console.log(`Applied ${data.slotSymbolRows.length} slot symbols from SlotMachine.xlsx/SlotSymbols.`);
-  console.log(`Applied ${data.reelGroups.size} BaseBet reel groups from SpinPresentation.xlsx/ReelStrips.`);
+  console.log(`Applied ${data.reelGroups.size} BaseBet reel groups from SlotMachine.xlsx/ReelStrips.`);
   console.log(`Updated runtime: ${runtimePath}`);
 }
 

@@ -54,7 +54,7 @@ This implementation does not add a new framed popup or regenerate the slot UI. I
 The 777 result is intentionally rare, so the test sandbox supports a session-only force path through the development cheat UI.
 
 - Long-press the top-right `...` development button in `TEST_SANDBOX`.
-- Enter a code from `Cheat.xlsx / CheatCommands` in the input field.
+- Enter a code from `Cheat.xlsx / CheatCommands` in the input field, or tap a command row to copy that code into the input field.
 - The default code is `777`.
 - `CheatType = FORCE_777_BONUS_ONCE`.
 - The next spin result is forced to a visible Wild x5 payline, which enters the 777 bonus slot through the normal payline resolver.

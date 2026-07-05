@@ -13,24 +13,24 @@ This document is a planning reference for the 기획 디렉터 and 테크 디렉
 - Line payout: `BaseBet * Multiplier * paytableMultiplier`.
 - Multiplier is RTP-neutral.
 - `WILD` is substitute-only. It substitutes for the first non-Wild target in a left-to-right run, and an all-Wild line has no payout.
-- Runtime-authoritative simulation uses explicit `SpinPresentation.xlsx/ReelStrips` data.
+- Runtime-authoritative simulation uses explicit `SlotMachine.xlsx/ReelStrips` data.
 - Weighted candidates are only pre-strip estimates.
 
 ## Current Explicit Reel Strip Results
-Generated with `tools/check_slot_rtp_simulator.cjs` on 2026-07-01 from the current Excel tables.
+Generated with `tools/check_slot_rtp_simulator.cjs` on 2026-07-05 from the current Excel tables.
 
 | BaseBetIndex | Base Bet | RTP | Spin Hit Rate | Multi-Line Win Rate | Max Payout Multiple |
 |---:|---:|---:|---:|---:|---:|
-| 1 | 1 | 73.56% | 22.53% | 2.36% | 130.0x |
-| 2 | 2 | 72.04% | 22.42% | 2.35% | 115.0x |
-| 3 | 3 | 72.76% | 22.32% | 2.31% | 130.0x |
-| 4 | 4 | 70.46% | 22.29% | 2.36% | 130.0x |
-| 5 | 5 | 73.75% | 22.27% | 2.31% | 200.0x |
-| 6 | 6 | 72.82% | 22.52% | 2.36% | 130.0x |
-| 7 | 7 | 73.51% | 22.53% | 2.34% | 130.0x |
-| 8 | 8 | 73.97% | 22.42% | 2.36% | 112.0x |
-| 9 | 9 | 72.90% | 22.49% | 2.36% | 112.0x |
-| 10 | 10 | 75.58% | 22.79% | 2.32% | 112.0x |
+| 1 | 1 | 66.15% | 24.08% | 2.97% | 100.0x |
+| 2 | 2 | 66.07% | 24.03% | 2.85% | 100.0x |
+| 3 | 3 | 65.17% | 23.98% | 2.86% | 100.0x |
+| 4 | 4 | 65.11% | 23.99% | 2.94% | 100.0x |
+| 5 | 5 | 66.00% | 23.88% | 2.90% | 666.0x |
+| 6 | 6 | 65.41% | 24.19% | 2.92% | 100.0x |
+| 7 | 7 | 67.20% | 24.22% | 2.91% | 100.0x |
+| 8 | 8 | 64.38% | 23.97% | 2.91% | 100.0x |
+| 9 | 9 | 65.03% | 24.02% | 2.98% | 101.8x |
+| 10 | 10 | 67.12% | 24.47% | 2.97% | 100.0x |
 
 ## Weighted Candidate Results
 Generated with `tools/check_slot_rtp_candidates.cjs`.
@@ -47,11 +47,11 @@ Generated with `tools/check_slot_rtp_candidates.cjs`.
 Use the explicit reel strip lane as the Phase1 playable baseline.
 
 The current Excel strips sit in the intended prototype feel band:
-- RTP: about 70.5%-75.6%.
-- Spin hit rate: about 22%-23%.
-- Multi-line win rate: about 2.3%.
+- RTP: about 64.4%-67.2%.
+- Spin hit rate: about 23.9%-24.5%.
+- Multi-line win rate: about 2.9%-3.0%.
 
-Do not use weighted candidates as final proof. They are useful for rough direction only. Final balancing should edit `SpinPresentation.xlsx/ReelStrips`, then rerun `tools/check_slot_rtp_simulator.cjs`.
+Do not use weighted candidates as final proof. They are useful for rough direction only. Final balancing should edit `SlotMachine.xlsx/ReelStrips`, then rerun `tools/check_slot_rtp_simulator.cjs`.
 
 ## Design Risks
 - Wild frequency can inflate RTP much faster than a normal symbol because it extends multiple target-symbol runs.
