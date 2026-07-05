@@ -1,0 +1,387 @@
+{
+  "source": "GeneratedAssets/SlotMachineUI/classic_example/source/classic_slot_machine_full_alpha.png",
+  "canvasSize": {
+    "width": 1254,
+    "height": 1254
+  },
+  "rootNode": "Panel_ClassicSlotMachine",
+  "uiHierarchy": [
+    "Panel_ClassicSlotMachine",
+    "Panel_ClassicSlotMachine/Sprite_FrameShell",
+    "Panel_ClassicSlotMachine/ReelMask_1/Sprite_ReelStrip",
+    "Panel_ClassicSlotMachine/ReelMask_2/Sprite_ReelStrip",
+    "Panel_ClassicSlotMachine/ReelMask_3/Sprite_ReelStrip",
+    "Panel_ClassicSlotMachine/Sprite_ReelWindowFrame",
+    "Panel_ClassicSlotMachine/Sprite_TopArch",
+    "Panel_ClassicSlotMachine/Sprite_TopEmblem",
+    "Panel_ClassicSlotMachine/Sprite_BottomPanel",
+    "Panel_ClassicSlotMachine/Sprite_BasePlinth",
+    "Panel_ClassicSlotMachine/Sprite_Lever"
+  ],
+  "assets": [
+    {
+      "name": "classic_slot_full_composite",
+      "node": "Panel_ClassicSlotMachine/Sprite_FullComposite_Reference",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_full_composite.png",
+      "sourceRect": {
+        "left": 87,
+        "top": 72,
+        "right": 1226,
+        "bottom": 1171
+      },
+      "trimmedSourceRect": {
+        "left": 87,
+        "top": 72,
+        "right": 1226,
+        "bottom": 1171
+      },
+      "size": {
+        "width": 1139,
+        "height": 1099
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 29.5,
+        "y": 5.5
+      },
+      "purpose": "Reference-only full generated mockup."
+    },
+    {
+      "name": "classic_slot_frame_shell",
+      "node": "Panel_ClassicSlotMachine/Sprite_FrameShell",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_frame_shell.png",
+      "sourceRect": {
+        "left": 87,
+        "top": 72,
+        "right": 1226,
+        "bottom": 1171
+      },
+      "trimmedSourceRect": {
+        "left": 87,
+        "top": 72,
+        "right": 1226,
+        "bottom": 1171
+      },
+      "size": {
+        "width": 1139,
+        "height": 1099
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 29.5,
+        "y": 5.5
+      },
+      "purpose": "Cabinet shell, top arch, outer gold frame, base, and lever with the reel viewport cleared."
+    },
+    {
+      "name": "classic_slot_reel_window_frame",
+      "node": "Panel_ClassicSlotMachine/Sprite_ReelWindowFrame",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_reel_window_frame.png",
+      "sourceRect": {
+        "left": 178,
+        "top": 300,
+        "right": 1044,
+        "bottom": 895
+      },
+      "trimmedSourceRect": {
+        "left": 178,
+        "top": 300,
+        "right": 1044,
+        "bottom": 895
+      },
+      "size": {
+        "width": 866,
+        "height": 595
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -16.0,
+        "y": 29.5
+      },
+      "purpose": "Gold reel-window frame and vertical divider structure."
+    },
+    {
+      "name": "classic_slot_reel_strip_1",
+      "node": "Panel_ClassicSlotMachine/ReelMask_1/Sprite_ReelStrip",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_reel_strip_1.png",
+      "sourceRect": {
+        "left": 257,
+        "top": 322,
+        "right": 475,
+        "bottom": 843
+      },
+      "trimmedSourceRect": {
+        "left": 257,
+        "top": 322,
+        "right": 475,
+        "bottom": 843
+      },
+      "size": {
+        "width": 218,
+        "height": 521
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -261.0,
+        "y": 44.5
+      },
+      "purpose": "Left reel strip sample with fruit, 7, and cherry cells."
+    },
+    {
+      "name": "classic_slot_reel_strip_2",
+      "node": "Panel_ClassicSlotMachine/ReelMask_2/Sprite_ReelStrip",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_reel_strip_2.png",
+      "sourceRect": {
+        "left": 518,
+        "top": 322,
+        "right": 740,
+        "bottom": 843
+      },
+      "trimmedSourceRect": {
+        "left": 518,
+        "top": 322,
+        "right": 740,
+        "bottom": 843
+      },
+      "size": {
+        "width": 222,
+        "height": 521
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 2.0,
+        "y": 44.5
+      },
+      "purpose": "Center reel strip sample with watermelon, 7, and bell cells."
+    },
+    {
+      "name": "classic_slot_reel_strip_3",
+      "node": "Panel_ClassicSlotMachine/ReelMask_3/Sprite_ReelStrip",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_reel_strip_3.png",
+      "sourceRect": {
+        "left": 779,
+        "top": 322,
+        "right": 1003,
+        "bottom": 843
+      },
+      "trimmedSourceRect": {
+        "left": 779,
+        "top": 322,
+        "right": 1003,
+        "bottom": 843
+      },
+      "size": {
+        "width": 224,
+        "height": 521
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 264.0,
+        "y": 44.5
+      },
+      "purpose": "Right reel strip sample with grapes, 7, and orange cells."
+    },
+    {
+      "name": "classic_slot_top_arch",
+      "node": "Panel_ClassicSlotMachine/Sprite_TopArch",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_top_arch.png",
+      "sourceRect": {
+        "left": 196,
+        "top": 72,
+        "right": 1054,
+        "bottom": 320
+      },
+      "trimmedSourceRect": {
+        "left": 196,
+        "top": 72,
+        "right": 1054,
+        "bottom": 320
+      },
+      "size": {
+        "width": 858,
+        "height": 248
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -2.0,
+        "y": 431.0
+      },
+      "purpose": "Wooden top arch and gold crown frame."
+    },
+    {
+      "name": "classic_slot_top_emblem",
+      "node": "Panel_ClassicSlotMachine/Sprite_TopEmblem",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_top_emblem.png",
+      "sourceRect": {
+        "left": 415,
+        "top": 128,
+        "right": 832,
+        "bottom": 315
+      },
+      "trimmedSourceRect": {
+        "left": 415,
+        "top": 128,
+        "right": 832,
+        "bottom": 315
+      },
+      "size": {
+        "width": 417,
+        "height": 187
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -3.5,
+        "y": 405.5
+      },
+      "purpose": "Central red-gem ornament for the top arch."
+    },
+    {
+      "name": "classic_slot_bottom_panel",
+      "node": "Panel_ClassicSlotMachine/Sprite_BottomPanel",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_bottom_panel.png",
+      "sourceRect": {
+        "left": 221,
+        "top": 884,
+        "right": 1033,
+        "bottom": 1019
+      },
+      "trimmedSourceRect": {
+        "left": 221,
+        "top": 884,
+        "right": 1033,
+        "bottom": 1019
+      },
+      "size": {
+        "width": 812,
+        "height": 135
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 0.0,
+        "y": -324.5
+      },
+      "purpose": "Wood and gold decorative bottom panel."
+    },
+    {
+      "name": "classic_slot_base_plinth",
+      "node": "Panel_ClassicSlotMachine/Sprite_BasePlinth",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_base_plinth.png",
+      "sourceRect": {
+        "left": 96,
+        "top": 1018,
+        "right": 1153,
+        "bottom": 1171
+      },
+      "trimmedSourceRect": {
+        "left": 96,
+        "top": 1018,
+        "right": 1153,
+        "bottom": 1171
+      },
+      "size": {
+        "width": 1057,
+        "height": 153
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -2.5,
+        "y": -467.5
+      },
+      "purpose": "Heavy gold base plinth."
+    },
+    {
+      "name": "classic_slot_lever",
+      "node": "Panel_ClassicSlotMachine/Sprite_Lever",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_lever.png",
+      "sourceRect": {
+        "left": 1047,
+        "top": 320,
+        "right": 1226,
+        "bottom": 774
+      },
+      "trimmedSourceRect": {
+        "left": 1047,
+        "top": 320,
+        "right": 1226,
+        "bottom": 774
+      },
+      "size": {
+        "width": 179,
+        "height": 454
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 509.5,
+        "y": 80.0
+      },
+      "purpose": "Right-side lever assembly with red ball handle."
+    },
+    {
+      "name": "classic_slot_side_left",
+      "node": "Panel_ClassicSlotMachine/Sprite_LeftSideCap",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_side_left.png",
+      "sourceRect": {
+        "left": 87,
+        "top": 210,
+        "right": 263,
+        "bottom": 1046
+      },
+      "trimmedSourceRect": {
+        "left": 87,
+        "top": 210,
+        "right": 263,
+        "bottom": 1046
+      },
+      "size": {
+        "width": 176,
+        "height": 836
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -452.0,
+        "y": -1.0
+      },
+      "purpose": "Left side pillar and side cap."
+    },
+    {
+      "name": "classic_slot_side_right",
+      "node": "Panel_ClassicSlotMachine/Sprite_RightSideCap",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_side_right.png",
+      "sourceRect": {
+        "left": 994,
+        "top": 210,
+        "right": 1141,
+        "bottom": 1046
+      },
+      "trimmedSourceRect": {
+        "left": 994,
+        "top": 210,
+        "right": 1141,
+        "bottom": 1046
+      },
+      "size": {
+        "width": 147,
+        "height": 836
+      },
+      "uiPositionFromSourceCenter": {
+        "x": 440.5,
+        "y": -1.0
+      },
+      "purpose": "Right side pillar and side cap below the lever."
+    },
+    {
+      "name": "classic_slot_symbol_7",
+      "node": "Panel_ClassicSlotMachine/Symbols/Sprite_Seven",
+      "file": "GeneratedAssets/SlotMachineUI/classic_example/sliced/classic_slot_symbol_7.png",
+      "sourceRect": {
+        "left": 317,
+        "top": 515,
+        "right": 449,
+        "bottom": 704
+      },
+      "trimmedSourceRect": {
+        "left": 317,
+        "top": 515,
+        "right": 449,
+        "bottom": 704
+      },
+      "size": {
+        "width": 132,
+        "height": 189
+      },
+      "uiPositionFromSourceCenter": {
+        "x": -244.0,
+        "y": 17.5
+      },
+      "purpose": "Standalone red 7 symbol example."
+    }
+  ]
+}
