@@ -1263,3 +1263,4 @@ console.log(`Created ${outputPath}`);
 
 require("./patch_dev_cheat_ui.cjs");
 require("./patch_bonus777_overlay_ui.cjs");
+require("./patch_classic_slot_example_ui.cjs");

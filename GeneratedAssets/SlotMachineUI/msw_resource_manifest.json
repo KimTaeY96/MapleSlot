@@ -310,5 +310,89 @@
     "fileName": "casino_slot_ui_win_glow_loop_frame8.png",
     "ruid": "c01ede8df67f4da69121619c7842854e",
     "size": 33792
+  },
+  "classicSlotFullComposite": {
+    "key": "classicSlotFullComposite",
+    "fileName": "classic_slot_full_composite.png",
+    "ruid": "321cc5aa42ed4e4c80c1057b52f20e5d",
+    "size": 1757500
+  },
+  "classicSlotFrameShell": {
+    "key": "classicSlotFrameShell",
+    "fileName": "classic_slot_frame_shell.png",
+    "ruid": "f31d1dd86964427bbfa56d95e7421f8d",
+    "size": 1097352
+  },
+  "classicSlotReelWindowFrame": {
+    "key": "classicSlotReelWindowFrame",
+    "fileName": "classic_slot_reel_window_frame.png",
+    "ruid": "17df616371824684a1b67e42bfa740ff",
+    "size": 246642
+  },
+  "classicSlotReelStrip1": {
+    "key": "classicSlotReelStrip1",
+    "fileName": "classic_slot_reel_strip_1.png",
+    "ruid": "43c2b04d71a84916939bd60448f31234",
+    "size": 192758
+  },
+  "classicSlotReelStrip2": {
+    "key": "classicSlotReelStrip2",
+    "fileName": "classic_slot_reel_strip_2.png",
+    "ruid": "5a2f645cc9e74f5a94f8399008782ac8",
+    "size": 196763
+  },
+  "classicSlotReelStrip3": {
+    "key": "classicSlotReelStrip3",
+    "fileName": "classic_slot_reel_strip_3.png",
+    "ruid": "39faa380bfe44847842c0bebc8029234",
+    "size": 197387
+  },
+  "classicSlotTopArch": {
+    "key": "classicSlotTopArch",
+    "fileName": "classic_slot_top_arch.png",
+    "ruid": "d35e7c6c72c44fe48502ee7d8c174f11",
+    "size": 312801
+  },
+  "classicSlotTopEmblem": {
+    "key": "classicSlotTopEmblem",
+    "fileName": "classic_slot_top_emblem.png",
+    "ruid": "1a9c20dffc854ba08077a66b4d4db355",
+    "size": 155919
+  },
+  "classicSlotBottomPanel": {
+    "key": "classicSlotBottomPanel",
+    "fileName": "classic_slot_bottom_panel.png",
+    "ruid": "e482014c199247349d4bf1d3337f504a",
+    "size": 186686
+  },
+  "classicSlotBasePlinth": {
+    "key": "classicSlotBasePlinth",
+    "fileName": "classic_slot_base_plinth.png",
+    "ruid": "eb8659cc00a64f15b5bc1f7c54014227",
+    "size": 222963
+  },
+  "classicSlotLever": {
+    "key": "classicSlotLever",
+    "fileName": "classic_slot_lever.png",
+    "ruid": "6a2a874185f640dd955a3ec83047657a",
+    "size": 105410
+  },
+  "classicSlotSideLeft": {
+    "key": "classicSlotSideLeft",
+    "fileName": "classic_slot_side_left.png",
+    "ruid": "580126c81ba04b2c98421139231af595",
+    "size": 179444
+  },
+  "classicSlotSideRight": {
+    "key": "classicSlotSideRight",
+    "fileName": "classic_slot_side_right.png",
+    "ruid": "721129a24d1948e7a19daab27dad01f2",
+    "size": 167905
+  },
+  "classicSlotSymbol7": {
+    "key": "classicSlotSymbol7",
+    "fileName": "classic_slot_symbol_7.png",
+    "ruid": "0edcf2a1191b4b7d814c4e54a86460c7",
+    "size": 46316
   }
 }

@@ -13,12 +13,14 @@ Built with the `imagegen` skill using a flat magenta chroma-key background, then
 | Slice manifest | `GeneratedAssets/SlotMachineUI/classic_example/classic_slot_ui_structure.json` |
 | Contact sheet | `GeneratedAssets/SlotMachineUI/classic_example/classic_slot_resource_sheet.png` |
 | Slice builder | `tools/build_classic_slot_example_assets.py` |
+| MSW uploader | `tools/upload_classic_slot_example_to_msw.mjs` |
+| UI patcher | `tools/patch_classic_slot_example_ui.cjs` |
 
 ## UI Hierarchy Draft
-This is a draft hierarchy only. It is not wired into `UIRoot_TestSandbox_MainPlay.ui` yet.
+This hierarchy is wired into `UIRoot_TestSandbox_MainPlay.ui` as `Panel_ClassicSlotMachine_Hidden`. The panel starts disabled to avoid overlapping the active slot machine UI.
 
 ```text
-Panel_ClassicSlotMachine
+Panel_ClassicSlotMachine_Hidden
   Sprite_FrameShell
   ReelMask_1
     Sprite_ReelStrip
@@ -60,5 +62,11 @@ Recommended layer order:
 - `classic_slot_full_composite.png` is reference-only and should not be layered with the decomposed assets in the final UI.
 - `classic_slot_symbol_7.png` is an extracted example symbol crop; final symbol assets should be generated or cleaned separately if isolated icons are needed.
 
+## Applied State
+- Sliced PNGs were uploaded to MSW resource storage and merged into `GeneratedAssets/SlotMachineUI/msw_resource_manifest.json` with `classicSlot*` keys.
+- `tools/patch_classic_slot_example_ui.cjs` applies only the new hidden classic slot panel and does not regenerate the existing slot UI.
+- `tools/create_mainplay_testsandbox_ui.cjs` calls the classic slot patcher after the normal UI generation flow so the panel can be restored after a full rebuild.
+- `tools/validate_slot_ui_layers.cjs` validates the hidden panel, reel masks, sprite sizes, positions, RUIDs, and layer order.
+
 ## Next Implementation Step
-Upload the sliced PNGs to MSW resource storage, add their RUIDs to a manifest/table, then create a narrow UI patch that adds `Panel_ClassicSlotMachine` and binds only the new nodes. Avoid regenerating the full existing slot UI unless the hierarchy changes substantially.
+When this preview needs to become an active replacement or selectable skin, add runtime/table ownership for enabling `Panel_ClassicSlotMachine_Hidden` and deciding whether it should replace or coexist with `Panel_LeftSlotMachine`.

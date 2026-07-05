@@ -5,10 +5,12 @@ const fs = require("fs");
 const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
 const uiPath = `${projectRoot}/ui/UIRoot_TestSandbox_MainPlay.ui`;
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
+const classicSlotStructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/classic_example/classic_slot_ui_structure.json`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
 
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const classicSlotStructure = JSON.parse(fs.readFileSync(classicSlotStructurePath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
 const screenSprayAnimationRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
 const entities = ui.ContentProto.Entities;
@@ -63,6 +65,13 @@ function expectTextAlignment(relativePath, alignment) {
   const text = getComponent(relativePath, "MOD.Core.TextComponent");
   if (text.Alignment !== alignment) {
     fail(`Unexpected text alignment for ${relativePath}: ${text.Alignment}; expected ${alignment}`);
+  }
+}
+
+function expectUiScale(relativePath, x, y) {
+  const transform = getComponent(relativePath, "MOD.Core.UITransformComponent");
+  if (transform.UIScale.x !== x || transform.UIScale.y !== y) {
+    fail(`Unexpected UI scale for ${relativePath}: ${transform.UIScale.x},${transform.UIScale.y}; expected ${x},${y}`);
   }
 }
 
@@ -161,6 +170,72 @@ if (screenSprayRenderer.OrderInLayer !== 420 || screenSprayRenderer.OverrideSort
 if (screenSprayRenderer.RaycastTarget !== false) {
   fail("ScreenSprayVFX_Fullscreen must not block slot controls while hidden or playing");
 }
+
+const classicSlotAssetKeyByName = {
+  classic_slot_full_composite: "classicSlotFullComposite",
+  classic_slot_frame_shell: "classicSlotFrameShell",
+  classic_slot_reel_window_frame: "classicSlotReelWindowFrame",
+  classic_slot_reel_strip_1: "classicSlotReelStrip1",
+  classic_slot_reel_strip_2: "classicSlotReelStrip2",
+  classic_slot_reel_strip_3: "classicSlotReelStrip3",
+  classic_slot_top_arch: "classicSlotTopArch",
+  classic_slot_top_emblem: "classicSlotTopEmblem",
+  classic_slot_bottom_panel: "classicSlotBottomPanel",
+  classic_slot_base_plinth: "classicSlotBasePlinth",
+  classic_slot_lever: "classicSlotLever",
+  classic_slot_side_left: "classicSlotSideLeft",
+  classic_slot_side_right: "classicSlotSideRight",
+  classic_slot_symbol_7: "classicSlotSymbol7",
+};
+const classicSlotAssets = new Map(classicSlotStructure.assets.map((asset) => [asset.name, asset]));
+function expectClassicSlotSprite(name, relativePath, order, enabled = true, overridePos = null) {
+  const asset = classicSlotAssets.get(name);
+  if (!asset) fail(`Missing classic slot structure asset: ${name}`);
+  const key = classicSlotAssetKeyByName[name];
+  if (!key) fail(`Missing classic slot manifest key mapping: ${name}`);
+  expectRect(relativePath, asset.size.width, asset.size.height);
+  const expectedPos = overridePos ?? asset.uiPositionFromSourceCenter;
+  expectPosition(relativePath, expectedPos.x, expectedPos.y);
+  expectSprite(relativePath, key);
+  const renderer = getComponent(relativePath, "MOD.Core.SpriteGUIRendererComponent");
+  if (renderer.OrderInLayer !== order || renderer.OverrideSorting !== true) {
+    fail(`Unexpected classic slot sorting for ${relativePath}: order=${renderer.OrderInLayer}, override=${renderer.OverrideSorting}; expected ${order}/true`);
+  }
+  if (getEntity(relativePath).enable !== enabled) {
+    fail(`Unexpected classic slot entity enable for ${relativePath}: ${getEntity(relativePath).enable}; expected ${enabled}`);
+  }
+}
+
+expectRect("Panel_ClassicSlotMachine_Hidden", 1139, 1099);
+expectPosition("Panel_ClassicSlotMachine_Hidden", -390, -30);
+expectUiScale("Panel_ClassicSlotMachine_Hidden", 0.56, 0.56);
+if (getEntity("Panel_ClassicSlotMachine_Hidden").enable !== false) {
+  fail("Panel_ClassicSlotMachine_Hidden must start hidden to avoid overlapping the active slot UI");
+}
+expectClassicSlotSprite("classic_slot_full_composite", "Panel_ClassicSlotMachine_Hidden/Sprite_FullComposite_Reference", 359, false);
+expectClassicSlotSprite("classic_slot_frame_shell", "Panel_ClassicSlotMachine_Hidden/Sprite_FrameShell", 360);
+for (let index = 1; index <= 3; index += 1) {
+  const assetName = `classic_slot_reel_strip_${index}`;
+  const asset = classicSlotAssets.get(assetName);
+  const maskPath = `Panel_ClassicSlotMachine_Hidden/ReelMask_${index}`;
+  expectRect(maskPath, asset.size.width, asset.size.height);
+  expectPosition(maskPath, asset.uiPositionFromSourceCenter.x, asset.uiPositionFromSourceCenter.y);
+  getComponent(maskPath, "MOD.Core.MaskComponent");
+  expectClassicSlotSprite(assetName, `${maskPath}/Sprite_ReelStrip`, 362, true, { x: 0, y: 0 });
+}
+expectClassicSlotSprite("classic_slot_reel_window_frame", "Panel_ClassicSlotMachine_Hidden/Sprite_ReelWindowFrame", 366);
+expectClassicSlotSprite("classic_slot_top_arch", "Panel_ClassicSlotMachine_Hidden/Sprite_TopArch", 368);
+expectClassicSlotSprite("classic_slot_top_emblem", "Panel_ClassicSlotMachine_Hidden/Sprite_TopEmblem", 369);
+expectClassicSlotSprite("classic_slot_bottom_panel", "Panel_ClassicSlotMachine_Hidden/Sprite_BottomPanel", 370);
+expectClassicSlotSprite("classic_slot_base_plinth", "Panel_ClassicSlotMachine_Hidden/Sprite_BasePlinth", 371);
+expectClassicSlotSprite("classic_slot_lever", "Panel_ClassicSlotMachine_Hidden/Sprite_Lever", 372);
+expectClassicSlotSprite("classic_slot_side_left", "Panel_ClassicSlotMachine_Hidden/Sprite_LeftSideCap", 373);
+expectClassicSlotSprite("classic_slot_side_right", "Panel_ClassicSlotMachine_Hidden/Sprite_RightSideCap", 373);
+expectRect("Panel_ClassicSlotMachine_Hidden/Symbols", 1139, 1099);
+if (getEntity("Panel_ClassicSlotMachine_Hidden/Symbols").enable !== false) {
+  fail("Panel_ClassicSlotMachine_Hidden/Symbols must start hidden because it is an extraction reference group");
+}
+expectClassicSlotSprite("classic_slot_symbol_7", "Panel_ClassicSlotMachine_Hidden/Symbols/Sprite_Seven", 374, true, { x: 0, y: 0 });
 
 expectRect("Panel_Bonus777_Hidden", 1920, 1080);
 expectPosition("Panel_Bonus777_Hidden", 0, 0);
@@ -821,6 +896,6 @@ if (runtime.includes("displayName =")) {
 
 console.log(`Validated ${entities.length} UI entities.`);
 console.log(`Validated 5 reel columns, ${reelCells.length} reel-strip cells, and ${reelSymbolSprites.length} monster symbol sprites.`);
-console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, screen spray VFX, and the 777 bonus overlay.`);
+console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, screen spray VFX, the 777 bonus overlay, and the classic slot resource panel.`);
 console.log("Validated layered RUIDs, split bottom-panel RUIDs, and Spin SpriteSwap states.");
 console.log("Validated responsive dimensions, runtime cell height, and current runtime bindings.");
