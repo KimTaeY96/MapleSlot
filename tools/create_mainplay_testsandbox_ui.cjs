@@ -265,6 +265,17 @@ function buildDevCheatRuntimeBindingProperties() {
   return lines;
 }
 
+function buildBonus777RuntimeBindingProperties() {
+  return [
+    '    property Entity bonus777Panel = ""',
+    '    property TextComponent bonus777ReelText1 = ""',
+    '    property TextComponent bonus777ReelText2 = ""',
+    '    property TextComponent bonus777ReelText3 = ""',
+    '    property TextComponent bonus777ChanceText = ""',
+    '    property TextComponent bonus777ResultText = ""',
+  ];
+}
+
 function formatTemplate(template, values) {
   return values.reduce(
     (result, value, index) => result.replaceAll(`{${index}}`, String(value)),
@@ -287,6 +298,7 @@ function ensureRuntimeBindingProperties() {
     '    property TextComponent winResultTotalText = ""',
     ...buildReelCellFrameRuntimeBindingProperties(),
     ...buildDevCheatRuntimeBindingProperties(),
+    ...buildBonus777RuntimeBindingProperties(),
   ];
   let runtime = fs.readFileSync(runtimePath, "utf8");
   const missingProps = requiredProps.filter((line) => {
@@ -1250,3 +1262,4 @@ b.write(outputPath, {
 console.log(`Created ${outputPath}`);
 
 require("./patch_dev_cheat_ui.cjs");
+require("./patch_bonus777_overlay_ui.cjs");

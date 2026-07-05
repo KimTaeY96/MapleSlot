@@ -185,6 +185,12 @@ script SlotMachineRuntime extends Logic
     property TextComponent winResultText2 = "ea128b54-384d-411f-8afa-d3bd194bcde2"
     property TextComponent winResultText3 = "44706179-4029-4ff6-8c59-2a5ed058c0ba"
     property TextComponent winResultTotalText = "8394b87a-9949-40a9-b63c-54138c19bf60"
+    property Entity bonus777Panel = "18ead209-6991-418c-aded-8f8ca972fb30"
+    property TextComponent bonus777ReelText1 = "48eda183-fe08-4583-9078-6b755ad2c84f"
+    property TextComponent bonus777ReelText2 = "53785820-4970-4c70-b411-e90108fd6390"
+    property TextComponent bonus777ReelText3 = "1152dadc-0056-4060-b620-43d7cac7cd95"
+    property TextComponent bonus777ChanceText = "08add462-1ba1-4c91-8771-d63644d14da5"
+    property TextComponent bonus777ResultText = "56eaf077-6325-42d4-9647-a8dac5233f7f"
 
     property Entity screenSprayVfxEntity = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
     property SpriteGUIRendererComponent screenSprayVfxRenderer = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
@@ -607,6 +613,7 @@ script SlotMachineRuntime extends Logic
         self.devCheatCommands = self:BuildCheatCommands()
         self.screenSprayVfxTimerId = nil
         self:HideScreenSprayVfx()
+        self:HideBonus777Panel()
         self:ApplyResponsiveLayout()
         self:ConnectDevCheatUi()
 
@@ -683,6 +690,7 @@ script SlotMachineRuntime extends Logic
     method void OnEndPlay()
         self:StopWinVfxFrameLoop()
         self:HideScreenSprayVfx()
+        self:HideBonus777Panel()
         self:DisconnectDevCheatUi()
         if self.baseBetHandler ~= nil then
             self.baseBetButton:DisconnectEvent(ButtonClickEvent, self.baseBetHandler)
@@ -2738,6 +2746,8 @@ script SlotMachineRuntime extends Logic
 
         self:PlaySpinPresentation(spinResult.stopIndexes)
 
+        self:PlayBonus777Presentation(result.bonusSlotResult)
+
         self.commonUnits = self.commonUnits + result.payoutUnits
         self:RefreshCurrency()
         if result.payoutUnits > 0 or (result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true) then
@@ -3432,6 +3442,97 @@ script SlotMachineRuntime extends Logic
             end
             self.devCheatItemClickHandlers = nil
         end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void HideBonus777Panel()
+        if self.bonus777Panel ~= nil then
+            self.bonus777Panel.Enable = false
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetBonus777ReelDigit(integer reelIndex, integer digit)
+        local text = tostring(digit)
+        if reelIndex == 1 and self.bonus777ReelText1 ~= nil then
+            self.bonus777ReelText1.Text = text
+        elseif reelIndex == 2 and self.bonus777ReelText2 ~= nil then
+            self.bonus777ReelText2.Text = text
+        elseif reelIndex == 3 and self.bonus777ReelText3 ~= nil then
+            self.bonus777ReelText3.Text = text
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetBonus777DigitsFromResultKey(string resultKey)
+        for reelIndex = 1, 3 do
+            local digitText = string.sub(resultKey or "", reelIndex, reelIndex)
+            local digit = tonumber(digitText)
+            if digit == nil then
+                digit = 0
+            end
+            self:SetBonus777ReelDigit(reelIndex, digit)
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetBonus777Texts(string chanceText, string resultText)
+        if self.bonus777ChanceText ~= nil then
+            self.bonus777ChanceText.Text = chanceText or ""
+        end
+        if self.bonus777ResultText ~= nil then
+            self.bonus777ResultText.Text = resultText or ""
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void PlayBonus777Presentation(table bonusSlotResult)
+        if bonusSlotResult == nil or bonusSlotResult.triggered ~= true then
+            self:HideBonus777Panel()
+            return
+        end
+        if self.bonus777Panel == nil then
+            return
+        end
+
+        self.bonus777Panel.Enable = true
+        self:SetBonus777DigitsFromResultKey("777")
+        self:SetBonus777Texts("CHANCE 0 / " .. tostring(bonusSlotResult.spinCount or 0), "WILD x5 BONUS")
+        wait(0.25)
+
+        local spins = bonusSlotResult.spins or {}
+        local totalSpinCount = #spins
+        if totalSpinCount <= 0 then
+            totalSpinCount = bonusSlotResult.spinCount or 0
+        end
+
+        for spinIndex, spin in ipairs(spins) do
+            self:SetBonus777Texts("CHANCE " .. tostring(spinIndex) .. " / " .. tostring(totalSpinCount), "GENERATE!!")
+            for tick = 1, 8 do
+                self:SetBonus777ReelDigit(1, ((spinIndex + tick) % 7) + 1)
+                self:SetBonus777ReelDigit(2, ((spinIndex + tick + 2) % 7) + 1)
+                self:SetBonus777ReelDigit(3, ((spinIndex + tick + 4) % 7) + 1)
+                wait(0.045)
+            end
+
+            local resultKey = spin.resultKey or "000"
+            self:SetBonus777DigitsFromResultKey(resultKey)
+            if (spin.matchedDigit or 0) > 0 then
+                local resultText = resultKey .. " x" .. tostring(spin.rewardMultiplier or 0) .. " = +" .. self:FormatUnits(spin.payoutUnits or 0)
+                if (spin.extraChanceCount or 0) > 0 then
+                    resultText = resultText .. " / +" .. tostring(spin.extraChanceCount) .. " CHANCE"
+                end
+                self:SetBonus777Texts("HIT " .. tostring(spinIndex) .. " / " .. tostring(totalSpinCount), resultText)
+                wait(0.85)
+            else
+                self:SetBonus777Texts("CHANCE " .. tostring(spinIndex) .. " / " .. tostring(totalSpinCount), resultKey .. " MISS")
+                wait(0.45)
+            end
+        end
+
+        self:SetBonus777Texts("TOTAL " .. self:FormatUnits(bonusSlotResult.payoutUnits or 0), "BONUS COMPLETE")
+        wait(0.75)
+        self:HideBonus777Panel()
     end
 
     @ExecSpace("ClientOnly")

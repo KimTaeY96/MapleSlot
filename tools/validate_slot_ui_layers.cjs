@@ -162,6 +162,52 @@ if (screenSprayRenderer.RaycastTarget !== false) {
   fail("ScreenSprayVFX_Fullscreen must not block slot controls while hidden or playing");
 }
 
+expectRect("Panel_Bonus777_Hidden", 1920, 1080);
+expectPosition("Panel_Bonus777_Hidden", 0, 0);
+if (getEntity("Panel_Bonus777_Hidden").enable !== false) {
+  fail("Panel_Bonus777_Hidden must start hidden and only be enabled during the 777 bonus presentation");
+}
+expectRect("Panel_Bonus777_Hidden/Dim", 1920, 1080);
+expectRect("Panel_Bonus777_Hidden/WindowBorder", 660, 452);
+expectRect("Panel_Bonus777_Hidden/Window", 628, 420);
+expectRect("Panel_Bonus777_Hidden/TopBand", 560, 54);
+expectRect("Panel_Bonus777_Hidden/Text_Title", 520, 46);
+expectRect("Panel_Bonus777_Hidden/Badge_Generate", 220, 46);
+expectRect("Panel_Bonus777_Hidden/Text_Generate", 200, 38);
+expectRect("Panel_Bonus777_Hidden/ReelBackplate", 510, 168);
+expectRect("Panel_Bonus777_Hidden/Text_Chance", 500, 34);
+expectRect("Panel_Bonus777_Hidden/Text_Result", 560, 44);
+expectPosition("Panel_Bonus777_Hidden/WindowBorder", 0, -8);
+expectPosition("Panel_Bonus777_Hidden/Window", 0, -8);
+expectPosition("Panel_Bonus777_Hidden/TopBand", 0, 176);
+expectPosition("Panel_Bonus777_Hidden/Text_Title", 0, 176);
+expectPosition("Panel_Bonus777_Hidden/Badge_Generate", 0, 116);
+expectPosition("Panel_Bonus777_Hidden/Text_Generate", 0, 116);
+expectPosition("Panel_Bonus777_Hidden/ReelBackplate", 0, -18);
+expectPosition("Panel_Bonus777_Hidden/Text_Chance", 0, -128);
+expectPosition("Panel_Bonus777_Hidden/Text_Result", 0, -168);
+const bonus777DimRenderer = getComponent("Panel_Bonus777_Hidden/Dim", "MOD.Core.SpriteGUIRendererComponent");
+if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSorting !== true) {
+  fail(`Unexpected 777 dim sorting: order=${bonus777DimRenderer.OrderInLayer}, override=${bonus777DimRenderer.OverrideSorting}; expected 440/true`);
+}
+if (bonus777DimRenderer.RaycastTarget !== true) {
+  fail("Panel_Bonus777_Hidden/Dim must block base slot touches while the bonus overlay is visible");
+}
+for (let index = 1; index <= 3; index += 1) {
+  const reelPath = `Panel_Bonus777_Hidden/Reel_${index}`;
+  expectRect(reelPath, 124, 144);
+  expectRect(`${reelPath}/Face`, 104, 124);
+  expectRect(`${reelPath}/Text_Digit`, 96, 112);
+  expectPosition(reelPath, -160 + ((index - 1) * 160), -18);
+  expectPosition(`${reelPath}/Face`, 0, 0);
+  expectPosition(`${reelPath}/Text_Digit`, 0, 0);
+  expectTextAlignment(`${reelPath}/Text_Digit`, 4);
+}
+expectTextAlignment("Panel_Bonus777_Hidden/Text_Title", 4);
+expectTextAlignment("Panel_Bonus777_Hidden/Text_Generate", 4);
+expectTextAlignment("Panel_Bonus777_Hidden/Text_Chance", 4);
+expectTextAlignment("Panel_Bonus777_Hidden/Text_Result", 4);
+
 expectRect("Button_DevCheatMenu", 68, 68);
 expectPosition("Button_DevCheatMenu", -40, -40);
 getComponent("Button_DevCheatMenu", "MOD.Core.ButtonComponent");
@@ -502,6 +548,14 @@ if (!runtime.includes("method table ResolveBonusSlot") || !runtime.includes("sel
 if (!runtime.includes("self:ApplyBonusSlotResult(result)") || !runtime.includes("self:FormatBonusSlotStatus(result.bonusSlotResult)")) {
   fail("Runtime spin flow does not apply or display the 777 bonus slot result");
 }
+if (
+  !runtime.includes("method void PlayBonus777Presentation(table bonusSlotResult)") ||
+  !runtime.includes("self:PlayBonus777Presentation(result.bonusSlotResult)") ||
+  !runtime.includes("self.bonus777Panel.Enable = true") ||
+  !runtime.includes("self:SetBonus777DigitsFromResultKey(resultKey)")
+) {
+  fail("Runtime 777 bonus slot overlay presentation flow is missing");
+}
 if (!runtime.includes("runtimeBuildKind = \"TEST_SANDBOX\"") || !runtime.includes("method boolean IsBonusSlotTestCheatAllowed")) {
   fail("Runtime 777 test cheat build-kind guard is missing");
 }
@@ -598,6 +652,12 @@ const requiredBindings = [
   "winResultTotalText",
   "screenSprayVfxEntity",
   "screenSprayVfxRenderer",
+  "bonus777Panel",
+  "bonus777ReelText1",
+  "bonus777ReelText2",
+  "bonus777ReelText3",
+  "bonus777ChanceText",
+  "bonus777ResultText",
   "spinButton",
   "multiplierButton1",
   "multiplierButton5",
@@ -652,6 +712,12 @@ for (let index = 1; index <= 3; index += 1) {
 expectBinding("winResultTotalText", "Panel_LeftSlotMachine/Panel_WinResult/Text_Total", "TextComponent");
 expectBinding("screenSprayVfxEntity", "ScreenSprayVFX_Fullscreen", "Entity");
 expectBinding("screenSprayVfxRenderer", "ScreenSprayVFX_Fullscreen", "SpriteGUIRendererComponent");
+expectBinding("bonus777Panel", "Panel_Bonus777_Hidden", "Entity");
+expectBinding("bonus777ReelText1", "Panel_Bonus777_Hidden/Reel_1/Text_Digit", "TextComponent");
+expectBinding("bonus777ReelText2", "Panel_Bonus777_Hidden/Reel_2/Text_Digit", "TextComponent");
+expectBinding("bonus777ReelText3", "Panel_Bonus777_Hidden/Reel_3/Text_Digit", "TextComponent");
+expectBinding("bonus777ChanceText", "Panel_Bonus777_Hidden/Text_Chance", "TextComponent");
+expectBinding("bonus777ResultText", "Panel_Bonus777_Hidden/Text_Result", "TextComponent");
 expectBinding("devCheatButton", "Button_DevCheatMenu", "Entity");
 expectBinding("devCheatPanel", "Panel_DevCheat_Hidden", "Entity");
 expectBinding("devCheatInput", "Panel_DevCheat_Hidden/Input_CheatCode", "TextInputComponent");
@@ -755,6 +821,6 @@ if (runtime.includes("displayName =")) {
 
 console.log(`Validated ${entities.length} UI entities.`);
 console.log(`Validated 5 reel columns, ${reelCells.length} reel-strip cells, and ${reelSymbolSprites.length} monster symbol sprites.`);
-console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, and screen spray VFX.`);
+console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, screen spray VFX, and the 777 bonus overlay.`);
 console.log("Validated layered RUIDs, split bottom-panel RUIDs, and Spin SpriteSwap states.");
 console.log("Validated responsive dimensions, runtime cell height, and current runtime bindings.");

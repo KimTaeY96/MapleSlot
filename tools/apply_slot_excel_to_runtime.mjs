@@ -1048,6 +1048,117 @@ function makeFormatBonusSlotStatus() {
   ].join("\n");
 }
 
+function makeHideBonus777Panel() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void HideBonus777Panel()",
+    "        if self.bonus777Panel ~= nil then",
+    "            self.bonus777Panel.Enable = false",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777ReelDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777ReelDigit(integer reelIndex, integer digit)",
+    "        local text = tostring(digit)",
+    "        if reelIndex == 1 and self.bonus777ReelText1 ~= nil then",
+    "            self.bonus777ReelText1.Text = text",
+    "        elseif reelIndex == 2 and self.bonus777ReelText2 ~= nil then",
+    "            self.bonus777ReelText2.Text = text",
+    "        elseif reelIndex == 3 and self.bonus777ReelText3 ~= nil then",
+    "            self.bonus777ReelText3.Text = text",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777DigitsFromResultKey() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777DigitsFromResultKey(string resultKey)",
+    "        for reelIndex = 1, 3 do",
+    "            local digitText = string.sub(resultKey or \"\", reelIndex, reelIndex)",
+    "            local digit = tonumber(digitText)",
+    "            if digit == nil then",
+    "                digit = 0",
+    "            end",
+    "            self:SetBonus777ReelDigit(reelIndex, digit)",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777Texts() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777Texts(string chanceText, string resultText)",
+    "        if self.bonus777ChanceText ~= nil then",
+    "            self.bonus777ChanceText.Text = chanceText or \"\"",
+    "        end",
+    "        if self.bonus777ResultText ~= nil then",
+    "            self.bonus777ResultText.Text = resultText or \"\"",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makePlayBonus777Presentation() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void PlayBonus777Presentation(table bonusSlotResult)",
+    "        if bonusSlotResult == nil or bonusSlotResult.triggered ~= true then",
+    "            self:HideBonus777Panel()",
+    "            return",
+    "        end",
+    "        if self.bonus777Panel == nil then",
+    "            return",
+    "        end",
+    "",
+    "        self.bonus777Panel.Enable = true",
+    "        self:SetBonus777DigitsFromResultKey(\"777\")",
+    "        self:SetBonus777Texts(\"CHANCE 0 / \" .. tostring(bonusSlotResult.spinCount or 0), \"WILD x5 BONUS\")",
+    "        wait(0.25)",
+    "",
+    "        local spins = bonusSlotResult.spins or {}",
+    "        local totalSpinCount = #spins",
+    "        if totalSpinCount <= 0 then",
+    "            totalSpinCount = bonusSlotResult.spinCount or 0",
+    "        end",
+    "",
+    "        for spinIndex, spin in ipairs(spins) do",
+    "            self:SetBonus777Texts(\"CHANCE \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), \"GENERATE!!\")",
+    "            for tick = 1, 8 do",
+    "                self:SetBonus777ReelDigit(1, ((spinIndex + tick) % 7) + 1)",
+    "                self:SetBonus777ReelDigit(2, ((spinIndex + tick + 2) % 7) + 1)",
+    "                self:SetBonus777ReelDigit(3, ((spinIndex + tick + 4) % 7) + 1)",
+    "                wait(0.045)",
+    "            end",
+    "",
+    "            local resultKey = spin.resultKey or \"000\"",
+    "            self:SetBonus777DigitsFromResultKey(resultKey)",
+    "            if (spin.matchedDigit or 0) > 0 then",
+    "                local resultText = resultKey .. \" x\" .. tostring(spin.rewardMultiplier or 0) .. \" = +\" .. self:FormatUnits(spin.payoutUnits or 0)",
+    "                if (spin.extraChanceCount or 0) > 0 then",
+    "                    resultText = resultText .. \" / +\" .. tostring(spin.extraChanceCount) .. \" CHANCE\"",
+    "                end",
+    "                self:SetBonus777Texts(\"HIT \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), resultText)",
+    "                wait(0.85)",
+    "            else",
+    "                self:SetBonus777Texts(\"CHANCE \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), resultKey .. \" MISS\")",
+    "                wait(0.45)",
+    "            end",
+    "        end",
+    "",
+    "        self:SetBonus777Texts(\"TOTAL \" .. self:FormatUnits(bonusSlotResult.payoutUnits or 0), \"BONUS COMPLETE\")",
+    "        wait(0.75)",
+    "        self:HideBonus777Panel()",
+    "    end",
+  ].join("\n");
+}
+
 function makeEvaluatePaylines() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1484,7 +1595,60 @@ function patchRuntimeDataProperties(runtime) {
   return runtime;
 }
 
+function patchBonus777PanelLifecycle(runtime) {
+  const onBeginPlayMatch = runtime.match(/    method void OnBeginPlay\(\)\r?\n[\s\S]*?\r?\n    end/);
+  if (onBeginPlayMatch) {
+    let updatedOnBeginPlay = onBeginPlayMatch[0].replace(/        self:HideBonus777Panel\(\)\r?\n/g, "");
+    updatedOnBeginPlay = updatedOnBeginPlay.includes("self:HideScreenSprayVfx()")
+      ? updatedOnBeginPlay.replace(
+        /        self:HideScreenSprayVfx\(\)\r?\n/,
+        (match) => `${match}        self:HideBonus777Panel()\n`,
+      )
+      : updatedOnBeginPlay.replace(
+        /        self\.bonusSlotTestCheatRemaining = 0\r?\n/,
+        (match) => `${match}        self:HideBonus777Panel()\n`,
+      );
+    runtime = runtime.replace(onBeginPlayMatch[0], updatedOnBeginPlay);
+  }
+
+  const onEndPlayMatch = runtime.match(/    method void OnEndPlay\(\)\r?\n[\s\S]*?\r?\n    end/);
+  if (onEndPlayMatch) {
+    let updatedOnEndPlay = onEndPlayMatch[0].replace(/        self:HideBonus777Panel\(\)\r?\n/g, "");
+    updatedOnEndPlay = updatedOnEndPlay.includes("self:HideScreenSprayVfx()")
+      ? updatedOnEndPlay.replace(
+        /        self:HideScreenSprayVfx\(\)\r?\n/,
+        (match) => `${match}        self:HideBonus777Panel()\n`,
+      )
+      : updatedOnEndPlay.replace(
+        /        self:StopWinVfxFrameLoop\(\)\r?\n/,
+        (match) => `${match}        self:HideBonus777Panel()\n`,
+      );
+    runtime = runtime.replace(onEndPlayMatch[0], updatedOnEndPlay);
+  }
+
+  return runtime;
+}
+
 function patchBonusSlotProperties(runtime) {
+  const bonus777UiProps = [
+    '    property Entity bonus777Panel = ""',
+    '    property TextComponent bonus777ReelText1 = ""',
+    '    property TextComponent bonus777ReelText2 = ""',
+    '    property TextComponent bonus777ReelText3 = ""',
+    '    property TextComponent bonus777ChanceText = ""',
+    '    property TextComponent bonus777ResultText = ""',
+  ];
+  const missingBonus777UiProps = bonus777UiProps.filter((line) => {
+    const propName = line.match(/property\s+\S+\s+(\S+)/)?.[1];
+    return propName && !new RegExp(`\\bproperty\\s+\\S+\\s+${propName}\\s*=`).test(runtime);
+  });
+  if (missingBonus777UiProps.length > 0) {
+    runtime = runtime.replace(
+      /    property TextComponent winResultTotalText = "[^"]*"\r?\n/,
+      (match) => `${match}${missingBonus777UiProps.join("\n")}\n`,
+    );
+  }
+
   if (!runtime.includes("property any bonusSlotRules = nil")) {
     runtime = runtime.replace(
       /    property any paytableTenths = nil\r?\n/,
@@ -1513,7 +1677,7 @@ function patchBonusSlotProperties(runtime) {
   runtime = runtime.replace(/        self\.bonusSlotTestCheatRemaining = self\.bonusSlotRules\.testCheatUseCount or 0/g, "        self.bonusSlotTestCheatRemaining = 0");
   runtime = runtime.replace(/(        self\.bonusSlotTestCheatRemaining = 0\r?\n){2,}/g, "        self.bonusSlotTestCheatRemaining = 0\n");
 
-  return runtime;
+  return patchBonus777PanelLifecycle(runtime);
 }
 
 function makeDevCheatUiProperties() {
@@ -1975,11 +2139,23 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "table", "ResolveBonusSlot", makeResolveBonusSlot(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "ApplyBonusSlotResult", makeApplyBonusSlotResult(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "string", "FormatBonusSlotStatus", makeFormatBonusSlotStatus(), "ShowWinResult");
+  runtime = upsertTypedMethod(runtime, "void", "HideBonus777Panel", makeHideBonus777Panel(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777ReelDigit", makeSetBonus777ReelDigit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777DigitsFromResultKey", makeSetBonus777DigitsFromResultKey(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777Texts", makeSetBonus777Texts(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "PlayBonus777Presentation", makePlayBonus777Presentation(), "EvaluatePaylines");
 
   if (!runtime.includes("self:ApplyBonusSlotResult(result)")) {
     runtime = runtime.replace(
       /        local result = self:EvaluatePaylines\(spinResult\.grid\)\r?\n/,
       (match) => `${match}        self:ApplyBonusSlotResult(result)\n`,
+    );
+  }
+
+  if (!runtime.includes("self:PlayBonus777Presentation(result.bonusSlotResult)")) {
+    runtime = runtime.replace(
+      /        self:PlaySpinPresentation\(spinResult\.stopIndexes\)\r?\n/,
+      (match) => `${match}\n        self:PlayBonus777Presentation(result.bonusSlotResult)\n`,
     );
   }
 
@@ -2372,6 +2548,7 @@ async function main() {
   runtime = patchWinPresentation(runtime);
   runtime = patchWinResultFlow(runtime);
   runtime = patchScreenSprayVfxFlow(runtime);
+  runtime = patchBonus777PanelLifecycle(runtime);
 
   await fs.writeFile(runtimePath, runtime, "utf8");
   try {

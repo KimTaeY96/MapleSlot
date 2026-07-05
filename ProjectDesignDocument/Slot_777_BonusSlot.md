@@ -45,10 +45,13 @@ These values live in `SlotMachine.xlsx / BonusSlotPaytable`. `RollWeight` is als
 3. After paylines resolve, `ApplyBonusSlotResult` runs the 777 bonus when the trigger count meets `MinTriggerLineCount`.
 4. The bonus consumes `InitialChanceCount` chances and grants additional chances from `BonusSlotPaytable.ExtraChanceCount`.
 5. The accumulated bonus payout is added to the same spin result payout.
-6. The status text uses `GameString.xlsx / GameString[210]` to show the bonus spin count and bonus payout.
+6. After the base 3x5 reels stop, `PlayBonus777Presentation` opens the dedicated 777 overlay and plays each bonus roll once.
+7. The status text still uses `GameString.xlsx / GameString[210]` to summarize the bonus spin count and bonus payout.
 
 ## Presentation Scope
-This implementation does not add a new framed popup or regenerate the slot UI. It reuses the existing win presentation surface and status text to avoid broad `.ui` churn. A dedicated 777 bonus overlay can be added later once the interaction/visual spec is approved.
+The 777 bonus uses a separate hidden overlay, `Panel_Bonus777_Hidden`, instead of reusing the base slot reel UI. The first implementation is a shape-only placeholder: a dimmed full-screen blocker, framed popup, `GENERATE!!` badge, three numeric reel boxes, chance text, and result text. Runtime enables the overlay only while a triggered 777 bonus result is presenting, rolls the three displayed digits for each bonus spin, shows the final matched or missed result, then hides the overlay after the total bonus payout is displayed.
+
+This keeps the base 3x5 slot UI contract intact while making the Wild x5 bonus visibly distinct. Final art can replace the placeholder shapes later without changing the bonus data tables or resolver contract.
 
 ## Test-Only Cheat
 The 777 result is intentionally rare, so the test sandbox supports a session-only force path through the development cheat UI.
@@ -67,5 +70,5 @@ The 777 result is intentionally rare, so the test sandbox supports a session-onl
 ## Validation Contract
 - Runtime must be generated from `SlotMachine.xlsx`, not `Core.xlsx`.
 - RTP simulator must include 777 bonus payouts through the same data tables.
-- UI layer validation must assert the 777 data, trigger, and runtime flow are present.
+- UI layer validation must assert the 777 data, trigger, dedicated overlay, bindings, and runtime presentation flow are present.
 - Validation must assert the 777 cheat is guarded to `TEST_SANDBOX` and consumes its data-driven use count.
