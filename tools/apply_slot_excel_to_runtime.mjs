@@ -1056,6 +1056,7 @@ function makeHideBonus777Panel() {
     "            self.bonus777Panel.Enable = false",
     "        end",
     "        self:SetBonus777LeverOffset(0.0)",
+    "        self:SetBonus777LeverFrame(\"up\")",
     "    end",
   ].join("\n");
 }
@@ -1080,7 +1081,7 @@ function makeGetBonus777DigitCellHeight() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method float GetBonus777DigitCellHeight()",
-    "        return 174.0",
+    "        return 128.0",
     "    end",
   ].join("\n");
 }
@@ -1094,16 +1095,68 @@ function makeGetBonus777DigitCount() {
   ].join("\n");
 }
 
+function makeBuildInitialBonus777ReelVisualIndex() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildInitialBonus777ReelVisualIndex()",
+    "        return { 7, 7, 7 }",
+    "    end",
+  ].join("\n");
+}
+
+function makeNormalizeBonus777Digit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer NormalizeBonus777Digit(integer digit)",
+    "        local digitCount = self:GetBonus777DigitCount()",
+    "        if digit == nil then",
+    "            return 1",
+    "        end",
+    "        while digit < 1 do",
+    "            digit = digit + digitCount",
+    "        end",
+    "        while digit > digitCount do",
+    "            digit = digit - digitCount",
+    "        end",
+    "        return digit",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonus777CurrentReelDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer GetBonus777CurrentReelDigit(integer reelIndex)",
+    "        if self.bonus777ReelVisualIndex == nil then",
+    "            self.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex()",
+    "        end",
+    "        local digit = self.bonus777ReelVisualIndex[reelIndex]",
+    "        if digit == nil then",
+    "            digit = 7",
+    "        end",
+    "        return self:NormalizeBonus777Digit(digit)",
+    "    end",
+  ].join("\n");
+}
+
+function makeRememberBonus777ReelDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void RememberBonus777ReelDigit(integer reelIndex, integer digit)",
+    "        if self.bonus777ReelVisualIndex == nil then",
+    "            self.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex()",
+    "        end",
+    "        self.bonus777ReelVisualIndex[reelIndex] = self:NormalizeBonus777Digit(digit)",
+    "    end",
+  ].join("\n");
+}
+
 function makeGetBonus777CenterYForDigit() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method float GetBonus777CenterYForDigit(integer digit)",
     "        local digitCount = self:GetBonus777DigitCount()",
-    "        if digit < 1 then",
-    "            digit = 1",
-    "        elseif digit > digitCount then",
-    "            digit = digitCount",
-    "        end",
+    "        digit = self:NormalizeBonus777Digit(digit)",
     "        return (digit - ((digitCount + 1) * 0.5)) * self:GetBonus777DigitCellHeight()",
     "    end",
   ].join("\n");
@@ -1118,6 +1171,23 @@ function makeGetBonus777MinStripY() {
   ].join("\n");
 }
 
+function makeNormalizeBonus777StripY() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method float NormalizeBonus777StripY(float y)",
+    "        local stripHeight = self:GetBonus777DigitCount() * self:GetBonus777DigitCellHeight()",
+    "        local minY = self:GetBonus777MinStripY()",
+    "        while y < minY do",
+    "            y = y + stripHeight",
+    "        end",
+    "        while y >= minY + stripHeight do",
+    "            y = y - stripHeight",
+    "        end",
+    "        return y",
+    "    end",
+  ].join("\n");
+}
+
 function makeMoveBonus777ReelDown() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1128,11 +1198,7 @@ function makeMoveBonus777ReelDown() {
     "        end",
     "        local pos = transform.anchoredPosition",
     "        local nextY = pos.y - pixelDelta",
-    "        local stripHeight = self:GetBonus777DigitCount() * self:GetBonus777DigitCellHeight()",
-    "        local minY = self:GetBonus777MinStripY()",
-    "        while nextY < minY do",
-    "            nextY = nextY + stripHeight",
-    "        end",
+    "        nextY = self:NormalizeBonus777StripY(nextY)",
     "        transform.anchoredPosition = Vector2(pos.x, nextY)",
     "    end",
   ].join("\n");
@@ -1158,13 +1224,16 @@ function makeSetBonus777ReelDigit() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method void SetBonus777ReelDigit(integer reelIndex, integer digit)",
+    "        digit = self:NormalizeBonus777Digit(digit)",
     "        local transform = self:GetBonus777ReelStripTransform(reelIndex)",
     "        if transform ~= nil then",
     "            local pos = transform.anchoredPosition",
     "            transform.anchoredPosition = Vector2(pos.x, self:GetBonus777CenterYForDigit(digit))",
+    "            self:RememberBonus777ReelDigit(reelIndex, digit)",
     "            return",
     "        end",
     "        self:SetBonus777ReelDigitFallback(reelIndex, digit)",
+    "        self:RememberBonus777ReelDigit(reelIndex, digit)",
     "    end",
   ].join("\n");
 }
@@ -1199,6 +1268,41 @@ function makeSetBonus777Texts() {
   ].join("\n");
 }
 
+function makeBuildBonus777LeverFrameRuids() {
+  const up = resourceManifest.bonus777SlotLeverUp?.ruid ?? "";
+  const mid = resourceManifest.bonus777SlotLeverMid?.ruid ?? "";
+  const down = resourceManifest.bonus777SlotLeverDown?.ruid ?? "";
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonus777LeverFrameRuids()",
+    "        local frames = {}",
+    `        frames.up = ${JSON.stringify(up)}`,
+    `        frames.mid = ${JSON.stringify(mid)}`,
+    `        frames.down = ${JSON.stringify(down)}`,
+    "        return frames",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777LeverFrame() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777LeverFrame(string frameKey)",
+    "        if self.bonus777LeverRenderer == nil then",
+    "            return",
+    "        end",
+    "        if self.bonus777LeverFrameRuids == nil then",
+    "            self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()",
+    "        end",
+    "        local frameRuid = self.bonus777LeverFrameRuids[frameKey or \"up\"]",
+    "        if frameRuid == nil or frameRuid == \"\" then",
+    "            return",
+    "        end",
+    "        self.bonus777LeverRenderer.ImageRUID = frameRuid",
+    "    end",
+  ].join("\n");
+}
+
 function makeSetBonus777LeverOffset() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1206,7 +1310,7 @@ function makeSetBonus777LeverOffset() {
     "        if self.bonus777LeverTransform == nil then",
     "            return",
     "        end",
-    "        self.bonus777LeverTransform.anchoredPosition = Vector2(509.5, 80.0 + offsetY)",
+    "        self.bonus777LeverTransform.anchoredPosition = Vector2(448.0, 122.0)",
     "    end",
   ].join("\n");
 }
@@ -1215,18 +1319,67 @@ function makeUpdateBonus777LeverPull() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method void UpdateBonus777LeverPull(float elapsed)",
-    "        local duration = 0.36",
-    "        local pullDistance = -72.0",
-    "        local offsetY = 0.0",
-    "        if elapsed < duration then",
-    "            local half = duration * 0.5",
-    "            if elapsed < half then",
-    "                offsetY = pullDistance * (elapsed / half)",
-    "            else",
-    "                offsetY = pullDistance * (1.0 - ((elapsed - half) / half))",
-    "            end",
+    "        if elapsed < 0.08 then",
+    "            self:SetBonus777LeverFrame(\"up\")",
+    "        elseif elapsed < 0.16 then",
+    "            self:SetBonus777LeverFrame(\"mid\")",
+    "        else",
+    "            self:SetBonus777LeverFrame(\"down\")",
     "        end",
-    "        self:SetBonus777LeverOffset(offsetY)",
+    "    end",
+  ].join("\n");
+}
+
+function makePlayBonus777LeverPullDown() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void PlayBonus777LeverPullDown()",
+    "        self:SetBonus777LeverFrame(\"up\")",
+    "        wait(0.04)",
+    "        self:SetBonus777LeverFrame(\"mid\")",
+    "        wait(0.05)",
+    "        self:SetBonus777LeverFrame(\"down\")",
+    "    end",
+  ].join("\n");
+}
+
+function makePlayBonus777LeverReturnUp() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void PlayBonus777LeverReturnUp()",
+    "        self:SetBonus777LeverFrame(\"down\")",
+    "        wait(0.04)",
+    "        self:SetBonus777LeverFrame(\"mid\")",
+    "        wait(0.05)",
+    "        self:SetBonus777LeverFrame(\"up\")",
+    "    end",
+  ].join("\n");
+}
+
+function makeBuildBonus777ReelPlans() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonus777ReelPlans(table targetDigits)",
+    "        local digitCount = self:GetBonus777DigitCount()",
+    "        local loops = { 3, 4, 5 }",
+    "        local durations = { 0.72, 0.92, 1.12 }",
+    "        local plans = {}",
+    "        for reelIndex = 1, 3 do",
+    "            local targetDigit = 1",
+    "            if targetDigits ~= nil and targetDigits[reelIndex] ~= nil then",
+    "                targetDigit = targetDigits[reelIndex]",
+    "            end",
+    "            targetDigit = self:NormalizeBonus777Digit(targetDigit)",
+    "            local currentDigit = self:GetBonus777CurrentReelDigit(reelIndex)",
+    "            local distance = self:CircularDistanceDown(currentDigit, targetDigit, digitCount)",
+    "            local totalDistance = distance + (digitCount * loops[reelIndex])",
+    "            plans[reelIndex] = {",
+    "                targetDigit = targetDigit,",
+    "                stopTime = durations[reelIndex],",
+    "                totalPixels = totalDistance * self:GetBonus777DigitCellHeight(),",
+    "            }",
+    "        end",
+    "        return plans",
     "    end",
   ].join("\n");
 }
@@ -1237,26 +1390,39 @@ function makePlayBonus777ReelSpin() {
     "    method void PlayBonus777ReelSpin(table digits)",
     "        local tick = 0.016",
     "        local elapsed = 0.0",
-    "        local cellHeight = self:GetBonus777DigitCellHeight()",
-    "        local stopTimes = { 0.56, 0.72, 0.9 }",
-    "        local cellsPerSecond = { 32.0, 36.0, 40.0 }",
+    "        local plans = self:BuildBonus777ReelPlans(digits)",
+    "        local startY = {}",
     "        local stopped = { false, false, false }",
     "        local stoppedCount = 0",
+    "        for reelIndex = 1, 3 do",
+    "            local transform = self:GetBonus777ReelStripTransform(reelIndex)",
+    "            if transform ~= nil then",
+    "                startY[reelIndex] = transform.anchoredPosition.y",
+    "            else",
+    "                startY[reelIndex] = self:GetBonus777CenterYForDigit(self:GetBonus777CurrentReelDigit(reelIndex))",
+    "            end",
+    "        end",
     "",
+    "        self:PlayBonus777LeverPullDown()",
     "        while stoppedCount < 3 do",
-    "            self:UpdateBonus777LeverPull(elapsed)",
     "            for reelIndex = 1, 3 do",
     "                if not stopped[reelIndex] then",
-    "                    if elapsed >= stopTimes[reelIndex] then",
-    "                        local digit = 1",
-    "                        if digits ~= nil and digits[reelIndex] ~= nil then",
-    "                            digit = digits[reelIndex]",
-    "                        end",
-    "                        self:SetBonus777ReelDigit(reelIndex, digit)",
+    "                    local plan = plans[reelIndex]",
+    "                    local transform = self:GetBonus777ReelStripTransform(reelIndex)",
+    "                    local progress = elapsed / plan.stopTime",
+    "                    if progress > 1.0 then",
+    "                        progress = 1.0",
+    "                    end",
+    "                    local eased = 1.0 - ((1.0 - progress) * (1.0 - progress))",
+    "                    if transform ~= nil then",
+    "                        local pos = transform.anchoredPosition",
+    "                        local nextY = self:NormalizeBonus777StripY(startY[reelIndex] - (plan.totalPixels * eased))",
+    "                        transform.anchoredPosition = Vector2(pos.x, nextY)",
+    "                    end",
+    "                    if elapsed >= plan.stopTime then",
+    "                        self:SetBonus777ReelDigit(reelIndex, plan.targetDigit)",
     "                        stopped[reelIndex] = true",
     "                        stoppedCount = stoppedCount + 1",
-    "                    else",
-    "                        self:MoveBonus777ReelDown(reelIndex, cellsPerSecond[reelIndex] * cellHeight * tick)",
     "                    end",
     "                end",
     "            end",
@@ -1266,7 +1432,7 @@ function makePlayBonus777ReelSpin() {
     "                elapsed = elapsed + tick",
     "            end",
     "        end",
-    "        self:SetBonus777LeverOffset(0.0)",
+    "        self:PlayBonus777LeverReturnUp()",
     "    end",
   ].join("\n");
 }
@@ -1297,8 +1463,11 @@ function makePlayBonus777Presentation() {
     "        for spinIndex, spin in ipairs(spins) do",
     "            self:SetBonus777Texts(\"CHANCE \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), \"GENERATE!!\")",
     "            local resultKey = spin.resultKey or \"000\"",
-    "            self:PlayBonus777ReelSpin(spin.digits)",
-    "            self:SetBonus777DigitsFromResultKey(resultKey)",
+    "            local targetDigits = spin.digits",
+    "            if targetDigits == nil or #targetDigits < 3 then",
+    "                targetDigits = self:BuildForcedBonusSlotDigits(resultKey)",
+    "            end",
+    "            self:PlayBonus777ReelSpin(targetDigits)",
     "            if (spin.matchedDigit or 0) > 0 then",
     "                local resultText = resultKey .. \" x\" .. tostring(spin.rewardMultiplier or 0) .. \" = +\" .. self:FormatUnits(spin.payoutUnits or 0)",
     "                if (spin.extraChanceCount or 0) > 0 then",
@@ -1801,6 +1970,7 @@ function patchBonusSlotProperties(runtime) {
     '    property UITransformComponent bonus777ReelStripTransform2 = ""',
     '    property UITransformComponent bonus777ReelStripTransform3 = ""',
     '    property UITransformComponent bonus777LeverTransform = ""',
+    '    property SpriteGUIRendererComponent bonus777LeverRenderer = ""',
   ];
   const missingBonus777UiProps = bonus777UiProps.filter((line) => {
     const propName = line.match(/property\s+\S+\s+(\S+)/)?.[1];
@@ -1825,6 +1995,18 @@ function patchBonusSlotProperties(runtime) {
       (match) => `${match}    property integer bonusSlotTestCheatRemaining = 0\n`,
     );
   }
+  if (!runtime.includes("property any bonus777ReelVisualIndex = nil")) {
+    runtime = runtime.replace(
+      /    property integer bonusSlotTestCheatRemaining = 0\r?\n/,
+      (match) => `${match}    property any bonus777ReelVisualIndex = nil\n    property any bonus777LeverFrameRuids = nil\n`,
+    );
+  }
+  if (!runtime.includes("property any bonus777LeverFrameRuids = nil")) {
+    runtime = runtime.replace(
+      /    property any bonus777ReelVisualIndex = nil\r?\n/,
+      (match) => `${match}    property any bonus777LeverFrameRuids = nil\n`,
+    );
+  }
 
   if (!runtime.includes("self.bonusSlotRules = self:BuildBonusSlotRules()")) {
     runtime = runtime.replace(
@@ -1838,8 +2020,21 @@ function patchBonusSlotProperties(runtime) {
       (match) => `${match}        self.bonusSlotTestCheatRemaining = 0\n`,
     );
   }
+  if (!runtime.includes("self.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex()")) {
+    runtime = runtime.replace(
+      /        self\.bonusSlotTestCheatRemaining = 0\r?\n/,
+      (match) => `${match}        self.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex()\n        self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()\n`,
+    );
+  }
+  if (!runtime.includes("self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()")) {
+    runtime = runtime.replace(
+      /        self\.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex\(\)\r?\n/,
+      (match) => `${match}        self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()\n`,
+    );
+  }
   runtime = runtime.replace(/        self\.bonusSlotTestCheatRemaining = self\.bonusSlotRules\.testCheatUseCount or 0/g, "        self.bonusSlotTestCheatRemaining = 0");
   runtime = runtime.replace(/(        self\.bonusSlotTestCheatRemaining = 0\r?\n){2,}/g, "        self.bonusSlotTestCheatRemaining = 0\n");
+  runtime = runtime.replace(/(        self\.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids\(\)\r?\n){2,}/g, "        self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()\n");
 
   return patchBonus777PanelLifecycle(runtime);
 }
@@ -2307,15 +2502,25 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "any", "GetBonus777ReelStripTransform", makeGetBonus777ReelStripTransform(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "float", "GetBonus777DigitCellHeight", makeGetBonus777DigitCellHeight(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "integer", "GetBonus777DigitCount", makeGetBonus777DigitCount(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildInitialBonus777ReelVisualIndex", makeBuildInitialBonus777ReelVisualIndex(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "NormalizeBonus777Digit", makeNormalizeBonus777Digit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "GetBonus777CurrentReelDigit", makeGetBonus777CurrentReelDigit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "RememberBonus777ReelDigit", makeRememberBonus777ReelDigit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "float", "GetBonus777CenterYForDigit", makeGetBonus777CenterYForDigit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "float", "GetBonus777MinStripY", makeGetBonus777MinStripY(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "float", "NormalizeBonus777StripY", makeNormalizeBonus777StripY(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "MoveBonus777ReelDown", makeMoveBonus777ReelDown(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777ReelDigitFallback", makeSetBonus777ReelDigitFallback(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777ReelDigit", makeSetBonus777ReelDigit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777DigitsFromResultKey", makeSetBonus777DigitsFromResultKey(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777Texts", makeSetBonus777Texts(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonus777LeverFrameRuids", makeBuildBonus777LeverFrameRuids(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverFrame", makeSetBonus777LeverFrame(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverOffset", makeSetBonus777LeverOffset(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "UpdateBonus777LeverPull", makeUpdateBonus777LeverPull(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "PlayBonus777LeverPullDown", makePlayBonus777LeverPullDown(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "PlayBonus777LeverReturnUp", makePlayBonus777LeverReturnUp(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonus777ReelPlans", makeBuildBonus777ReelPlans(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "PlayBonus777ReelSpin", makePlayBonus777ReelSpin(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "PlayBonus777Presentation", makePlayBonus777Presentation(), "EvaluatePaylines");
 

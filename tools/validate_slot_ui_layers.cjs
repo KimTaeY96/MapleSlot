@@ -5,12 +5,12 @@ const fs = require("fs");
 const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
 const uiPath = `${projectRoot}/ui/UIRoot_TestSandbox_MainPlay.ui`;
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
-const classicSlotStructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/classic_example/classic_slot_ui_structure.json`;
+const bonus777StructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/bonus777/bonus777_slot_ui_structure.json`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
 
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-const classicSlotStructure = JSON.parse(fs.readFileSync(classicSlotStructurePath, "utf8"));
+const bonus777Structure = JSON.parse(fs.readFileSync(bonus777StructurePath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
 const screenSprayAnimationRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
 const entities = ui.ContentProto.Entities;
@@ -171,38 +171,31 @@ if (screenSprayRenderer.RaycastTarget !== false) {
   fail("ScreenSprayVFX_Fullscreen must not block slot controls while hidden or playing");
 }
 
-const classicSlotAssetKeyByName = {
-  classic_slot_frame_shell: "classicSlotFrameShell",
-  classic_slot_reel_window_frame: "classicSlotReelWindowFrame",
-  classic_slot_top_arch: "classicSlotTopArch",
-  classic_slot_top_emblem: "classicSlotTopEmblem",
-  classic_slot_bottom_panel: "classicSlotBottomPanel",
-  classic_slot_base_plinth: "classicSlotBasePlinth",
-  classic_slot_lever: "classicSlotLever",
-  classic_slot_side_left: "classicSlotSideLeft",
-  classic_slot_side_right: "classicSlotSideRight",
-};
-const classicSlotAssets = new Map(classicSlotStructure.assets.map((asset) => [asset.name, asset]));
-function expectClassicSlotSprite(name, relativePath, order, enabled = true, overridePos = null) {
-  const asset = classicSlotAssets.get(name);
-  if (!asset) fail(`Missing classic slot structure asset: ${name}`);
-  const key = classicSlotAssetKeyByName[name];
-  if (!key) fail(`Missing classic slot manifest key mapping: ${name}`);
-  expectRect(relativePath, asset.size.width, asset.size.height);
-  const expectedPos = overridePos ?? asset.uiPositionFromSourceCenter;
-  expectPosition(relativePath, expectedPos.x, expectedPos.y);
-  expectSprite(relativePath, key);
+const bonus777Assets = new Map(bonus777Structure.assets.map((asset) => [asset.name, asset]));
+function expectBonus777Sprite(name, relativePath, order, overrideRect = null, overridePos = null) {
+  const asset = bonus777Assets.get(name);
+  if (!asset) fail(`Missing 777 slot structure asset: ${name}`);
+  const expectedRect = overrideRect ?? [asset.displaySize.width, asset.displaySize.height];
+  const expectedPos = overridePos ?? [asset.uiPosition.x, asset.uiPosition.y];
+  expectRect(relativePath, expectedRect[0], expectedRect[1]);
+  expectPosition(relativePath, expectedPos[0], expectedPos[1]);
+  expectSprite(relativePath, asset.resourceKey);
   const renderer = getComponent(relativePath, "MOD.Core.SpriteGUIRendererComponent");
   if (renderer.OrderInLayer !== order || renderer.OverrideSorting !== true) {
-    fail(`Unexpected classic slot sorting for ${relativePath}: order=${renderer.OrderInLayer}, override=${renderer.OverrideSorting}; expected ${order}/true`);
-  }
-  if (getEntity(relativePath).enable !== enabled) {
-    fail(`Unexpected classic slot entity enable for ${relativePath}: ${getEntity(relativePath).enable}; expected ${enabled}`);
+    fail(`Unexpected 777 slot sorting for ${relativePath}: order=${renderer.OrderInLayer}, override=${renderer.OverrideSorting}; expected ${order}/true`);
   }
 }
 
+function bonus777ReelPosition(index) {
+  const offset = (index - 1) * 2;
+  return [bonus777Structure.reels.positions[offset], bonus777Structure.reels.positions[offset + 1]];
+}
+
 if (byPath.has(`${root}/Panel_ClassicSlotMachine_Hidden`)) {
-  fail("Panel_ClassicSlotMachine_Hidden must not exist; classic resources belong inside Panel_Bonus777_Hidden");
+  fail("Panel_ClassicSlotMachine_Hidden must not exist; the 777 bonus slot uses Panel_Bonus777_Hidden only");
+}
+if (byPath.has(`${root}/Panel_Bonus777_Hidden/ClassicSlot`)) {
+  fail("Panel_Bonus777_Hidden/ClassicSlot must not exist; old classic resources must not be mixed into the 777 bonus slot");
 }
 
 expectRect("Panel_Bonus777_Hidden", 1920, 1080);
@@ -211,15 +204,15 @@ if (getEntity("Panel_Bonus777_Hidden").enable !== false) {
   fail("Panel_Bonus777_Hidden must start hidden and only be enabled during the 777 bonus presentation");
 }
 expectRect("Panel_Bonus777_Hidden/Dim", 1920, 1080);
-expectRect("Panel_Bonus777_Hidden/ClassicSlot", 1139, 1099);
-expectPosition("Panel_Bonus777_Hidden/ClassicSlot", 0, 54);
-expectUiScale("Panel_Bonus777_Hidden/ClassicSlot", 0.58, 0.58);
-expectRect("Panel_Bonus777_Hidden/Text_Title", 620, 46);
-expectRect("Panel_Bonus777_Hidden/Text_Chance", 640, 34);
-expectRect("Panel_Bonus777_Hidden/Text_Result", 760, 48);
-expectPosition("Panel_Bonus777_Hidden/Text_Title", 0, 455);
-expectPosition("Panel_Bonus777_Hidden/Text_Chance", 0, -326);
-expectPosition("Panel_Bonus777_Hidden/Text_Result", 0, -372);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.rectSize[0], bonus777Structure.slotRoot.rectSize[1]);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.position[0], bonus777Structure.slotRoot.position[1]);
+expectUiScale("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.uiScale[0], bonus777Structure.slotRoot.uiScale[1]);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 470, 46);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 520, 34);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 600, 48);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 393);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -246);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -302);
 const bonus777DimRenderer = getComponent("Panel_Bonus777_Hidden/Dim", "MOD.Core.SpriteGUIRendererComponent");
 if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSorting !== true) {
   fail(`Unexpected 777 dim sorting: order=${bonus777DimRenderer.OrderInLayer}, override=${bonus777DimRenderer.OverrideSorting}; expected 440/true`);
@@ -228,37 +221,41 @@ if (bonus777DimRenderer.RaycastTarget !== true) {
   fail("Panel_Bonus777_Hidden/Dim must block base slot touches while the bonus overlay is visible");
 }
 
-expectClassicSlotSprite("classic_slot_frame_shell", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_FrameShell", 450);
-expectClassicSlotSprite("classic_slot_reel_window_frame", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_ReelWindowFrame", 456);
-expectClassicSlotSprite("classic_slot_top_arch", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_TopArch", 458);
-expectClassicSlotSprite("classic_slot_top_emblem", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_TopEmblem", 459);
-expectClassicSlotSprite("classic_slot_bottom_panel", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_BottomPanel", 460);
-expectClassicSlotSprite("classic_slot_base_plinth", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_BasePlinth", 461);
-expectClassicSlotSprite("classic_slot_side_left", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_LeftSideCap", 462);
-expectClassicSlotSprite("classic_slot_side_right", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_RightSideCap", 462);
-expectClassicSlotSprite("classic_slot_lever", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_Lever", 464);
+const bonus777Root = "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot";
+expectBonus777Sprite("bonus777_slot_frame_shell", `${bonus777Root}/Sprite_FrameShell`, 450);
+expectBonus777Sprite("bonus777_slot_title_badge", `${bonus777Root}/Sprite_TitleBadge`, 458);
+expectBonus777Sprite("bonus777_slot_result_panel", `${bonus777Root}/Sprite_ResultPanel`, 458);
+expectBonus777Sprite("bonus777_slot_reel_window_frame", `${bonus777Root}/Sprite_ReelWindowFrame`, 459);
+expectBonus777Sprite("bonus777_slot_lever_up", `${bonus777Root}/Sprite_Lever`, 464);
 
-const bonus777DigitCellHeight = 174;
+const bonus777DigitCellHeight = bonus777Structure.reels.cellHeight;
 for (let index = 1; index <= 3; index += 1) {
-  const geometry = classicSlotAssets.get(`classic_slot_reel_strip_${index}`);
-  const maskPath = `Panel_Bonus777_Hidden/ClassicSlot/ReelMask_${index}`;
-  const stripPath = `${maskPath}/ReelStrip_${index}`;
-  expectRect(maskPath, geometry.size.width, 522);
-  expectPosition(maskPath, geometry.uiPositionFromSourceCenter.x, geometry.uiPositionFromSourceCenter.y);
+  const reelPos = bonus777ReelPosition(index);
+  expectBonus777Sprite(
+    "bonus777_slot_reel_column_background",
+    `${bonus777Root}/Sprite_ReelColumnBg_${index}`,
+    452,
+    bonus777Structure.reels.maskSize,
+    reelPos,
+  );
+  const maskPath = `${bonus777Root}/Mask_Bonus777Reel_${index}`;
+  const stripPath = `${maskPath}/Panel_Bonus777ReelStrip_${index}`;
+  expectRect(maskPath, bonus777Structure.reels.maskSize[0], bonus777Structure.reels.maskSize[1]);
+  expectPosition(maskPath, reelPos[0], reelPos[1]);
   getComponent(maskPath, "MOD.Core.MaskComponent");
-  expectRect(stripPath, geometry.size.width, bonus777DigitCellHeight * 11);
+  expectRect(stripPath, bonus777Structure.reels.stripSize[0], bonus777Structure.reels.stripSize[1]);
   expectPosition(stripPath, 0, 0);
   if (byPath.has(`${root}/${maskPath}/Sprite_ReelStrip`)) {
     fail(`${maskPath} must use live digit cells, not a static Sprite_ReelStrip image`);
   }
-  for (let displayIndex = 1; displayIndex <= 11; displayIndex += 1) {
+  for (let displayIndex = 1; displayIndex <= bonus777Structure.reels.visualCellCount; displayIndex += 1) {
     const virtualIndex = displayIndex - 2;
     const expectedDigit = ((((virtualIndex - 1) % 7) + 7) % 7) + 1;
     const cellPath = `${stripPath}/DigitCell_${String(displayIndex).padStart(2, "0")}`;
-    expectRect(cellPath, geometry.size.width, bonus777DigitCellHeight);
+    expectRect(cellPath, bonus777Structure.reels.stripSize[0], bonus777DigitCellHeight);
     expectPosition(cellPath, 0, (4 - virtualIndex) * bonus777DigitCellHeight);
-    expectRect(`${cellPath}/Face`, geometry.size.width - 20, bonus777DigitCellHeight - 18);
-    expectRect(`${cellPath}/Text_Digit`, geometry.size.width - 30, bonus777DigitCellHeight - 20);
+    expectBonus777Sprite("bonus777_slot_digit_cell", `${cellPath}/Sprite_Face`, 453, bonus777Structure.reels.digitCellSize, [0, 0]);
+    expectRect(`${cellPath}/Text_Digit`, bonus777Structure.reels.digitTextSize[0], bonus777Structure.reels.digitTextSize[1]);
     expectTextAlignment(`${cellPath}/Text_Digit`, 4);
     const text = getComponent(`${cellPath}/Text_Digit`, "MOD.Core.TextComponent");
     if (text.Text !== String(expectedDigit)) {
@@ -266,9 +263,9 @@ for (let index = 1; index <= 3; index += 1) {
     }
   }
 }
-expectTextAlignment("Panel_Bonus777_Hidden/Text_Title", 4);
-expectTextAlignment("Panel_Bonus777_Hidden/Text_Chance", 4);
-expectTextAlignment("Panel_Bonus777_Hidden/Text_Result", 4);
+expectTextAlignment(`${bonus777Root}/Text_Title`, 4);
+expectTextAlignment(`${bonus777Root}/Text_Chance`, 4);
+expectTextAlignment(`${bonus777Root}/Text_Result`, 4);
 
 expectRect("Button_DevCheatMenu", 68, 68);
 expectPosition("Button_DevCheatMenu", -40, -40);
@@ -614,12 +611,20 @@ if (
   !runtime.includes("method void PlayBonus777Presentation(table bonusSlotResult)") ||
   !runtime.includes("self:PlayBonus777Presentation(result.bonusSlotResult)") ||
   !runtime.includes("self.bonus777Panel.Enable = true") ||
-  !runtime.includes("self:SetBonus777DigitsFromResultKey(resultKey)") ||
-  !runtime.includes("self:PlayBonus777ReelSpin(spin.digits)") ||
+  !runtime.includes("local targetDigits = spin.digits") ||
+  !runtime.includes("self:PlayBonus777ReelSpin(targetDigits)") ||
+  !runtime.includes("method table BuildBonus777ReelPlans(table targetDigits)") ||
+  !runtime.includes("method table BuildBonus777LeverFrameRuids()") ||
+  !runtime.includes("self:PlayBonus777LeverPullDown()") ||
+  !runtime.includes("self:PlayBonus777LeverReturnUp()") ||
+  !runtime.includes("self.bonus777LeverRenderer.ImageRUID = frameRuid") ||
   !runtime.includes("method void MoveBonus777ReelDown(integer reelIndex, float pixelDelta)") ||
   !runtime.includes("method void UpdateBonus777LeverPull(float elapsed)")
 ) {
   fail("Runtime 777 bonus slot overlay presentation flow or moving-strip lever presentation is missing");
+}
+if (runtime.includes("self:SetBonus777DigitsFromResultKey(resultKey)")) {
+  fail("Runtime 777 bonus slot must not swap digits after the reels have stopped");
 }
 if (!runtime.includes("runtimeBuildKind = \"TEST_SANDBOX\"") || !runtime.includes("method boolean IsBonusSlotTestCheatAllowed")) {
   fail("Runtime 777 test cheat build-kind guard is missing");
@@ -727,6 +732,7 @@ const requiredBindings = [
   "bonus777ReelStripTransform2",
   "bonus777ReelStripTransform3",
   "bonus777LeverTransform",
+  "bonus777LeverRenderer",
   "spinButton",
   "multiplierButton1",
   "multiplierButton5",
@@ -782,15 +788,16 @@ expectBinding("winResultTotalText", "Panel_LeftSlotMachine/Panel_WinResult/Text_
 expectBinding("screenSprayVfxEntity", "ScreenSprayVFX_Fullscreen", "Entity");
 expectBinding("screenSprayVfxRenderer", "ScreenSprayVFX_Fullscreen", "SpriteGUIRendererComponent");
 expectBinding("bonus777Panel", "Panel_Bonus777_Hidden", "Entity");
-expectBinding("bonus777ReelText1", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_1/ReelStrip_1/DigitCell_04/Text_Digit", "TextComponent");
-expectBinding("bonus777ReelText2", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_2/ReelStrip_2/DigitCell_04/Text_Digit", "TextComponent");
-expectBinding("bonus777ReelText3", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_3/ReelStrip_3/DigitCell_04/Text_Digit", "TextComponent");
-expectBinding("bonus777ChanceText", "Panel_Bonus777_Hidden/Text_Chance", "TextComponent");
-expectBinding("bonus777ResultText", "Panel_Bonus777_Hidden/Text_Result", "TextComponent");
-expectBinding("bonus777ReelStripTransform1", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_1/ReelStrip_1", "UITransformComponent");
-expectBinding("bonus777ReelStripTransform2", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_2/ReelStrip_2", "UITransformComponent");
-expectBinding("bonus777ReelStripTransform3", "Panel_Bonus777_Hidden/ClassicSlot/ReelMask_3/ReelStrip_3", "UITransformComponent");
-expectBinding("bonus777LeverTransform", "Panel_Bonus777_Hidden/ClassicSlot/Sprite_Lever", "UITransformComponent");
+expectBinding("bonus777ReelText1", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04/Text_Digit", "TextComponent");
+expectBinding("bonus777ReelText2", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04/Text_Digit", "TextComponent");
+expectBinding("bonus777ReelText3", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04/Text_Digit", "TextComponent");
+expectBinding("bonus777ChanceText", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", "TextComponent");
+expectBinding("bonus777ResultText", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", "TextComponent");
+expectBinding("bonus777ReelStripTransform1", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1", "UITransformComponent");
+expectBinding("bonus777ReelStripTransform2", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2", "UITransformComponent");
+expectBinding("bonus777ReelStripTransform3", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3", "UITransformComponent");
+expectBinding("bonus777LeverTransform", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_Lever", "UITransformComponent");
+expectBinding("bonus777LeverRenderer", "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_Lever", "SpriteGUIRendererComponent");
 expectBinding("devCheatButton", "Button_DevCheatMenu", "Entity");
 expectBinding("devCheatPanel", "Panel_DevCheat_Hidden", "Entity");
 expectBinding("devCheatInput", "Panel_DevCheat_Hidden/Input_CheatCode", "TextInputComponent");

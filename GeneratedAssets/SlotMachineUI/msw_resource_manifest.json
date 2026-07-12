@@ -394,5 +394,59 @@
     "fileName": "classic_slot_symbol_7.png",
     "ruid": "0edcf2a1191b4b7d814c4e54a86460c7",
     "size": 46316
+  },
+  "bonus777SlotFrameShell": {
+    "key": "bonus777SlotFrameShell",
+    "fileName": "bonus777_slot_frame_shell.png",
+    "ruid": "f3f9736dd8b24eda981a7e8f7a6236b0",
+    "size": 582549
+  },
+  "bonus777SlotReelWindowFrame": {
+    "key": "bonus777SlotReelWindowFrame",
+    "fileName": "bonus777_slot_reel_window_frame.png",
+    "ruid": "361f0a923b504e9e8498c04cbb090e52",
+    "size": 160537
+  },
+  "bonus777SlotTitleBadge": {
+    "key": "bonus777SlotTitleBadge",
+    "fileName": "bonus777_slot_title_badge.png",
+    "ruid": "53cac48c379c4d8ca36d3c0b24bc1459",
+    "size": 115926
+  },
+  "bonus777SlotResultPanel": {
+    "key": "bonus777SlotResultPanel",
+    "fileName": "bonus777_slot_result_panel.png",
+    "ruid": "cccde1dcdb2040ee9276a5943b3c995f",
+    "size": 265379
+  },
+  "bonus777SlotReelColumnBackground": {
+    "key": "bonus777SlotReelColumnBackground",
+    "fileName": "bonus777_slot_reel_column_background.png",
+    "ruid": "a05d09b4e3204ec788e528c486939311",
+    "size": 106501
+  },
+  "bonus777SlotDigitCell": {
+    "key": "bonus777SlotDigitCell",
+    "fileName": "bonus777_slot_digit_cell.png",
+    "ruid": "59073bef131646e9a578ac991c4b62e6",
+    "size": 65544
+  },
+  "bonus777SlotLeverUp": {
+    "key": "bonus777SlotLeverUp",
+    "fileName": "bonus777_slot_lever_up.png",
+    "ruid": "6c54bf0fb25b4b3080e43503e78cd5a0",
+    "size": 34111
+  },
+  "bonus777SlotLeverMid": {
+    "key": "bonus777SlotLeverMid",
+    "fileName": "bonus777_slot_lever_mid.png",
+    "ruid": "5fad4a02673245c591182fdf6a2edaab",
+    "size": 35779
+  },
+  "bonus777SlotLeverDown": {
+    "key": "bonus777SlotLeverDown",
+    "fileName": "bonus777_slot_lever_down.png",
+    "ruid": "7c66bb1bf66242f89c1c1070a1fe92a2",
+    "size": 31506
   }
 }
