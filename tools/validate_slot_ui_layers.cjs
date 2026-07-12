@@ -100,7 +100,7 @@ function expectSprite(relativePath, key) {
 
 expectRect("Panel_LeftSlotMachine", 893, 1020);
 expectRect("Panel_LeftSlotMachine/Bg_CabinetFrame", 893, 1020);
-expectRect("Panel_LeftSlotMachine/Bg_CabinetInterior", 689, 938);
+expectRect("Panel_LeftSlotMachine/Bg_CabinetInterior", 689, 870);
 expectRect("Panel_LeftSlotMachine/Decoration_TopEmblem", 378.863, 185.586761);
 expectRect("Panel_LeftSlotMachine/ReelFrame_BG", 791, 350);
 expectRect("Panel_LeftSlotMachine/ReelGrid_3x5", 791, 290);
@@ -124,7 +124,7 @@ expectRect("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Backdrop_MultiplierTitl
 expectRect("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Dropdown_BaseBet/Text_BaseBetValue", 206, 34);
 
 expectPosition("Panel_LeftSlotMachine/Decoration_TopEmblem", 0, -135);
-expectPosition("Panel_LeftSlotMachine/Bg_CabinetInterior", 0, -84);
+expectPosition("Panel_LeftSlotMachine/Bg_CabinetInterior", 0, -75);
 expectPosition("Panel_LeftSlotMachine/Text_SlotStatus", 0, 164);
 expectPosition("Panel_LeftSlotMachine/Panel_WinResult", 0, 164);
 expectPosition("Panel_LeftSlotMachine/ReelFrame_BG", 0, -316);

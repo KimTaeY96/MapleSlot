@@ -29,7 +29,7 @@ Use a **4:6 Left/Right composition**, but only the left 40% is occupied by a hea
 | Right Combat Status Overlay | Right side | Hunting tier, HP, death countdown | Small UI overlay on top of the actual map. |
 
 ## Slot Cabinet Placement Rules
-The active slot cabinet reference canvas is `700x1020`. Placement is defined
+The active slot cabinet reference canvas is `893x1020`. Placement is defined
 against this local canvas before runtime responsive scaling is applied.
 
 ### Pillar Inner-Safe Width
@@ -88,8 +88,8 @@ Do not tint the shared border red; if a red accent is required later, apply it
 only to an inner fill layer.
 
 ### Verification Checklist
-- [ ] `ReelFrame_BG` width == `Panel_BetMultiplierRow/Bg` width == `620`, centered at cabinet `x=350`.
-- [ ] No live child control crosses `x<40` or `x>660`.
+- [ ] `ReelFrame_BG` width == `Panel_BetMultiplierRow/Bg` width == `791`, centered at cabinet `x=446.5`.
+- [ ] No live child control crosses `x<51` or `x>842`.
 - [ ] Top emblem, reel frame, bottom panel, and Spin button do not overlap vertically.
 - [ ] Open Base Bet dropdown renders above Multiplier controls.
 - [ ] Open Base Bet dropdown bottom edge stays above the Base Bet button.
@@ -174,11 +174,11 @@ These are not UI. They must be handled by the level/asset lane in an actual map 
 - Avoid hardcoding final currency values in UI. Use placeholder text such as `0` and document the binding target.
 
 ## Layered Runtime Resource Mapping
-The active slot-machine reference size is `700x1020`. The runtime scales this parent as one unit, while every live UI area remains a separate child node.
+The active slot-machine reference size is `893x1020`. The runtime scales this parent as one unit, while every live UI area remains a separate child node.
 
 | Node | Rect | Resource responsibility |
 |---|---:|---|
-| `Bg_CabinetInterior` | `540x870` | Opaque navy fill behind the hollow cabinet so the map does not show through. |
+| `Bg_CabinetInterior` | `689x870` | Opaque navy fill behind the hollow cabinet so the map does not show through. |
 | `Bg_CabinetFrame` | `893x1020` | Layer 1 outer cabinet frame only. |
 | `Decoration_TopEmblem` | `520x250` | Layer 2 decorative emblem only. |
 | `ReelFrame_BG` | `791x350` | Layer 3 reel-window border and five divider bars. |

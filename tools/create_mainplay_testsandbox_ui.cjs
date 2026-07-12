@@ -578,8 +578,8 @@ b.panel("Panel_LeftSlotMachine", {
 });
 b.sprite("Panel_LeftSlotMachine/Bg_CabinetInterior", {
   anchor: "top-center",
-  pos: [0, -84],
-  rect_size: [SLOT_INTERIOR_WIDTH, 938],
+  pos: [0, -75],
+  rect_size: [SLOT_INTERIOR_WIDTH, 870],
   color: "#050D36",
   alpha: 0.98,
   raycast: false,
