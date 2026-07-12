@@ -26,24 +26,24 @@ ASSETS = {
         "file": "bonus777_slot_reel_window_frame.png",
         "rect": [687, 123, 1225, 473],
         "trim": True,
-        "displaySize": [620, 404],
-        "uiPosition": [0, 90],
+        "displaySize": [564, 400],
+        "uiPosition": [0, 12],
     },
     "bonus777_slot_title_badge": {
         "resourceKey": "bonus777SlotTitleBadge",
         "file": "bonus777_slot_title_badge.png",
         "rect": [45, 681, 646, 834],
         "trim": True,
-        "displaySize": [540, 138],
-        "uiPosition": [0, 356],
+        "displaySize": [540, 90],
+        "uiPosition": [0, 350],
     },
     "bonus777_slot_result_panel": {
         "resourceKey": "bonus777SlotResultPanel",
         "file": "bonus777_slot_result_panel.png",
         "rect": [18, 893, 656, 1212],
         "trim": True,
-        "displaySize": [640, 276],
-        "uiPosition": [0, -292],
+        "displaySize": [600, 104],
+        "uiPosition": [0, -288],
     },
     "bonus777_slot_reel_column_background": {
         "resourceKey": "bonus777SlotReelColumnBackground",
@@ -87,6 +87,34 @@ ASSETS = {
         "clearFrameGuide": True,
         "displaySize": [150, 158],
         "uiPosition": [392, 110],
+    },
+}
+
+
+EXTERNAL_ASSETS = {
+    "bonus777_slot_lever_base": {
+        "resourceKey": "bonus777SlotLeverBase",
+        "file": "bonus777_slot_lever_base.png",
+        "displaySize": [180, 180],
+        "uiPosition": [326, 14],
+    },
+    "bonus777_slot_lever_arm_up": {
+        "resourceKey": "bonus777SlotLeverArmUp",
+        "file": "bonus777_slot_lever_arm_up.png",
+        "displaySize": [170, 170],
+        "uiPosition": [335, 86],
+    },
+    "bonus777_slot_lever_arm_mid": {
+        "resourceKey": "bonus777SlotLeverArmMid",
+        "file": "bonus777_slot_lever_arm_mid.png",
+        "displaySize": [170, 170],
+        "uiPosition": [325, 86],
+    },
+    "bonus777_slot_lever_arm_down": {
+        "resourceKey": "bonus777SlotLeverArmDown",
+        "file": "bonus777_slot_lever_arm_down.png",
+        "displaySize": [170, 170],
+        "uiPosition": [282, 33],
     },
 }
 
@@ -137,7 +165,7 @@ def main() -> None:
             "cellHeight": 88,
             "maskSize": [150, 260],
             "stripSize": [150, 968],
-            "positions": [-166, 108, 0, 108, 166, 108],
+            "positions": [-160, 32, 0, 32, 160, 32],
             "digitCellSize": [118, 78],
             "digitTextSize": [106, 70],
             "maskSafePadding": 3,
@@ -166,6 +194,28 @@ def main() -> None:
                     "y": spec["uiPosition"][1],
                 },
                 "trimmed": bool(spec.get("trim", True)),
+            }
+        )
+
+    for name, spec in EXTERNAL_ASSETS.items():
+        output_path = OUT_DIR / spec["file"]
+        image = Image.open(output_path).convert("RGBA")
+        metadata["assets"].append(
+            {
+                "name": name,
+                "resourceKey": spec["resourceKey"],
+                "file": str(output_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+                "sourceRect": [0, 0, image.width, image.height],
+                "size": {"width": image.width, "height": image.height},
+                "displaySize": {
+                    "width": spec["displaySize"][0],
+                    "height": spec["displaySize"][1],
+                },
+                "uiPosition": {
+                    "x": spec["uiPosition"][0],
+                    "y": spec["uiPosition"][1],
+                },
+                "trimmed": False,
             }
         )
 

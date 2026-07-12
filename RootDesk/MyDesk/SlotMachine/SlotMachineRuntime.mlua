@@ -510,6 +510,7 @@ script SlotMachineRuntime extends Logic
     property integer bonusSlotTestCheatRemaining = 0
     property any bonus777ReelVisualIndex = nil
     property any bonus777LeverFrameRuids = nil
+    property any bonus777LeverFramePositions = nil
     property any paylines = nil
     property any spinProfiles = nil
     property any screenSprayVfxConfig = nil
@@ -616,6 +617,7 @@ script SlotMachineRuntime extends Logic
         self.bonusSlotTestCheatRemaining = 0
         self.bonus777ReelVisualIndex = self:BuildInitialBonus777ReelVisualIndex()
         self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()
+        self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()
         self.paylines = self:BuildPaylines()
         self.spinProfiles = self:BuildSpinProfiles()
         self.screenSprayVfxConfig = self:BuildScreenSprayVfxConfig()
@@ -3561,7 +3563,11 @@ script SlotMachineRuntime extends Logic
         if self.bonus777LeverTransform == nil then
             return
         end
-        self.bonus777LeverTransform.anchoredPosition = Vector2(392.0, 110.0)
+        if self.bonus777LeverFramePositions == nil then
+            self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()
+        end
+        local upPosition = self.bonus777LeverFramePositions.up
+        self.bonus777LeverTransform.anchoredPosition = Vector2(upPosition.x, upPosition.y + (offsetY or 0.0))
     end
 
     @ExecSpace("ClientOnly")
@@ -3730,10 +3736,19 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method table BuildBonus777LeverFrameRuids()
         local frames = {}
-        frames.up = "6c54bf0fb25b4b3080e43503e78cd5a0"
-        frames.mid = "5fad4a02673245c591182fdf6a2edaab"
-        frames.down = "7c66bb1bf66242f89c1c1070a1fe92a2"
+        frames.up = "734e6cde0e894dc8ab3d72a0a9141875"
+        frames.mid = "6c3b5d0a862d4589bebd2a88130f5818"
+        frames.down = "d0576219dbf44c3fb4a2111b614e872d"
         return frames
+    end
+
+    @ExecSpace("ClientOnly")
+    method table BuildBonus777LeverFramePositions()
+        local positions = {}
+        positions.up = Vector2(335.0, 86.0)
+        positions.mid = Vector2(325.0, 86.0)
+        positions.down = Vector2(282.0, 33.0)
+        return positions
     end
 
     @ExecSpace("ClientOnly")
@@ -3749,6 +3764,15 @@ script SlotMachineRuntime extends Logic
             return
         end
         self.bonus777LeverRenderer.ImageRUID = frameRuid
+        if self.bonus777LeverTransform ~= nil then
+            if self.bonus777LeverFramePositions == nil then
+                self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()
+            end
+            local framePosition = self.bonus777LeverFramePositions[frameKey or "up"]
+            if framePosition ~= nil then
+                self.bonus777LeverTransform.anchoredPosition = framePosition
+            end
+        end
     end
 
     @ExecSpace("ClientOnly")

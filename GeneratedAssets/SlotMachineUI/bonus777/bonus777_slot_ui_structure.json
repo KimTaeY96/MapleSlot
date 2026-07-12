@@ -32,12 +32,12 @@
       968
     ],
     "positions": [
-      -166,
-      108,
+      -160,
+      32,
       0,
-      108,
-      166,
-      108
+      32,
+      160,
+      32
     ],
     "digitCellSize": [
       118,
@@ -90,12 +90,12 @@
         "height": 350
       },
       "displaySize": {
-        "width": 620,
-        "height": 404
+        "width": 564,
+        "height": 400
       },
       "uiPosition": {
         "x": 0,
-        "y": 90
+        "y": 12
       },
       "trimmed": true
     },
@@ -115,11 +115,11 @@
       },
       "displaySize": {
         "width": 540,
-        "height": 138
+        "height": 90
       },
       "uiPosition": {
         "x": 0,
-        "y": 356
+        "y": 350
       },
       "trimmed": true
     },
@@ -138,12 +138,12 @@
         "height": 317
       },
       "displaySize": {
-        "width": 640,
-        "height": 276
+        "width": 600,
+        "height": 104
       },
       "uiPosition": {
         "x": 0,
-        "y": -292
+        "y": -288
       },
       "trimmed": true
     },
@@ -264,6 +264,102 @@
       "uiPosition": {
         "x": 392,
         "y": 110
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_lever_base",
+      "resourceKey": "bonus777SlotLeverBase",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_base.png",
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "size": {
+        "width": 1254,
+        "height": 1254
+      },
+      "displaySize": {
+        "width": 180,
+        "height": 180
+      },
+      "uiPosition": {
+        "x": 326,
+        "y": 14
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_lever_arm_up",
+      "resourceKey": "bonus777SlotLeverArmUp",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_arm_up.png",
+      "sourceRect": [
+        0,
+        0,
+        1198,
+        1313
+      ],
+      "size": {
+        "width": 1198,
+        "height": 1313
+      },
+      "displaySize": {
+        "width": 170,
+        "height": 170
+      },
+      "uiPosition": {
+        "x": 335,
+        "y": 86
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_lever_arm_mid",
+      "resourceKey": "bonus777SlotLeverArmMid",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_arm_mid.png",
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "size": {
+        "width": 1254,
+        "height": 1254
+      },
+      "displaySize": {
+        "width": 170,
+        "height": 170
+      },
+      "uiPosition": {
+        "x": 325,
+        "y": 86
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_lever_arm_down",
+      "resourceKey": "bonus777SlotLeverArmDown",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_arm_down.png",
+      "sourceRect": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "size": {
+        "width": 1254,
+        "height": 1254
+      },
+      "displaySize": {
+        "width": 170,
+        "height": 170
+      },
+      "uiPosition": {
+        "x": 282,
+        "y": 33
       },
       "trimmed": false
     }

@@ -448,5 +448,29 @@
     "fileName": "bonus777_slot_lever_down.png",
     "ruid": "7c66bb1bf66242f89c1c1070a1fe92a2",
     "size": 31506
+  },
+  "bonus777SlotLeverBase": {
+    "key": "bonus777SlotLeverBase",
+    "fileName": "bonus777_slot_lever_base.png",
+    "ruid": "d05c2cfedf5b4af3ac911e195776ade7",
+    "size": 611370
+  },
+  "bonus777SlotLeverArmUp": {
+    "key": "bonus777SlotLeverArmUp",
+    "fileName": "bonus777_slot_lever_arm_up.png",
+    "ruid": "734e6cde0e894dc8ab3d72a0a9141875",
+    "size": 224245
+  },
+  "bonus777SlotLeverArmMid": {
+    "key": "bonus777SlotLeverArmMid",
+    "fileName": "bonus777_slot_lever_arm_mid.png",
+    "ruid": "6c3b5d0a862d4589bebd2a88130f5818",
+    "size": 252840
+  },
+  "bonus777SlotLeverArmDown": {
+    "key": "bonus777SlotLeverArmDown",
+    "fileName": "bonus777_slot_lever_arm_down.png",
+    "ruid": "d0576219dbf44c3fb4a2111b614e872d",
+    "size": 201199
   }
 }

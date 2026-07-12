@@ -216,12 +216,12 @@ expectRect("Panel_Bonus777_Hidden/Dim", 1920, 1080);
 expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.rectSize[0], bonus777Structure.slotRoot.rectSize[1]);
 expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.position[0], bonus777Structure.slotRoot.position[1]);
 expectUiScale("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.uiScale[0], bonus777Structure.slotRoot.uiScale[1]);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 500, 40);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 560, 34);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 560, 82);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 362);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -224);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -296);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 486, 34);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 520, 28);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 520, 34);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 350);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -270);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -306);
 const bonus777DimRenderer = getComponent("Panel_Bonus777_Hidden/Dim", "MOD.Core.SpriteGUIRendererComponent");
 if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSorting !== true) {
   fail(`Unexpected 777 dim sorting: order=${bonus777DimRenderer.OrderInLayer}, override=${bonus777DimRenderer.OverrideSorting}; expected 440/true`);
@@ -238,7 +238,21 @@ expectBonus777Sprite("bonus777_slot_frame_shell", `${bonus777Root}/Sprite_FrameS
 expectBonus777Sprite("bonus777_slot_title_badge", `${bonus777Root}/Sprite_TitleBadge`, 458);
 expectBonus777Sprite("bonus777_slot_result_panel", `${bonus777Root}/Sprite_ResultPanel`, 458);
 expectBonus777Sprite("bonus777_slot_reel_window_frame", `${bonus777Root}/Sprite_ReelWindowFrame`, 459);
-expectBonus777Sprite("bonus777_slot_lever_up", `${bonus777Root}/Sprite_Lever`, 464);
+if (getComponent(`${bonus777Root}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRendererComponent").PreserveAspect !== false) {
+  fail("777 reel window frame must fill its validated rect exactly");
+}
+expectBonus777Sprite("bonus777_slot_lever_base", `${bonus777Root}/Sprite_LeverBase`, 464);
+expectBonus777Sprite("bonus777_slot_lever_arm_up", `${bonus777Root}/Sprite_Lever`, 465);
+expectRect(`${bonus777Root}/Bg_TitleOpaque`, 486, 54);
+expectPosition(`${bonus777Root}/Bg_TitleOpaque`, 0, 350);
+expectRect(`${bonus777Root}/Bg_ResultOpaque`, 548, 76);
+expectPosition(`${bonus777Root}/Bg_ResultOpaque`, 0, -288);
+for (const opaquePath of [`${bonus777Root}/Bg_TitleOpaque`, `${bonus777Root}/Bg_ResultOpaque`]) {
+  const renderer = getComponent(opaquePath, "MOD.Core.SpriteGUIRendererComponent");
+  if (Math.abs((renderer.Color?.a ?? 0) - 1) > 0.001) {
+    fail(`${opaquePath} must be fully opaque`);
+  }
+}
 
 const bonus777DigitCellHeight = bonus777Structure.reels.cellHeight;
 for (let index = 1; index <= 3; index += 1) {
@@ -630,6 +644,8 @@ if (
   !runtime.includes("self:PlayBonus777LeverPullDown()") ||
   !runtime.includes("self:PlayBonus777LeverReturnUp()") ||
   !runtime.includes("self.bonus777LeverRenderer.ImageRUID = frameRuid") ||
+  !runtime.includes("method table BuildBonus777LeverFramePositions()") ||
+  !runtime.includes("self.bonus777LeverTransform.anchoredPosition = framePosition") ||
   !runtime.includes("method void MoveBonus777ReelDown(integer reelIndex, float pixelDelta)") ||
   !runtime.includes("method void UpdateBonus777LeverPull(float elapsed)")
 ) {

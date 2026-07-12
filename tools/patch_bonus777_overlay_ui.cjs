@@ -99,7 +99,7 @@ function addSprite(b, pathName, entry, order, options = {}) {
     pos: options.pos ?? uiPosition(entry),
     rect_size: options.rect_size ?? displaySize(entry),
     image_ruid: options.image_ruid ?? entry.ruid,
-    preserve_aspect: true,
+    preserve_aspect: options.preserve_aspect ?? true,
     raycast: false,
     sorting_layer: "UI",
     order_in_layer: order,
@@ -149,6 +149,8 @@ const assets = {
   reelColumnBackground: asset("bonus777_slot_reel_column_background"),
   digitCell: asset("bonus777_slot_digit_cell"),
   leverUp: asset("bonus777_slot_lever_up"),
+  leverBase: asset("bonus777_slot_lever_base"),
+  leverArmUp: asset("bonus777_slot_lever_arm_up"),
 };
 
 const b = UIBuilder.load(uiPath);
@@ -190,8 +192,22 @@ b.patchComponent(SLOT, "MOD.Core.UITransformComponent", {
 });
 
 addSprite(b, `${SLOT}/Sprite_FrameShell`, assets.frameShell, Z.shell);
-addSprite(b, `${SLOT}/Sprite_TitleBadge`, assets.titleBadge, Z.frame);
-addSprite(b, `${SLOT}/Sprite_ResultPanel`, assets.resultPanel, Z.frame);
+addRect(b, `${SLOT}/Bg_TitleOpaque`, {
+  pos: [0, 350],
+  rect_size: [486, 54],
+  color: "#07080D",
+  alpha: 1,
+  order_in_layer: Z.frame - 1,
+});
+addSprite(b, `${SLOT}/Sprite_TitleBadge`, assets.titleBadge, Z.frame, { preserve_aspect: false });
+addRect(b, `${SLOT}/Bg_ResultOpaque`, {
+  pos: [0, -288],
+  rect_size: [548, 76],
+  color: "#07080D",
+  alpha: 1,
+  order_in_layer: Z.frame - 1,
+});
+addSprite(b, `${SLOT}/Sprite_ResultPanel`, assets.resultPanel, Z.frame, { preserve_aspect: false });
 
 for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   const reelPos = pairPosition(reelIndex);
@@ -247,15 +263,16 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   }
 }
 
-addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame + 1);
-addSprite(b, `${SLOT}/Sprite_Lever`, assets.leverUp, Z.lever);
+addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame + 1, { preserve_aspect: false });
+addSprite(b, `${SLOT}/Sprite_LeverBase`, assets.leverBase, Z.lever);
+addSprite(b, `${SLOT}/Sprite_Lever`, assets.leverArmUp, Z.lever + 1);
 
 addText(b, `${SLOT}/Text_Title`, "777 BONUS SLOT", {
-  pos: [0, 362],
-  rect_size: [500, 40],
-  size: 28,
+  pos: [0, 350],
+  rect_size: [486, 34],
+  size: 26,
   min_size: 18,
-  max_size: 28,
+  max_size: 26,
   bold: true,
   color: "#FFE8A3",
   outline: true,
@@ -263,11 +280,11 @@ addText(b, `${SLOT}/Text_Title`, "777 BONUS SLOT", {
   outline_width: 2,
 });
 addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
-  pos: [0, -224],
-  rect_size: [560, 34],
-  size: 22,
+  pos: [0, -270],
+  rect_size: [520, 28],
+  size: 20,
   min_size: 14,
-  max_size: 22,
+  max_size: 20,
   bold: true,
   color: "#FFE8A3",
   outline: true,
@@ -275,11 +292,11 @@ addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
   order_in_layer: Z.text,
 });
 addText(b, `${SLOT}/Text_Result`, "WILD x5 BONUS", {
-  pos: [0, -296],
-  rect_size: [560, 82],
-  size: 24,
+  pos: [0, -306],
+  rect_size: [520, 34],
+  size: 22,
   min_size: 15,
-  max_size: 24,
+  max_size: 22,
   bold: true,
   color: "#FFE9B0",
   outline: true,

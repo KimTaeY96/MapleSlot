@@ -22,6 +22,10 @@ const assets = [
   ["bonus777SlotLeverUp", "bonus777_slot_lever_up.png"],
   ["bonus777SlotLeverMid", "bonus777_slot_lever_mid.png"],
   ["bonus777SlotLeverDown", "bonus777_slot_lever_down.png"],
+  ["bonus777SlotLeverBase", "bonus777_slot_lever_base.png"],
+  ["bonus777SlotLeverArmUp", "bonus777_slot_lever_arm_up.png"],
+  ["bonus777SlotLeverArmMid", "bonus777_slot_lever_arm_mid.png"],
+  ["bonus777SlotLeverArmDown", "bonus777_slot_lever_arm_down.png"],
 ];
 
 let nextId = 1;

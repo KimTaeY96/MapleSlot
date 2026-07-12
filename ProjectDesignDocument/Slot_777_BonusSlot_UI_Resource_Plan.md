@@ -40,7 +40,8 @@ Do not mix the old wood/parchment classic-stat UI tone with the current slot-mac
 - `Sprite_Bonus777ResultPanel`
 - `Text_Bonus777Chance`
 - `Text_Bonus777Result`
-- `Sprite_Bonus777Lever`
+- `Sprite_Bonus777LeverBase`
+- `Sprite_Bonus777LeverArm`
 
 ## Required Image Resources
 
@@ -54,9 +55,10 @@ All generated raster assets must be transparent PNG slices derived from one full
 | `bonus777SlotDigitCell` | Repeated cell face behind dynamic digit text |
 | `bonus777SlotTitleBadge` | Decorative top title plaque without baked text |
 | `bonus777SlotResultPanel` | Decorative lower result/chance panel without baked text |
-| `bonus777SlotLeverUp` | Lever sprite frame: default/up |
-| `bonus777SlotLeverMid` | Lever sprite frame: transition/mid-pull |
-| `bonus777SlotLeverDown` | Lever sprite frame: pulled/held down |
+| `bonus777SlotLeverBase` | Fixed mechanical housing aligned to the right black-crystal socket |
+| `bonus777SlotLeverArmUp` | Moving arm sprite frame: default/up |
+| `bonus777SlotLeverArmMid` | Moving arm sprite frame: transition/mid-pull |
+| `bonus777SlotLeverArmDown` | Moving arm sprite frame: pulled/held down |
 
 ## Motion Rules
 
@@ -64,12 +66,19 @@ All generated raster assets must be transparent PNG slices derived from one full
 
 The right lever is a sprite animation, not a transform-only effect.
 
-1. Idle: `bonus777SlotLeverUp`
-2. Spin start: `bonus777SlotLeverUp -> bonus777SlotLeverMid -> bonus777SlotLeverDown`
-3. Reels spinning: hold `bonus777SlotLeverDown`
-4. Just before result text appears: `bonus777SlotLeverDown -> bonus777SlotLeverMid -> bonus777SlotLeverUp`
+1. The mechanical base remains fixed over the right black-crystal socket.
+2. Idle arm: `bonus777SlotLeverArmUp`
+3. Spin start: `bonus777SlotLeverArmUp -> bonus777SlotLeverArmMid -> bonus777SlotLeverArmDown`
+4. Reels spinning: hold `bonus777SlotLeverArmDown`
+5. Just before result text appears: `bonus777SlotLeverArmDown -> bonus777SlotLeverArmMid -> bonus777SlotLeverArmUp`
 
-All lever frames must share the same padded canvas so swapping `ImageRUID` does not move or resize the lever.
+The arm frames use per-frame anchored positions that keep their lower pivot on one shared hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
+
+### Panel Alignment
+
+- The reel window frame, reel-column backgrounds, and reel masks share the same inner-window center and opening dimensions.
+- The result panel is `600 x 104`, fully opaque behind its two strings, with only compact top and bottom padding.
+- The title badge is `540 x 90`, fully opaque behind the title string, and the string is centered in the badge interior.
 
 ### Reels
 
