@@ -273,6 +273,10 @@ function buildBonus777RuntimeBindingProperties() {
     '    property TextComponent bonus777ReelText3 = ""',
     '    property TextComponent bonus777ChanceText = ""',
     '    property TextComponent bonus777ResultText = ""',
+    '    property UITransformComponent bonus777ReelStripTransform1 = ""',
+    '    property UITransformComponent bonus777ReelStripTransform2 = ""',
+    '    property UITransformComponent bonus777ReelStripTransform3 = ""',
+    '    property UITransformComponent bonus777LeverTransform = ""',
   ];
 }
 
@@ -1263,4 +1267,3 @@ console.log(`Created ${outputPath}`);
 
 require("./patch_dev_cheat_ui.cjs");
 require("./patch_bonus777_overlay_ui.cjs");
-require("./patch_classic_slot_example_ui.cjs");

@@ -1055,14 +1055,93 @@ function makeHideBonus777Panel() {
     "        if self.bonus777Panel ~= nil then",
     "            self.bonus777Panel.Enable = false",
     "        end",
+    "        self:SetBonus777LeverOffset(0.0)",
     "    end",
   ].join("\n");
 }
 
-function makeSetBonus777ReelDigit() {
+function makeGetBonus777ReelStripTransform() {
   return [
     '    @ExecSpace("ClientOnly")',
-    "    method void SetBonus777ReelDigit(integer reelIndex, integer digit)",
+    "    method any GetBonus777ReelStripTransform(integer reelIndex)",
+    "        if reelIndex == 1 then",
+    "            return self.bonus777ReelStripTransform1",
+    "        elseif reelIndex == 2 then",
+    "            return self.bonus777ReelStripTransform2",
+    "        elseif reelIndex == 3 then",
+    "            return self.bonus777ReelStripTransform3",
+    "        end",
+    "        return nil",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonus777DigitCellHeight() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method float GetBonus777DigitCellHeight()",
+    "        return 174.0",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonus777DigitCount() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method integer GetBonus777DigitCount()",
+    "        return 7",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonus777CenterYForDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method float GetBonus777CenterYForDigit(integer digit)",
+    "        local digitCount = self:GetBonus777DigitCount()",
+    "        if digit < 1 then",
+    "            digit = 1",
+    "        elseif digit > digitCount then",
+    "            digit = digitCount",
+    "        end",
+    "        return (digit - ((digitCount + 1) * 0.5)) * self:GetBonus777DigitCellHeight()",
+    "    end",
+  ].join("\n");
+}
+
+function makeGetBonus777MinStripY() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method float GetBonus777MinStripY()",
+    "        return self:GetBonus777CenterYForDigit(1) - self:GetBonus777DigitCellHeight()",
+    "    end",
+  ].join("\n");
+}
+
+function makeMoveBonus777ReelDown() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void MoveBonus777ReelDown(integer reelIndex, float pixelDelta)",
+    "        local transform = self:GetBonus777ReelStripTransform(reelIndex)",
+    "        if transform == nil then",
+    "            return",
+    "        end",
+    "        local pos = transform.anchoredPosition",
+    "        local nextY = pos.y - pixelDelta",
+    "        local stripHeight = self:GetBonus777DigitCount() * self:GetBonus777DigitCellHeight()",
+    "        local minY = self:GetBonus777MinStripY()",
+    "        while nextY < minY do",
+    "            nextY = nextY + stripHeight",
+    "        end",
+    "        transform.anchoredPosition = Vector2(pos.x, nextY)",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777ReelDigitFallback() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777ReelDigitFallback(integer reelIndex, integer digit)",
     "        local text = tostring(digit)",
     "        if reelIndex == 1 and self.bonus777ReelText1 ~= nil then",
     "            self.bonus777ReelText1.Text = text",
@@ -1071,6 +1150,21 @@ function makeSetBonus777ReelDigit() {
     "        elseif reelIndex == 3 and self.bonus777ReelText3 ~= nil then",
     "            self.bonus777ReelText3.Text = text",
     "        end",
+    "    end",
+  ].join("\n");
+}
+
+function makeSetBonus777ReelDigit() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777ReelDigit(integer reelIndex, integer digit)",
+    "        local transform = self:GetBonus777ReelStripTransform(reelIndex)",
+    "        if transform ~= nil then",
+    "            local pos = transform.anchoredPosition",
+    "            transform.anchoredPosition = Vector2(pos.x, self:GetBonus777CenterYForDigit(digit))",
+    "            return",
+    "        end",
+    "        self:SetBonus777ReelDigitFallback(reelIndex, digit)",
     "    end",
   ].join("\n");
 }
@@ -1105,6 +1199,78 @@ function makeSetBonus777Texts() {
   ].join("\n");
 }
 
+function makeSetBonus777LeverOffset() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void SetBonus777LeverOffset(float offsetY)",
+    "        if self.bonus777LeverTransform == nil then",
+    "            return",
+    "        end",
+    "        self.bonus777LeverTransform.anchoredPosition = Vector2(509.5, 80.0 + offsetY)",
+    "    end",
+  ].join("\n");
+}
+
+function makeUpdateBonus777LeverPull() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void UpdateBonus777LeverPull(float elapsed)",
+    "        local duration = 0.36",
+    "        local pullDistance = -72.0",
+    "        local offsetY = 0.0",
+    "        if elapsed < duration then",
+    "            local half = duration * 0.5",
+    "            if elapsed < half then",
+    "                offsetY = pullDistance * (elapsed / half)",
+    "            else",
+    "                offsetY = pullDistance * (1.0 - ((elapsed - half) / half))",
+    "            end",
+    "        end",
+    "        self:SetBonus777LeverOffset(offsetY)",
+    "    end",
+  ].join("\n");
+}
+
+function makePlayBonus777ReelSpin() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void PlayBonus777ReelSpin(table digits)",
+    "        local tick = 0.016",
+    "        local elapsed = 0.0",
+    "        local cellHeight = self:GetBonus777DigitCellHeight()",
+    "        local stopTimes = { 0.56, 0.72, 0.9 }",
+    "        local cellsPerSecond = { 32.0, 36.0, 40.0 }",
+    "        local stopped = { false, false, false }",
+    "        local stoppedCount = 0",
+    "",
+    "        while stoppedCount < 3 do",
+    "            self:UpdateBonus777LeverPull(elapsed)",
+    "            for reelIndex = 1, 3 do",
+    "                if not stopped[reelIndex] then",
+    "                    if elapsed >= stopTimes[reelIndex] then",
+    "                        local digit = 1",
+    "                        if digits ~= nil and digits[reelIndex] ~= nil then",
+    "                            digit = digits[reelIndex]",
+    "                        end",
+    "                        self:SetBonus777ReelDigit(reelIndex, digit)",
+    "                        stopped[reelIndex] = true",
+    "                        stoppedCount = stoppedCount + 1",
+    "                    else",
+    "                        self:MoveBonus777ReelDown(reelIndex, cellsPerSecond[reelIndex] * cellHeight * tick)",
+    "                    end",
+    "                end",
+    "            end",
+    "",
+    "            if stoppedCount < 3 then",
+    "                wait(tick)",
+    "                elapsed = elapsed + tick",
+    "            end",
+    "        end",
+    "        self:SetBonus777LeverOffset(0.0)",
+    "    end",
+  ].join("\n");
+}
+
 function makePlayBonus777Presentation() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1130,14 +1296,8 @@ function makePlayBonus777Presentation() {
     "",
     "        for spinIndex, spin in ipairs(spins) do",
     "            self:SetBonus777Texts(\"CHANCE \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), \"GENERATE!!\")",
-    "            for tick = 1, 8 do",
-    "                self:SetBonus777ReelDigit(1, ((spinIndex + tick) % 7) + 1)",
-    "                self:SetBonus777ReelDigit(2, ((spinIndex + tick + 2) % 7) + 1)",
-    "                self:SetBonus777ReelDigit(3, ((spinIndex + tick + 4) % 7) + 1)",
-    "                wait(0.045)",
-    "            end",
-    "",
     "            local resultKey = spin.resultKey or \"000\"",
+    "            self:PlayBonus777ReelSpin(spin.digits)",
     "            self:SetBonus777DigitsFromResultKey(resultKey)",
     "            if (spin.matchedDigit or 0) > 0 then",
     "                local resultText = resultKey .. \" x\" .. tostring(spin.rewardMultiplier or 0) .. \" = +\" .. self:FormatUnits(spin.payoutUnits or 0)",
@@ -1637,6 +1797,10 @@ function patchBonusSlotProperties(runtime) {
     '    property TextComponent bonus777ReelText3 = ""',
     '    property TextComponent bonus777ChanceText = ""',
     '    property TextComponent bonus777ResultText = ""',
+    '    property UITransformComponent bonus777ReelStripTransform1 = ""',
+    '    property UITransformComponent bonus777ReelStripTransform2 = ""',
+    '    property UITransformComponent bonus777ReelStripTransform3 = ""',
+    '    property UITransformComponent bonus777LeverTransform = ""',
   ];
   const missingBonus777UiProps = bonus777UiProps.filter((line) => {
     const propName = line.match(/property\s+\S+\s+(\S+)/)?.[1];
@@ -2140,9 +2304,19 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "void", "ApplyBonusSlotResult", makeApplyBonusSlotResult(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "string", "FormatBonusSlotStatus", makeFormatBonusSlotStatus(), "ShowWinResult");
   runtime = upsertTypedMethod(runtime, "void", "HideBonus777Panel", makeHideBonus777Panel(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "any", "GetBonus777ReelStripTransform", makeGetBonus777ReelStripTransform(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "float", "GetBonus777DigitCellHeight", makeGetBonus777DigitCellHeight(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "integer", "GetBonus777DigitCount", makeGetBonus777DigitCount(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "float", "GetBonus777CenterYForDigit", makeGetBonus777CenterYForDigit(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "float", "GetBonus777MinStripY", makeGetBonus777MinStripY(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "MoveBonus777ReelDown", makeMoveBonus777ReelDown(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777ReelDigitFallback", makeSetBonus777ReelDigitFallback(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777ReelDigit", makeSetBonus777ReelDigit(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777DigitsFromResultKey", makeSetBonus777DigitsFromResultKey(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777Texts", makeSetBonus777Texts(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverOffset", makeSetBonus777LeverOffset(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "UpdateBonus777LeverPull", makeUpdateBonus777LeverPull(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "PlayBonus777ReelSpin", makePlayBonus777ReelSpin(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "PlayBonus777Presentation", makePlayBonus777Presentation(), "EvaluatePaylines");
 
   if (!runtime.includes("self:ApplyBonusSlotResult(result)")) {

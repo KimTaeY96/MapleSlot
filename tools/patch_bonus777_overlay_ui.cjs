@@ -5,13 +5,39 @@ const { UIBuilder, colorDict } = require("C:/Users/ghddj/Desktop/AI/MSW/.agents/
 const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
 const uiPath = path.join(projectRoot, "ui", "UIRoot_TestSandbox_MainPlay.ui");
 const runtimePath = path.join(projectRoot, "RootDesk", "MyDesk", "SlotMachine", "SlotMachineRuntime.mlua");
+const manifestPath = path.join(projectRoot, "GeneratedAssets", "SlotMachineUI", "msw_resource_manifest.json");
+const structurePath = path.join(projectRoot, "GeneratedAssets", "SlotMachineUI", "classic_example", "classic_slot_ui_structure.json");
 
+const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const structure = JSON.parse(fs.readFileSync(structurePath, "utf8"));
+
+const ROOT = "Panel_Bonus777_Hidden";
+const SLOT = `${ROOT}/ClassicSlot`;
+const CELL_HEIGHT = 174;
+const DIGIT_CELL_COUNT = 11;
+const DIGIT_MIN = 1;
+const DIGIT_MAX = 7;
 const Z = {
   dim: 440,
-  window: 450,
-  panel: 452,
-  reel: 456,
-  text: 460,
+  shell: 450,
+  reelBg: 452,
+  reelText: 454,
+  frame: 456,
+  ornament: 458,
+  lever: 464,
+  text: 470,
+};
+
+const assetKeys = {
+  classic_slot_frame_shell: "classicSlotFrameShell",
+  classic_slot_reel_window_frame: "classicSlotReelWindowFrame",
+  classic_slot_top_arch: "classicSlotTopArch",
+  classic_slot_top_emblem: "classicSlotTopEmblem",
+  classic_slot_bottom_panel: "classicSlotBottomPanel",
+  classic_slot_base_plinth: "classicSlotBasePlinth",
+  classic_slot_lever: "classicSlotLever",
+  classic_slot_side_left: "classicSlotSideLeft",
+  classic_slot_side_right: "classicSlotSideRight",
 };
 
 const bonus777Props = [
@@ -21,6 +47,10 @@ const bonus777Props = [
   '    property TextComponent bonus777ReelText3 = ""',
   '    property TextComponent bonus777ChanceText = ""',
   '    property TextComponent bonus777ResultText = ""',
+  '    property UITransformComponent bonus777ReelStripTransform1 = ""',
+  '    property UITransformComponent bonus777ReelStripTransform2 = ""',
+  '    property UITransformComponent bonus777ReelStripTransform3 = ""',
+  '    property UITransformComponent bonus777LeverTransform = ""',
 ];
 
 function ensureRuntimeBindingProperties() {
@@ -31,7 +61,7 @@ function ensureRuntimeBindingProperties() {
   });
   if (missing.length === 0) return;
 
-  const marker = /    property TextComponent winResultTotalText = "[^"]*"\r?\n/;
+  const marker = /    property TextComponent bonus777ResultText = "[^"]*"\r?\n/;
   if (!marker.test(runtime)) {
     throw new Error(`Could not insert 777 bonus runtime binding properties in ${runtimePath}`);
   }
@@ -39,16 +69,24 @@ function ensureRuntimeBindingProperties() {
   fs.writeFileSync(runtimePath, runtime, "utf8");
 }
 
-const b = UIBuilder.load(uiPath);
-try {
-  b.remove("Panel_Bonus777_Hidden");
-} catch (error) {
-  if (!String(error?.message ?? "").includes("UI entity not found")) {
-    throw error;
-  }
+function asset(name) {
+  const entry = structure.assets.find((item) => item.name === name);
+  if (!entry) throw new Error(`Missing classic slot structure asset: ${name}`);
+  const key = assetKeys[name];
+  const ruid = manifest[key]?.ruid;
+  if (!ruid) throw new Error(`Missing classic slot manifest RUID: ${key}`);
+  return { ...entry, key, ruid };
 }
 
-function addRect(pathName, options = {}) {
+function pos(entry) {
+  return [entry.uiPositionFromSourceCenter.x, entry.uiPositionFromSourceCenter.y];
+}
+
+function size(entry) {
+  return [entry.size.width, entry.size.height];
+}
+
+function addRect(b, pathName, options = {}) {
   b.sprite(pathName, {
     anchor: options.anchor ?? "middle-center",
     pos: options.pos ?? [0, 0],
@@ -58,12 +96,26 @@ function addRect(pathName, options = {}) {
     sprite_type: 1,
     raycast: options.raycast ?? false,
     sorting_layer: "UI",
-    order_in_layer: options.order_in_layer ?? Z.panel,
+    order_in_layer: options.order_in_layer ?? Z.reelBg,
     override_sorting: true,
   });
 }
 
-function addText(pathName, text, options = {}) {
+function addSprite(b, pathName, entry, order, options = {}) {
+  b.sprite(pathName, {
+    anchor: "middle-center",
+    pos: options.pos ?? pos(entry),
+    rect_size: options.rect_size ?? size(entry),
+    image_ruid: entry.ruid,
+    preserve_aspect: true,
+    raycast: false,
+    sorting_layer: "UI",
+    order_in_layer: order,
+    override_sorting: true,
+  });
+}
+
+function addText(b, pathName, text, options = {}) {
   b.text(pathName, text, {
     anchor: options.anchor ?? "middle-center",
     pos: options.pos ?? [0, 0],
@@ -93,12 +145,27 @@ function addText(pathName, text, options = {}) {
   });
 }
 
-b.panel("Panel_Bonus777_Hidden", {
+function digitForVirtualIndex(virtualIndex) {
+  return ((((virtualIndex - DIGIT_MIN) % DIGIT_MAX) + DIGIT_MAX) % DIGIT_MAX) + DIGIT_MIN;
+}
+
+const b = UIBuilder.load(uiPath);
+for (const staleRoot of [ROOT, "Panel_ClassicSlotMachine_Hidden"]) {
+  try {
+    b.remove(staleRoot);
+  } catch (error) {
+    if (!String(error?.message ?? "").includes("UI entity not found")) {
+      throw error;
+    }
+  }
+}
+
+b.panel(ROOT, {
   anchor: "stretch",
   rect_size: [1920, 1080],
   enable: false,
 });
-addRect("Panel_Bonus777_Hidden/Dim", {
+addRect(b, `${ROOT}/Dim`, {
   anchor: "stretch",
   rect_size: [1920, 1080],
   color: "#05020A",
@@ -106,116 +173,118 @@ addRect("Panel_Bonus777_Hidden/Dim", {
   raycast: true,
   order_in_layer: Z.dim,
 });
-addRect("Panel_Bonus777_Hidden/WindowBorder", {
-  pos: [0, -8],
-  rect_size: [660, 452],
-  color: "#5B3416",
-  alpha: 1,
-  order_in_layer: Z.window,
+
+b.panel(SLOT, {
+  anchor: "middle-center",
+  pos: [0, 54],
+  rect_size: [1139, 1099],
 });
-addRect("Panel_Bonus777_Hidden/Window", {
-  pos: [0, -8],
-  rect_size: [628, 420],
-  color: "#F5E6B8",
-  alpha: 1,
-  order_in_layer: Z.window + 1,
+b.patchComponent(SLOT, "MOD.Core.UITransformComponent", {
+  UIScale: { x: 0.58, y: 0.58, z: 1.0 },
 });
-addRect("Panel_Bonus777_Hidden/TopBand", {
-  pos: [0, 176],
-  rect_size: [560, 54],
-  color: "#A64820",
-  alpha: 1,
-  order_in_layer: Z.panel,
-});
-addText("Panel_Bonus777_Hidden/Text_Title", "777 BONUS SLOT", {
-  pos: [0, 176],
-  rect_size: [520, 46],
-  size: 28,
+
+addSprite(b, `${SLOT}/Sprite_FrameShell`, asset("classic_slot_frame_shell"), Z.shell);
+
+const reelAssets = [
+  structure.assets.find((item) => item.name === "classic_slot_reel_strip_1"),
+  structure.assets.find((item) => item.name === "classic_slot_reel_strip_2"),
+  structure.assets.find((item) => item.name === "classic_slot_reel_strip_3"),
+];
+for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
+  const reelAsset = reelAssets[reelIndex - 1];
+  if (!reelAsset) throw new Error(`Missing classic reel asset geometry for reel ${reelIndex}`);
+  const maskPath = `${SLOT}/ReelMask_${reelIndex}`;
+  const stripPath = `${maskPath}/ReelStrip_${reelIndex}`;
+  b.mask(maskPath, {
+    anchor: "middle-center",
+    pos: pos(reelAsset),
+    rect_size: [reelAsset.size.width, 522],
+    alpha: 0,
+    sorting_layer: "UI",
+    order_in_layer: Z.reelBg,
+    override_sorting: true,
+  });
+  b.panel(stripPath, {
+    anchor: "middle-center",
+    pos: [0, 0],
+    rect_size: [reelAsset.size.width, CELL_HEIGHT * DIGIT_CELL_COUNT],
+  });
+  for (let virtualIndex = -1; virtualIndex <= 9; virtualIndex += 1) {
+    const displayIndex = virtualIndex + 2;
+    const cellPath = `${stripPath}/DigitCell_${String(displayIndex).padStart(2, "0")}`;
+    const digit = digitForVirtualIndex(virtualIndex);
+    const y = (((DIGIT_MAX + 1) * 0.5) - virtualIndex) * CELL_HEIGHT;
+    b.panel(cellPath, {
+      anchor: "middle-center",
+      pos: [0, y],
+      rect_size: [reelAsset.size.width, CELL_HEIGHT],
+    });
+    addRect(b, `${cellPath}/Face`, {
+      rect_size: [reelAsset.size.width - 20, CELL_HEIGHT - 18],
+      color: "#FFF4D8",
+      alpha: 0.96,
+      order_in_layer: Z.reelBg,
+    });
+    addText(b, `${cellPath}/Text_Digit`, String(digit), {
+      rect_size: [reelAsset.size.width - 30, CELL_HEIGHT - 20],
+      size: 112,
+      min_size: 68,
+      max_size: 112,
+      bold: true,
+      color: "#D91224",
+      outline: true,
+      outline_color: "#5E0710",
+      outline_width: 3,
+      drop_shadow_alpha: 0.3,
+      order_in_layer: Z.reelText,
+    });
+  }
+}
+
+addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, asset("classic_slot_reel_window_frame"), Z.frame);
+addSprite(b, `${SLOT}/Sprite_TopArch`, asset("classic_slot_top_arch"), Z.ornament);
+addSprite(b, `${SLOT}/Sprite_TopEmblem`, asset("classic_slot_top_emblem"), Z.ornament + 1);
+addSprite(b, `${SLOT}/Sprite_BottomPanel`, asset("classic_slot_bottom_panel"), Z.ornament + 2);
+addSprite(b, `${SLOT}/Sprite_BasePlinth`, asset("classic_slot_base_plinth"), Z.ornament + 3);
+addSprite(b, `${SLOT}/Sprite_LeftSideCap`, asset("classic_slot_side_left"), Z.ornament + 4);
+addSprite(b, `${SLOT}/Sprite_RightSideCap`, asset("classic_slot_side_right"), Z.ornament + 4);
+addSprite(b, `${SLOT}/Sprite_Lever`, asset("classic_slot_lever"), Z.lever);
+
+addText(b, `${ROOT}/Text_Title`, "777 BONUS SLOT", {
+  pos: [0, 455],
+  rect_size: [620, 46],
+  size: 30,
   min_size: 18,
-  max_size: 28,
+  max_size: 30,
   bold: true,
   color: "#FFE8A3",
   outline: true,
   outline_color: "#2A1208",
   outline_width: 2,
 });
-addRect("Panel_Bonus777_Hidden/Badge_Generate", {
-  pos: [0, 116],
-  rect_size: [220, 46],
-  color: "#6E3B20",
-  alpha: 1,
-  order_in_layer: Z.panel,
-});
-addText("Panel_Bonus777_Hidden/Text_Generate", "GENERATE!!", {
-  pos: [0, 116],
-  rect_size: [200, 38],
+addText(b, `${ROOT}/Text_Chance`, "CHANCE 0 / 0", {
+  pos: [0, -326],
+  rect_size: [640, 34],
   size: 22,
   min_size: 14,
   max_size: 22,
   bold: true,
-  color: "#FFFFFF",
+  color: "#FFE8A3",
   outline: true,
-  outline_color: "#321709",
-});
-addRect("Panel_Bonus777_Hidden/ReelBackplate", {
-  pos: [0, -18],
-  rect_size: [510, 168],
-  color: "#2B1830",
-  alpha: 1,
-  order_in_layer: Z.panel,
-});
-
-for (let index = 1; index <= 3; index += 1) {
-  const x = -160 + (index - 1) * 160;
-  addRect(`Panel_Bonus777_Hidden/Reel_${index}`, {
-    pos: [x, -18],
-    rect_size: [124, 144],
-    color: "#8F111A",
-    alpha: 1,
-    order_in_layer: Z.reel,
-  });
-  addRect(`Panel_Bonus777_Hidden/Reel_${index}/Face`, {
-    pos: [0, 0],
-    rect_size: [104, 124],
-    color: "#F9FBFF",
-    alpha: 1,
-    order_in_layer: Z.reel + 1,
-  });
-  addText(`Panel_Bonus777_Hidden/Reel_${index}/Text_Digit`, "7", {
-    pos: [0, 0],
-    rect_size: [96, 112],
-    size: 72,
-    min_size: 42,
-    max_size: 72,
-    bold: true,
-    color: "#D91224",
-    outline: true,
-    outline_color: "#580810",
-    outline_width: 2,
-    order_in_layer: Z.text + 2,
-  });
-}
-
-addText("Panel_Bonus777_Hidden/Text_Chance", "CHANCE 0 / 0", {
-  pos: [0, -128],
-  rect_size: [500, 34],
-  size: 20,
-  min_size: 13,
-  max_size: 20,
-  bold: true,
-  color: "#442514",
+  outline_color: "#2A1208",
   order_in_layer: Z.text,
 });
-addText("Panel_Bonus777_Hidden/Text_Result", "WILD x5 BONUS", {
-  pos: [0, -168],
-  rect_size: [560, 44],
-  size: 24,
-  min_size: 14,
-  max_size: 24,
+addText(b, `${ROOT}/Text_Result`, "WILD x5 BONUS", {
+  pos: [0, -372],
+  rect_size: [760, 48],
+  size: 26,
+  min_size: 15,
+  max_size: 26,
   bold: true,
-  color: "#8C171F",
+  color: "#FFFFFF",
   outline: true,
-  outline_color: "#FFF1B8",
+  outline_color: "#8C171F",
+  outline_width: 2,
   order_in_layer: Z.text,
 });
 
@@ -227,11 +296,15 @@ b.write(uiPath, {
     mlua: runtimePath,
     props: {
       bonus777Panel: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden",
-      bonus777ReelText1: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Reel_1/Text_Digit",
-      bonus777ReelText2: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Reel_2/Text_Digit",
-      bonus777ReelText3: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Reel_3/Text_Digit",
+      bonus777ReelText1: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_1/ReelStrip_1/DigitCell_04/Text_Digit",
+      bonus777ReelText2: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_2/ReelStrip_2/DigitCell_04/Text_Digit",
+      bonus777ReelText3: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_3/ReelStrip_3/DigitCell_04/Text_Digit",
       bonus777ChanceText: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Text_Chance",
       bonus777ResultText: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Text_Result",
+      bonus777ReelStripTransform1: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_1/ReelStrip_1",
+      bonus777ReelStripTransform2: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_2/ReelStrip_2",
+      bonus777ReelStripTransform3: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/ReelMask_3/ReelStrip_3",
+      bonus777LeverTransform: "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/ClassicSlot/Sprite_Lever",
     },
   },
 });
