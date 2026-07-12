@@ -91252,7 +91252,7 @@
         }
       },
       {
-        "id": "3487fc10-1e8b-40ae-9e43-81c85986789e",
+        "id": "ea4998e8-aff2-44b0-a61e-692d792a7391",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -91262,7 +91262,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 8,
+          "displayOrder": 9,
           "pathConstraints": "///",
           "revision": 0,
           "origin": {
@@ -91337,7 +91337,7 @@
         }
       },
       {
-        "id": "b177a21b-d70c-44b4-b805-fae587c349a3",
+        "id": "e8d18ad3-c79b-4904-91a4-5a04bc265b16",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Dim",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91347,7 +91347,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -91483,7 +91483,7 @@
         }
       },
       {
-        "id": "23ca903e-a920-4b03-bf9c-02303dcf1b75",
+        "id": "27d632e6-beb8-4d7c-9358-2e48ea1bf794",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -91493,7 +91493,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -91568,7 +91568,7 @@
         }
       },
       {
-        "id": "d8af9907-a10f-4d18-ab00-7701579a7229",
+        "id": "c60829ba-312a-46d2-9019-f33a33949c66",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_FrameShell",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91578,7 +91578,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 28,
+          "displayOrder": 42,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -91714,7 +91714,7 @@
         }
       },
       {
-        "id": "a54c33d2-bab6-44a2-b97d-ab7088d1f0d2",
+        "id": "d8f9604b-3c0c-4eaa-a67d-3f2e166ec132",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_TitleBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91724,7 +91724,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 29,
+          "displayOrder": 43,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -91860,7 +91860,7 @@
         }
       },
       {
-        "id": "620ded5a-3119-4a6e-919c-6bf99e809100",
+        "id": "faf76893-5649-41d8-a1c8-30c381557c98",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ResultPanel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91870,7 +91870,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 30,
+          "displayOrder": 44,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92006,7 +92006,7 @@
         }
       },
       {
-        "id": "63a2ec41-b869-4723-9512-19ee28cf99cf",
+        "id": "7bf93ce0-a8f4-4852-b64f-565ffca1df33",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92016,7 +92016,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 31,
+          "displayOrder": 45,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92043,11 +92043,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": -91,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": -241,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -92055,7 +92055,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -92066,7 +92066,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": -166,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -92152,7 +92152,7 @@
         }
       },
       {
-        "id": "24f8c0a4-1f23-45d6-aadd-5e8e4db14151",
+        "id": "e2624d05-204e-453b-81c0-876cddfc92f8",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -92162,7 +92162,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 32,
+          "displayOrder": 46,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92189,11 +92189,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": -91,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": -241,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -92201,7 +92201,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -92212,7 +92212,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": -166,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -92313,7 +92313,7 @@
         }
       },
       {
-        "id": "e99221f9-a529-4930-8aed-f18de304faef",
+        "id": "6e808cd2-b42a-4a5f-ac40-d5d19798f887",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92323,7 +92323,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 3,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -92398,7 +92398,7 @@
         }
       },
       {
-        "id": "2552a8fd-8cfc-4815-a887-f2558ca96c98",
+        "id": "467b9afc-deb7-4671-aef9-4d8bd61d86b2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92408,7 +92408,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 22,
+          "displayOrder": 33,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -92483,7 +92483,7 @@
         }
       },
       {
-        "id": "5d85a00e-dae6-4f56-9271-b5fe5882f052",
+        "id": "616fe1c5-4ebb-4e91-9f1f-b7932f89dab1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92493,7 +92493,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -92629,7 +92629,7 @@
         }
       },
       {
-        "id": "5f127765-d6b9-4cd5-9e8e-2e9598172e3a",
+        "id": "28816160-7d92-4409-a221-6bacb6ef8d5a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -92639,7 +92639,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -92832,7 +92832,7 @@
         }
       },
       {
-        "id": "efe5d560-6f2e-4409-98f6-3e436bff0062",
+        "id": "92b5a449-c7dd-45e8-bdef-300e44243105",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92842,7 +92842,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 23,
+          "displayOrder": 34,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -92917,7 +92917,7 @@
         }
       },
       {
-        "id": "7ee23297-d4d3-4082-9997-ce968ddcc8d8",
+        "id": "597561c6-cc8b-4dba-8a3a-1c9a1b4e7d6e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92927,7 +92927,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93063,7 +93063,7 @@
         }
       },
       {
-        "id": "86b3f275-43d9-4269-8c1a-c82db00bf22b",
+        "id": "14558857-81a0-443a-9ca9-b78cda5218be",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93073,7 +93073,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93266,7 +93266,7 @@
         }
       },
       {
-        "id": "5e571f76-f6f9-4f84-95dc-7e4bf56508b2",
+        "id": "9ea33e2a-a58d-4b1d-abee-055614321dcd",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -93276,7 +93276,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 24,
+          "displayOrder": 35,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -93351,7 +93351,7 @@
         }
       },
       {
-        "id": "0c520bad-02ae-4de1-9776-7f1523c34b30",
+        "id": "5e44d7ac-1149-47ae-b0f8-6cee8d8e358f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -93361,7 +93361,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93497,7 +93497,7 @@
         }
       },
       {
-        "id": "0ddab26a-7c79-4e15-8bc7-340b5eb18577",
+        "id": "b07cd8bb-6cf5-42b2-9fbe-ef4f72551275",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93507,7 +93507,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93700,7 +93700,7 @@
         }
       },
       {
-        "id": "c87c0cbe-fd23-4a27-85ea-7e54139c43c3",
+        "id": "227889c4-51f0-4328-9587-ece5b4b196e6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -93710,7 +93710,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 25,
+          "displayOrder": 36,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -93785,7 +93785,7 @@
         }
       },
       {
-        "id": "d99672db-791b-4c2c-90b3-d23822529162",
+        "id": "d1c04cff-f8da-4fcb-8a1a-372bf11a8742",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -93795,7 +93795,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93931,7 +93931,7 @@
         }
       },
       {
-        "id": "036cc7cd-0bf8-4ad0-bff5-b9eef103375d",
+        "id": "4fde2dac-3e0d-4df8-a301-6a6d35e059f9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93941,7 +93941,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94134,7 +94134,7 @@
         }
       },
       {
-        "id": "3a648c75-bfd6-4a08-aab0-e3d0b74fe2f4",
+        "id": "f6b97995-9033-41ea-bbf6-94e0b19bc7fc",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -94144,7 +94144,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 26,
+          "displayOrder": 37,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -94219,7 +94219,7 @@
         }
       },
       {
-        "id": "25cdfbc5-e69c-45fc-b861-ab61359fa921",
+        "id": "8a362520-413b-4e75-89dd-bdd5ed704b49",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -94229,7 +94229,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94365,7 +94365,7 @@
         }
       },
       {
-        "id": "a3c8bddb-8cfd-4f49-acfc-bebba06de44d",
+        "id": "04f88ee1-38f7-489c-814c-71edcc9d07e7",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -94375,7 +94375,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94568,7 +94568,7 @@
         }
       },
       {
-        "id": "f063f7a8-010e-4725-9fcd-d0852d0f9fb8",
+        "id": "225cfb95-88fc-4932-8cce-2abcb4ec1f6a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -94578,7 +94578,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 27,
+          "displayOrder": 38,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -94653,7 +94653,7 @@
         }
       },
       {
-        "id": "98d7ad88-46a2-4e25-8af8-cf9f84bd9312",
+        "id": "b3639258-1036-4280-a6b3-bc0145a8a219",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -94663,7 +94663,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94799,7 +94799,7 @@
         }
       },
       {
-        "id": "3e71534e-b811-4531-9c52-a10cb71c5e76",
+        "id": "62bf9c8f-4fda-47f9-8fd9-59998116f400",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -94809,7 +94809,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95002,7 +95002,7 @@
         }
       },
       {
-        "id": "98785018-3cd3-4382-b015-370dab657757",
+        "id": "09095b0e-061d-445c-9370-d721310aa1de",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95012,7 +95012,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 28,
+          "displayOrder": 39,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95087,7 +95087,7 @@
         }
       },
       {
-        "id": "05029131-507a-4285-931d-be2cd038620f",
+        "id": "c2790150-4404-40e1-85c2-c6ffb421858f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95097,7 +95097,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95233,7 +95233,7 @@
         }
       },
       {
-        "id": "c1328f81-b295-4893-8267-f293b915c268",
+        "id": "93df95c4-cf68-42b2-a524-e2bcaed3038e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -95243,7 +95243,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95436,7 +95436,7 @@
         }
       },
       {
-        "id": "66312d48-1806-485e-b783-95e1fe4393e2",
+        "id": "2e002fa6-a194-492c-a641-1e564bfe4532",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95446,7 +95446,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 29,
+          "displayOrder": 40,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95521,7 +95521,7 @@
         }
       },
       {
-        "id": "da449b55-490b-48fe-a8f6-426f7433c2fb",
+        "id": "e3a434d7-ddd5-45a0-9d32-363efac26592",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95531,7 +95531,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95667,7 +95667,7 @@
         }
       },
       {
-        "id": "738e79be-2856-43c7-abd4-dc6ba3a870c1",
+        "id": "75de90da-e6d9-4f38-8e6b-7f6674f7e536",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -95677,7 +95677,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95870,7 +95870,7 @@
         }
       },
       {
-        "id": "509a06e4-f079-4c3a-aac2-bd1530e5a2b6",
+        "id": "461198e6-48c6-48ea-8843-113c8b04344b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95880,7 +95880,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 30,
+          "displayOrder": 41,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95955,7 +95955,7 @@
         }
       },
       {
-        "id": "73025290-0610-4c84-9af5-46551317bf7d",
+        "id": "895e06b2-f206-48f1-bf33-6f5245f6380f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95965,7 +95965,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96101,7 +96101,7 @@
         }
       },
       {
-        "id": "a89c93ef-1912-4b2f-bed2-814e3f39bb9c",
+        "id": "66fdc475-71ee-423f-873a-519147aa798a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96111,7 +96111,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96304,7 +96304,7 @@
         }
       },
       {
-        "id": "789fcaf5-8c4b-4774-a570-7c0c88dcc7a3",
+        "id": "11045b14-b60a-40d2-9959-4bca94208831",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -96314,7 +96314,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 31,
+          "displayOrder": 42,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -96389,7 +96389,7 @@
         }
       },
       {
-        "id": "257ada60-6b68-4ae1-9906-0cbd6e4b77bc",
+        "id": "b0cfd899-6c55-4638-9764-770dcf68e2d2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -96399,7 +96399,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96535,7 +96535,7 @@
         }
       },
       {
-        "id": "df3607d2-ce98-41ad-9f48-4e8e042614c5",
+        "id": "77ca2e9c-5fe7-4b80-990f-790ec7548142",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96545,7 +96545,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96738,7 +96738,7 @@
         }
       },
       {
-        "id": "6830174a-4454-4840-bd2f-323430cfd5fe",
+        "id": "d04e830a-93af-4a16-9fb9-4c456951edc2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -96748,7 +96748,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 32,
+          "displayOrder": 43,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -96823,7 +96823,7 @@
         }
       },
       {
-        "id": "80f47fb1-b01c-4b54-a7a7-f6159d957a31",
+        "id": "f688a1ca-bc29-4a3b-a69d-ccedcce2cd12",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -96833,7 +96833,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96969,7 +96969,7 @@
         }
       },
       {
-        "id": "77f1fa4c-6d66-41fa-8ef5-a08ffa52ef21",
+        "id": "e99a8e70-dcea-40d7-a965-eb68f9b23e2a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96979,7 +96979,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97172,7 +97172,7 @@
         }
       },
       {
-        "id": "e72e00af-88a0-46fd-b450-da8006745107",
+        "id": "d1b6853d-3c3d-44b1-85fb-f4fb28eebd89",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -97182,7 +97182,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 33,
+          "displayOrder": 47,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -97209,11 +97209,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": 75,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": -75,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -97221,7 +97221,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -97232,7 +97232,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -97318,7 +97318,7 @@
         }
       },
       {
-        "id": "58b15c93-bf97-4086-8570-8d26810cbc35",
+        "id": "7a722f1d-fa0e-439f-b187-3b72e8a7582a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -97328,7 +97328,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 34,
+          "displayOrder": 48,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -97355,11 +97355,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": 75,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": -75,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -97367,7 +97367,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -97378,7 +97378,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -97479,7 +97479,7 @@
         }
       },
       {
-        "id": "ab361f87-c30d-406c-ad8b-2dbf27e9b508",
+        "id": "6bbbce43-7199-49fb-90e3-18dc6e067d34",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -97489,7 +97489,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 3,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -97564,7 +97564,7 @@
         }
       },
       {
-        "id": "e1733e3c-43a3-40b0-971b-12c87422805c",
+        "id": "53e84f55-472e-4045-b4c9-089af400c7de",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -97574,7 +97574,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 22,
+          "displayOrder": 33,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -97649,7 +97649,7 @@
         }
       },
       {
-        "id": "1fe0bc63-2298-4f61-b895-4c2ec295a335",
+        "id": "01f69cd8-e339-4f56-90dc-58dc3b0022a4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -97659,7 +97659,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97795,7 +97795,7 @@
         }
       },
       {
-        "id": "b580ada8-b1a4-439b-88d5-459e1941087e",
+        "id": "f444f2f4-88be-4597-9e1d-d328c6f4c8a5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -97805,7 +97805,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97998,7 +97998,7 @@
         }
       },
       {
-        "id": "03478018-27cc-4040-a2e5-eeef815b928e",
+        "id": "83f84f81-006b-4088-91ac-0e9aabcd5ddc",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98008,7 +98008,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 23,
+          "displayOrder": 34,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98083,7 +98083,7 @@
         }
       },
       {
-        "id": "3b6abfef-31b7-46b1-b50a-aeb1a1a4a6a6",
+        "id": "eb1391b1-878d-4d56-9b2f-a0b944847ee9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98093,7 +98093,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98229,7 +98229,7 @@
         }
       },
       {
-        "id": "ff02b6ef-3951-48da-9982-cd0446f0fe62",
+        "id": "10c80f24-0e3d-494a-ade1-541449bdacfb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -98239,7 +98239,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98432,7 +98432,7 @@
         }
       },
       {
-        "id": "fac569ba-b478-4668-ba72-e84c67eb9f55",
+        "id": "96ae16c1-bfeb-410c-a78f-9ffa329f5c8a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98442,7 +98442,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 24,
+          "displayOrder": 35,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98517,7 +98517,7 @@
         }
       },
       {
-        "id": "db7465e1-12e6-453a-a095-582839c5806d",
+        "id": "f3159148-ce22-4063-bbff-1b67b73d5106",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98527,7 +98527,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98663,7 +98663,7 @@
         }
       },
       {
-        "id": "b6af537a-9a76-4cb3-859e-7ccd58ab149d",
+        "id": "e942fb8c-7d6b-4cee-a420-38a93d8f8682",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -98673,7 +98673,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98866,7 +98866,7 @@
         }
       },
       {
-        "id": "82964ee3-679a-4c94-8159-b15ace89e771",
+        "id": "eca9e7fa-aec2-44ea-90e8-dde495b8524b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98876,7 +98876,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 25,
+          "displayOrder": 36,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98951,7 +98951,7 @@
         }
       },
       {
-        "id": "49ff4494-bf5e-4dff-b510-51b0420566a3",
+        "id": "877aa8ff-953d-4a89-894e-46c60eef3e8a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98961,7 +98961,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99097,7 +99097,7 @@
         }
       },
       {
-        "id": "86f89a8c-79e3-4a8a-ac0f-33ba81a0400d",
+        "id": "62a733fc-7077-4082-bba4-05722c4db29d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99107,7 +99107,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99300,7 +99300,7 @@
         }
       },
       {
-        "id": "2b924f68-54d2-4fb6-9cbb-3dd043796fe6",
+        "id": "20c9a00d-e7b4-4e9b-8963-e5739613eaf1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -99310,7 +99310,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 26,
+          "displayOrder": 37,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -99385,7 +99385,7 @@
         }
       },
       {
-        "id": "01c17b5e-abff-4412-a783-c35ac3995ff1",
+        "id": "d0210fe0-6794-44f0-a098-e82aad78e1a3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -99395,7 +99395,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99531,7 +99531,7 @@
         }
       },
       {
-        "id": "a406fb98-9cac-4c5f-b749-09679e174bbf",
+        "id": "e52230f9-377a-492f-a95a-d04aa9f8be1e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99541,7 +99541,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99734,7 +99734,7 @@
         }
       },
       {
-        "id": "4d9e979b-140e-4504-91f1-04306d9c0951",
+        "id": "e6b0ef18-0034-4c40-a024-91e2cc2dbc17",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -99744,7 +99744,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 27,
+          "displayOrder": 38,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -99819,7 +99819,7 @@
         }
       },
       {
-        "id": "78ec86bf-c646-4e9c-a700-c8dfc841174d",
+        "id": "9374f30f-aa3f-45e6-add3-a8a329ec8b4e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -99829,7 +99829,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99965,7 +99965,7 @@
         }
       },
       {
-        "id": "64153aff-4aed-4c51-991e-1a846b726012",
+        "id": "238d3680-9ac7-4782-b43b-9a0689b415fb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99975,7 +99975,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100168,7 +100168,7 @@
         }
       },
       {
-        "id": "7b70e999-1d89-4c3b-9d22-35c6fe907f6f",
+        "id": "404ea1ce-5008-4629-9a02-24c9bc5f99a5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -100178,7 +100178,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 28,
+          "displayOrder": 39,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -100253,7 +100253,7 @@
         }
       },
       {
-        "id": "12ba31b4-c611-4b7e-9f68-2d27bc407880",
+        "id": "7026dac6-fcba-41e5-8449-52a897f2d4eb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -100263,7 +100263,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100399,7 +100399,7 @@
         }
       },
       {
-        "id": "3c8ddf92-813f-4c42-aefe-8788a4778d93",
+        "id": "daf53559-ce10-459f-94bb-ab235680dcd9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -100409,7 +100409,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100602,7 +100602,7 @@
         }
       },
       {
-        "id": "a5fd221f-4703-4c31-9851-7d9fd7ed49fb",
+        "id": "a6657298-bb53-44a8-83be-d17cdd4f4e66",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -100612,7 +100612,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 29,
+          "displayOrder": 40,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -100687,7 +100687,7 @@
         }
       },
       {
-        "id": "bb4db2fb-0e43-422b-9958-17a63f19ecbd",
+        "id": "c477ee8d-fdcf-4113-95d5-ec9bd38ea828",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -100697,7 +100697,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100833,7 +100833,7 @@
         }
       },
       {
-        "id": "2a547ba7-1ffb-44e7-ab92-501307fcb0b1",
+        "id": "3965274e-f6d1-4ade-9142-b10deed9060e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -100843,7 +100843,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101036,7 +101036,7 @@
         }
       },
       {
-        "id": "cf4c9ec5-520e-4fdd-bf04-afc0f68d88f5",
+        "id": "a9efd874-9111-4eac-a888-98f62f5b8e45",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101046,7 +101046,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 30,
+          "displayOrder": 41,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101121,7 +101121,7 @@
         }
       },
       {
-        "id": "cb2532c1-5735-4728-b866-429f5d48f509",
+        "id": "966b8deb-ca13-45e8-893d-1ddc7d92fea2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101131,7 +101131,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101267,7 +101267,7 @@
         }
       },
       {
-        "id": "993864e8-c465-45f6-bcf8-ad142982e4a1",
+        "id": "6adb5f8e-3d00-4253-9df2-befbb8e2f7af",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -101277,7 +101277,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101470,7 +101470,7 @@
         }
       },
       {
-        "id": "2ad39d2d-5895-4e6c-8f49-fbbc11026aa6",
+        "id": "d93750d8-9619-49b4-b6ef-50cb3fe07aa9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101480,7 +101480,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 31,
+          "displayOrder": 42,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101555,7 +101555,7 @@
         }
       },
       {
-        "id": "2bbca713-4248-45d0-8034-afef9c5e9c01",
+        "id": "af14fd4f-738f-40d9-bf4c-59a0793e783f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101565,7 +101565,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101701,7 +101701,7 @@
         }
       },
       {
-        "id": "e7b9f07c-d6aa-45c9-9166-0449587e2234",
+        "id": "6421ec34-d789-424c-a8df-985e56c0d449",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -101711,7 +101711,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101904,7 +101904,7 @@
         }
       },
       {
-        "id": "98722a61-a012-4e04-aadd-b7b3f1093d63",
+        "id": "d8e24d80-e459-4088-9c02-e4354577be27",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101914,7 +101914,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 32,
+          "displayOrder": 43,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101989,7 +101989,7 @@
         }
       },
       {
-        "id": "d76233b3-593f-456d-8801-166fa3658bff",
+        "id": "350d420c-fd68-476e-8f60-615c28aa5637",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101999,7 +101999,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102135,7 +102135,7 @@
         }
       },
       {
-        "id": "e19b5ed5-6ed2-413b-b1b6-21ecf25139a1",
+        "id": "ef4fa45b-2bc0-44d8-ae39-f680edf72552",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -102145,7 +102145,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102338,7 +102338,7 @@
         }
       },
       {
-        "id": "0bc6a52e-bd98-4026-8644-3d14d32167f3",
+        "id": "e49d26ef-705a-4022-b64a-89a622964908",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -102348,7 +102348,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 35,
+          "displayOrder": 49,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -102375,11 +102375,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": 241,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": 91,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -102387,7 +102387,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -102398,7 +102398,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 166,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -102484,7 +102484,7 @@
         }
       },
       {
-        "id": "217620ba-7ef9-42f7-86d0-36975f0657c3",
+        "id": "f512fc40-9a6c-4db3-803a-b5b842e92363",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -102494,7 +102494,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 36,
+          "displayOrder": 50,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -102521,11 +102521,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": 241,
-                "y": 282
+                "y": 238
               },
               "OffsetMin": {
                 "x": 91,
-                "y": -18
+                "y": -22
               },
               "Pivot": {
                 "x": 0.5,
@@ -102533,7 +102533,7 @@
               },
               "RectSize": {
                 "x": 150,
-                "y": 300
+                "y": 260
               },
               "UIMode": 1,
               "UIScale": {
@@ -102544,7 +102544,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 166,
-                "y": 132
+                "y": 108
               },
               "Position": {
                 "x": 0,
@@ -102645,7 +102645,7 @@
         }
       },
       {
-        "id": "359d91df-3567-4cd5-9a79-9fed0dc7ac3c",
+        "id": "c2e1ef7d-1d34-4e04-9051-1f23be0c9507",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -102655,7 +102655,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 3,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -102730,7 +102730,7 @@
         }
       },
       {
-        "id": "70821507-56f7-4c05-be1f-b6bbd400ef3a",
+        "id": "2aa036f5-c150-427a-bc8a-9962d4a1c1e4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -102740,7 +102740,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 22,
+          "displayOrder": 33,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -102815,7 +102815,7 @@
         }
       },
       {
-        "id": "3e14f707-6878-42bb-8d10-1604850224d9",
+        "id": "eb09ea30-3047-4e05-9106-c0d47d59a233",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -102825,7 +102825,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102961,7 +102961,7 @@
         }
       },
       {
-        "id": "af6a8f64-fb18-415c-b8f7-37ab795e9c78",
+        "id": "9a3d5f77-3691-4788-b3cf-a4b127158df4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -102971,7 +102971,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103164,7 +103164,7 @@
         }
       },
       {
-        "id": "223cd2c2-e025-42b8-a3a2-b394482b2969",
+        "id": "30a8962c-c69f-424e-b544-baea9c1d8c0f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -103174,7 +103174,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 23,
+          "displayOrder": 34,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -103249,7 +103249,7 @@
         }
       },
       {
-        "id": "7a4398e1-d272-4da4-9c70-7f305a074a32",
+        "id": "2c953b58-2acc-4971-8849-9fa945f9b3dc",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -103259,7 +103259,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103395,7 +103395,7 @@
         }
       },
       {
-        "id": "c015c04f-4251-44cb-9b6b-3b69f641c613",
+        "id": "b34609d2-f41f-450c-aff6-cdf985a5b2b1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -103405,7 +103405,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103598,7 +103598,7 @@
         }
       },
       {
-        "id": "81a27b59-0b94-4117-998e-4ee0146b3a34",
+        "id": "074e838a-0785-4c38-a64c-c8e18d0b222b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -103608,7 +103608,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 24,
+          "displayOrder": 35,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -103683,7 +103683,7 @@
         }
       },
       {
-        "id": "1652bbbd-b833-4fdd-88a1-86568162d24e",
+        "id": "bc7e51ed-7ae4-4e87-8577-6709925a0e94",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -103693,7 +103693,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103829,7 +103829,7 @@
         }
       },
       {
-        "id": "ad45fbd9-ca6b-428e-be3a-650764d345f2",
+        "id": "fbf91b8e-d8ee-4af3-91e8-ab43ed51d36e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -103839,7 +103839,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104032,7 +104032,7 @@
         }
       },
       {
-        "id": "8b64aef0-6eb3-424b-bf80-149164334140",
+        "id": "70aee393-e747-45fe-94a5-21c296273b75",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104042,7 +104042,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 25,
+          "displayOrder": 36,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104117,7 +104117,7 @@
         }
       },
       {
-        "id": "8e9e0aea-2f11-47ff-b295-83f08b853053",
+        "id": "149d40de-e0ac-4fa6-adb4-b934833b73a6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104127,7 +104127,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104263,7 +104263,7 @@
         }
       },
       {
-        "id": "50a23ff5-0b66-4781-8805-8580bc2d4243",
+        "id": "671c8b29-79ea-4e1e-91dd-71a21f70e795",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -104273,7 +104273,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104466,7 +104466,7 @@
         }
       },
       {
-        "id": "5518897f-ba1e-48e2-97e2-e91cfee713e2",
+        "id": "24d67298-7fae-4159-9dc0-8f2df4be8d8a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104476,7 +104476,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 26,
+          "displayOrder": 37,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104551,7 +104551,7 @@
         }
       },
       {
-        "id": "bc9124f2-bfea-4cff-b33d-411fb6946918",
+        "id": "c3a1603c-7c83-456f-9a69-b64cc151cda4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104561,7 +104561,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104697,7 +104697,7 @@
         }
       },
       {
-        "id": "cd75cb1e-9e9d-40f8-8734-1853a5650bca",
+        "id": "13e66a8f-592c-4c2e-9456-6857acef1759",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -104707,7 +104707,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104900,7 +104900,7 @@
         }
       },
       {
-        "id": "1933b8ad-d3b6-45b8-93b8-cfe01d875824",
+        "id": "6df832bb-c257-41a0-9677-389286b2adbb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104910,7 +104910,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 27,
+          "displayOrder": 38,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104985,7 +104985,7 @@
         }
       },
       {
-        "id": "550645f0-d1d7-47cf-834d-759e1860fa46",
+        "id": "1299b37e-d67b-4760-8249-5e57e7360106",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104995,7 +104995,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105131,7 +105131,7 @@
         }
       },
       {
-        "id": "6c94007d-bee6-455f-9c34-426cb4c7f1dc",
+        "id": "777b36d2-59f3-4822-9311-78de0803baca",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -105141,7 +105141,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105334,7 +105334,7 @@
         }
       },
       {
-        "id": "b3ef29dd-03fb-4d44-a616-5e4b252e424d",
+        "id": "55724704-1778-4bdb-9e13-0119d220e039",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -105344,7 +105344,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 28,
+          "displayOrder": 39,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -105419,7 +105419,7 @@
         }
       },
       {
-        "id": "6542ebf9-b86c-47cf-a6ab-8a680a8b3b1a",
+        "id": "9e93bae3-e6ad-479d-bd66-65a03a1eeb47",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -105429,7 +105429,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105565,7 +105565,7 @@
         }
       },
       {
-        "id": "778d2ded-19d3-4a54-a154-b5dca9edb629",
+        "id": "2c6f97f2-c1b6-4cc2-b7f0-128df85c257d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -105575,7 +105575,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105768,7 +105768,7 @@
         }
       },
       {
-        "id": "6f2df1af-5ecc-4dce-8351-b6d58341eeef",
+        "id": "97d680fa-c367-47d0-b23f-ca902820cd19",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -105778,7 +105778,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 29,
+          "displayOrder": 40,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -105853,7 +105853,7 @@
         }
       },
       {
-        "id": "f604884d-b7a2-4638-950a-15f288b65b92",
+        "id": "c70741c5-6691-4a0b-b0b4-430d827407f0",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -105863,7 +105863,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105999,7 +105999,7 @@
         }
       },
       {
-        "id": "de8f820f-95d4-494d-8bf9-6841a6468503",
+        "id": "64d5fc04-9753-4085-9212-9e5adab24ab1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106009,7 +106009,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106202,7 +106202,7 @@
         }
       },
       {
-        "id": "6e27bc90-114f-43f2-96c3-116ccf085de1",
+        "id": "b6911a30-38cc-4e5d-b233-408d0d760d7c",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -106212,7 +106212,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 30,
+          "displayOrder": 41,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -106287,7 +106287,7 @@
         }
       },
       {
-        "id": "501f70ff-1b0b-4296-bbe7-1975671b564e",
+        "id": "33adaf2f-1882-4bbe-a957-d5c47a5b9c6e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -106297,7 +106297,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106433,7 +106433,7 @@
         }
       },
       {
-        "id": "13149dba-a19d-4dbe-8c81-2c78ff0129d0",
+        "id": "de9fb786-e1c9-427d-bb0b-b0a67b0d9edb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106443,7 +106443,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106636,7 +106636,7 @@
         }
       },
       {
-        "id": "a8b5bf9d-84b5-4842-9d89-61106c04d1d9",
+        "id": "0fe28813-8421-4539-be8b-89c5e93cc8a5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -106646,7 +106646,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 31,
+          "displayOrder": 42,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -106721,7 +106721,7 @@
         }
       },
       {
-        "id": "e7b51f25-49b6-48d5-a34d-d2868e2885a1",
+        "id": "21339db0-353c-42fb-a578-49644d08dc72",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -106731,7 +106731,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106867,7 +106867,7 @@
         }
       },
       {
-        "id": "5b7212ab-0096-4881-82f5-108cabf8cb4b",
+        "id": "7ecf6ab4-8d40-49e4-94ff-d37655faa4ca",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106877,7 +106877,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -107070,7 +107070,7 @@
         }
       },
       {
-        "id": "e58cfef1-7724-4dfb-b696-cd0f004bb7f0",
+        "id": "2b030798-9041-4be9-9df5-be3c258bb36b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -107080,7 +107080,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 32,
+          "displayOrder": 43,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -107155,7 +107155,7 @@
         }
       },
       {
-        "id": "5a6769fa-4ac5-40d9-bf38-6e91c68d9424",
+        "id": "0e695c42-a38d-4924-a9c7-8ce61543b931",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107165,7 +107165,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 6,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -107301,7 +107301,7 @@
         }
       },
       {
-        "id": "85e12f50-4f98-418a-8710-7dbdfcec9be5",
+        "id": "bc8c1513-61f3-4af8-9425-e73d06b4c799",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -107311,7 +107311,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
+          "displayOrder": 7,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -107504,7 +107504,7 @@
         }
       },
       {
-        "id": "55a3196b-dc37-40f1-a441-a0fd081496e4",
+        "id": "1f118f0e-bf72-416e-bb5e-bb2d9149ec3b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelWindowFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107514,7 +107514,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 37,
+          "displayOrder": 51,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107650,7 +107650,7 @@
         }
       },
       {
-        "id": "25d36119-11d9-4898-ac72-cf92696c37d1",
+        "id": "4cae7a4c-0880-478c-9054-42fa25bea283",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_Lever",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107660,7 +107660,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 38,
+          "displayOrder": 52,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107796,7 +107796,7 @@
         }
       },
       {
-        "id": "f9161058-5d5f-4083-940a-34f6f052627a",
+        "id": "f88ab86a-4ec1-4f66-8fc1-106dc084d85c",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -107806,7 +107806,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 39,
+          "displayOrder": 53,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107999,7 +107999,7 @@
         }
       },
       {
-        "id": "2c2523f1-070c-4d69-ac38-585249fe0ebe",
+        "id": "a0daa470-05c0-4bfe-9909-f67ccf777f4b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -108009,7 +108009,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 40,
+          "displayOrder": 54,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -108202,7 +108202,7 @@
         }
       },
       {
-        "id": "6c56c5cb-e489-4a2c-93a8-4d1da70ffaf1",
+        "id": "607007b7-b3e5-4a40-a7fb-ec3830275d82",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -108212,7 +108212,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 41,
+          "displayOrder": 55,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {

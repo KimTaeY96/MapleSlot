@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const { execFileSync } = require("child_process");
 
 const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
 const uiPath = `${projectRoot}/ui/UIRoot_TestSandbox_MainPlay.ui`;
@@ -21,6 +22,14 @@ const root = "/ui/UIRoot_TestSandbox_MainPlay";
 function fail(message) {
   throw new Error(message);
 }
+
+function validateBonus777VisualSafeArea() {
+  const pythonPath = process.env.MSW_PYTHON_EXE || "C:/Users/ghddj/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe";
+  const validatorPath = `${projectRoot}/tools/validate_bonus777_visual_safe_area.py`;
+  execFileSync(pythonPath, [validatorPath], { stdio: "inherit" });
+}
+
+validateBonus777VisualSafeArea();
 
 function getEntity(relativePath) {
   const fullPath = `${root}/${relativePath}`;
@@ -225,15 +234,6 @@ if (Math.abs((bonus777DimRenderer.Color?.a ?? 0) - 0.72) > 0.001) {
 }
 
 const bonus777Root = "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot";
-const reelCenterY = bonus777Structure.reels.positions[1];
-const visibleDigitHalfHeight = bonus777Structure.reels.digitCellSize[1] * 0.5;
-const topVisibleDigitEdge = reelCenterY + bonus777Structure.reels.cellHeight + visibleDigitHalfHeight;
-const bottomVisibleDigitEdge = reelCenterY - bonus777Structure.reels.cellHeight - visibleDigitHalfHeight;
-if (topVisibleDigitEdge > 270 || bottomVisibleDigitEdge < 0) {
-  fail(
-    `777 bonus visible reel rows are outside the frame safe area: top=${topVisibleDigitEdge}, bottom=${bottomVisibleDigitEdge}; expected top<=270 and bottom>=0`,
-  );
-}
 expectBonus777Sprite("bonus777_slot_frame_shell", `${bonus777Root}/Sprite_FrameShell`, 450);
 expectBonus777Sprite("bonus777_slot_title_badge", `${bonus777Root}/Sprite_TitleBadge`, 458);
 expectBonus777Sprite("bonus777_slot_result_panel", `${bonus777Root}/Sprite_ResultPanel`, 458);

@@ -25,7 +25,7 @@
     "cellHeight": 88,
     "maskSize": [
       150,
-      300
+      260
     ],
     "stripSize": [
       150,
@@ -33,11 +33,11 @@
     ],
     "positions": [
       -166,
-      132,
+      108,
       0,
-      132,
+      108,
       166,
-      132
+      108
     ],
     "digitCellSize": [
       118,
@@ -46,7 +46,9 @@
     "digitTextSize": [
       106,
       70
-    ]
+    ],
+    "maskSafePadding": 3,
+    "maxFrameOverlapRatio": 0.02
   },
   "assets": [
     {
@@ -161,7 +163,7 @@
       },
       "displaySize": {
         "width": 150,
-        "height": 320
+        "height": 260
       },
       "uiPosition": {
         "x": 0,
