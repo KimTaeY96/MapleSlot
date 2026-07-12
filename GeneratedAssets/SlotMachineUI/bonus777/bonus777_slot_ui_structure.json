@@ -16,36 +16,36 @@
     ],
     "position": [
       0,
-      32
+      0
     ]
   },
   "reels": {
     "logicalDigitCount": 7,
     "visualCellCount": 11,
-    "cellHeight": 128,
+    "cellHeight": 108,
     "maskSize": [
-      166,
-      384
+      156,
+      348
     ],
     "stripSize": [
-      166,
-      1408
+      156,
+      1188
     ],
     "positions": [
-      -184,
+      -170,
       88,
       0,
       88,
-      184,
+      170,
       88
     ],
     "digitCellSize": [
-      142,
-      118
+      132,
+      96
     ],
     "digitTextSize": [
-      128,
-      106
+      120,
+      84
     ]
   },
   "assets": [
@@ -88,12 +88,12 @@
         "height": 350
       },
       "displaySize": {
-        "width": 642,
-        "height": 418
+        "width": 620,
+        "height": 404
       },
       "uiPosition": {
         "x": 0,
-        "y": 86
+        "y": 90
       },
       "trimmed": true
     },
@@ -112,12 +112,12 @@
         "height": 152
       },
       "displaySize": {
-        "width": 560,
-        "height": 143
+        "width": 540,
+        "height": 138
       },
       "uiPosition": {
         "x": 0,
-        "y": 388
+        "y": 356
       },
       "trimmed": true
     },
@@ -137,11 +137,11 @@
       },
       "displaySize": {
         "width": 640,
-        "height": 320
+        "height": 276
       },
       "uiPosition": {
         "x": 0,
-        "y": -306
+        "y": -292
       },
       "trimmed": true
     },
@@ -161,7 +161,7 @@
       },
       "displaySize": {
         "width": 154,
-        "height": 400
+        "height": 360
       },
       "uiPosition": {
         "x": 0,
@@ -184,8 +184,8 @@
         "height": 181
       },
       "displaySize": {
-        "width": 142,
-        "height": 118
+        "width": 132,
+        "height": 96
       },
       "uiPosition": {
         "x": 0,
@@ -208,12 +208,12 @@
         "height": 215
       },
       "displaySize": {
-        "width": 172,
-        "height": 182
+        "width": 150,
+        "height": 158
       },
       "uiPosition": {
-        "x": 448,
-        "y": 122
+        "x": 392,
+        "y": 110
       },
       "trimmed": false
     },
@@ -232,12 +232,12 @@
         "height": 215
       },
       "displaySize": {
-        "width": 172,
-        "height": 182
+        "width": 150,
+        "height": 158
       },
       "uiPosition": {
-        "x": 448,
-        "y": 122
+        "x": 392,
+        "y": 110
       },
       "trimmed": false
     },
@@ -256,12 +256,12 @@
         "height": 215
       },
       "displaySize": {
-        "width": 172,
-        "height": 182
+        "width": 150,
+        "height": 158
       },
       "uiPosition": {
-        "x": 448,
-        "y": 122
+        "x": 392,
+        "y": 110
       },
       "trimmed": false
     }

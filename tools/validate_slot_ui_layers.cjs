@@ -207,18 +207,21 @@ expectRect("Panel_Bonus777_Hidden/Dim", 1920, 1080);
 expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.rectSize[0], bonus777Structure.slotRoot.rectSize[1]);
 expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.position[0], bonus777Structure.slotRoot.position[1]);
 expectUiScale("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.uiScale[0], bonus777Structure.slotRoot.uiScale[1]);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 470, 46);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 520, 34);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 600, 48);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 393);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -246);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -302);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 500, 40);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 560, 34);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 560, 82);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 362);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -224);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -296);
 const bonus777DimRenderer = getComponent("Panel_Bonus777_Hidden/Dim", "MOD.Core.SpriteGUIRendererComponent");
 if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSorting !== true) {
   fail(`Unexpected 777 dim sorting: order=${bonus777DimRenderer.OrderInLayer}, override=${bonus777DimRenderer.OverrideSorting}; expected 440/true`);
 }
 if (bonus777DimRenderer.RaycastTarget !== true) {
   fail("Panel_Bonus777_Hidden/Dim must block base slot touches while the bonus overlay is visible");
+}
+if (Math.abs((bonus777DimRenderer.Color?.a ?? 0) - 0.68) > 0.001) {
+  fail(`Unexpected 777 dim alpha: ${bonus777DimRenderer.Color?.a}; expected 0.68`);
 }
 
 const bonus777Root = "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot";

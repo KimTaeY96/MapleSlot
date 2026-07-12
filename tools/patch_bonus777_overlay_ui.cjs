@@ -171,7 +171,7 @@ addRect(b, `${ROOT}/Dim`, {
   anchor: "stretch",
   rect_size: [1920, 1080],
   color: "#05020A",
-  alpha: 0.5,
+  alpha: 0.68,
   raycast: true,
   order_in_layer: Z.dim,
 });
@@ -233,15 +233,15 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     });
     addText(b, `${cellPath}/Text_Digit`, String(digit), {
       rect_size: structure.reels.digitTextSize,
-      size: 92,
-      min_size: 64,
-      max_size: 92,
+      size: 78,
+      min_size: 48,
+      max_size: 78,
       bold: true,
-      color: "#E51621",
+      color: "#FFE39A",
       outline: true,
-      outline_color: "#5E0710",
-      outline_width: 3,
-      drop_shadow_alpha: 0.28,
+      outline_color: "#1B1028",
+      outline_width: 4,
+      drop_shadow_alpha: 0.45,
       order_in_layer: Z.reelText,
     });
   }
@@ -251,11 +251,11 @@ addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame +
 addSprite(b, `${SLOT}/Sprite_Lever`, assets.leverUp, Z.lever);
 
 addText(b, `${SLOT}/Text_Title`, "777 BONUS SLOT", {
-  pos: [0, 393],
-  rect_size: [470, 46],
-  size: 30,
+  pos: [0, 362],
+  rect_size: [500, 40],
+  size: 28,
   min_size: 18,
-  max_size: 30,
+  max_size: 28,
   bold: true,
   color: "#FFE8A3",
   outline: true,
@@ -263,8 +263,8 @@ addText(b, `${SLOT}/Text_Title`, "777 BONUS SLOT", {
   outline_width: 2,
 });
 addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
-  pos: [0, -246],
-  rect_size: [520, 34],
+  pos: [0, -224],
+  rect_size: [560, 34],
   size: 22,
   min_size: 14,
   max_size: 22,
@@ -275,16 +275,16 @@ addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
   order_in_layer: Z.text,
 });
 addText(b, `${SLOT}/Text_Result`, "WILD x5 BONUS", {
-  pos: [0, -302],
-  rect_size: [600, 48],
-  size: 26,
+  pos: [0, -296],
+  rect_size: [560, 82],
+  size: 24,
   min_size: 15,
-  max_size: 26,
+  max_size: 24,
   bold: true,
-  color: "#FFFFFF",
+  color: "#FFE9B0",
   outline: true,
-  outline_color: "#8C171F",
-  outline_width: 2,
+  outline_color: "#2A1208",
+  outline_width: 3,
   order_in_layer: Z.text,
 });
 

@@ -1081,7 +1081,7 @@ function makeGetBonus777DigitCellHeight() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method float GetBonus777DigitCellHeight()",
-    "        return 128.0",
+    "        return 108.0",
     "    end",
   ].join("\n");
 }
@@ -1310,7 +1310,7 @@ function makeSetBonus777LeverOffset() {
     "        if self.bonus777LeverTransform == nil then",
     "            return",
     "        end",
-    "        self.bonus777LeverTransform.anchoredPosition = Vector2(448.0, 122.0)",
+    "        self.bonus777LeverTransform.anchoredPosition = Vector2(392.0, 110.0)",
     "    end",
   ].join("\n");
 }
@@ -1449,9 +1449,12 @@ function makePlayBonus777Presentation() {
     "            return",
     "        end",
     "",
+    "        self:SetDevCheatPanelOpen(false)",
     "        self.bonus777Panel.Enable = true",
+    "        self:SetBonus777LeverOffset(0.0)",
+    "        self:SetBonus777LeverFrame(\"up\")",
     "        self:SetBonus777DigitsFromResultKey(\"777\")",
-    "        self:SetBonus777Texts(\"CHANCE 0 / \" .. tostring(bonusSlotResult.spinCount or 0), \"WILD x5 BONUS\")",
+    "        self:SetBonus777Texts(\"CHANCE 0 / \" .. tostring(bonusSlotResult.spinCount or 0), self:FormatBonusSlotStatus(bonusSlotResult))",
     "        wait(0.25)",
     "",
     "        local spins = bonusSlotResult.spins or {}",
