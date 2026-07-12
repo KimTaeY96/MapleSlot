@@ -50,7 +50,7 @@ ASSETS = {
         "file": "bonus777_slot_reel_column_background.png",
         "rect": [739, 577, 903, 1005],
         "trim": True,
-        "displaySize": [154, 360],
+        "displaySize": [150, 320],
         "uiPosition": [0, 0],
     },
     "bonus777_slot_digit_cell": {
@@ -58,7 +58,7 @@ ASSETS = {
         "file": "bonus777_slot_digit_cell.png",
         "rect": [694, 1028, 977, 1213],
         "trim": True,
-        "displaySize": [132, 96],
+        "displaySize": [118, 78],
         "uiPosition": [0, 0],
     },
     "bonus777_slot_lever_up": {
@@ -134,12 +134,12 @@ def main() -> None:
         "reels": {
             "logicalDigitCount": 7,
             "visualCellCount": 11,
-            "cellHeight": 108,
-            "maskSize": [156, 348],
-            "stripSize": [156, 1188],
-            "positions": [-170, 88, 0, 88, 170, 88],
-            "digitCellSize": [132, 96],
-            "digitTextSize": [120, 84],
+            "cellHeight": 88,
+            "maskSize": [150, 300],
+            "stripSize": [150, 968],
+            "positions": [-166, 132, 0, 132, 166, 132],
+            "digitCellSize": [118, 78],
+            "digitTextSize": [106, 70],
         },
         "assets": [],
     }

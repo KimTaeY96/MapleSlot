@@ -185,17 +185,17 @@ script SlotMachineRuntime extends Logic
     property TextComponent winResultText2 = "ea128b54-384d-411f-8afa-d3bd194bcde2"
     property TextComponent winResultText3 = "44706179-4029-4ff6-8c59-2a5ed058c0ba"
     property TextComponent winResultTotalText = "8394b87a-9949-40a9-b63c-54138c19bf60"
-    property Entity bonus777Panel = "9ba4669f-893e-4d4c-a34b-81ae0d94cb38"
-    property TextComponent bonus777ReelText1 = "5316b917-12e4-4d01-b95a-12417e2183b6"
-    property TextComponent bonus777ReelText2 = "137d1ab0-39f1-4593-a079-205f34b790d8"
-    property TextComponent bonus777ReelText3 = "17cb7085-b399-48f7-9073-b27d157a3109"
-    property TextComponent bonus777ChanceText = "8492a48d-97d3-41cb-a231-8892adc9cb64"
-    property TextComponent bonus777ResultText = "9fc261ad-1857-4eda-bcf4-9733cfa80cde"
-    property UITransformComponent bonus777ReelStripTransform1 = "84759628-c041-43b9-90ae-e35ba87af663"
-    property UITransformComponent bonus777ReelStripTransform2 = "15d59733-3c7d-4687-a30d-9226150a6f6c"
-    property UITransformComponent bonus777ReelStripTransform3 = "80559cd6-b32e-418a-bcfa-b9aeff09fa23"
-    property UITransformComponent bonus777LeverTransform = "d6e7130f-b467-4c74-b3a1-b4dc61849d42"
-    property SpriteGUIRendererComponent bonus777LeverRenderer = "d6e7130f-b467-4c74-b3a1-b4dc61849d42"
+    property Entity bonus777Panel = "3487fc10-1e8b-40ae-9e43-81c85986789e"
+    property TextComponent bonus777ReelText1 = "036cc7cd-0bf8-4ad0-bff5-b9eef103375d"
+    property TextComponent bonus777ReelText2 = "86f89a8c-79e3-4a8a-ac0f-33ba81a0400d"
+    property TextComponent bonus777ReelText3 = "50a23ff5-0b66-4781-8805-8580bc2d4243"
+    property TextComponent bonus777ChanceText = "2c2523f1-070c-4d69-ac38-585249fe0ebe"
+    property TextComponent bonus777ResultText = "6c56c5cb-e489-4a2c-93a8-4d1da70ffaf1"
+    property UITransformComponent bonus777ReelStripTransform1 = "e99221f9-a529-4930-8aed-f18de304faef"
+    property UITransformComponent bonus777ReelStripTransform2 = "ab361f87-c30d-406c-ad8b-2dbf27e9b508"
+    property UITransformComponent bonus777ReelStripTransform3 = "359d91df-3567-4cd5-9a79-9fed0dc7ac3c"
+    property UITransformComponent bonus777LeverTransform = "25d36119-11d9-4898-ac72-cf92696c37d1"
+    property SpriteGUIRendererComponent bonus777LeverRenderer = "25d36119-11d9-4898-ac72-cf92696c37d1"
 
     property Entity screenSprayVfxEntity = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
     property SpriteGUIRendererComponent screenSprayVfxRenderer = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
@@ -3476,7 +3476,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method float GetBonus777DigitCellHeight()
-        return 108.0
+        return 88.0
     end
 
     @ExecSpace("ClientOnly")

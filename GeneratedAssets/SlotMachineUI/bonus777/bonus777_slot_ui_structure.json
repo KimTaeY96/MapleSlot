@@ -22,30 +22,30 @@
   "reels": {
     "logicalDigitCount": 7,
     "visualCellCount": 11,
-    "cellHeight": 108,
+    "cellHeight": 88,
     "maskSize": [
-      156,
-      348
+      150,
+      300
     ],
     "stripSize": [
-      156,
-      1188
+      150,
+      968
     ],
     "positions": [
-      -170,
-      88,
+      -166,
+      132,
       0,
-      88,
-      170,
-      88
+      132,
+      166,
+      132
     ],
     "digitCellSize": [
-      132,
-      96
+      118,
+      78
     ],
     "digitTextSize": [
-      120,
-      84
+      106,
+      70
     ]
   },
   "assets": [
@@ -160,8 +160,8 @@
         "height": 425
       },
       "displaySize": {
-        "width": 154,
-        "height": 360
+        "width": 150,
+        "height": 320
       },
       "uiPosition": {
         "x": 0,
@@ -184,8 +184,8 @@
         "height": 181
       },
       "displaySize": {
-        "width": 132,
-        "height": 96
+        "width": 118,
+        "height": 78
       },
       "uiPosition": {
         "x": 0,

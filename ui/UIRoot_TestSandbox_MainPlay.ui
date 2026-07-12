@@ -91252,7 +91252,7 @@
         }
       },
       {
-        "id": "9ba4669f-893e-4d4c-a34b-81ae0d94cb38",
+        "id": "3487fc10-1e8b-40ae-9e43-81c85986789e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -91262,7 +91262,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 7,
+          "displayOrder": 8,
           "pathConstraints": "///",
           "revision": 0,
           "origin": {
@@ -91337,7 +91337,7 @@
         }
       },
       {
-        "id": "a570e5c7-6e50-420a-86bb-f2dee5b9a450",
+        "id": "b177a21b-d70c-44b4-b805-fae587c349a3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Dim",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91347,7 +91347,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -91445,7 +91445,7 @@
                 "r": 0.0196078431372549,
                 "g": 0.00784313725490196,
                 "b": 0.0392156862745098,
-                "a": 0.68
+                "a": 0.72
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -91483,7 +91483,7 @@
         }
       },
       {
-        "id": "dc55b448-d10d-4ac9-9923-9451af288785",
+        "id": "23ca903e-a920-4b03-bf9c-02303dcf1b75",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -91493,7 +91493,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -91568,7 +91568,7 @@
         }
       },
       {
-        "id": "7286ace9-51c4-4163-99b4-108851c1820b",
+        "id": "d8af9907-a10f-4d18-ab00-7701579a7229",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_FrameShell",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91578,7 +91578,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 14,
+          "displayOrder": 28,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -91714,7 +91714,7 @@
         }
       },
       {
-        "id": "08ac7328-8ac3-41d6-8060-ec459872f867",
+        "id": "a54c33d2-bab6-44a2-b97d-ab7088d1f0d2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_TitleBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91724,7 +91724,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 15,
+          "displayOrder": 29,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -91860,7 +91860,7 @@
         }
       },
       {
-        "id": "3b0471be-9570-4eee-9ed1-d2e9b6fd1652",
+        "id": "620ded5a-3119-4a6e-919c-6bf99e809100",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ResultPanel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -91870,7 +91870,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 16,
+          "displayOrder": 30,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92006,7 +92006,7 @@
         }
       },
       {
-        "id": "ae2fe368-7201-4ca4-b590-a17d22388365",
+        "id": "63a2ec41-b869-4723-9512-19ee28cf99cf",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92016,7 +92016,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 17,
+          "displayOrder": 31,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92042,20 +92042,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -92,
-                "y": 262
+                "x": -91,
+                "y": 282
               },
               "OffsetMin": {
-                "x": -248,
-                "y": -86
+                "x": -241,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -92065,8 +92065,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -170,
-                "y": 88
+                "x": -166,
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -92152,7 +92152,7 @@
         }
       },
       {
-        "id": "e9b84907-2846-4354-8901-884f33c977fb",
+        "id": "24f8c0a4-1f23-45d6-aadd-5e8e4db14151",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -92162,7 +92162,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 18,
+          "displayOrder": 32,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -92188,20 +92188,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -92,
-                "y": 262
+                "x": -91,
+                "y": 282
               },
               "OffsetMin": {
-                "x": -248,
-                "y": -86
+                "x": -241,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -92211,8 +92211,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -170,
-                "y": 88
+                "x": -166,
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -92313,7 +92313,7 @@
         }
       },
       {
-        "id": "84759628-c041-43b9-90ae-e35ba87af663",
+        "id": "e99221f9-a529-4930-8aed-f18de304faef",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92323,7 +92323,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -92349,20 +92349,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 1188
+                "x": 150,
+                "y": 968
               },
               "UIMode": 1,
               "UIScale": {
@@ -92398,7 +92398,7 @@
         }
       },
       {
-        "id": "06bfcbee-e34f-4b28-a6fd-605daab67375",
+        "id": "2552a8fd-8cfc-4815-a887-f2558ca96c98",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92408,7 +92408,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 11,
+          "displayOrder": 22,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -92434,20 +92434,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 486
+                "x": -75,
+                "y": 396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -92458,7 +92458,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 540
+                "y": 440
               },
               "Position": {
                 "x": 0,
@@ -92483,7 +92483,7 @@
         }
       },
       {
-        "id": "fb5f7420-e0e8-4d93-b04e-a7570784f40d",
+        "id": "5d85a00e-dae6-4f56-9271-b5fe5882f052",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92493,7 +92493,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -92519,20 +92519,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -92629,7 +92629,7 @@
         }
       },
       {
-        "id": "40a3d36f-281e-4e48-a9d0-9fe53e8ceab8",
+        "id": "5f127765-d6b9-4cd5-9e8e-2e9598172e3a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -92639,7 +92639,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -92665,20 +92665,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -92794,11 +92794,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -92807,10 +92807,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -92832,7 +92832,7 @@
         }
       },
       {
-        "id": "a6f605e5-7606-4204-9f06-c288a1af41f8",
+        "id": "efe5d560-6f2e-4409-98f6-3e436bff0062",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -92842,7 +92842,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 12,
+          "displayOrder": 23,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -92868,20 +92868,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 486
+                "x": 75,
+                "y": 396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 378
+                "x": -75,
+                "y": 308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -92892,7 +92892,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 432
+                "y": 352
               },
               "Position": {
                 "x": 0,
@@ -92917,7 +92917,7 @@
         }
       },
       {
-        "id": "e5ecd910-7901-4558-aad5-026f9e9ae008",
+        "id": "7ee23297-d4d3-4082-9997-ce968ddcc8d8",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -92927,7 +92927,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -92953,20 +92953,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -93063,7 +93063,7 @@
         }
       },
       {
-        "id": "182f3f9c-b495-4d55-8f8a-a2ab77e40d95",
+        "id": "86b3f275-43d9-4269-8c1a-c82db00bf22b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93073,7 +93073,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93099,20 +93099,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -93228,11 +93228,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -93241,10 +93241,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -93266,7 +93266,7 @@
         }
       },
       {
-        "id": "87a1bf56-ff78-4caf-9491-c0ae0816a5c6",
+        "id": "5e571f76-f6f9-4f84-95dc-7e4bf56508b2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -93276,7 +93276,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 13,
+          "displayOrder": 24,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -93302,20 +93302,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 378
+                "x": 75,
+                "y": 308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 270
+                "x": -75,
+                "y": 220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -93326,7 +93326,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 324
+                "y": 264
               },
               "Position": {
                 "x": 0,
@@ -93351,7 +93351,7 @@
         }
       },
       {
-        "id": "8a8645be-8060-4090-a629-f5a54f99d88e",
+        "id": "0c520bad-02ae-4de1-9776-7f1523c34b30",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -93361,7 +93361,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93387,20 +93387,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -93497,7 +93497,7 @@
         }
       },
       {
-        "id": "df359ffc-7f46-4374-803d-b5e57f9a21ba",
+        "id": "0ddab26a-7c79-4e15-8bc7-340b5eb18577",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93507,7 +93507,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93533,20 +93533,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -93662,11 +93662,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -93675,10 +93675,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -93700,7 +93700,7 @@
         }
       },
       {
-        "id": "4a54a656-d9b3-439f-9c64-a6811b87aa7c",
+        "id": "c87c0cbe-fd23-4a27-85ea-7e54139c43c3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -93710,7 +93710,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 14,
+          "displayOrder": 25,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -93736,20 +93736,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 270
+                "x": 75,
+                "y": 220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 162
+                "x": -75,
+                "y": 132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -93760,7 +93760,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 216
+                "y": 176
               },
               "Position": {
                 "x": 0,
@@ -93785,7 +93785,7 @@
         }
       },
       {
-        "id": "51fadbbd-0df0-4299-b573-e505eb69837e",
+        "id": "d99672db-791b-4c2c-90b3-d23822529162",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -93795,7 +93795,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93821,20 +93821,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -93931,7 +93931,7 @@
         }
       },
       {
-        "id": "5316b917-12e4-4d01-b95a-12417e2183b6",
+        "id": "036cc7cd-0bf8-4ad0-bff5-b9eef103375d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -93941,7 +93941,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -93967,20 +93967,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -94096,11 +94096,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -94109,10 +94109,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -94134,7 +94134,7 @@
         }
       },
       {
-        "id": "67d55295-cbfa-4934-9c45-bfd14cef4739",
+        "id": "3a648c75-bfd6-4a08-aab0-e3d0b74fe2f4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -94144,7 +94144,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 15,
+          "displayOrder": 26,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -94170,20 +94170,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 162
+                "x": 75,
+                "y": 132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 54
+                "x": -75,
+                "y": 44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -94194,7 +94194,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 108
+                "y": 88
               },
               "Position": {
                 "x": 0,
@@ -94219,7 +94219,7 @@
         }
       },
       {
-        "id": "d5094efb-8900-42b0-9a76-cc336546979f",
+        "id": "25cdfbc5-e69c-45fc-b861-ab61359fa921",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -94229,7 +94229,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94255,20 +94255,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -94365,7 +94365,7 @@
         }
       },
       {
-        "id": "324b34f2-2a44-432d-b779-97019943ba8f",
+        "id": "a3c8bddb-8cfd-4f49-acfc-bebba06de44d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -94375,7 +94375,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94401,20 +94401,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -94530,11 +94530,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -94543,10 +94543,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -94568,7 +94568,7 @@
         }
       },
       {
-        "id": "40a453d5-e219-49ad-88ca-c3f66cf44eef",
+        "id": "f063f7a8-010e-4725-9fcd-d0852d0f9fb8",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -94578,7 +94578,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 16,
+          "displayOrder": 27,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -94604,20 +94604,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 54
+                "x": 75,
+                "y": 44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -54
+                "x": -75,
+                "y": -44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -94653,7 +94653,7 @@
         }
       },
       {
-        "id": "8c25f35c-e92f-49a8-a922-3d94390e82a6",
+        "id": "98d7ad88-46a2-4e25-8af8-cf9f84bd9312",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -94663,7 +94663,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94689,20 +94689,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -94799,7 +94799,7 @@
         }
       },
       {
-        "id": "02b53bbf-62f7-455c-a843-d02ce517fe84",
+        "id": "3e71534e-b811-4531-9c52-a10cb71c5e76",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -94809,7 +94809,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -94835,20 +94835,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -94964,11 +94964,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -94977,10 +94977,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -95002,7 +95002,7 @@
         }
       },
       {
-        "id": "d0c55d73-d055-4cd5-aa80-6da6cedfa8c9",
+        "id": "98785018-3cd3-4382-b015-370dab657757",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95012,7 +95012,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 17,
+          "displayOrder": 28,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95038,20 +95038,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -54
+                "x": 75,
+                "y": -44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -162
+                "x": -75,
+                "y": -132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -95062,7 +95062,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -108
+                "y": -88
               },
               "Position": {
                 "x": 0,
@@ -95087,7 +95087,7 @@
         }
       },
       {
-        "id": "5f86559c-e8e4-4271-8d18-e0a5afb30a02",
+        "id": "05029131-507a-4285-931d-be2cd038620f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95097,7 +95097,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95123,20 +95123,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -95233,7 +95233,7 @@
         }
       },
       {
-        "id": "7e99229e-8cc4-4c54-9bde-9e2c8d6a68c4",
+        "id": "c1328f81-b295-4893-8267-f293b915c268",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -95243,7 +95243,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95269,20 +95269,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -95398,11 +95398,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -95411,10 +95411,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -95436,7 +95436,7 @@
         }
       },
       {
-        "id": "03fd62f7-a850-42c7-8e17-a12abb5597aa",
+        "id": "66312d48-1806-485e-b783-95e1fe4393e2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95446,7 +95446,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 18,
+          "displayOrder": 29,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95472,20 +95472,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -162
+                "x": 75,
+                "y": -132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -270
+                "x": -75,
+                "y": -220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -95496,7 +95496,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -216
+                "y": -176
               },
               "Position": {
                 "x": 0,
@@ -95521,7 +95521,7 @@
         }
       },
       {
-        "id": "67513023-9f3b-44bb-a334-86bdb4a5f62f",
+        "id": "da449b55-490b-48fe-a8f6-426f7433c2fb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95531,7 +95531,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95557,20 +95557,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -95667,7 +95667,7 @@
         }
       },
       {
-        "id": "120938ca-619c-4c01-9f10-3c26154434e6",
+        "id": "738e79be-2856-43c7-abd4-dc6ba3a870c1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -95677,7 +95677,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95703,20 +95703,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -95832,11 +95832,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -95845,10 +95845,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -95870,7 +95870,7 @@
         }
       },
       {
-        "id": "65d363c8-b5eb-4dd4-b0ff-0222b0b122d7",
+        "id": "509a06e4-f079-4c3a-aac2-bd1530e5a2b6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -95880,7 +95880,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 19,
+          "displayOrder": 30,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -95906,20 +95906,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -270
+                "x": 75,
+                "y": -220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -378
+                "x": -75,
+                "y": -308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -95930,7 +95930,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -324
+                "y": -264
               },
               "Position": {
                 "x": 0,
@@ -95955,7 +95955,7 @@
         }
       },
       {
-        "id": "1bf7cbe9-edb0-4329-aab4-33ab79f9f1b8",
+        "id": "73025290-0610-4c84-9af5-46551317bf7d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -95965,7 +95965,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -95991,20 +95991,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -96101,7 +96101,7 @@
         }
       },
       {
-        "id": "92ebab80-ae4d-4423-9d86-88f2497fa842",
+        "id": "a89c93ef-1912-4b2f-bed2-814e3f39bb9c",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96111,7 +96111,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96137,20 +96137,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -96266,11 +96266,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -96279,10 +96279,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -96304,7 +96304,7 @@
         }
       },
       {
-        "id": "b98061ce-2c5a-40fe-9c7d-ae67ac23df9b",
+        "id": "789fcaf5-8c4b-4774-a570-7c0c88dcc7a3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -96314,7 +96314,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 20,
+          "displayOrder": 31,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -96340,20 +96340,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -378
+                "x": 75,
+                "y": -308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -486
+                "x": -75,
+                "y": -396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -96364,7 +96364,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -432
+                "y": -352
               },
               "Position": {
                 "x": 0,
@@ -96389,7 +96389,7 @@
         }
       },
       {
-        "id": "4163a597-e94d-4105-a36e-0846b03a1ae2",
+        "id": "257ada60-6b68-4ae1-9906-0cbd6e4b77bc",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -96399,7 +96399,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96425,20 +96425,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -96535,7 +96535,7 @@
         }
       },
       {
-        "id": "455800e9-ef40-4969-99b5-237fc092d600",
+        "id": "df3607d2-ce98-41ad-9f48-4e8e042614c5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96545,7 +96545,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96571,20 +96571,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -96700,11 +96700,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -96713,10 +96713,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -96738,7 +96738,7 @@
         }
       },
       {
-        "id": "792a751e-74be-4782-987e-53d835400788",
+        "id": "6830174a-4454-4840-bd2f-323430cfd5fe",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -96748,7 +96748,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 21,
+          "displayOrder": 32,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -96774,20 +96774,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -486
+                "x": 75,
+                "y": -396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -96798,7 +96798,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -540
+                "y": -440
               },
               "Position": {
                 "x": 0,
@@ -96823,7 +96823,7 @@
         }
       },
       {
-        "id": "af8f3e88-d48c-483d-bde4-f6e47868831f",
+        "id": "80f47fb1-b01c-4b54-a7a7-f6159d957a31",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -96833,7 +96833,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -96859,20 +96859,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -96969,7 +96969,7 @@
         }
       },
       {
-        "id": "ae1bbfef-84aa-4169-a9ae-21e58d21067f",
+        "id": "77f1fa4c-6d66-41fa-8ef5-a08ffa52ef21",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_1/Panel_Bonus777ReelStrip_1/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -96979,7 +96979,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97005,20 +97005,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -97134,11 +97134,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -97147,10 +97147,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -97172,7 +97172,7 @@
         }
       },
       {
-        "id": "b0b8c258-1ee0-48e3-bf83-55d3129dd79c",
+        "id": "e72e00af-88a0-46fd-b450-da8006745107",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -97182,7 +97182,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 19,
+          "displayOrder": 33,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -97208,20 +97208,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 262
+                "x": 75,
+                "y": 282
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -86
+                "x": -75,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -97232,7 +97232,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 88
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -97318,7 +97318,7 @@
         }
       },
       {
-        "id": "3f5cd61a-1d9b-49ee-820e-38e72cb14393",
+        "id": "58b15c93-bf97-4086-8570-8d26810cbc35",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -97328,7 +97328,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 20,
+          "displayOrder": 34,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -97354,20 +97354,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 262
+                "x": 75,
+                "y": 282
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -86
+                "x": -75,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -97378,7 +97378,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 88
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -97479,7 +97479,7 @@
         }
       },
       {
-        "id": "15d59733-3c7d-4687-a30d-9226150a6f6c",
+        "id": "ab361f87-c30d-406c-ad8b-2dbf27e9b508",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -97489,7 +97489,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -97515,20 +97515,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 1188
+                "x": 150,
+                "y": 968
               },
               "UIMode": 1,
               "UIScale": {
@@ -97564,7 +97564,7 @@
         }
       },
       {
-        "id": "4ad39cbc-166c-43a0-b1d9-1ede25e2598e",
+        "id": "e1733e3c-43a3-40b0-971b-12c87422805c",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -97574,7 +97574,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 11,
+          "displayOrder": 22,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -97600,20 +97600,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 486
+                "x": -75,
+                "y": 396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -97624,7 +97624,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 540
+                "y": 440
               },
               "Position": {
                 "x": 0,
@@ -97649,7 +97649,7 @@
         }
       },
       {
-        "id": "3d1a2230-806e-4929-90d9-991b4bf9ef4a",
+        "id": "1fe0bc63-2298-4f61-b895-4c2ec295a335",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -97659,7 +97659,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97685,20 +97685,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -97795,7 +97795,7 @@
         }
       },
       {
-        "id": "2fe07425-8e14-4d93-9a03-a2a2c3bfa663",
+        "id": "b580ada8-b1a4-439b-88d5-459e1941087e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -97805,7 +97805,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -97831,20 +97831,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -97960,11 +97960,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -97973,10 +97973,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -97998,7 +97998,7 @@
         }
       },
       {
-        "id": "4084f124-9208-4b6c-acdc-f35219beae47",
+        "id": "03478018-27cc-4040-a2e5-eeef815b928e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98008,7 +98008,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 12,
+          "displayOrder": 23,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98034,20 +98034,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 486
+                "x": 75,
+                "y": 396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 378
+                "x": -75,
+                "y": 308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -98058,7 +98058,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 432
+                "y": 352
               },
               "Position": {
                 "x": 0,
@@ -98083,7 +98083,7 @@
         }
       },
       {
-        "id": "70a55dfd-7bb1-4dc1-8322-be7bb1ab9e98",
+        "id": "3b6abfef-31b7-46b1-b50a-aeb1a1a4a6a6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98093,7 +98093,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98119,20 +98119,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -98229,7 +98229,7 @@
         }
       },
       {
-        "id": "a45c1f7e-4a47-4c8b-ac02-1cffda51a67d",
+        "id": "ff02b6ef-3951-48da-9982-cd0446f0fe62",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -98239,7 +98239,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98265,20 +98265,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -98394,11 +98394,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -98407,10 +98407,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -98432,7 +98432,7 @@
         }
       },
       {
-        "id": "9f8223ee-f680-4336-9401-f2c0bbe590a5",
+        "id": "fac569ba-b478-4668-ba72-e84c67eb9f55",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98442,7 +98442,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 13,
+          "displayOrder": 24,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98468,20 +98468,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 378
+                "x": 75,
+                "y": 308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 270
+                "x": -75,
+                "y": 220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -98492,7 +98492,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 324
+                "y": 264
               },
               "Position": {
                 "x": 0,
@@ -98517,7 +98517,7 @@
         }
       },
       {
-        "id": "e5f195be-1bb8-4448-87ee-925c2106dbde",
+        "id": "db7465e1-12e6-453a-a095-582839c5806d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98527,7 +98527,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98553,20 +98553,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -98663,7 +98663,7 @@
         }
       },
       {
-        "id": "2f4b35df-d12e-46c4-92eb-337f960c968f",
+        "id": "b6af537a-9a76-4cb3-859e-7ccd58ab149d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -98673,7 +98673,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98699,20 +98699,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -98828,11 +98828,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -98841,10 +98841,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -98866,7 +98866,7 @@
         }
       },
       {
-        "id": "4d403d25-dec6-4406-8ff5-11d3b7d4bbec",
+        "id": "82964ee3-679a-4c94-8159-b15ace89e771",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -98876,7 +98876,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 14,
+          "displayOrder": 25,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -98902,20 +98902,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 270
+                "x": 75,
+                "y": 220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 162
+                "x": -75,
+                "y": 132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -98926,7 +98926,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 216
+                "y": 176
               },
               "Position": {
                 "x": 0,
@@ -98951,7 +98951,7 @@
         }
       },
       {
-        "id": "f8edfb9f-e70b-4e54-8436-d03a785c1da2",
+        "id": "49ff4494-bf5e-4dff-b510-51b0420566a3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -98961,7 +98961,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -98987,20 +98987,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -99097,7 +99097,7 @@
         }
       },
       {
-        "id": "137d1ab0-39f1-4593-a079-205f34b790d8",
+        "id": "86f89a8c-79e3-4a8a-ac0f-33ba81a0400d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99107,7 +99107,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99133,20 +99133,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -99262,11 +99262,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -99275,10 +99275,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -99300,7 +99300,7 @@
         }
       },
       {
-        "id": "331411eb-bb7c-4143-9b54-2b3d5b6858b5",
+        "id": "2b924f68-54d2-4fb6-9cbb-3dd043796fe6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -99310,7 +99310,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 15,
+          "displayOrder": 26,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -99336,20 +99336,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 162
+                "x": 75,
+                "y": 132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 54
+                "x": -75,
+                "y": 44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -99360,7 +99360,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 108
+                "y": 88
               },
               "Position": {
                 "x": 0,
@@ -99385,7 +99385,7 @@
         }
       },
       {
-        "id": "32465532-3d41-4e54-a1a4-8276e04b2178",
+        "id": "01c17b5e-abff-4412-a783-c35ac3995ff1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -99395,7 +99395,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99421,20 +99421,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -99531,7 +99531,7 @@
         }
       },
       {
-        "id": "9fcb4de4-11a9-470f-b4f0-01edb61776b5",
+        "id": "a406fb98-9cac-4c5f-b749-09679e174bbf",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99541,7 +99541,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99567,20 +99567,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -99696,11 +99696,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -99709,10 +99709,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -99734,7 +99734,7 @@
         }
       },
       {
-        "id": "46612034-2113-4303-b6ac-7aad9bd49744",
+        "id": "4d9e979b-140e-4504-91f1-04306d9c0951",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -99744,7 +99744,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 16,
+          "displayOrder": 27,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -99770,20 +99770,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 54
+                "x": 75,
+                "y": 44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -54
+                "x": -75,
+                "y": -44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -99819,7 +99819,7 @@
         }
       },
       {
-        "id": "257e3b44-945a-4656-b864-ab638f92b8f5",
+        "id": "78ec86bf-c646-4e9c-a700-c8dfc841174d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -99829,7 +99829,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -99855,20 +99855,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -99965,7 +99965,7 @@
         }
       },
       {
-        "id": "88bcbe6a-f9d5-440f-8710-1341a3323742",
+        "id": "64153aff-4aed-4c51-991e-1a846b726012",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -99975,7 +99975,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100001,20 +100001,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -100130,11 +100130,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -100143,10 +100143,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -100168,7 +100168,7 @@
         }
       },
       {
-        "id": "afca0954-32dc-4e58-8691-a4ce1e60312d",
+        "id": "7b70e999-1d89-4c3b-9d22-35c6fe907f6f",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -100178,7 +100178,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 17,
+          "displayOrder": 28,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -100204,20 +100204,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -54
+                "x": 75,
+                "y": -44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -162
+                "x": -75,
+                "y": -132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -100228,7 +100228,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -108
+                "y": -88
               },
               "Position": {
                 "x": 0,
@@ -100253,7 +100253,7 @@
         }
       },
       {
-        "id": "fd9050e1-3ccf-4353-b113-1624b6295c23",
+        "id": "12ba31b4-c611-4b7e-9f68-2d27bc407880",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -100263,7 +100263,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100289,20 +100289,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -100399,7 +100399,7 @@
         }
       },
       {
-        "id": "d2818abb-c117-4a0f-a4ed-88a222c266aa",
+        "id": "3c8ddf92-813f-4c42-aefe-8788a4778d93",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -100409,7 +100409,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100435,20 +100435,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -100564,11 +100564,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -100577,10 +100577,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -100602,7 +100602,7 @@
         }
       },
       {
-        "id": "2cbbbe48-bb8b-406c-b6db-7add874942fc",
+        "id": "a5fd221f-4703-4c31-9851-7d9fd7ed49fb",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -100612,7 +100612,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 18,
+          "displayOrder": 29,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -100638,20 +100638,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -162
+                "x": 75,
+                "y": -132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -270
+                "x": -75,
+                "y": -220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -100662,7 +100662,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -216
+                "y": -176
               },
               "Position": {
                 "x": 0,
@@ -100687,7 +100687,7 @@
         }
       },
       {
-        "id": "9e2d61c9-a0b4-40bb-a0b5-dbbeeecf31e6",
+        "id": "bb4db2fb-0e43-422b-9958-17a63f19ecbd",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -100697,7 +100697,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100723,20 +100723,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -100833,7 +100833,7 @@
         }
       },
       {
-        "id": "61a22a15-1381-416f-ac35-c1703a1c2b86",
+        "id": "2a547ba7-1ffb-44e7-ab92-501307fcb0b1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -100843,7 +100843,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -100869,20 +100869,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -100998,11 +100998,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -101011,10 +101011,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -101036,7 +101036,7 @@
         }
       },
       {
-        "id": "1bcfa93e-db50-4dc8-81f1-bde29b8a68fe",
+        "id": "cf4c9ec5-520e-4fdd-bf04-afc0f68d88f5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101046,7 +101046,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 19,
+          "displayOrder": 30,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101072,20 +101072,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -270
+                "x": 75,
+                "y": -220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -378
+                "x": -75,
+                "y": -308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -101096,7 +101096,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -324
+                "y": -264
               },
               "Position": {
                 "x": 0,
@@ -101121,7 +101121,7 @@
         }
       },
       {
-        "id": "d46a6235-6758-4c2d-b5f9-c78e712a9e79",
+        "id": "cb2532c1-5735-4728-b866-429f5d48f509",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101131,7 +101131,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101157,20 +101157,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -101267,7 +101267,7 @@
         }
       },
       {
-        "id": "9d1f6eab-0984-4852-9582-593e7f270068",
+        "id": "993864e8-c465-45f6-bcf8-ad142982e4a1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -101277,7 +101277,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101303,20 +101303,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -101432,11 +101432,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -101445,10 +101445,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -101470,7 +101470,7 @@
         }
       },
       {
-        "id": "1bbf1c65-d526-4d08-a9f8-050bd05abd99",
+        "id": "2ad39d2d-5895-4e6c-8f49-fbbc11026aa6",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101480,7 +101480,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 20,
+          "displayOrder": 31,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101506,20 +101506,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -378
+                "x": 75,
+                "y": -308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -486
+                "x": -75,
+                "y": -396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -101530,7 +101530,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -432
+                "y": -352
               },
               "Position": {
                 "x": 0,
@@ -101555,7 +101555,7 @@
         }
       },
       {
-        "id": "24a8ec53-b93a-46a5-8901-f73ffd042bed",
+        "id": "2bbca713-4248-45d0-8034-afef9c5e9c01",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101565,7 +101565,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101591,20 +101591,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -101701,7 +101701,7 @@
         }
       },
       {
-        "id": "4f54b298-bf1d-4855-b6a4-740793b54fb9",
+        "id": "e7b9f07c-d6aa-45c9-9166-0449587e2234",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -101711,7 +101711,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -101737,20 +101737,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -101866,11 +101866,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -101879,10 +101879,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -101904,7 +101904,7 @@
         }
       },
       {
-        "id": "51c88cca-c0e4-4b69-aa41-4e68cb4f4062",
+        "id": "98722a61-a012-4e04-aadd-b7b3f1093d63",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -101914,7 +101914,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 21,
+          "displayOrder": 32,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -101940,20 +101940,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -486
+                "x": 75,
+                "y": -396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -101964,7 +101964,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -540
+                "y": -440
               },
               "Position": {
                 "x": 0,
@@ -101989,7 +101989,7 @@
         }
       },
       {
-        "id": "ba72e9bf-214d-480e-9d5d-ce1fa407ed97",
+        "id": "d76233b3-593f-456d-8801-166fa3658bff",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -101999,7 +101999,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102025,20 +102025,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -102135,7 +102135,7 @@
         }
       },
       {
-        "id": "70dc8376-f045-40db-9d82-fb01222e2851",
+        "id": "e19b5ed5-6ed2-413b-b1b6-21ecf25139a1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_2/Panel_Bonus777ReelStrip_2/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -102145,7 +102145,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102171,20 +102171,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -102300,11 +102300,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -102313,10 +102313,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -102338,7 +102338,7 @@
         }
       },
       {
-        "id": "6712b46f-9bd0-4f7e-9772-70c387c4423e",
+        "id": "0bc6a52e-bd98-4026-8644-3d14d32167f3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelColumnBg_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -102348,7 +102348,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 21,
+          "displayOrder": 35,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -102374,20 +102374,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 248,
-                "y": 262
+                "x": 241,
+                "y": 282
               },
               "OffsetMin": {
-                "x": 92,
-                "y": -86
+                "x": 91,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -102397,8 +102397,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 170,
-                "y": 88
+                "x": 166,
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -102484,7 +102484,7 @@
         }
       },
       {
-        "id": "b82b5318-5b4f-4ecd-a63c-d0644b22ba5f",
+        "id": "217620ba-7ef9-42f7-86d0-36975f0657c3",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
         "jsonString": {
@@ -102494,7 +102494,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 22,
+          "displayOrder": 36,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -102520,20 +102520,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 248,
-                "y": 262
+                "x": 241,
+                "y": 282
               },
               "OffsetMin": {
-                "x": 92,
-                "y": -86
+                "x": 91,
+                "y": -18
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 348
+                "x": 150,
+                "y": 300
               },
               "UIMode": 1,
               "UIScale": {
@@ -102543,8 +102543,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 170,
-                "y": 88
+                "x": 166,
+                "y": 132
               },
               "Position": {
                 "x": 0,
@@ -102645,7 +102645,7 @@
         }
       },
       {
-        "id": "80559cd6-b32e-418a-bcfa-b9aeff09fa23",
+        "id": "359d91df-3567-4cd5-9a79-9fed0dc7ac3c",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -102655,7 +102655,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "//////",
           "revision": 0,
           "origin": {
@@ -102681,20 +102681,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 1188
+                "x": 150,
+                "y": 968
               },
               "UIMode": 1,
               "UIScale": {
@@ -102730,7 +102730,7 @@
         }
       },
       {
-        "id": "fbc206ca-67e6-4600-bbed-ab7429e819c0",
+        "id": "70821507-56f7-4c05-be1f-b6bbd400ef3a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -102740,7 +102740,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 11,
+          "displayOrder": 22,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -102766,20 +102766,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 594
+                "x": 75,
+                "y": 484
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 486
+                "x": -75,
+                "y": 396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -102790,7 +102790,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 540
+                "y": 440
               },
               "Position": {
                 "x": 0,
@@ -102815,7 +102815,7 @@
         }
       },
       {
-        "id": "ce031e34-9774-4b84-9523-bab665ebbdcd",
+        "id": "3e14f707-6878-42bb-8d10-1604850224d9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -102825,7 +102825,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102851,20 +102851,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -102961,7 +102961,7 @@
         }
       },
       {
-        "id": "298c7536-3de6-4bf1-855b-88af7c7081a5",
+        "id": "af6a8f64-fb18-415c-b8f7-37ab795e9c78",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_01/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -102971,7 +102971,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -102997,20 +102997,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -103126,11 +103126,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -103139,10 +103139,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -103164,7 +103164,7 @@
         }
       },
       {
-        "id": "5b0f20e4-6a0b-491c-bdd6-4f0ca05cd4e8",
+        "id": "223cd2c2-e025-42b8-a3a2-b394482b2969",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -103174,7 +103174,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 12,
+          "displayOrder": 23,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -103200,20 +103200,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 486
+                "x": 75,
+                "y": 396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 378
+                "x": -75,
+                "y": 308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -103224,7 +103224,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 432
+                "y": 352
               },
               "Position": {
                 "x": 0,
@@ -103249,7 +103249,7 @@
         }
       },
       {
-        "id": "9703bd6c-1241-43ba-a489-7efa9051a0ab",
+        "id": "7a4398e1-d272-4da4-9c70-7f305a074a32",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -103259,7 +103259,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103285,20 +103285,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -103395,7 +103395,7 @@
         }
       },
       {
-        "id": "16ac9b6d-b8e9-458a-9318-d89635b5c85a",
+        "id": "c015c04f-4251-44cb-9b6b-3b69f641c613",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_02/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -103405,7 +103405,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103431,20 +103431,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -103560,11 +103560,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -103573,10 +103573,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -103598,7 +103598,7 @@
         }
       },
       {
-        "id": "e5283331-9850-4363-ae4b-d2f7147b1fa3",
+        "id": "81a27b59-0b94-4117-998e-4ee0146b3a34",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -103608,7 +103608,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 13,
+          "displayOrder": 24,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -103634,20 +103634,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 378
+                "x": 75,
+                "y": 308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 270
+                "x": -75,
+                "y": 220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -103658,7 +103658,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 324
+                "y": 264
               },
               "Position": {
                 "x": 0,
@@ -103683,7 +103683,7 @@
         }
       },
       {
-        "id": "93c537cf-e6b8-46de-9c5b-8ee9304a04b4",
+        "id": "1652bbbd-b833-4fdd-88a1-86568162d24e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -103693,7 +103693,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103719,20 +103719,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -103829,7 +103829,7 @@
         }
       },
       {
-        "id": "aea9b3b5-2ef3-4cca-8d35-1165a2fa8aed",
+        "id": "ad45fbd9-ca6b-428e-be3a-650764d345f2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_03/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -103839,7 +103839,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -103865,20 +103865,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -103994,11 +103994,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -104007,10 +104007,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -104032,7 +104032,7 @@
         }
       },
       {
-        "id": "a4273964-ffe6-4e0e-b75b-e2f06bd6cd6d",
+        "id": "8b64aef0-6eb3-424b-bf80-149164334140",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104042,7 +104042,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 14,
+          "displayOrder": 25,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104068,20 +104068,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 270
+                "x": 75,
+                "y": 220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 162
+                "x": -75,
+                "y": 132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -104092,7 +104092,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 216
+                "y": 176
               },
               "Position": {
                 "x": 0,
@@ -104117,7 +104117,7 @@
         }
       },
       {
-        "id": "76fbc7cc-605b-4d80-b995-9ecab9c33cd3",
+        "id": "8e9e0aea-2f11-47ff-b295-83f08b853053",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104127,7 +104127,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104153,20 +104153,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -104263,7 +104263,7 @@
         }
       },
       {
-        "id": "17cb7085-b399-48f7-9073-b27d157a3109",
+        "id": "50a23ff5-0b66-4781-8805-8580bc2d4243",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_04/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -104273,7 +104273,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104299,20 +104299,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -104428,11 +104428,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -104441,10 +104441,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -104466,7 +104466,7 @@
         }
       },
       {
-        "id": "588d71c2-f839-4974-aa15-0f2d1eeeb2a1",
+        "id": "5518897f-ba1e-48e2-97e2-e91cfee713e2",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104476,7 +104476,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 15,
+          "displayOrder": 26,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104502,20 +104502,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 162
+                "x": 75,
+                "y": 132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": 54
+                "x": -75,
+                "y": 44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -104526,7 +104526,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 108
+                "y": 88
               },
               "Position": {
                 "x": 0,
@@ -104551,7 +104551,7 @@
         }
       },
       {
-        "id": "3277cdd3-f3dc-4bee-8aa8-3fecbb90a1ee",
+        "id": "bc9124f2-bfea-4cff-b33d-411fb6946918",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104561,7 +104561,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104587,20 +104587,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -104697,7 +104697,7 @@
         }
       },
       {
-        "id": "5fb9bfb6-6b22-4ece-a84b-0dd421923a04",
+        "id": "cd75cb1e-9e9d-40f8-8734-1853a5650bca",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_05/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -104707,7 +104707,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -104733,20 +104733,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -104862,11 +104862,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -104875,10 +104875,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -104900,7 +104900,7 @@
         }
       },
       {
-        "id": "f8cef64f-751c-41a9-80c6-3d8a6ac67e28",
+        "id": "1933b8ad-d3b6-45b8-93b8-cfe01d875824",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -104910,7 +104910,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 16,
+          "displayOrder": 27,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -104936,20 +104936,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": 54
+                "x": 75,
+                "y": 44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -54
+                "x": -75,
+                "y": -44
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -104985,7 +104985,7 @@
         }
       },
       {
-        "id": "91000419-93df-4aa0-b432-4fb1737ce71a",
+        "id": "550645f0-d1d7-47cf-834d-759e1860fa46",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -104995,7 +104995,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105021,20 +105021,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -105131,7 +105131,7 @@
         }
       },
       {
-        "id": "af2d3298-b0b8-4a34-a114-5dad522ee06c",
+        "id": "6c94007d-bee6-455f-9c34-426cb4c7f1dc",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_06/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -105141,7 +105141,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105167,20 +105167,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -105296,11 +105296,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -105309,10 +105309,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -105334,7 +105334,7 @@
         }
       },
       {
-        "id": "0b5df686-ca46-4557-95ac-f74ce052bee7",
+        "id": "b3ef29dd-03fb-4d44-a616-5e4b252e424d",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -105344,7 +105344,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 17,
+          "displayOrder": 28,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -105370,20 +105370,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -54
+                "x": 75,
+                "y": -44
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -162
+                "x": -75,
+                "y": -132
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -105394,7 +105394,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -108
+                "y": -88
               },
               "Position": {
                 "x": 0,
@@ -105419,7 +105419,7 @@
         }
       },
       {
-        "id": "7812d2ee-78bb-4675-a525-ec982ac2df5b",
+        "id": "6542ebf9-b86c-47cf-a6ab-8a680a8b3b1a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -105429,7 +105429,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105455,20 +105455,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -105565,7 +105565,7 @@
         }
       },
       {
-        "id": "4b46b74b-abd2-48cb-bf5e-39f58bfc9bda",
+        "id": "778d2ded-19d3-4a54-a154-b5dca9edb629",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_07/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -105575,7 +105575,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105601,20 +105601,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -105730,11 +105730,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -105743,10 +105743,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -105768,7 +105768,7 @@
         }
       },
       {
-        "id": "28f33b7b-32aa-45e2-bda7-f05e538fecd0",
+        "id": "6f2df1af-5ecc-4dce-8351-b6d58341eeef",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -105778,7 +105778,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 18,
+          "displayOrder": 29,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -105804,20 +105804,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -162
+                "x": 75,
+                "y": -132
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -270
+                "x": -75,
+                "y": -220
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -105828,7 +105828,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -216
+                "y": -176
               },
               "Position": {
                 "x": 0,
@@ -105853,7 +105853,7 @@
         }
       },
       {
-        "id": "1592d54f-88fa-4474-9138-1b27e6b6af81",
+        "id": "f604884d-b7a2-4638-950a-15f288b65b92",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -105863,7 +105863,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -105889,20 +105889,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -105999,7 +105999,7 @@
         }
       },
       {
-        "id": "599d7a99-dba0-4d42-a6ab-1fcf210d9d2f",
+        "id": "de8f820f-95d4-494d-8bf9-6841a6468503",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_08/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106009,7 +106009,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106035,20 +106035,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -106164,11 +106164,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -106177,10 +106177,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -106202,7 +106202,7 @@
         }
       },
       {
-        "id": "308252a3-768e-43c0-bd21-44159a855ccc",
+        "id": "6e27bc90-114f-43f2-96c3-116ccf085de1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -106212,7 +106212,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 19,
+          "displayOrder": 30,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -106238,20 +106238,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -270
+                "x": 75,
+                "y": -220
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -378
+                "x": -75,
+                "y": -308
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -106262,7 +106262,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -324
+                "y": -264
               },
               "Position": {
                 "x": 0,
@@ -106287,7 +106287,7 @@
         }
       },
       {
-        "id": "4cf8cac3-7b0a-4434-9098-1cb6fcb9824a",
+        "id": "501f70ff-1b0b-4296-bbe7-1975671b564e",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -106297,7 +106297,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106323,20 +106323,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -106433,7 +106433,7 @@
         }
       },
       {
-        "id": "89ee05bc-fbb7-4b8a-b1ca-fa50a876c069",
+        "id": "13149dba-a19d-4dbe-8c81-2c78ff0129d0",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_09/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106443,7 +106443,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106469,20 +106469,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -106598,11 +106598,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -106611,10 +106611,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -106636,7 +106636,7 @@
         }
       },
       {
-        "id": "0f9d4623-82ce-454a-81bc-5a534f90fd47",
+        "id": "a8b5bf9d-84b5-4842-9d89-61106c04d1d9",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -106646,7 +106646,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 20,
+          "displayOrder": 31,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -106672,20 +106672,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -378
+                "x": 75,
+                "y": -308
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -486
+                "x": -75,
+                "y": -396
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -106696,7 +106696,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -432
+                "y": -352
               },
               "Position": {
                 "x": 0,
@@ -106721,7 +106721,7 @@
         }
       },
       {
-        "id": "54833b15-18b6-4ba5-b0d7-f653cc885c1c",
+        "id": "e7b51f25-49b6-48d5-a34d-d2868e2885a1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -106731,7 +106731,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106757,20 +106757,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -106867,7 +106867,7 @@
         }
       },
       {
-        "id": "8c9314e5-cdec-4b47-a178-1ac5bd92113f",
+        "id": "5b7212ab-0096-4881-82f5-108cabf8cb4b",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_10/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -106877,7 +106877,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -106903,20 +106903,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -107032,11 +107032,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -107045,10 +107045,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -107070,7 +107070,7 @@
         }
       },
       {
-        "id": "3680a847-92ee-48b1-9ec8-50e54fb04e1b",
+        "id": "e58cfef1-7724-4dfb-b696-cd0f004bb7f0",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -107080,7 +107080,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 21,
+          "displayOrder": 32,
           "pathConstraints": "///////",
           "revision": 0,
           "origin": {
@@ -107106,20 +107106,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 78,
-                "y": -486
+                "x": 75,
+                "y": -396
               },
               "OffsetMin": {
-                "x": -78,
-                "y": -594
+                "x": -75,
+                "y": -484
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 156,
-                "y": 108
+                "x": 150,
+                "y": 88
               },
               "UIMode": 1,
               "UIScale": {
@@ -107130,7 +107130,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -540
+                "y": -440
               },
               "Position": {
                 "x": 0,
@@ -107155,7 +107155,7 @@
         }
       },
       {
-        "id": "a1bd1a81-c780-4ee7-9d31-e4d44d8f85df",
+        "id": "5a6769fa-4ac5-40d9-bf38-6e91c68d9424",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11/Sprite_Face",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107165,7 +107165,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 4,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -107191,20 +107191,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 66,
-                "y": 48
+                "x": 59,
+                "y": 39
               },
               "OffsetMin": {
-                "x": -66,
-                "y": -48
+                "x": -59,
+                "y": -39
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 132,
-                "y": 96
+                "x": 118,
+                "y": 78
               },
               "UIMode": 1,
               "UIScale": {
@@ -107301,7 +107301,7 @@
         }
       },
       {
-        "id": "333d062b-ba8f-4b2f-9e44-f2142fb9f11c",
+        "id": "85e12f50-4f98-418a-8710-7dbdfcec9be5",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Mask_Bonus777Reel_3/Panel_Bonus777ReelStrip_3/DigitCell_11/Text_Digit",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -107311,7 +107311,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
+          "displayOrder": 5,
           "pathConstraints": "////////",
           "revision": 0,
           "origin": {
@@ -107337,20 +107337,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 60,
-                "y": 42
+                "x": 53,
+                "y": 35
               },
               "OffsetMin": {
-                "x": -60,
-                "y": -42
+                "x": -53,
+                "y": -35
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 120,
-                "y": 84
+                "x": 106,
+                "y": 70
               },
               "UIMode": 1,
               "UIScale": {
@@ -107466,11 +107466,11 @@
                 "b": 0.6039215686274509,
                 "a": 1
               },
-              "FontSize": 78,
+              "FontSize": 66,
               "IgnoreMapLayerCheck": false,
               "IsLocalizationKey": false,
-              "MaxSize": 78,
-              "MinSize": 48,
+              "MaxSize": 66,
+              "MinSize": 42,
               "OrderInLayer": 454,
               "OutlineColor": {
                 "r": 0.10588235294117647,
@@ -107479,10 +107479,10 @@
                 "a": 1
               },
               "OutlineDistance": {
-                "x": 4,
-                "y": -4
+                "x": 3,
+                "y": -3
               },
-              "OutlineWidth": 4,
+              "OutlineWidth": 3,
               "Overflow": 2,
               "OverrideSorting": true,
               "Padding": {
@@ -107504,7 +107504,7 @@
         }
       },
       {
-        "id": "ea6908e8-c743-4b5a-9869-2ad479f7be6d",
+        "id": "55a3196b-dc37-40f1-a441-a0fd081496e4",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_ReelWindowFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107514,7 +107514,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 23,
+          "displayOrder": 37,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107650,7 +107650,7 @@
         }
       },
       {
-        "id": "d6e7130f-b467-4c74-b3a1-b4dc61849d42",
+        "id": "25d36119-11d9-4898-ac72-cf92696c37d1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Sprite_Lever",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -107660,7 +107660,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 24,
+          "displayOrder": 38,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107796,7 +107796,7 @@
         }
       },
       {
-        "id": "ba06409f-ccd1-4179-b0f9-bda3857bd324",
+        "id": "f9161058-5d5f-4083-940a-34f6f052627a",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -107806,7 +107806,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 25,
+          "displayOrder": 39,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -107999,7 +107999,7 @@
         }
       },
       {
-        "id": "8492a48d-97d3-41cb-a231-8892adc9cb64",
+        "id": "2c2523f1-070c-4d69-ac38-585249fe0ebe",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -108009,7 +108009,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 26,
+          "displayOrder": 40,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -108202,7 +108202,7 @@
         }
       },
       {
-        "id": "9fc261ad-1857-4eda-bcf4-9733cfa80cde",
+        "id": "6c56c5cb-e489-4a2c-93a8-4d1da70ffaf1",
         "path": "/ui/UIRoot_TestSandbox_MainPlay/Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextComponent",
         "jsonString": {
@@ -108212,7 +108212,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 27,
+          "displayOrder": 41,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {

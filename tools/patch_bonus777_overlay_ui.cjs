@@ -171,7 +171,7 @@ addRect(b, `${ROOT}/Dim`, {
   anchor: "stretch",
   rect_size: [1920, 1080],
   color: "#05020A",
-  alpha: 0.68,
+  alpha: 0.72,
   raycast: true,
   order_in_layer: Z.dim,
 });
@@ -233,14 +233,14 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     });
     addText(b, `${cellPath}/Text_Digit`, String(digit), {
       rect_size: structure.reels.digitTextSize,
-      size: 78,
-      min_size: 48,
-      max_size: 78,
+      size: 66,
+      min_size: 42,
+      max_size: 66,
       bold: true,
       color: "#FFE39A",
       outline: true,
       outline_color: "#1B1028",
-      outline_width: 4,
+      outline_width: 3,
       drop_shadow_alpha: 0.45,
       order_in_layer: Z.reelText,
     });

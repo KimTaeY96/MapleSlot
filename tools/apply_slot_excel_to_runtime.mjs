@@ -1081,7 +1081,7 @@ function makeGetBonus777DigitCellHeight() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method float GetBonus777DigitCellHeight()",
-    "        return 108.0",
+    "        return 88.0",
     "    end",
   ].join("\n");
 }

@@ -220,11 +220,20 @@ if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSort
 if (bonus777DimRenderer.RaycastTarget !== true) {
   fail("Panel_Bonus777_Hidden/Dim must block base slot touches while the bonus overlay is visible");
 }
-if (Math.abs((bonus777DimRenderer.Color?.a ?? 0) - 0.68) > 0.001) {
-  fail(`Unexpected 777 dim alpha: ${bonus777DimRenderer.Color?.a}; expected 0.68`);
+if (Math.abs((bonus777DimRenderer.Color?.a ?? 0) - 0.72) > 0.001) {
+  fail(`Unexpected 777 dim alpha: ${bonus777DimRenderer.Color?.a}; expected 0.72`);
 }
 
 const bonus777Root = "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot";
+const reelCenterY = bonus777Structure.reels.positions[1];
+const visibleDigitHalfHeight = bonus777Structure.reels.digitCellSize[1] * 0.5;
+const topVisibleDigitEdge = reelCenterY + bonus777Structure.reels.cellHeight + visibleDigitHalfHeight;
+const bottomVisibleDigitEdge = reelCenterY - bonus777Structure.reels.cellHeight - visibleDigitHalfHeight;
+if (topVisibleDigitEdge > 270 || bottomVisibleDigitEdge < 0) {
+  fail(
+    `777 bonus visible reel rows are outside the frame safe area: top=${topVisibleDigitEdge}, bottom=${bottomVisibleDigitEdge}; expected top<=270 and bottom>=0`,
+  );
+}
 expectBonus777Sprite("bonus777_slot_frame_shell", `${bonus777Root}/Sprite_FrameShell`, 450);
 expectBonus777Sprite("bonus777_slot_title_badge", `${bonus777Root}/Sprite_TitleBadge`, 458);
 expectBonus777Sprite("bonus777_slot_result_panel", `${bonus777Root}/Sprite_ResultPanel`, 458);
