@@ -484,5 +484,17 @@
     "fileName": "bonus777_slot_lever_arm_down_vertical.png",
     "ruid": "53221b6009b44fbfaa19d0f126f757b3",
     "size": 152919
+  },
+  "bonus777SlotFrameShellBalanced": {
+    "key": "bonus777SlotFrameShellBalanced",
+    "fileName": "bonus777_slot_frame_shell_balanced.png",
+    "ruid": "e2e5c1eba3964051bb1cf160886d56dd",
+    "size": 1527505
+  },
+  "bonus777SlotReelWindowFrameBalanced": {
+    "key": "bonus777SlotReelWindowFrameBalanced",
+    "fileName": "bonus777_slot_reel_window_frame_balanced.png",
+    "ruid": "d8c04f2204ee4aa4b81c0647d149c30f",
+    "size": 446123
   }
 }

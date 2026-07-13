@@ -15,21 +15,34 @@
       1.0
     ],
     "position": [
-      0,
+      10,
       0
     ]
+  },
+  "resourceValidation": {
+    "centeredAssets": [
+      "bonus777_slot_frame_shell",
+      "bonus777_slot_reel_window_frame"
+    ],
+    "symmetricAssets": [
+      "bonus777_slot_frame_shell",
+      "bonus777_slot_reel_window_frame"
+    ],
+    "minAlphaPadding": 8,
+    "maxVisualCenterOffset": 1.0,
+    "maxAlphaMirrorDelta": 0.02
   },
   "reels": {
     "logicalDigitCount": 7,
     "visualCellCount": 11,
-    "cellHeight": 88,
+    "cellHeight": 72,
     "maskSize": [
       150,
-      260
+      210
     ],
     "stripSize": [
       150,
-      968
+      792
     ],
     "positions": [
       -160,
@@ -41,112 +54,16 @@
     ],
     "digitCellSize": [
       118,
-      78
+      60
     ],
     "digitTextSize": [
       106,
-      70
+      54
     ],
     "maskSafePadding": 3,
     "maxFrameOverlapRatio": 0.02
   },
   "assets": [
-    {
-      "name": "bonus777_slot_frame_shell",
-      "resourceKey": "bonus777SlotFrameShell",
-      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_frame_shell.png",
-      "sourceRect": [
-        7,
-        31,
-        662,
-        663
-      ],
-      "size": {
-        "width": 654,
-        "height": 632
-      },
-      "displaySize": {
-        "width": 760,
-        "height": 734
-      },
-      "uiPosition": {
-        "x": 0,
-        "y": 18
-      },
-      "trimmed": true
-    },
-    {
-      "name": "bonus777_slot_reel_window_frame",
-      "resourceKey": "bonus777SlotReelWindowFrame",
-      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_reel_window_frame.png",
-      "sourceRect": [
-        687,
-        123,
-        1225,
-        473
-      ],
-      "size": {
-        "width": 534,
-        "height": 350
-      },
-      "displaySize": {
-        "width": 564,
-        "height": 400
-      },
-      "uiPosition": {
-        "x": 0,
-        "y": 12
-      },
-      "trimmed": true
-    },
-    {
-      "name": "bonus777_slot_title_badge",
-      "resourceKey": "bonus777SlotTitleBadge",
-      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_title_badge.png",
-      "sourceRect": [
-        45,
-        681,
-        646,
-        834
-      ],
-      "size": {
-        "width": 597,
-        "height": 152
-      },
-      "displaySize": {
-        "width": 540,
-        "height": 90
-      },
-      "uiPosition": {
-        "x": 0,
-        "y": 350
-      },
-      "trimmed": true
-    },
-    {
-      "name": "bonus777_slot_result_panel",
-      "resourceKey": "bonus777SlotResultPanel",
-      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_result_panel.png",
-      "sourceRect": [
-        18,
-        893,
-        656,
-        1212
-      ],
-      "size": {
-        "width": 635,
-        "height": 317
-      },
-      "displaySize": {
-        "width": 600,
-        "height": 104
-      },
-      "uiPosition": {
-        "x": 0,
-        "y": -288
-      },
-      "trimmed": true
-    },
     {
       "name": "bonus777_slot_reel_column_background",
       "resourceKey": "bonus777SlotReelColumnBackground",
@@ -264,6 +181,54 @@
       "uiPosition": {
         "x": 392,
         "y": 110
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_frame_shell",
+      "resourceKey": "bonus777SlotFrameShellBalanced",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_frame_shell_balanced.png",
+      "sourceRect": [
+        0,
+        0,
+        1179,
+        1139
+      ],
+      "size": {
+        "width": 1179,
+        "height": 1139
+      },
+      "displaySize": {
+        "width": 760,
+        "height": 734
+      },
+      "uiPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "trimmed": false
+    },
+    {
+      "name": "bonus777_slot_reel_window_frame",
+      "resourceKey": "bonus777SlotReelWindowFrameBalanced",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_reel_window_frame_balanced.png",
+      "sourceRect": [
+        0,
+        0,
+        1429,
+        836
+      ],
+      "size": {
+        "width": 1429,
+        "height": 836
+      },
+      "displaySize": {
+        "width": 564,
+        "height": 330
+      },
+      "uiPosition": {
+        "x": 0,
+        "y": 32
       },
       "trimmed": false
     },

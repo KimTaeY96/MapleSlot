@@ -35,9 +35,6 @@ Do not mix the old wood/parchment classic-stat UI tone with the current slot-mac
 - `Sprite_Bonus777DigitCell_3_01` to `Sprite_Bonus777DigitCell_3_11`
 - `Text_Bonus777Digit_3_01` to `Text_Bonus777Digit_3_11`
 - `Sprite_Bonus777ReelWindowFrame`
-- `Sprite_Bonus777TitleBadge`
-- `Text_Bonus777Title`
-- `Sprite_Bonus777ResultPanel`
 - `Text_Bonus777Chance`
 - `Text_Bonus777Result`
 - `Sprite_Bonus777LeverBase`
@@ -45,16 +42,14 @@ Do not mix the old wood/parchment classic-stat UI tone with the current slot-mac
 
 ## Required Image Resources
 
-All generated raster assets must be transparent PNG slices derived from one full ImageGen example atlas.
+The initial asset family is derived from one full ImageGen example atlas. A focused replacement may be generated separately only when the existing family is supplied as visual reference and the replacement passes the same transparency, center, symmetry, padding, and clipping checks.
 
 | Resource Key | Purpose |
 | --- | --- |
-| `bonus777SlotFrameShell` | Main cabinet shell and backplate |
-| `bonus777SlotReelWindowFrame` | Gold front reel window frame and dividers |
+| `bonus777SlotFrameShellBalanced` | Center-normalized, symmetric cabinet shell with an integrated lower text field |
+| `bonus777SlotReelWindowFrameBalanced` | Center-normalized symmetric gold front reel window frame and equal dividers |
 | `bonus777SlotReelColumnBackground` | Interior backing behind each reel strip |
 | `bonus777SlotDigitCell` | Repeated cell face behind dynamic digit text |
-| `bonus777SlotTitleBadge` | Decorative top title plaque without baked text |
-| `bonus777SlotResultPanel` | Decorative lower result/chance panel without baked text |
 | `bonus777SlotLeverBase` | Fixed mechanical housing aligned to the right black-crystal socket |
 | `bonus777SlotLeverArmUp` | Moving arm sprite frame: default/up |
 | `bonus777SlotLeverArmMidVertical` | Moving arm sprite frame: short vertical mid-pull |
@@ -74,12 +69,25 @@ The right lever is a sprite animation, not a transform-only effect.
 
 The moving ball must travel from above the hinge to below it. Leftward or horizontal pull frames are not valid. Per-frame anchored positions keep the connector on one shared mechanical hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
 
+The lever arm must have a greater Screen UI `displayOrder` than the fixed machine base. `OrderInLayer` alone is not a valid depth guarantee for Screen UI.
+
 ### Panel Alignment
 
 - The reel window frame, reel-column backgrounds, and reel masks share the same inner-window center and opening dimensions.
-- The result panel is `600 x 104`, fully opaque behind its two strings, with only compact top and bottom padding.
-- The title badge is `540 x 90`, fully opaque behind the title string, and the string is centered in the badge interior.
-- Do not add separate `Bg_TitleOpaque` or `Bg_ResultOpaque` sprites. The title and result artwork already owns those dark surfaces, and duplicate black sprites can cover the decorated panels in Screen UI draw order.
+- The validated reel window is `564x330` at local `y=32`; each live reel mask is `150x210` on that same `y=32` axis.
+- Each reel uses `72px` logical spacing and a `118x60` digit-cell rect, leaving a measured front-frame overlap ratio of `0.0000`.
+- The separate title badge, title string, and result-panel sprite do not exist.
+- `Text_Chance` and `Text_Result` are centered directly inside the cabinet shell's integrated lower dark field.
+- The lower field resource must not contain a center gemstone or any ornament behind either text line.
+- Do not add separate `Bg_TitleOpaque`, `Bg_ResultOpaque`, `Sprite_TitleBadge`, or `Sprite_ResultPanel` nodes.
+
+### Centered Resource Processing
+
+- Any asset declared in `resourceValidation.centeredAssets` must use `uiPosition.x = 0` and have alpha-bounds center within `1px` of its image-canvas center.
+- Any asset declared in `resourceValidation.symmetricAssets` must have left/right alpha-mask mirror delta no greater than `0.02`.
+- Centered assets require at least `8px` of transparent alpha padding on every side; opaque pixels touching an image edge are a build failure.
+- Run `tools/normalize_centered_ui_asset.py --chroma-green` for ImageGen green-screen output. It removes chroma, crops to the alpha subject, restores the declared aspect ratio, adds equal padding, centers the subject, and rejects unexpected asymmetry in one step.
+- `tools/validate_bonus777_visual_safe_area.py` rechecks center, symmetry, padding, reel-mask fit, and visible-frame overlap before the UI layer validator can pass.
 
 ### Win VFX
 

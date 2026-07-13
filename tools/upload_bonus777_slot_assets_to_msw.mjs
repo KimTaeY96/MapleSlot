@@ -13,10 +13,8 @@ const manifestPath = path.join(projectRoot, "GeneratedAssets", "SlotMachineUI", 
 const forceUpload = process.env.MSW_FORCE_BONUS777_SLOT_UPLOAD === "1";
 
 const assets = [
-  ["bonus777SlotFrameShell", "bonus777_slot_frame_shell.png"],
-  ["bonus777SlotReelWindowFrame", "bonus777_slot_reel_window_frame.png"],
-  ["bonus777SlotTitleBadge", "bonus777_slot_title_badge.png"],
-  ["bonus777SlotResultPanel", "bonus777_slot_result_panel.png"],
+  ["bonus777SlotFrameShellBalanced", "bonus777_slot_frame_shell_balanced.png"],
+  ["bonus777SlotReelWindowFrameBalanced", "bonus777_slot_reel_window_frame_balanced.png"],
   ["bonus777SlotReelColumnBackground", "bonus777_slot_reel_column_background.png"],
   ["bonus777SlotDigitCell", "bonus777_slot_digit_cell.png"],
   ["bonus777SlotLeverUp", "bonus777_slot_lever_up.png"],
@@ -144,7 +142,8 @@ let uploaded = 0;
 let skipped = 0;
 
 for (const [key, fileName] of assets) {
-  if (!forceUpload && manifest[key]?.ruid) {
+  const fileSize = fs.statSync(path.join(assetDir, fileName)).size;
+  if (!forceUpload && manifest[key]?.ruid && manifest[key]?.size === fileSize) {
     console.log(`Skipping ${fileName}: ${manifest[key].ruid}`);
     skipped += 1;
     continue;

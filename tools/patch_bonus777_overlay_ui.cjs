@@ -144,8 +144,6 @@ function digitForVirtualIndex(virtualIndex) {
 const assets = {
   frameShell: asset("bonus777_slot_frame_shell"),
   reelWindowFrame: asset("bonus777_slot_reel_window_frame"),
-  titleBadge: asset("bonus777_slot_title_badge"),
-  resultPanel: asset("bonus777_slot_result_panel"),
   reelColumnBackground: asset("bonus777_slot_reel_column_background"),
   digitCell: asset("bonus777_slot_digit_cell"),
   leverUp: asset("bonus777_slot_lever_up"),
@@ -192,8 +190,6 @@ b.patchComponent(SLOT, "MOD.Core.UITransformComponent", {
 });
 
 addSprite(b, `${SLOT}/Sprite_FrameShell`, assets.frameShell, Z.shell);
-addSprite(b, `${SLOT}/Sprite_TitleBadge`, assets.titleBadge, Z.frame, { preserve_aspect: false });
-addSprite(b, `${SLOT}/Sprite_ResultPanel`, assets.resultPanel, Z.frame, { preserve_aspect: false });
 
 for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   const reelPos = pairPosition(reelIndex);
@@ -235,9 +231,9 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     });
     addText(b, `${cellPath}/Text_Digit`, String(digit), {
       rect_size: structure.reels.digitTextSize,
-      size: 66,
-      min_size: 42,
-      max_size: 66,
+      size: 52,
+      min_size: 34,
+      max_size: 52,
       bold: true,
       color: "#FFE39A",
       outline: true,
@@ -249,25 +245,15 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   }
 }
 
-addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame + 1, { preserve_aspect: false });
+addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame + 1);
 addSprite(b, `${SLOT}/Sprite_LeverBase`, assets.leverBase, Z.lever);
 addSprite(b, `${SLOT}/Sprite_Lever`, assets.leverArmUp, Z.lever + 1);
+b.patch(`${SLOT}/Sprite_LeverBase`, { display_order: 59 });
+b.patch(`${SLOT}/Sprite_Lever`, { display_order: 60 });
 
-addText(b, `${SLOT}/Text_Title`, "777 BONUS SLOT", {
-  pos: [0, 350],
-  rect_size: [486, 34],
-  size: 26,
-  min_size: 18,
-  max_size: 26,
-  bold: true,
-  color: "#FFE8A3",
-  outline: true,
-  outline_color: "#2A1208",
-  outline_width: 2,
-});
 addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
-  pos: [0, -270],
-  rect_size: [520, 28],
+  pos: [0, -224],
+  rect_size: [480, 28],
   size: 20,
   min_size: 14,
   max_size: 20,
@@ -278,8 +264,8 @@ addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
   order_in_layer: Z.text,
 });
 addText(b, `${SLOT}/Text_Result`, "WILD x5 BONUS", {
-  pos: [0, -306],
-  rect_size: [520, 34],
+  pos: [0, -260],
+  rect_size: [480, 32],
   size: 22,
   min_size: 15,
   max_size: 22,

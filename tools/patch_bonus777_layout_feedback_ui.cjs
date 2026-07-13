@@ -28,14 +28,18 @@ function size(entry) {
 }
 
 const reelFrame = asset("bonus777_slot_reel_window_frame");
-const titleBadge = asset("bonus777_slot_title_badge");
-const resultPanel = asset("bonus777_slot_result_panel");
+const frameShell = asset("bonus777_slot_frame_shell");
 const leverBase = asset("bonus777_slot_lever_base");
 const leverArmUp = asset("bonus777_slot_lever_arm_up");
 
 const builder = UIBuilder.load(uiPath);
 
-for (const stalePanel of ["Bg_TitleOpaque", "Bg_ResultOpaque"]) {
+builder.patch(slotRoot, {
+  pos: structure.slotRoot.position,
+  rect_size: structure.slotRoot.rectSize,
+});
+
+for (const stalePanel of ["Bg_TitleOpaque", "Bg_ResultOpaque", "Sprite_TitleBadge", "Sprite_ResultPanel", "Text_Title"]) {
   try {
     builder.remove(`${slotRoot}/${stalePanel}`);
   } catch (error) {
@@ -43,9 +47,15 @@ for (const stalePanel of ["Bg_TitleOpaque", "Bg_ResultOpaque"]) {
   }
 }
 
+builder.patch(`${slotRoot}/Sprite_FrameShell`, { pos: pos(frameShell), rect_size: size(frameShell) });
+builder.patchComponent(`${slotRoot}/Sprite_FrameShell`, "MOD.Core.SpriteGUIRendererComponent", {
+  ImageRUID: { DataId: frameShell.ruid },
+  PreserveAspect: true,
+});
 builder.patch(`${slotRoot}/Sprite_ReelWindowFrame`, { pos: pos(reelFrame), rect_size: size(reelFrame) });
 builder.patchComponent(`${slotRoot}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRendererComponent", {
-  PreserveAspect: false,
+  ImageRUID: { DataId: reelFrame.ruid },
+  PreserveAspect: true,
 });
 for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   const offset = (reelIndex - 1) * 2;
@@ -58,45 +68,51 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     pos: reelPosition,
     rect_size: structure.reels.maskSize,
   });
+  const stripPath = `${slotRoot}/Mask_Bonus777Reel_${reelIndex}/Panel_Bonus777ReelStrip_${reelIndex}`;
+  builder.patch(stripPath, { rect_size: structure.reels.stripSize });
+  for (let virtualIndex = -1; virtualIndex <= 9; virtualIndex += 1) {
+    const displayIndex = virtualIndex + 2;
+    const cellPath = `${stripPath}/DigitCell_${String(displayIndex).padStart(2, "0")}`;
+    const y = ((4 - virtualIndex) * structure.reels.cellHeight);
+    builder.patch(cellPath, {
+      pos: [0, y],
+      rect_size: [structure.reels.stripSize[0], structure.reels.cellHeight],
+    });
+    builder.patch(`${cellPath}/Sprite_Face`, { rect_size: structure.reels.digitCellSize });
+    builder.patch(`${cellPath}/Text_Digit`, { rect_size: structure.reels.digitTextSize });
+    builder.patchComponent(`${cellPath}/Text_Digit`, "MOD.Core.TextComponent", {
+      FontSize: 52,
+      MaxSize: 52,
+      MinSize: 34,
+    });
+  }
 }
 
-builder.patch(`${slotRoot}/Sprite_TitleBadge`, { pos: pos(titleBadge), rect_size: size(titleBadge) });
-builder.patchComponent(`${slotRoot}/Sprite_TitleBadge`, "MOD.Core.SpriteGUIRendererComponent", {
-  PreserveAspect: false,
-});
-builder.patch(`${slotRoot}/Text_Title`, { pos: [0, 350], rect_size: [486, 34] });
-builder.patchComponent(`${slotRoot}/Text_Title`, "MOD.Core.TextComponent", {
-  FontSize: 26,
-  MaxSize: 26,
-});
-
-builder.patch(`${slotRoot}/Sprite_ResultPanel`, { pos: pos(resultPanel), rect_size: size(resultPanel) });
-builder.patchComponent(`${slotRoot}/Sprite_ResultPanel`, "MOD.Core.SpriteGUIRendererComponent", {
-  PreserveAspect: false,
-});
-builder.patch(`${slotRoot}/Text_Chance`, { pos: [0, -270], rect_size: [520, 28] });
+builder.patch(`${slotRoot}/Text_Chance`, { pos: [0, -224], rect_size: [480, 28] });
 builder.patchComponent(`${slotRoot}/Text_Chance`, "MOD.Core.TextComponent", {
   FontSize: 20,
   MaxSize: 20,
 });
-builder.patch(`${slotRoot}/Text_Result`, { pos: [0, -306], rect_size: [520, 34] });
+builder.patch(`${slotRoot}/Text_Result`, { pos: [0, -260], rect_size: [480, 32] });
 builder.patchComponent(`${slotRoot}/Text_Result`, "MOD.Core.TextComponent", {
   FontSize: 22,
   MaxSize: 22,
 });
 
-builder.sprite(`${slotRoot}/Sprite_LeverBase`, {
-  anchor: "middle-center",
+builder.patch(`${slotRoot}/Sprite_LeverBase`, {
   pos: pos(leverBase),
   rect_size: size(leverBase),
-  image_ruid: leverBase.ruid,
-  preserve_aspect: true,
-  raycast: false,
-  sorting_layer: "UI",
-  order_in_layer: 464,
-  override_sorting: true,
+  display_order: 59,
 });
-builder.patch(`${slotRoot}/Sprite_Lever`, { pos: pos(leverArmUp), rect_size: size(leverArmUp) });
+builder.patchComponent(`${slotRoot}/Sprite_LeverBase`, "MOD.Core.SpriteGUIRendererComponent", {
+  ImageRUID: { DataId: leverBase.ruid },
+  PreserveAspect: true,
+});
+builder.patch(`${slotRoot}/Sprite_Lever`, {
+  pos: pos(leverArmUp),
+  rect_size: size(leverArmUp),
+  display_order: 60,
+});
 builder.patchComponent(`${slotRoot}/Sprite_Lever`, "MOD.Core.SpriteGUIRendererComponent", {
   ImageRUID: { DataId: leverArmUp.ruid },
   OrderInLayer: 465,
@@ -104,4 +120,4 @@ builder.patchComponent(`${slotRoot}/Sprite_Lever`, "MOD.Core.SpriteGUIRendererCo
 });
 
 builder.write(uiPath, { lint: false, strict: false });
-console.log("Patched 777 reel alignment, removed redundant panels, and fixed the vertical lever hierarchy.");
+console.log("Patched centered 777 resources, embedded result text, and Screen UI lever depth.");

@@ -99,6 +99,19 @@ only to an inner fill layer.
 - [ ] Bottom panel contains the Base Bet / Multiplier divider bar.
 - [ ] No game-logic code is modified for layout/resource fixes.
 
+### Centered Raster Resource Invariants
+
+Resources that read as centered or bilaterally symmetric must be validated by their visible alpha silhouette, not only by node coordinates.
+
+- A centered resource uses `uiPosition.x = 0` inside its local parent unless the layout spec explicitly defines an offset.
+- The alpha-bounds center must be within `1px` of the image-canvas center on both axes.
+- A symmetric resource must keep equal transparent left/right padding and pass the feature validator's alpha-mirror threshold.
+- The complete silhouette needs at least `8px` transparent padding on every edge. Any pillar, frame corner, ornament, or anti-aliased outline touching the source edge is treated as clipped.
+- ImageGen prompts must explicitly request a front-on centered composition, bilateral symmetry, equal side padding, and a complete uncut silhouette.
+- Run `tools/normalize_centered_ui_asset.py --chroma-green` before upload for generated green-screen assets; after upload, validate the final PNG and the UI node using the same structure metadata.
+- Resource uploaders must compare the current file against manifest metadata before skipping an existing key. A stale RUID is not accepted merely because the logical key already exists.
+- Screen UI depth is controlled by sibling `displayOrder`. `OrderInLayer` must not be used as the sole proof that one Screen UI resource renders in front of another.
+
 ## Canvas Hierarchy
 ```text
 UIRoot_TestSandbox_MainPlay

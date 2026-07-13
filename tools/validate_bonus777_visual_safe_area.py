@@ -46,10 +46,26 @@ def frame_overlap_ratio(frame_alpha, frame_origin, rect):
     return overlap / max(1, total)
 
 
+def alpha_mirror_delta(alpha, threshold):
+    width, height = alpha.size
+    pixels = alpha.load()
+    mismatch = 0
+    coverage = 0
+    for x in range(width):
+        mirror_x = width - 1 - x
+        for y in range(height):
+            left = pixels[x, y] > threshold
+            right = pixels[mirror_x, y] > threshold
+            mismatch += 1 if left != right else 0
+            coverage += int(left) + int(right)
+    return mismatch / max(1, coverage)
+
+
 def main():
     structure = load_structure()
     assets = asset_map(structure)
     reels = structure["reels"]
+    resource_validation = structure["resourceValidation"]
     slot_width, slot_height = structure["slotRoot"]["rectSize"]
 
     cell_height = reels["cellHeight"]
@@ -104,6 +120,38 @@ def main():
             f"expected <= {max_allowed_overlap:.4f}. Adjust reel positions/cell sizes from the frame alpha mask, not by eye."
         )
 
+    min_padding = resource_validation["minAlphaPadding"]
+    max_center_offset = resource_validation["maxVisualCenterOffset"]
+    max_mirror_delta = resource_validation["maxAlphaMirrorDelta"]
+    for name in resource_validation["centeredAssets"]:
+        asset = assets[name]
+        if asset["uiPosition"]["x"] != 0:
+            raise SystemExit(f"Centered 777 asset must use uiPosition.x=0: {name}")
+        image = Image.open(PROJECT_ROOT / asset["file"]).convert("RGBA")
+        alpha = image.getchannel("A")
+        bbox = alpha.point(lambda value: 255 if value > FRAME_ALPHA_THRESHOLD else 0).getbbox()
+        if bbox is None:
+            raise SystemExit(f"Centered 777 asset is fully transparent: {name}")
+        margins = (bbox[0], bbox[1], image.width - bbox[2], image.height - bbox[3])
+        if min(margins) < min_padding:
+            raise SystemExit(f"Centered 777 asset lacks safe padding: {name} margins={margins}")
+        center_offset = (
+            abs(((bbox[0] + bbox[2]) * 0.5) - (image.width * 0.5)),
+            abs(((bbox[1] + bbox[3]) * 0.5) - (image.height * 0.5)),
+        )
+        if max(center_offset) > max_center_offset:
+            raise SystemExit(f"Centered 777 asset has shifted alpha bounds: {name} offset={center_offset}")
+
+    for name in resource_validation["symmetricAssets"]:
+        asset = assets[name]
+        alpha = Image.open(PROJECT_ROOT / asset["file"]).convert("RGBA").getchannel("A")
+        mirror_delta = alpha_mirror_delta(alpha, FRAME_ALPHA_THRESHOLD)
+        if mirror_delta > max_mirror_delta:
+            raise SystemExit(
+                f"Expected symmetric 777 asset is asymmetric: {name} delta={mirror_delta:.4f}; "
+                f"expected <= {max_mirror_delta:.4f}"
+            )
+
     lever_names = (
         "bonus777_slot_lever_base",
         "bonus777_slot_lever_arm_up",
@@ -125,7 +173,8 @@ def main():
 
     print(
         "Validated 777 bonus visual safe area "
-        f"(maskPadding={mask_padding:.1f}px, maxFrameOverlap={worst['ratio']:.4f}, leverMargins=ok)."
+        f"(maskPadding={mask_padding:.1f}px, maxFrameOverlap={worst['ratio']:.4f}, "
+        "centeredSymmetry=ok, leverMargins=ok)."
     )
 
 

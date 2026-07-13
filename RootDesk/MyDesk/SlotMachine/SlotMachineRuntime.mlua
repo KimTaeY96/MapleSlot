@@ -3478,7 +3478,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method float GetBonus777DigitCellHeight()
-        return 88.0
+        return 72.0
     end
 
     @ExecSpace("ClientOnly")

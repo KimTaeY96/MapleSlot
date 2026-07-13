@@ -1087,10 +1087,14 @@ function makeGetBonus777ReelStripTransform() {
 }
 
 function makeGetBonus777DigitCellHeight() {
+  const cellHeight = Number(bonus777Structure.reels?.cellHeight);
+  if (!Number.isFinite(cellHeight) || cellHeight <= 0) {
+    throw new Error(`Invalid 777 reel cell height in ${bonus777StructurePath}: ${cellHeight}`);
+  }
   return [
     '    @ExecSpace("ClientOnly")',
     "    method float GetBonus777DigitCellHeight()",
-    "        return 88.0",
+    `        return ${cellHeight.toFixed(1)}`,
     "    end",
   ].join("\n");
 }

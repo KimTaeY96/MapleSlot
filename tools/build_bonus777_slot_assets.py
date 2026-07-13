@@ -13,38 +13,6 @@ STRUCTURE = PROJECT_ROOT / "GeneratedAssets" / "SlotMachineUI" / "bonus777" / "b
 
 
 ASSETS = {
-    "bonus777_slot_frame_shell": {
-        "resourceKey": "bonus777SlotFrameShell",
-        "file": "bonus777_slot_frame_shell.png",
-        "rect": [7, 31, 662, 663],
-        "trim": True,
-        "displaySize": [760, 734],
-        "uiPosition": [0, 18],
-    },
-    "bonus777_slot_reel_window_frame": {
-        "resourceKey": "bonus777SlotReelWindowFrame",
-        "file": "bonus777_slot_reel_window_frame.png",
-        "rect": [687, 123, 1225, 473],
-        "trim": True,
-        "displaySize": [564, 400],
-        "uiPosition": [0, 12],
-    },
-    "bonus777_slot_title_badge": {
-        "resourceKey": "bonus777SlotTitleBadge",
-        "file": "bonus777_slot_title_badge.png",
-        "rect": [45, 681, 646, 834],
-        "trim": True,
-        "displaySize": [540, 90],
-        "uiPosition": [0, 350],
-    },
-    "bonus777_slot_result_panel": {
-        "resourceKey": "bonus777SlotResultPanel",
-        "file": "bonus777_slot_result_panel.png",
-        "rect": [18, 893, 656, 1212],
-        "trim": True,
-        "displaySize": [600, 104],
-        "uiPosition": [0, -288],
-    },
     "bonus777_slot_reel_column_background": {
         "resourceKey": "bonus777SlotReelColumnBackground",
         "file": "bonus777_slot_reel_column_background.png",
@@ -92,6 +60,18 @@ ASSETS = {
 
 
 EXTERNAL_ASSETS = {
+    "bonus777_slot_frame_shell": {
+        "resourceKey": "bonus777SlotFrameShellBalanced",
+        "file": "bonus777_slot_frame_shell_balanced.png",
+        "displaySize": [760, 734],
+        "uiPosition": [0, 0],
+    },
+    "bonus777_slot_reel_window_frame": {
+        "resourceKey": "bonus777SlotReelWindowFrameBalanced",
+        "file": "bonus777_slot_reel_window_frame_balanced.png",
+        "displaySize": [564, 330],
+        "uiPosition": [0, 32],
+    },
     "bonus777_slot_lever_base": {
         "resourceKey": "bonus777SlotLeverBase",
         "file": "bonus777_slot_lever_base.png",
@@ -157,17 +137,30 @@ def main() -> None:
             "name": "Panel_Bonus777SlotRoot",
             "rectSize": [900, 760],
             "uiScale": [1.0, 1.0],
-            "position": [0, 0],
+            "position": [10, 0],
+        },
+        "resourceValidation": {
+            "centeredAssets": [
+                "bonus777_slot_frame_shell",
+                "bonus777_slot_reel_window_frame",
+            ],
+            "symmetricAssets": [
+                "bonus777_slot_frame_shell",
+                "bonus777_slot_reel_window_frame",
+            ],
+            "minAlphaPadding": 8,
+            "maxVisualCenterOffset": 1.0,
+            "maxAlphaMirrorDelta": 0.02,
         },
         "reels": {
             "logicalDigitCount": 7,
             "visualCellCount": 11,
-            "cellHeight": 88,
-            "maskSize": [150, 260],
-            "stripSize": [150, 968],
+            "cellHeight": 72,
+            "maskSize": [150, 210],
+            "stripSize": [150, 792],
             "positions": [-160, 32, 0, 32, 160, 32],
-            "digitCellSize": [118, 78],
-            "digitTextSize": [106, 70],
+            "digitCellSize": [118, 60],
+            "digitTextSize": [106, 54],
             "maskSafePadding": 3,
             "maxFrameOverlapRatio": 0.02,
         },

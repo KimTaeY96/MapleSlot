@@ -240,12 +240,10 @@ expectRect("Panel_Bonus777_Hidden/Dim", 1920, 1080);
 expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.rectSize[0], bonus777Structure.slotRoot.rectSize[1]);
 expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.position[0], bonus777Structure.slotRoot.position[1]);
 expectUiScale("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot", bonus777Structure.slotRoot.uiScale[0], bonus777Structure.slotRoot.uiScale[1]);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 486, 34);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 520, 28);
-expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 520, 34);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Title", 0, 350);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -270);
-expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -306);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 480, 28);
+expectRect("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 480, 32);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Chance", 0, -224);
+expectPosition("Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot/Text_Result", 0, -260);
 const bonus777DimRenderer = getComponent("Panel_Bonus777_Hidden/Dim", "MOD.Core.SpriteGUIRendererComponent");
 if (bonus777DimRenderer.OrderInLayer !== 440 || bonus777DimRenderer.OverrideSorting !== true) {
   fail(`Unexpected 777 dim sorting: order=${bonus777DimRenderer.OrderInLayer}, override=${bonus777DimRenderer.OverrideSorting}; expected 440/true`);
@@ -259,21 +257,42 @@ if (Math.abs((bonus777DimRenderer.Color?.a ?? 0) - 0.72) > 0.001) {
 
 const bonus777Root = "Panel_Bonus777_Hidden/Panel_Bonus777SlotRoot";
 expectBonus777Sprite("bonus777_slot_frame_shell", `${bonus777Root}/Sprite_FrameShell`, 450);
-expectBonus777Sprite("bonus777_slot_title_badge", `${bonus777Root}/Sprite_TitleBadge`, 458);
-expectBonus777Sprite("bonus777_slot_result_panel", `${bonus777Root}/Sprite_ResultPanel`, 458);
 expectBonus777Sprite("bonus777_slot_reel_window_frame", `${bonus777Root}/Sprite_ReelWindowFrame`, 459);
-if (getComponent(`${bonus777Root}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRendererComponent").PreserveAspect !== false) {
-  fail("777 reel window frame must fill its validated rect exactly");
+if (getComponent(`${bonus777Root}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRendererComponent").PreserveAspect !== true) {
+  fail("777 reel window frame must preserve the normalized centered resource aspect");
 }
 expectBonus777Sprite("bonus777_slot_lever_base", `${bonus777Root}/Sprite_LeverBase`, 464);
 expectBonus777Sprite("bonus777_slot_lever_arm_up", `${bonus777Root}/Sprite_Lever`, 465);
-for (const redundantPath of [`${bonus777Root}/Bg_TitleOpaque`, `${bonus777Root}/Bg_ResultOpaque`]) {
+const bonus777LeverBaseEntity = getEntity(`${bonus777Root}/Sprite_LeverBase`);
+const bonus777LeverArmEntity = getEntity(`${bonus777Root}/Sprite_Lever`);
+if (bonus777LeverArmEntity.displayOrder <= bonus777LeverBaseEntity.displayOrder) {
+  fail("Screen UI lever arm displayOrder must be greater than the fixed machine base displayOrder");
+}
+for (const redundantPath of [
+  `${bonus777Root}/Bg_TitleOpaque`,
+  `${bonus777Root}/Bg_ResultOpaque`,
+  `${bonus777Root}/Sprite_TitleBadge`,
+  `${bonus777Root}/Sprite_ResultPanel`,
+  `${bonus777Root}/Text_Title`,
+]) {
   if (byPath.has(`${root}/${redundantPath}`)) {
-    fail(`${redundantPath} duplicates artwork already included in the 777 cabinet background`);
+    fail(`${redundantPath} must not exist; title/result surfaces are integrated into the 777 cabinet background`);
   }
 }
 
 const bonus777DigitCellHeight = bonus777Structure.reels.cellHeight;
+const bonus777RuntimeCellHeightMatch = runtime.match(
+  /method float GetBonus777DigitCellHeight\(\)\s+return ([0-9.]+)\s+end/,
+);
+if (!bonus777RuntimeCellHeightMatch) {
+  fail("Runtime is missing GetBonus777DigitCellHeight");
+}
+const bonus777RuntimeCellHeight = Number(bonus777RuntimeCellHeightMatch[1]);
+if (bonus777RuntimeCellHeight !== bonus777DigitCellHeight) {
+  fail(
+    `Runtime 777 cell height ${bonus777RuntimeCellHeight} does not match UI structure ${bonus777DigitCellHeight}`,
+  );
+}
 for (let index = 1; index <= 3; index += 1) {
   const reelPos = bonus777ReelPosition(index);
   expectBonus777Sprite(
@@ -308,7 +327,6 @@ for (let index = 1; index <= 3; index += 1) {
     }
   }
 }
-expectTextAlignment(`${bonus777Root}/Text_Title`, 4);
 expectTextAlignment(`${bonus777Root}/Text_Chance`, 4);
 expectTextAlignment(`${bonus777Root}/Text_Result`, 4);
 
