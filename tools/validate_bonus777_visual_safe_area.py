@@ -80,8 +80,24 @@ def main():
         )
 
     frame_asset = assets["bonus777_slot_reel_window_frame"]
+    shell_asset = assets["bonus777_slot_frame_shell"]
     frame_path = PROJECT_ROOT / frame_asset["file"]
     frame_size = (frame_asset["displaySize"]["width"], frame_asset["displaySize"]["height"])
+    shell_size = (shell_asset["displaySize"]["width"], shell_asset["displaySize"]["height"])
+    min_fill_ratio = resource_validation["minReelWindowToShellRatio"]
+    frame_to_shell_ratio = (frame_size[0] / shell_size[0], frame_size[1] / shell_size[1])
+    if frame_to_shell_ratio[0] < min_fill_ratio[0] or frame_to_shell_ratio[1] < min_fill_ratio[1]:
+        raise SystemExit(
+            "777 reel window is undersized relative to the cabinet shell: "
+            f"ratio=({frame_to_shell_ratio[0]:.4f}, {frame_to_shell_ratio[1]:.4f}); "
+            f"expected >=({min_fill_ratio[0]:.4f}, {min_fill_ratio[1]:.4f})"
+        )
+    frame_axis_y = frame_asset["uiPosition"]["y"]
+    reel_axis_y = reels["positions"][1::2]
+    if any(value != frame_axis_y for value in reel_axis_y):
+        raise SystemExit(
+            f"777 reel centers must share the front-frame y axis: frame={frame_axis_y}, reels={reel_axis_y}"
+        )
     frame_image = Image.open(frame_path).convert("RGBA").resize(frame_size, Image.LANCZOS)
     frame_alpha = frame_image.getchannel("A")
     frame_origin = (
@@ -174,6 +190,7 @@ def main():
     print(
         "Validated 777 bonus visual safe area "
         f"(maskPadding={mask_padding:.1f}px, maxFrameOverlap={worst['ratio']:.4f}, "
+        f"frameToShell=({frame_to_shell_ratio[0]:.3f},{frame_to_shell_ratio[1]:.3f}), "
         "centeredSymmetry=ok, leverMargins=ok)."
     )
 

@@ -81,9 +81,9 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     builder.patch(`${cellPath}/Sprite_Face`, { rect_size: structure.reels.digitCellSize });
     builder.patch(`${cellPath}/Text_Digit`, { rect_size: structure.reels.digitTextSize });
     builder.patchComponent(`${cellPath}/Text_Digit`, "MOD.Core.TextComponent", {
-      FontSize: 52,
-      MaxSize: 52,
-      MinSize: 34,
+      FontSize: 66,
+      MaxSize: 66,
+      MinSize: 42,
     });
   }
 }
@@ -102,7 +102,7 @@ builder.patchComponent(`${slotRoot}/Text_Result`, "MOD.Core.TextComponent", {
 builder.patch(`${slotRoot}/Sprite_LeverBase`, {
   pos: pos(leverBase),
   rect_size: size(leverBase),
-  display_order: 59,
+  display_order: 58,
 });
 builder.patchComponent(`${slotRoot}/Sprite_LeverBase`, "MOD.Core.SpriteGUIRendererComponent", {
   ImageRUID: { DataId: leverBase.ruid },
@@ -111,11 +111,11 @@ builder.patchComponent(`${slotRoot}/Sprite_LeverBase`, "MOD.Core.SpriteGUIRender
 builder.patch(`${slotRoot}/Sprite_Lever`, {
   pos: pos(leverArmUp),
   rect_size: size(leverArmUp),
-  display_order: 60,
+  display_order: 1000,
 });
 builder.patchComponent(`${slotRoot}/Sprite_Lever`, "MOD.Core.SpriteGUIRendererComponent", {
   ImageRUID: { DataId: leverArmUp.ruid },
-  OrderInLayer: 465,
+  OrderInLayer: 1000,
   PreserveAspect: true,
 });
 

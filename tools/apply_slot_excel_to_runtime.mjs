@@ -1313,6 +1313,21 @@ function makeBuildBonus777LeverFramePositions() {
   ].join("\n");
 }
 
+function makeEnsureBonus777LeverFront() {
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method void EnsureBonus777LeverFront()",
+    "        if self.bonus777LeverRenderer ~= nil then",
+    "            self.bonus777LeverRenderer.OverrideSorting = true",
+    "            self.bonus777LeverRenderer.OrderInLayer = 1000",
+    "        end",
+    "        if self.bonus777LeverTransform ~= nil then",
+    "            _UILogic:SetSiblingIndex(self.bonus777LeverTransform, 1000000)",
+    "        end",
+    "    end",
+  ].join("\n");
+}
+
 function makeSetBonus777LeverFrame() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -1337,6 +1352,7 @@ function makeSetBonus777LeverFrame() {
     "                self.bonus777LeverTransform.anchoredPosition = framePosition",
     "            end",
     "        end",
+    "        self:EnsureBonus777LeverFront()",
     "    end",
   ].join("\n");
 }
@@ -2581,6 +2597,7 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777Texts", makeSetBonus777Texts(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "table", "BuildBonus777LeverFrameRuids", makeBuildBonus777LeverFrameRuids(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "table", "BuildBonus777LeverFramePositions", makeBuildBonus777LeverFramePositions(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "void", "EnsureBonus777LeverFront", makeEnsureBonus777LeverFront(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverFrame", makeSetBonus777LeverFrame(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverOffset", makeSetBonus777LeverOffset(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "UpdateBonus777LeverPull", makeUpdateBonus777LeverPull(), "EvaluatePaylines");

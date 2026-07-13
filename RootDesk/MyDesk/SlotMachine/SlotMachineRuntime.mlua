@@ -3478,7 +3478,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method float GetBonus777DigitCellHeight()
-        return 72.0
+        return 88.0
     end
 
     @ExecSpace("ClientOnly")
@@ -3753,6 +3753,17 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method void EnsureBonus777LeverFront()
+        if self.bonus777LeverRenderer ~= nil then
+            self.bonus777LeverRenderer.OverrideSorting = true
+            self.bonus777LeverRenderer.OrderInLayer = 1000
+        end
+        if self.bonus777LeverTransform ~= nil then
+            _UILogic:SetSiblingIndex(self.bonus777LeverTransform, 1000000)
+        end
+    end
+
+    @ExecSpace("ClientOnly")
     method void SetBonus777LeverFrame(string frameKey)
         if self.bonus777LeverRenderer == nil then
             return
@@ -3774,6 +3785,7 @@ script SlotMachineRuntime extends Logic
                 self.bonus777LeverTransform.anchoredPosition = framePosition
             end
         end
+        self:EnsureBonus777LeverFront()
     end
 
     @ExecSpace("ClientOnly")

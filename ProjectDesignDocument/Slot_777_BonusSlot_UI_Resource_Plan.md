@@ -69,13 +69,14 @@ The right lever is a sprite animation, not a transform-only effect.
 
 The moving ball must travel from above the hinge to below it. Leftward or horizontal pull frames are not valid. Per-frame anchored positions keep the connector on one shared mechanical hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
 
-The lever arm must have a greater Screen UI `displayOrder` than the fixed machine base. `OrderInLayer` alone is not a valid depth guarantee for Screen UI.
+The lever arm uses `displayOrder=1000` and `OrderInLayer=1000`, above the fixed machine base. Every sprite-frame change also calls `_UILogic:SetSiblingIndex(leverTransform, 1000000)` so the moving arm remains in front at runtime.
 
 ### Panel Alignment
 
 - The reel window frame, reel-column backgrounds, and reel masks share the same inner-window center and opening dimensions.
-- The validated reel window is `564x330` at local `y=32`; each live reel mask is `150x210` on that same `y=32` axis.
-- Each reel uses `72px` logical spacing and a `118x60` digit-cell rect, leaving a measured front-frame overlap ratio of `0.0000`.
+- The validated reel window is `600x400` at local `y=0`; each live reel mask is `150x260` on that same axis.
+- Each reel uses `88px` logical spacing and a `118x78` digit-cell rect. The front frame and live reels must fill the cabinet's upper inner cavity with comparable top and bottom inset.
+- Validation rejects a front frame smaller than `78%` of the shell width or `53%` of the shell height, and rejects any reel whose local `y` center differs from the frame axis.
 - The separate title badge, title string, and result-panel sprite do not exist.
 - `Text_Chance` and `Text_Result` are centered directly inside the cabinet shell's integrated lower dark field.
 - The lower field resource must not contain a center gemstone or any ornament behind either text line.

@@ -262,11 +262,18 @@ if (getComponent(`${bonus777Root}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRe
   fail("777 reel window frame must preserve the normalized centered resource aspect");
 }
 expectBonus777Sprite("bonus777_slot_lever_base", `${bonus777Root}/Sprite_LeverBase`, 464);
-expectBonus777Sprite("bonus777_slot_lever_arm_up", `${bonus777Root}/Sprite_Lever`, 465);
+expectBonus777Sprite("bonus777_slot_lever_arm_up", `${bonus777Root}/Sprite_Lever`, 1000);
 const bonus777LeverBaseEntity = getEntity(`${bonus777Root}/Sprite_LeverBase`);
 const bonus777LeverArmEntity = getEntity(`${bonus777Root}/Sprite_Lever`);
-if (bonus777LeverArmEntity.displayOrder <= bonus777LeverBaseEntity.displayOrder) {
-  fail("Screen UI lever arm displayOrder must be greater than the fixed machine base displayOrder");
+if (bonus777LeverArmEntity.displayOrder !== 1000 || bonus777LeverArmEntity.displayOrder <= bonus777LeverBaseEntity.displayOrder) {
+  fail("Screen UI lever arm must use displayOrder 1000 above the fixed machine base");
+}
+if (
+  !runtime.includes("self:EnsureBonus777LeverFront()")
+  || !runtime.includes("_UILogic:SetSiblingIndex(self.bonus777LeverTransform, 1000000)")
+  || !runtime.includes("self.bonus777LeverRenderer.OrderInLayer = 1000")
+) {
+  fail("Runtime must force the animated 777 lever arm in front after every sprite-frame change");
 }
 for (const redundantPath of [
   `${bonus777Root}/Bg_TitleOpaque`,

@@ -30,35 +30,39 @@
     ],
     "minAlphaPadding": 8,
     "maxVisualCenterOffset": 1.0,
-    "maxAlphaMirrorDelta": 0.02
+    "maxAlphaMirrorDelta": 0.02,
+    "minReelWindowToShellRatio": [
+      0.78,
+      0.53
+    ]
   },
   "reels": {
     "logicalDigitCount": 7,
     "visualCellCount": 11,
-    "cellHeight": 72,
+    "cellHeight": 88,
     "maskSize": [
       150,
-      210
+      260
     ],
     "stripSize": [
       150,
-      792
+      968
     ],
     "positions": [
       -160,
-      32,
       0,
-      32,
+      0,
+      0,
       160,
-      32
+      0
     ],
     "digitCellSize": [
       118,
-      60
+      78
     ],
     "digitTextSize": [
       106,
-      54
+      70
     ],
     "maskSafePadding": 3,
     "maxFrameOverlapRatio": 0.02
@@ -215,20 +219,20 @@
       "sourceRect": [
         0,
         0,
-        1429,
-        836
+        1382,
+        921
       ],
       "size": {
-        "width": 1429,
-        "height": 836
+        "width": 1382,
+        "height": 921
       },
       "displaySize": {
-        "width": 564,
-        "height": 330
+        "width": 600,
+        "height": 400
       },
       "uiPosition": {
         "x": 0,
-        "y": 32
+        "y": 0
       },
       "trimmed": false
     },

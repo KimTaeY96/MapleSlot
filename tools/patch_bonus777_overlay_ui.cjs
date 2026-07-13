@@ -231,9 +231,9 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
     });
     addText(b, `${cellPath}/Text_Digit`, String(digit), {
       rect_size: structure.reels.digitTextSize,
-      size: 52,
-      min_size: 34,
-      max_size: 52,
+      size: 66,
+      min_size: 42,
+      max_size: 66,
       bold: true,
       color: "#FFE39A",
       outline: true,
@@ -248,8 +248,11 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
 addSprite(b, `${SLOT}/Sprite_ReelWindowFrame`, assets.reelWindowFrame, Z.frame + 1);
 addSprite(b, `${SLOT}/Sprite_LeverBase`, assets.leverBase, Z.lever);
 addSprite(b, `${SLOT}/Sprite_Lever`, assets.leverArmUp, Z.lever + 1);
-b.patch(`${SLOT}/Sprite_LeverBase`, { display_order: 59 });
-b.patch(`${SLOT}/Sprite_Lever`, { display_order: 60 });
+b.patch(`${SLOT}/Sprite_LeverBase`, { display_order: 58 });
+b.patch(`${SLOT}/Sprite_Lever`, { display_order: 1000 });
+b.patchComponent(`${SLOT}/Sprite_Lever`, "MOD.Core.SpriteGUIRendererComponent", {
+  OrderInLayer: 1000,
+});
 
 addText(b, `${SLOT}/Text_Chance`, "CHANCE 0 / 0", {
   pos: [0, -224],
