@@ -496,5 +496,11 @@
     "fileName": "bonus777_slot_reel_window_frame_balanced.png",
     "ruid": "015efafbe25e4f259bf2e8ae710f52b6",
     "size": 468231
+  },
+  "bonus777SlotLeverBaseCompact": {
+    "key": "bonus777SlotLeverBaseCompact",
+    "fileName": "bonus777_slot_lever_base_compact.png",
+    "ruid": "a79e0ada6cf94a5985a6d7b1d4bed4ed",
+    "size": 235395
   }
 }

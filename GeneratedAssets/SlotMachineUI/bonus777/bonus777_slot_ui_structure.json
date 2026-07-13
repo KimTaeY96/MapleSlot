@@ -26,7 +26,8 @@
     ],
     "symmetricAssets": [
       "bonus777_slot_frame_shell",
-      "bonus777_slot_reel_window_frame"
+      "bonus777_slot_reel_window_frame",
+      "bonus777_slot_lever_base"
     ],
     "minAlphaPadding": 8,
     "maxVisualCenterOffset": 1.0,
@@ -34,6 +35,10 @@
     "minReelWindowToShellRatio": [
       0.78,
       0.53
+    ],
+    "maxLeverBaseDisplaySize": [
+      140,
+      160
     ]
   },
   "reels": {
@@ -238,21 +243,21 @@
     },
     {
       "name": "bonus777_slot_lever_base",
-      "resourceKey": "bonus777SlotLeverBase",
-      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_base.png",
+      "resourceKey": "bonus777SlotLeverBaseCompact",
+      "file": "GeneratedAssets/SlotMachineUI/bonus777/sliced/bonus777_slot_lever_base_compact.png",
       "sourceRect": [
         0,
         0,
-        1254,
-        1254
+        415,
+        490
       ],
       "size": {
-        "width": 1254,
-        "height": 1254
+        "width": 415,
+        "height": 490
       },
       "displaySize": {
-        "width": 180,
-        "height": 180
+        "width": 132,
+        "height": 156
       },
       "uiPosition": {
         "x": 326,

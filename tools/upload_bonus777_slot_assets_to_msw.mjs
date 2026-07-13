@@ -20,7 +20,7 @@ const assets = [
   ["bonus777SlotLeverUp", "bonus777_slot_lever_up.png"],
   ["bonus777SlotLeverMid", "bonus777_slot_lever_mid.png"],
   ["bonus777SlotLeverDown", "bonus777_slot_lever_down.png"],
-  ["bonus777SlotLeverBase", "bonus777_slot_lever_base.png"],
+  ["bonus777SlotLeverBaseCompact", "bonus777_slot_lever_base_compact.png"],
   ["bonus777SlotLeverArmUp", "bonus777_slot_lever_arm_up.png"],
   ["bonus777SlotLeverArmMidVertical", "bonus777_slot_lever_arm_mid_vertical.png"],
   ["bonus777SlotLeverArmDownVertical", "bonus777_slot_lever_arm_down_vertical.png"],

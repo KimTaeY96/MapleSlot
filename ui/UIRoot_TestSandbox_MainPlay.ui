@@ -107946,20 +107946,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 416,
-                "y": 104
+                "x": 392,
+                "y": 92
               },
               "OffsetMin": {
-                "x": 236,
-                "y": -76
+                "x": 260,
+                "y": -64
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 180,
-                "y": 180
+                "x": 132,
+                "y": 156
               },
               "UIMode": 1,
               "UIScale": {
@@ -107995,7 +107995,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "d05c2cfedf5b4af3ac911e195776ade7"
+                "DataId": "a79e0ada6cf94a5985a6d7b1d4bed4ed"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {

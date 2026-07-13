@@ -73,9 +73,9 @@ EXTERNAL_ASSETS = {
         "uiPosition": [0, 0],
     },
     "bonus777_slot_lever_base": {
-        "resourceKey": "bonus777SlotLeverBase",
-        "file": "bonus777_slot_lever_base.png",
-        "displaySize": [180, 180],
+        "resourceKey": "bonus777SlotLeverBaseCompact",
+        "file": "bonus777_slot_lever_base_compact.png",
+        "displaySize": [132, 156],
         "uiPosition": [326, 14],
     },
     "bonus777_slot_lever_arm_up": {
@@ -147,11 +147,13 @@ def main() -> None:
             "symmetricAssets": [
                 "bonus777_slot_frame_shell",
                 "bonus777_slot_reel_window_frame",
+                "bonus777_slot_lever_base",
             ],
             "minAlphaPadding": 8,
             "maxVisualCenterOffset": 1.0,
             "maxAlphaMirrorDelta": 0.02,
             "minReelWindowToShellRatio": [0.78, 0.53],
+            "maxLeverBaseDisplaySize": [140, 160],
         },
         "reels": {
             "logicalDigitCount": 7,

@@ -174,6 +174,13 @@ def main():
         "bonus777_slot_lever_arm_mid",
         "bonus777_slot_lever_arm_down",
     )
+    lever_base = assets["bonus777_slot_lever_base"]
+    lever_base_size = (lever_base["displaySize"]["width"], lever_base["displaySize"]["height"])
+    max_lever_base_size = resource_validation["maxLeverBaseDisplaySize"]
+    if lever_base_size[0] > max_lever_base_size[0] or lever_base_size[1] > max_lever_base_size[1]:
+        raise SystemExit(
+            f"777 lever base is oversized: size={lever_base_size}; expected <= {tuple(max_lever_base_size)}"
+        )
     for name in lever_names:
         asset = assets[name]
         image = Image.open(PROJECT_ROOT / asset["file"]).convert("RGBA")

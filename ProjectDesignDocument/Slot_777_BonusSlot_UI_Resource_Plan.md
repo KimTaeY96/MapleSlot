@@ -50,7 +50,7 @@ The initial asset family is derived from one full ImageGen example atlas. A focu
 | `bonus777SlotReelWindowFrameBalanced` | Center-normalized symmetric gold front reel window frame and equal dividers |
 | `bonus777SlotReelColumnBackground` | Interior backing behind each reel strip |
 | `bonus777SlotDigitCell` | Repeated cell face behind dynamic digit text |
-| `bonus777SlotLeverBase` | Fixed mechanical housing aligned to the right black-crystal socket |
+| `bonus777SlotLeverBaseCompact` | Compact navy-and-gold bearing plate aligned to the right black-crystal socket |
 | `bonus777SlotLeverArmUp` | Moving arm sprite frame: default/up |
 | `bonus777SlotLeverArmMidVertical` | Moving arm sprite frame: short vertical mid-pull |
 | `bonus777SlotLeverArmDownVertical` | Moving arm sprite frame: vertical pulled/held-down state |
@@ -68,6 +68,8 @@ The right lever is a sprite animation, not a transform-only effect.
 5. Just before result text appears: `bonus777SlotLeverArmDownVertical -> bonus777SlotLeverArmMidVertical -> bonus777SlotLeverArmUp`
 
 The moving ball must travel from above the hinge to below it. Leftward or horizontal pull frames are not valid. Per-frame anchored positions keep the connector on one shared mechanical hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
+
+The fixed base must remain at or below `140x160`, use a centered circular bearing, and sit flush with the right pillar. A large protruding rectangular housing is not valid.
 
 The lever arm uses UI-file `displayOrder=1000` and `OrderInLayer=1000`, above the fixed machine base. Every sprite-frame change also calls `_UILogic:SetSiblingIndex(leverTransform, 1000000)` so the moving arm remains in front at runtime. Do not assign `OverrideSorting` or `OrderInLayer` from mlua; they are serialized UI fields, not runtime script fields.
 
