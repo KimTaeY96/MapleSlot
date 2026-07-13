@@ -6,11 +6,13 @@ const { execFileSync } = require("child_process");
 const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
 const uiPath = `${projectRoot}/ui/UIRoot_TestSandbox_MainPlay.ui`;
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
+const coinAnimationManifestPath = `${projectRoot}/GeneratedAssets/CoinAnimation/msw_resource_manifest.json`;
 const bonus777StructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/bonus777/bonus777_slot_ui_structure.json`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
 
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const coinAnimationManifest = JSON.parse(fs.readFileSync(coinAnimationManifestPath, "utf8"));
 const bonus777Structure = JSON.parse(fs.readFileSync(bonus777StructurePath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
 const screenSprayAnimationRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
@@ -762,6 +764,24 @@ if (!runtime.includes('PINK_BEAN = { id = "PINK_BEAN"')) {
 }
 if (!runtime.includes('WILD = { id = "WILD"') || !runtime.includes("isWild = true")) {
   fail("Runtime Wild symbol mapping is missing");
+}
+if (
+  !runtime.includes(
+    `WILD = { id = "WILD", payout3 = 0, payout4 = 0, payout5 = 0, resourcePath = "${coinAnimationManifest.sourceRuid}", winAnimationRuid = "${coinAnimationManifest.animationClipRuid}"`,
+  )
+) {
+  fail("Runtime Wild symbol does not use the table-driven mileage coin resources");
+}
+const wildReelCellResources = [...runtime.matchAll(
+  /symbolId = "WILD", idleSpriteRuid = "([^"]*)", winAnimationRuid = "([^"]*)"/g,
+)];
+if (wildReelCellResources.length === 0) {
+  fail("Runtime reel strips contain no Wild resource rows");
+}
+for (const match of wildReelCellResources) {
+  if (match[1] !== "" || match[2] !== "") {
+    fail("Runtime Wild reel cells must inherit SlotSymbols RUIDs instead of overriding them");
+  }
 }
 for (const animationId of ["BOUNCE", "POP", "WOBBLE", "SHAKE", "FLASH"]) {
   if (!runtime.includes(`winAnimation = "${animationId}"`)) {
