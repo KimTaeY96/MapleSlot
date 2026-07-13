@@ -192,21 +192,7 @@ b.patchComponent(SLOT, "MOD.Core.UITransformComponent", {
 });
 
 addSprite(b, `${SLOT}/Sprite_FrameShell`, assets.frameShell, Z.shell);
-addRect(b, `${SLOT}/Bg_TitleOpaque`, {
-  pos: [0, 350],
-  rect_size: [486, 54],
-  color: "#07080D",
-  alpha: 1,
-  order_in_layer: Z.frame - 1,
-});
 addSprite(b, `${SLOT}/Sprite_TitleBadge`, assets.titleBadge, Z.frame, { preserve_aspect: false });
-addRect(b, `${SLOT}/Bg_ResultOpaque`, {
-  pos: [0, -288],
-  rect_size: [548, 76],
-  color: "#07080D",
-  alpha: 1,
-  order_in_layer: Z.frame - 1,
-});
 addSprite(b, `${SLOT}/Sprite_ResultPanel`, assets.resultPanel, Z.frame, { preserve_aspect: false });
 
 for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {

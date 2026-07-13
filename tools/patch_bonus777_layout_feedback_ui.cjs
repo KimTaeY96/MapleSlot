@@ -27,21 +27,6 @@ function size(entry) {
   return [entry.displaySize.width, entry.displaySize.height];
 }
 
-function addOpaqueBacking(builder, name, position, rectSize) {
-  builder.sprite(`${slotRoot}/${name}`, {
-    anchor: "middle-center",
-    pos: position,
-    rect_size: rectSize,
-    color: "#07080D",
-    alpha: 1,
-    sprite_type: 1,
-    raycast: false,
-    sorting_layer: "UI",
-    order_in_layer: 457,
-    override_sorting: true,
-  });
-}
-
 const reelFrame = asset("bonus777_slot_reel_window_frame");
 const titleBadge = asset("bonus777_slot_title_badge");
 const resultPanel = asset("bonus777_slot_result_panel");
@@ -49,6 +34,14 @@ const leverBase = asset("bonus777_slot_lever_base");
 const leverArmUp = asset("bonus777_slot_lever_arm_up");
 
 const builder = UIBuilder.load(uiPath);
+
+for (const stalePanel of ["Bg_TitleOpaque", "Bg_ResultOpaque"]) {
+  try {
+    builder.remove(`${slotRoot}/${stalePanel}`);
+  } catch (error) {
+    if (!String(error?.message ?? "").includes("UI entity not found")) throw error;
+  }
+}
 
 builder.patch(`${slotRoot}/Sprite_ReelWindowFrame`, { pos: pos(reelFrame), rect_size: size(reelFrame) });
 builder.patchComponent(`${slotRoot}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRendererComponent", {
@@ -67,7 +60,6 @@ for (let reelIndex = 1; reelIndex <= 3; reelIndex += 1) {
   });
 }
 
-addOpaqueBacking(builder, "Bg_TitleOpaque", [0, 350], [486, 54]);
 builder.patch(`${slotRoot}/Sprite_TitleBadge`, { pos: pos(titleBadge), rect_size: size(titleBadge) });
 builder.patchComponent(`${slotRoot}/Sprite_TitleBadge`, "MOD.Core.SpriteGUIRendererComponent", {
   PreserveAspect: false,
@@ -78,7 +70,6 @@ builder.patchComponent(`${slotRoot}/Text_Title`, "MOD.Core.TextComponent", {
   MaxSize: 26,
 });
 
-addOpaqueBacking(builder, "Bg_ResultOpaque", [0, -288], [548, 76]);
 builder.patch(`${slotRoot}/Sprite_ResultPanel`, { pos: pos(resultPanel), rect_size: size(resultPanel) });
 builder.patchComponent(`${slotRoot}/Sprite_ResultPanel`, "MOD.Core.SpriteGUIRendererComponent", {
   PreserveAspect: false,
@@ -113,4 +104,4 @@ builder.patchComponent(`${slotRoot}/Sprite_Lever`, "MOD.Core.SpriteGUIRendererCo
 });
 
 builder.write(uiPath, { lint: false, strict: false });
-console.log("Patched 777 reel alignment, compact opaque panels, and fixed-pivot lever hierarchy.");
+console.log("Patched 777 reel alignment, removed redundant panels, and fixed the vertical lever hierarchy.");

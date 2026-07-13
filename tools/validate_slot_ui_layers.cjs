@@ -181,6 +181,30 @@ if (screenSprayRenderer.RaycastTarget !== false) {
 }
 
 const bonus777Assets = new Map(bonus777Structure.assets.map((asset) => [asset.name, asset]));
+const bonus777LeverArmUp = bonus777Assets.get("bonus777_slot_lever_arm_up");
+const bonus777LeverArmMid = bonus777Assets.get("bonus777_slot_lever_arm_mid");
+const bonus777LeverArmDown = bonus777Assets.get("bonus777_slot_lever_arm_down");
+if (!bonus777LeverArmUp || !bonus777LeverArmMid || !bonus777LeverArmDown) {
+  fail("777 vertical lever structure is incomplete");
+}
+if (
+  bonus777LeverArmMid.resourceKey !== "bonus777SlotLeverArmMidVertical" ||
+  bonus777LeverArmDown.resourceKey !== "bonus777SlotLeverArmDownVertical"
+) {
+  fail("777 lever must use the vertical mid/down resources, not the old leftward pull frames");
+}
+if (
+  bonus777LeverArmMid.uiPosition.x !== bonus777LeverArmDown.uiPosition.x ||
+  bonus777LeverArmMid.uiPosition.y >= bonus777LeverArmUp.uiPosition.y ||
+  bonus777LeverArmDown.uiPosition.y >= bonus777LeverArmUp.uiPosition.y
+) {
+  fail("777 lever frame positions must keep one hinge and move from the upper state to lower states");
+}
+for (const leverAsset of [bonus777LeverArmUp, bonus777LeverArmMid, bonus777LeverArmDown]) {
+  if (!runtime.includes(ruid(leverAsset.resourceKey))) {
+    fail(`Runtime 777 lever RUID is stale: ${leverAsset.resourceKey}`);
+  }
+}
 function expectBonus777Sprite(name, relativePath, order, overrideRect = null, overridePos = null) {
   const asset = bonus777Assets.get(name);
   if (!asset) fail(`Missing 777 slot structure asset: ${name}`);
@@ -243,14 +267,9 @@ if (getComponent(`${bonus777Root}/Sprite_ReelWindowFrame`, "MOD.Core.SpriteGUIRe
 }
 expectBonus777Sprite("bonus777_slot_lever_base", `${bonus777Root}/Sprite_LeverBase`, 464);
 expectBonus777Sprite("bonus777_slot_lever_arm_up", `${bonus777Root}/Sprite_Lever`, 465);
-expectRect(`${bonus777Root}/Bg_TitleOpaque`, 486, 54);
-expectPosition(`${bonus777Root}/Bg_TitleOpaque`, 0, 350);
-expectRect(`${bonus777Root}/Bg_ResultOpaque`, 548, 76);
-expectPosition(`${bonus777Root}/Bg_ResultOpaque`, 0, -288);
-for (const opaquePath of [`${bonus777Root}/Bg_TitleOpaque`, `${bonus777Root}/Bg_ResultOpaque`]) {
-  const renderer = getComponent(opaquePath, "MOD.Core.SpriteGUIRendererComponent");
-  if (Math.abs((renderer.Color?.a ?? 0) - 1) > 0.001) {
-    fail(`${opaquePath} must be fully opaque`);
+for (const redundantPath of [`${bonus777Root}/Bg_TitleOpaque`, `${bonus777Root}/Bg_ResultOpaque`]) {
+  if (byPath.has(`${root}/${redundantPath}`)) {
+    fail(`${redundantPath} duplicates artwork already included in the 777 cabinet background`);
   }
 }
 
@@ -674,6 +693,12 @@ if (!runtime.includes("fourPlusLineWinCount") || !runtime.includes("fivePlusLine
 }
 if (!runtime.includes("method boolean ShouldPlayScreenSprayVfx") || !runtime.includes("self:PlayScreenSprayVfxOnce()")) {
   fail("Runtime screen spray trigger flow is missing");
+}
+if (!runtime.includes('self:SetBonus777Texts("HIT "') || !runtime.includes('self:PlayScreenSprayVfxOnce()\n                wait(0.85)')) {
+  fail("Runtime 777 bonus must play the screen spray once for every winning bonus spin");
+}
+if (!runtime.includes("(result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result)")) {
+  fail("Runtime must not replay the screen spray after the 777 bonus presentation completes");
 }
 if (!runtime.includes("SpriteAnimClipPlayType.Onetime")) {
   fail("Runtime screen spray VFX must play once, not loop");

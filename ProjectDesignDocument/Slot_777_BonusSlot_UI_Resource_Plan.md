@@ -57,8 +57,8 @@ All generated raster assets must be transparent PNG slices derived from one full
 | `bonus777SlotResultPanel` | Decorative lower result/chance panel without baked text |
 | `bonus777SlotLeverBase` | Fixed mechanical housing aligned to the right black-crystal socket |
 | `bonus777SlotLeverArmUp` | Moving arm sprite frame: default/up |
-| `bonus777SlotLeverArmMid` | Moving arm sprite frame: transition/mid-pull |
-| `bonus777SlotLeverArmDown` | Moving arm sprite frame: pulled/held down |
+| `bonus777SlotLeverArmMidVertical` | Moving arm sprite frame: short vertical mid-pull |
+| `bonus777SlotLeverArmDownVertical` | Moving arm sprite frame: vertical pulled/held-down state |
 
 ## Motion Rules
 
@@ -68,17 +68,24 @@ The right lever is a sprite animation, not a transform-only effect.
 
 1. The mechanical base remains fixed over the right black-crystal socket.
 2. Idle arm: `bonus777SlotLeverArmUp`
-3. Spin start: `bonus777SlotLeverArmUp -> bonus777SlotLeverArmMid -> bonus777SlotLeverArmDown`
-4. Reels spinning: hold `bonus777SlotLeverArmDown`
-5. Just before result text appears: `bonus777SlotLeverArmDown -> bonus777SlotLeverArmMid -> bonus777SlotLeverArmUp`
+3. Spin start: `bonus777SlotLeverArmUp -> bonus777SlotLeverArmMidVertical -> bonus777SlotLeverArmDownVertical`
+4. Reels spinning: hold `bonus777SlotLeverArmDownVertical`
+5. Just before result text appears: `bonus777SlotLeverArmDownVertical -> bonus777SlotLeverArmMidVertical -> bonus777SlotLeverArmUp`
 
-The arm frames use per-frame anchored positions that keep their lower pivot on one shared hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
+The moving ball must travel from above the hinge to below it. Leftward or horizontal pull frames are not valid. Per-frame anchored positions keep the connector on one shared mechanical hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
 
 ### Panel Alignment
 
 - The reel window frame, reel-column backgrounds, and reel masks share the same inner-window center and opening dimensions.
 - The result panel is `600 x 104`, fully opaque behind its two strings, with only compact top and bottom padding.
 - The title badge is `540 x 90`, fully opaque behind the title string, and the string is centered in the badge interior.
+- Do not add separate `Bg_TitleOpaque` or `Bg_ResultOpaque` sprites. The title and result artwork already owns those dark surfaces, and duplicate black sprites can cover the decorated panels in Screen UI draw order.
+
+### Win VFX
+
+- Every winning 777 bonus spin plays the configured full-screen spray animation once immediately after the reels stop and the `HIT` text is set.
+- Misses do not play the spray animation.
+- Completing or closing the 777 panel does not replay the spray animation. The normal main-slot threshold trigger remains available for non-bonus results.
 
 ### Reels
 

@@ -13,8 +13,17 @@ const excelDir = `${projectRoot}/ExcelTable`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
 const stagingRuntimePath = "C:/Users/ghddj/Documents/MSW/staging/slot_ui_layers/SlotMachineRuntime.mlua";
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
+const bonus777StructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/bonus777/bonus777_slot_ui_structure.json`;
 const runtimeBuildKind = process.env.MSW_SLOT_RUNTIME_KIND || "RELEASE";
 const resourceManifest = JSON.parse(await fs.readFile(manifestPath, "utf8"));
+const bonus777Structure = JSON.parse(await fs.readFile(bonus777StructurePath, "utf8"));
+const bonus777Assets = new Map(bonus777Structure.assets.map((entry) => [entry.name, entry]));
+
+function bonus777Asset(name) {
+  const entry = bonus777Assets.get(name);
+  if (!entry) throw new Error(`Missing 777 UI structure asset: ${name}`);
+  return entry;
+}
 
 const fallbackStrings = new Map([
   [201, "{0} - {1} Coin"],
@@ -1269,9 +1278,9 @@ function makeSetBonus777Texts() {
 }
 
 function makeBuildBonus777LeverFrameRuids() {
-  const up = resourceManifest.bonus777SlotLeverUp?.ruid ?? "";
-  const mid = resourceManifest.bonus777SlotLeverMid?.ruid ?? "";
-  const down = resourceManifest.bonus777SlotLeverDown?.ruid ?? "";
+  const up = resourceManifest[bonus777Asset("bonus777_slot_lever_arm_up").resourceKey]?.ruid ?? "";
+  const mid = resourceManifest[bonus777Asset("bonus777_slot_lever_arm_mid").resourceKey]?.ruid ?? "";
+  const down = resourceManifest[bonus777Asset("bonus777_slot_lever_arm_down").resourceKey]?.ruid ?? "";
   return [
     '    @ExecSpace("ClientOnly")',
     "    method table BuildBonus777LeverFrameRuids()",
@@ -1280,6 +1289,22 @@ function makeBuildBonus777LeverFrameRuids() {
     `        frames.mid = ${JSON.stringify(mid)}`,
     `        frames.down = ${JSON.stringify(down)}`,
     "        return frames",
+    "    end",
+  ].join("\n");
+}
+
+function makeBuildBonus777LeverFramePositions() {
+  const up = bonus777Asset("bonus777_slot_lever_arm_up").uiPosition;
+  const mid = bonus777Asset("bonus777_slot_lever_arm_mid").uiPosition;
+  const down = bonus777Asset("bonus777_slot_lever_arm_down").uiPosition;
+  return [
+    '    @ExecSpace("ClientOnly")',
+    "    method table BuildBonus777LeverFramePositions()",
+    "        local positions = {}",
+    `        positions.up = Vector2(${Number(up.x).toFixed(1)}, ${Number(up.y).toFixed(1)})`,
+    `        positions.mid = Vector2(${Number(mid.x).toFixed(1)}, ${Number(mid.y).toFixed(1)})`,
+    `        positions.down = Vector2(${Number(down.x).toFixed(1)}, ${Number(down.y).toFixed(1)})`,
+    "        return positions",
     "    end",
   ].join("\n");
 }
@@ -1299,6 +1324,15 @@ function makeSetBonus777LeverFrame() {
     "            return",
     "        end",
     "        self.bonus777LeverRenderer.ImageRUID = frameRuid",
+    "        if self.bonus777LeverTransform ~= nil then",
+    "            if self.bonus777LeverFramePositions == nil then",
+    "                self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()",
+    "            end",
+    "            local framePosition = self.bonus777LeverFramePositions[frameKey or \"up\"]",
+    "            if framePosition ~= nil then",
+    "                self.bonus777LeverTransform.anchoredPosition = framePosition",
+    "            end",
+    "        end",
     "    end",
   ].join("\n");
 }
@@ -1310,7 +1344,11 @@ function makeSetBonus777LeverOffset() {
     "        if self.bonus777LeverTransform == nil then",
     "            return",
     "        end",
-    "        self.bonus777LeverTransform.anchoredPosition = Vector2(392.0, 110.0)",
+    "        if self.bonus777LeverFramePositions == nil then",
+    "            self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()",
+    "        end",
+    "        local upPosition = self.bonus777LeverFramePositions.up",
+    "        self.bonus777LeverTransform.anchoredPosition = Vector2(upPosition.x, upPosition.y + (offsetY or 0.0))",
     "    end",
   ].join("\n");
 }
@@ -1477,6 +1515,7 @@ function makePlayBonus777Presentation() {
     "                    resultText = resultText .. \" / +\" .. tostring(spin.extraChanceCount) .. \" CHANCE\"",
     "                end",
     "                self:SetBonus777Texts(\"HIT \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), resultText)",
+    "                self:PlayScreenSprayVfxOnce()",
     "                wait(0.85)",
     "            else",
     "                self:SetBonus777Texts(\"CHANCE \" .. tostring(spinIndex) .. \" / \" .. tostring(totalSpinCount), resultKey .. \" MISS\")",
@@ -1643,10 +1682,16 @@ function patchScreenSprayVfxFlow(runtime) {
     );
   }
 
-  if (!runtime.includes("self:PlayScreenSprayVfxOnce()")) {
+  runtime = runtime.replace(
+    /            if self:ShouldPlayScreenSprayVfx\(result\) then\r?\n                self:PlayScreenSprayVfxOnce\(\)\r?\n            end\r?\n/,
+    "            if (result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result) then\n                self:PlayScreenSprayVfxOnce()\n            end\n",
+  );
+
+  const normalSpinSprayGate = "if (result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result) then";
+  if (!runtime.includes(normalSpinSprayGate)) {
     runtime = runtime.replace(
       /            self:ApplyWinPresentation\(result\.lineWins\)\r?\n/,
-      "            self:ApplyWinPresentation(result.lineWins)\n            if self:ShouldPlayScreenSprayVfx(result) then\n                self:PlayScreenSprayVfxOnce()\n            end\n",
+      "            self:ApplyWinPresentation(result.lineWins)\n            if (result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result) then\n                self:PlayScreenSprayVfxOnce()\n            end\n",
     );
   }
 
@@ -2010,6 +2055,12 @@ function patchBonusSlotProperties(runtime) {
       (match) => `${match}    property any bonus777LeverFrameRuids = nil\n`,
     );
   }
+  if (!runtime.includes("property any bonus777LeverFramePositions = nil")) {
+    runtime = runtime.replace(
+      /    property any bonus777LeverFrameRuids = nil\r?\n/,
+      (match) => `${match}    property any bonus777LeverFramePositions = nil\n`,
+    );
+  }
 
   if (!runtime.includes("self.bonusSlotRules = self:BuildBonusSlotRules()")) {
     runtime = runtime.replace(
@@ -2035,9 +2086,16 @@ function patchBonusSlotProperties(runtime) {
       (match) => `${match}        self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()\n`,
     );
   }
+  if (!runtime.includes("self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()")) {
+    runtime = runtime.replace(
+      /        self\.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids\(\)\r?\n/,
+      (match) => `${match}        self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()\n`,
+    );
+  }
   runtime = runtime.replace(/        self\.bonusSlotTestCheatRemaining = self\.bonusSlotRules\.testCheatUseCount or 0/g, "        self.bonusSlotTestCheatRemaining = 0");
   runtime = runtime.replace(/(        self\.bonusSlotTestCheatRemaining = 0\r?\n){2,}/g, "        self.bonusSlotTestCheatRemaining = 0\n");
   runtime = runtime.replace(/(        self\.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids\(\)\r?\n){2,}/g, "        self.bonus777LeverFrameRuids = self:BuildBonus777LeverFrameRuids()\n");
+  runtime = runtime.replace(/(        self\.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions\(\)\r?\n){2,}/g, "        self.bonus777LeverFramePositions = self:BuildBonus777LeverFramePositions()\n");
 
   return patchBonus777PanelLifecycle(runtime);
 }
@@ -2518,6 +2576,7 @@ function patchBonusSlotFlow(runtime, data) {
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777DigitsFromResultKey", makeSetBonus777DigitsFromResultKey(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777Texts", makeSetBonus777Texts(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "table", "BuildBonus777LeverFrameRuids", makeBuildBonus777LeverFrameRuids(), "EvaluatePaylines");
+  runtime = upsertTypedMethod(runtime, "table", "BuildBonus777LeverFramePositions", makeBuildBonus777LeverFramePositions(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverFrame", makeSetBonus777LeverFrame(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "SetBonus777LeverOffset", makeSetBonus777LeverOffset(), "EvaluatePaylines");
   runtime = upsertTypedMethod(runtime, "void", "UpdateBonus777LeverPull", makeUpdateBonus777LeverPull(), "EvaluatePaylines");

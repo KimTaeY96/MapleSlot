@@ -472,5 +472,17 @@
     "fileName": "bonus777_slot_lever_arm_down.png",
     "ruid": "d0576219dbf44c3fb4a2111b614e872d",
     "size": 201199
+  },
+  "bonus777SlotLeverArmMidVertical": {
+    "key": "bonus777SlotLeverArmMidVertical",
+    "fileName": "bonus777_slot_lever_arm_mid_vertical.png",
+    "ruid": "52710e5f61c4446ba591acf4928083df",
+    "size": 139238
+  },
+  "bonus777SlotLeverArmDownVertical": {
+    "key": "bonus777SlotLeverArmDownVertical",
+    "fileName": "bonus777_slot_lever_arm_down_vertical.png",
+    "ruid": "53221b6009b44fbfaa19d0f126f757b3",
+    "size": 152919
   }
 }

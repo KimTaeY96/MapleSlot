@@ -7,6 +7,7 @@ from PIL import Image
 PROJECT_ROOT = Path(r"C:\Users\ghddj\Desktop\AI\MSW")
 STRUCTURE_PATH = PROJECT_ROOT / "GeneratedAssets" / "SlotMachineUI" / "bonus777" / "bonus777_slot_ui_structure.json"
 FRAME_ALPHA_THRESHOLD = 32
+LEVER_SAFE_MARGIN = 8
 
 
 def load_structure():
@@ -103,9 +104,28 @@ def main():
             f"expected <= {max_allowed_overlap:.4f}. Adjust reel positions/cell sizes from the frame alpha mask, not by eye."
         )
 
+    lever_names = (
+        "bonus777_slot_lever_base",
+        "bonus777_slot_lever_arm_up",
+        "bonus777_slot_lever_arm_mid",
+        "bonus777_slot_lever_arm_down",
+    )
+    for name in lever_names:
+        asset = assets[name]
+        image = Image.open(PROJECT_ROOT / asset["file"]).convert("RGBA")
+        bbox = image.getchannel("A").getbbox()
+        if bbox is None:
+            raise SystemExit(f"777 lever resource is fully transparent: {name}")
+        margins = (bbox[0], bbox[1], image.width - bbox[2], image.height - bbox[3])
+        if min(margins) < LEVER_SAFE_MARGIN:
+            raise SystemExit(
+                f"777 lever resource touches its source edge: {name} margins={margins}; "
+                f"expected at least {LEVER_SAFE_MARGIN}px on every side."
+            )
+
     print(
         "Validated 777 bonus visual safe area "
-        f"(maskPadding={mask_padding:.1f}px, maxFrameOverlap={worst['ratio']:.4f})."
+        f"(maskPadding={mask_padding:.1f}px, maxFrameOverlap={worst['ratio']:.4f}, leverMargins=ok)."
     )
 
 

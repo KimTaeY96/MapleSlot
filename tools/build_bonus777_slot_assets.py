@@ -102,19 +102,19 @@ EXTERNAL_ASSETS = {
         "resourceKey": "bonus777SlotLeverArmUp",
         "file": "bonus777_slot_lever_arm_up.png",
         "displaySize": [170, 170],
-        "uiPosition": [335, 86],
+        "uiPosition": [326, 71],
     },
     "bonus777_slot_lever_arm_mid": {
-        "resourceKey": "bonus777SlotLeverArmMid",
-        "file": "bonus777_slot_lever_arm_mid.png",
+        "resourceKey": "bonus777SlotLeverArmMidVertical",
+        "file": "bonus777_slot_lever_arm_mid_vertical.png",
         "displaySize": [170, 170],
-        "uiPosition": [325, 86],
+        "uiPosition": [329, -13],
     },
     "bonus777_slot_lever_arm_down": {
-        "resourceKey": "bonus777SlotLeverArmDown",
-        "file": "bonus777_slot_lever_arm_down.png",
+        "resourceKey": "bonus777SlotLeverArmDownVertical",
+        "file": "bonus777_slot_lever_arm_down_vertical.png",
         "displaySize": [170, 170],
-        "uiPosition": [282, 33],
+        "uiPosition": [329, -13],
     },
 }
 
