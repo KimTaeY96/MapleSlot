@@ -1,0 +1,34 @@
+{
+  "sourceRuid": "e9c1cc8acd504e41b1cdd4492c2fc05b",
+  "referenceAnimationRuid": "b60c3cbbf52c40709f2fd886d98fe2d9",
+  "frameCount": 4,
+  "frameDurationMs": 150,
+  "animationClipRuid": "464a7603c344480aaa3b085b81152cb8",
+  "animationClipName": "mileage_coin_spin_4f_pixel",
+  "frames": {
+    "mileageCoinSpinFrame01": {
+      "key": "mileageCoinSpinFrame01",
+      "fileName": "mileage_coin_spin_frame_01.png",
+      "ruid": "4609ba14a7c94485bbe02523a3eb14c0",
+      "size": 1952
+    },
+    "mileageCoinSpinFrame02": {
+      "key": "mileageCoinSpinFrame02",
+      "fileName": "mileage_coin_spin_frame_02.png",
+      "ruid": "16a65f72df394312840b5f85f20b3959",
+      "size": 2172
+    },
+    "mileageCoinSpinFrame03": {
+      "key": "mileageCoinSpinFrame03",
+      "fileName": "mileage_coin_spin_frame_03.png",
+      "ruid": "f578d76998a94ea09f0481c7618caa07",
+      "size": 1885
+    },
+    "mileageCoinSpinFrame04": {
+      "key": "mileageCoinSpinFrame04",
+      "fileName": "mileage_coin_spin_frame_04.png",
+      "ruid": "ddbb88f3578b49afac3f517f84695191",
+      "size": 846
+    }
+  }
+}
