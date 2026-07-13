@@ -69,7 +69,7 @@ The right lever is a sprite animation, not a transform-only effect.
 
 The moving ball must travel from above the hinge to below it. Leftward or horizontal pull frames are not valid. Per-frame anchored positions keep the connector on one shared mechanical hinge point. The fixed base never changes RUID or transform, so only the rod and ball appear to move.
 
-The lever arm uses `displayOrder=1000` and `OrderInLayer=1000`, above the fixed machine base. Every sprite-frame change also calls `_UILogic:SetSiblingIndex(leverTransform, 1000000)` so the moving arm remains in front at runtime.
+The lever arm uses UI-file `displayOrder=1000` and `OrderInLayer=1000`, above the fixed machine base. Every sprite-frame change also calls `_UILogic:SetSiblingIndex(leverTransform, 1000000)` so the moving arm remains in front at runtime. Do not assign `OverrideSorting` or `OrderInLayer` from mlua; they are serialized UI fields, not runtime script fields.
 
 ### Panel Alignment
 

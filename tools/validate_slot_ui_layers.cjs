@@ -271,9 +271,11 @@ if (bonus777LeverArmEntity.displayOrder !== 1000 || bonus777LeverArmEntity.displ
 if (
   !runtime.includes("self:EnsureBonus777LeverFront()")
   || !runtime.includes("_UILogic:SetSiblingIndex(self.bonus777LeverTransform, 1000000)")
-  || !runtime.includes("self.bonus777LeverRenderer.OrderInLayer = 1000")
 ) {
   fail("Runtime must force the animated 777 lever arm in front after every sprite-frame change");
+}
+if (runtime.includes("bonus777LeverRenderer.OverrideSorting =") || runtime.includes("bonus777LeverRenderer.OrderInLayer =")) {
+  fail("Runtime must not assign serialized-only SpriteGUIRenderer sorting fields");
 }
 for (const redundantPath of [
   `${bonus777Root}/Bg_TitleOpaque`,

@@ -1317,10 +1317,6 @@ function makeEnsureBonus777LeverFront() {
   return [
     '    @ExecSpace("ClientOnly")',
     "    method void EnsureBonus777LeverFront()",
-    "        if self.bonus777LeverRenderer ~= nil then",
-    "            self.bonus777LeverRenderer.OverrideSorting = true",
-    "            self.bonus777LeverRenderer.OrderInLayer = 1000",
-    "        end",
     "        if self.bonus777LeverTransform ~= nil then",
     "            _UILogic:SetSiblingIndex(self.bonus777LeverTransform, 1000000)",
     "        end",
