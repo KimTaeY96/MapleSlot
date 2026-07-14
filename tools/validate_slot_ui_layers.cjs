@@ -646,9 +646,6 @@ if (coinAnimationFrames.length !== coinAnimationManifest.frameCount) {
 if (!runtime.includes(`property string winSymbolAnimationClipRuid = "${coinAnimationManifest.animationClipRuid}"`)) {
   fail("Runtime mileage coin fallback is not keyed by the table AnimationClip RUID");
 }
-if (!runtime.includes(`property float winSymbolFrameInterval = ${coinAnimationManifest.frameDurationMs / 1000}`)) {
-  fail("Runtime mileage coin fallback does not use the manifest frame duration");
-}
 if (!runtime.includes("method table BuildWinSymbolFrameRuids")) {
   fail("Runtime mileage coin fallback frame RUID table is missing");
 }
@@ -658,19 +655,19 @@ for (const frame of coinAnimationFrames) {
   }
 }
 if (
-  !runtime.includes("method void StartWinSymbolFrameLoop()")
+  !runtime.includes("local symbolFrameRuid = nil")
   || !runtime.includes("cell.winAnimationRuid == self.winSymbolAnimationClipRuid")
-  || !runtime.includes("cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = frameRuid")
-  || !runtime.includes("self:StartWinSymbolFrameLoop()")
+  || !runtime.includes("cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = symbolFrameRuid")
+  || !runtime.includes(`end, ${coinAnimationManifest.frameDurationMs / 1000})`)
 ) {
-  fail("Runtime does not animate the mileage coin by cycling its uploaded frame sprites");
+  fail("Runtime does not animate the mileage coin through the shared win VFX frame timer");
 }
 if (
-  !runtime.includes("method void StopWinSymbolFrameLoop()")
-  || !runtime.includes("_TimerService:ClearTimer(self.winSymbolFrameTimerId)")
-  || !runtime.includes("self:StopWinSymbolFrameLoop()")
+  runtime.includes("winSymbolFrameTimerId")
+  || runtime.includes("StartWinSymbolFrameLoop")
+  || runtime.includes("StopWinSymbolFrameLoop")
 ) {
-  fail("Runtime does not clean up the mileage coin frame timer");
+  fail("Runtime must not create a second repeat-timer path for the mileage coin fallback");
 }
 if (!runtime.includes("winAnimationRuid = winAnimationRuid,")) {
   fail("Runtime active win cells do not retain the table AnimationClip RUID for fallback selection");

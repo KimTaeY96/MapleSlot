@@ -2694,12 +2694,12 @@ function patchWinVfxFrameProperties(runtime) {
 }
 
 function patchWinSymbolFrameProperties(runtime) {
+  runtime = runtime.replace(/\r?\n    property any winSymbolFrameTimerId = nil/g, "");
+  runtime = runtime.replace(/\r?\n    property float winSymbolFrameInterval = [^\r\n]+/g, "");
   if (
     runtime.includes("property any winSymbolFrameRuids = nil")
-    && runtime.includes("property any winSymbolFrameTimerId = nil")
     && runtime.includes("property integer winSymbolFrameIndex = 1")
     && runtime.includes("property string winSymbolAnimationClipRuid =")
-    && runtime.includes("property float winSymbolFrameInterval =")
   ) {
     return runtime;
   }
@@ -2711,10 +2711,8 @@ function patchWinSymbolFrameProperties(runtime) {
     [
       match.trimEnd(),
       "    property any winSymbolFrameRuids = nil",
-      "    property any winSymbolFrameTimerId = nil",
       "    property integer winSymbolFrameIndex = 1",
       `    property string winSymbolAnimationClipRuid = ${luaString(coinAnimationManifest.animationClipRuid)}`,
-      `    property float winSymbolFrameInterval = ${coinAnimationFrameInterval}`,
       "",
     ].join("\n"),
   );
@@ -2740,10 +2738,10 @@ function patchWinVfxFrameInitialization(runtime) {
 }
 
 function patchWinSymbolFrameInitialization(runtime) {
+  runtime = runtime.replace(/\r?\n        self\.winSymbolFrameTimerId = nil/g, "");
   if (
     runtime.includes("self.winSymbolFrameRuids = self:BuildWinSymbolFrameRuids()")
     && runtime.includes("self.winSymbolFrameIndex = 1")
-    && runtime.includes("self.winSymbolFrameTimerId = nil")
   ) {
     return runtime;
   }
@@ -2756,7 +2754,6 @@ function patchWinSymbolFrameInitialization(runtime) {
       match.trimEnd(),
       "        self.winSymbolFrameRuids = self:BuildWinSymbolFrameRuids()",
       "        self.winSymbolFrameIndex = 1",
-      "        self.winSymbolFrameTimerId = nil",
       "",
     ].join("\n"),
   );
@@ -2772,18 +2769,6 @@ function patchOnEndPlayWinVfxCleanup(runtime) {
   }
   const marker = /    method void OnEndPlay\(\)\r?\n/;
   return runtime.replace(marker, (match) => `${match}        self:StopWinVfxFrameLoop()\n`);
-}
-
-function patchOnEndPlayWinSymbolCleanup(runtime) {
-  const methodMatch = runtime.match(/    @ExecSpace\("ClientOnly"\)\r?\n    method void OnEndPlay\(\)\r?\n[\s\S]*?\r?\n    end/);
-  if (!methodMatch) {
-    throw new Error("Could not locate OnEndPlay for win-symbol frame fallback");
-  }
-  if (methodMatch[0].includes("self:StopWinSymbolFrameLoop()")) {
-    return runtime;
-  }
-  const marker = /    method void OnEndPlay\(\)\r?\n/;
-  return runtime.replace(marker, (match) => `${match}        self:StopWinSymbolFrameLoop()\n`);
 }
 
 function makeBuildWinSymbolOverlayRefs() {
@@ -2825,66 +2810,6 @@ function makeBuildWinSymbolFrameRuids() {
   ].join("\n");
 }
 
-function makeStartWinSymbolFrameLoop() {
-  return [
-    '    @ExecSpace("ClientOnly")',
-    "    method void StartWinSymbolFrameLoop()",
-    "        self:StopWinSymbolFrameLoop()",
-    "        if self.winSymbolFrameRuids == nil or #self.winSymbolFrameRuids == 0 then",
-    "            return",
-    "        end",
-    "",
-    "        local hasFallbackCell = false",
-    "        for _, cell in ipairs(self.activeWinCells) do",
-    "            if cell.winAnimationRuid == self.winSymbolAnimationClipRuid and cell.symbolEntity ~= nil and cell.symbolEntity.SpriteGUIRendererComponent ~= nil then",
-    "                cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = self.winSymbolFrameRuids[1]",
-    "                hasFallbackCell = true",
-    "            end",
-    "        end",
-    "        if not hasFallbackCell then",
-    "            return",
-    "        end",
-    "",
-    "        self.winSymbolFrameIndex = 1",
-    "        self.winSymbolFrameTimerId = _TimerService:SetTimerRepeat(function()",
-    "            if self.activeWinCells == nil or #self.activeWinCells == 0 then",
-    "                self:StopWinSymbolFrameLoop()",
-    "                return",
-    "            end",
-    "",
-    "            self.winSymbolFrameIndex = self.winSymbolFrameIndex + 1",
-    "            if self.winSymbolFrameIndex > #self.winSymbolFrameRuids then",
-    "                self.winSymbolFrameIndex = 1",
-    "            end",
-    "",
-    "            local frameRuid = self.winSymbolFrameRuids[self.winSymbolFrameIndex]",
-    "            local updatedFallbackCell = false",
-    "            for _, cell in ipairs(self.activeWinCells) do",
-    "                if cell.winAnimationRuid == self.winSymbolAnimationClipRuid and cell.symbolEntity ~= nil and cell.symbolEntity.SpriteGUIRendererComponent ~= nil then",
-    "                    cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = frameRuid",
-    "                    updatedFallbackCell = true",
-    "                end",
-    "            end",
-    "            if not updatedFallbackCell then",
-    "                self:StopWinSymbolFrameLoop()",
-    "            end",
-    "        end, self.winSymbolFrameInterval)",
-    "    end",
-  ].join("\n");
-}
-
-function makeStopWinSymbolFrameLoop() {
-  return [
-    '    @ExecSpace("ClientOnly")',
-    "    method void StopWinSymbolFrameLoop()",
-    "        if self.winSymbolFrameTimerId ~= nil then",
-    "            _TimerService:ClearTimer(self.winSymbolFrameTimerId)",
-    "            self.winSymbolFrameTimerId = nil",
-    "        end",
-    "    end",
-  ].join("\n");
-}
-
 function makeStartWinVfxFrameLoop() {
   return [
     '    @ExecSpace("ClientOnly")',
@@ -2895,6 +2820,7 @@ function makeStartWinVfxFrameLoop() {
     "        end",
     "",
     "        self.winVfxFrameIndex = 1",
+    "        self.winSymbolFrameIndex = 1",
     "        self.winVfxTimerId = _TimerService:SetTimerRepeat(function()",
     "            if self.activeWinCells == nil or #self.activeWinCells == 0 then",
     "                self:StopWinVfxFrameLoop()",
@@ -2905,14 +2831,25 @@ function makeStartWinVfxFrameLoop() {
     "            if self.winVfxFrameIndex > #self.winVfxFrameRuids then",
     "                self.winVfxFrameIndex = 1",
     "            end",
+    "            self.winSymbolFrameIndex = self.winSymbolFrameIndex + 1",
+    "            if self.winSymbolFrameRuids ~= nil and self.winSymbolFrameIndex > #self.winSymbolFrameRuids then",
+    "                self.winSymbolFrameIndex = 1",
+    "            end",
     "",
     "            local frameRuid = self.winVfxFrameRuids[self.winVfxFrameIndex]",
+    "            local symbolFrameRuid = nil",
+    "            if self.winSymbolFrameRuids ~= nil then",
+    "                symbolFrameRuid = self.winSymbolFrameRuids[self.winSymbolFrameIndex]",
+    "            end",
     "            for _, cell in ipairs(self.activeWinCells) do",
     "                if cell.vfxEntity ~= nil and cell.vfxEntity.SpriteGUIRendererComponent ~= nil then",
     "                    cell.vfxEntity.SpriteGUIRendererComponent.ImageRUID = frameRuid",
     "                end",
+    "                if symbolFrameRuid ~= nil and cell.winAnimationRuid == self.winSymbolAnimationClipRuid and cell.symbolEntity ~= nil and cell.symbolEntity.SpriteGUIRendererComponent ~= nil then",
+    "                    cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = symbolFrameRuid",
+    "                end",
     "            end",
-    "        end, 0.125)",
+    `        end, ${coinAnimationFrameInterval})`,
     "    end",
   ].join("\n");
 }
@@ -3071,7 +3008,6 @@ function makePlayWinCellAnimation() {
     "            end",
     "        end",
     "        self:StartWinVfxFrameLoop()",
-    "        self:StartWinSymbolFrameLoop()",
     "    end",
   ].join("\n");
 }
@@ -3081,7 +3017,6 @@ function makeResetWinCellPresentation() {
     '    @ExecSpace("ClientOnly")',
     "    method void ResetWinCellPresentation()",
     "        self:StopWinVfxFrameLoop()",
-    "        self:StopWinSymbolFrameLoop()",
     "        if self.activeWinCells ~= nil then",
     "            for _, cell in ipairs(self.activeWinCells) do",
     "                self:SetVisibleWinBaseSymbolAlpha(cell.rowIndex, cell.col, 1.0)",
@@ -3124,21 +3059,28 @@ function makeResetWinCellPresentation() {
   ].join("\n");
 }
 
+function removeWinSymbolFrameTimerArtifacts(runtime) {
+  runtime = runtime.replace(/\r?\n        self:(Start|Stop)WinSymbolFrameLoop\(\)/g, "");
+  for (const methodName of ["StartWinSymbolFrameLoop", "StopWinSymbolFrameLoop"]) {
+    const pattern = new RegExp(`[ \\t]*@ExecSpace\\("ClientOnly"\\)\\r?\\n    method void ${methodName}\\([^\\n]*\\)\\r?\\n[\\s\\S]*?\\r?\\n    end\\r?\\n?`);
+    runtime = runtime.replace(pattern, "");
+  }
+  return runtime;
+}
+
 function patchWinPresentation(runtime) {
+  runtime = removeWinSymbolFrameTimerArtifacts(runtime);
   runtime = patchWinSymbolProperties(runtime);
   runtime = patchWinVfxFrameProperties(runtime);
   runtime = patchWinSymbolFrameProperties(runtime);
   runtime = patchWinVfxFrameInitialization(runtime);
   runtime = patchWinSymbolFrameInitialization(runtime);
   runtime = patchOnEndPlayWinVfxCleanup(runtime);
-  runtime = patchOnEndPlayWinSymbolCleanup(runtime);
   runtime = replaceMethod(runtime, "BuildWinSymbolOverlayRefs", makeBuildWinSymbolOverlayRefs());
   runtime = upsertTypedMethod(runtime, "table", "BuildWinVfxFrameRuids", makeBuildWinVfxFrameRuids(), "ApplyWinPresentation");
   runtime = upsertTypedMethod(runtime, "table", "BuildWinSymbolFrameRuids", makeBuildWinSymbolFrameRuids(), "ApplyWinPresentation");
   runtime = upsertTypedMethod(runtime, "void", "StartWinVfxFrameLoop", makeStartWinVfxFrameLoop(), "ApplyWinPresentation");
   runtime = upsertTypedMethod(runtime, "void", "StopWinVfxFrameLoop", makeStopWinVfxFrameLoop(), "ApplyWinPresentation");
-  runtime = upsertTypedMethod(runtime, "void", "StartWinSymbolFrameLoop", makeStartWinSymbolFrameLoop(), "ApplyWinPresentation");
-  runtime = upsertTypedMethod(runtime, "void", "StopWinSymbolFrameLoop", makeStopWinSymbolFrameLoop(), "ApplyWinPresentation");
   runtime = upsertTypedMethod(runtime, "void", "SetVisibleWinBaseSymbolAlpha", makeSetVisibleWinBaseSymbolAlpha(), "ActivateWinCell");
   runtime = replaceVoidMethod(runtime, "ActivateWinCell", makeActivateWinCell());
   runtime = replaceVoidMethod(runtime, "PlayWinCellAnimation", makePlayWinCellAnimation());

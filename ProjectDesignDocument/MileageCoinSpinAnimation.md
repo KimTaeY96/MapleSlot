@@ -33,6 +33,6 @@ MSW AnimationClip Editor에서 위 프레임을 순서대로 연결했으며 각
 
 ## 런타임 재생 보장
 
-MSW AnimationClip Editor와 SpriteGUIRenderer에서 사용자 AnimationClip이 첫 프레임에 정지하는 경우를 대비해, 런타임은 테이블의 `WinAnimationRuid`가 위 AnimationClip RUID와 일치할 때 매니페스트의 개별 프레임을 `150ms` 간격으로 순환한다. AnimationClip RUID는 어떤 애니메이션을 재생할지 판별하는 데이터 키로 유지하며, 다른 심볼의 AnimationClip 재생에는 이 폴백을 적용하지 않는다.
+MSW AnimationClip Editor와 SpriteGUIRenderer에서 사용자 AnimationClip이 첫 프레임에 정지하는 경우를 대비해, 런타임은 테이블의 `WinAnimationRuid`가 위 AnimationClip RUID와 일치할 때 매니페스트의 개별 프레임을 `150ms` 간격으로 순환한다. AnimationClip RUID는 어떤 애니메이션을 재생할지 판별하는 데이터 키로 유지하며, 다른 심볼의 AnimationClip 재생에는 이 폴백을 적용하지 않는다. 별도 반복 타이머를 만들지 않고 기존 당첨 VFX 프레임 타이머에서 함께 갱신한다.
 
 당첨 연출 시작 시 오버레이를 비활성화한 뒤 재생 속성과 범위를 설정하고 리소스를 할당한 다음 다시 활성화한다. 당첨 연출 초기화와 `OnEndPlay`에서는 프레임 타이머를 반드시 해제한다.
