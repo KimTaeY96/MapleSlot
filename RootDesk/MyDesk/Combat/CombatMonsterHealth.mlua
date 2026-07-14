@@ -1,0 +1,69 @@
+@Component
+script CombatMonsterHealth extends Component
+    property integer MonsterDefinitionIndex = 1
+    @Sync property number MaxHp = 30
+    @Sync property number Hp = 30
+    @Sync @HideFromInspector property boolean IsDead = false
+    property string DropGroupId = "DROP_SLIME_TIER1"
+    property number RespawnSeconds = 2
+    property number DestroyDelay = 0.6
+    @HideFromInspector property Vector3 SpawnWorldPosition = Vector3(0, 0, 0)
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
+        if definition == nil or definition.Enabled == false then
+            log_error("[Combat] Missing enabled monster definition: " .. tostring(self.MonsterDefinitionIndex))
+            return
+        end
+        self.MaxHp = definition.MaxHp
+        self.Hp = definition.MaxHp
+        self.DropGroupId = definition.DropGroupId
+        self.RespawnSeconds = definition.RespawnSeconds
+        self.SpawnWorldPosition = self.Entity.TransformComponent.WorldPosition
+        _CombatRuntime:RegisterMonster(self.Entity)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void OnEndPlay()
+        _CombatRuntime:UnregisterMonster(self.Entity)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void Dead(Entity killer)
+        if self.IsDead then return end
+        self.IsDead = true
+        self.Hp = 0
+        local state = self.Entity.StateComponent
+        if isvalid(state) then state:ChangeState("DEAD") end
+        local grants = _CombatTableRuntime:ResolveDropGroup(self.DropGroupId)
+        _CombatRuntime:EnqueueGrants(killer, grants)
+        _TimerService:SetTimerOnce(function()
+            self.Entity:SetVisible(false)
+            self.Entity:SetEnable(false)
+        end, self.DestroyDelay)
+        _TimerService:SetTimerOnce(function()
+            self:Respawn()
+        end, self.RespawnSeconds)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void Respawn()
+        self.Entity.TransformComponent.WorldPosition = self.SpawnWorldPosition
+        self.Hp = self.MaxHp
+        self.IsDead = false
+        self.Entity:SetVisible(true)
+        self.Entity:SetEnable(true)
+        local state = self.Entity.StateComponent
+        if isvalid(state) then state:ChangeState("IDLE") end
+    end
+
+    @ExecSpace("ServerOnly")
+    @EventSender("Self")
+    handler HandleHitEvent(HitEvent event)
+        local originalHp = self.Hp
+        self.Hp = math.max(0, self.Hp - event.TotalDamage)
+        if self.Hp > 0 or originalHp <= 0 then return end
+        self:Dead(event.AttackerEntity)
+    end
+end

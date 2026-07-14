@@ -1,0 +1,77 @@
+@Logic
+script CombatRuntime extends Logic
+    property any monstersById = nil
+    property any pendingRewardsByUserId = nil
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        self.monstersById = {}
+        self.pendingRewardsByUserId = {}
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RegisterMonster(Entity monster)
+        if not isvalid(monster) then return end
+        if self.monstersById == nil then self.monstersById = {} end
+        self.monstersById[monster.Id] = monster
+    end
+
+    @ExecSpace("ServerOnly")
+    method void UnregisterMonster(Entity monster)
+        if not isvalid(monster) or self.monstersById == nil then return end
+        self.monstersById[monster.Id] = nil
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindNearestMonster(Entity seeker, number maxRange)
+        if not isvalid(seeker) or self.monstersById == nil then return nil end
+        local seekerTransform = seeker.TransformComponent
+        if not isvalid(seekerTransform) then return nil end
+        local seekerPosition = seekerTransform.WorldPosition
+        local nearest = nil
+        local nearestDistanceSquared = maxRange * maxRange
+        for id, monster in pairs(self.monstersById) do
+            if not isvalid(monster) then
+                self.monstersById[id] = nil
+            elseif monster.CurrentMap == seeker.CurrentMap then
+                local health = monster:GetComponent("script.CombatMonsterHealth")
+                local transform = monster.TransformComponent
+                if isvalid(health) and health.IsDead == false and isvalid(transform) then
+                    local position = transform.WorldPosition
+                    local dx = position.x - seekerPosition.x
+                    local dy = position.y - seekerPosition.y
+                    local distanceSquared = dx * dx + dy * dy
+                    if distanceSquared <= nearestDistanceSquared then
+                        nearest = monster
+                        nearestDistanceSquared = distanceSquared
+                    end
+                end
+            end
+        end
+        return nearest
+    end
+
+    @ExecSpace("ServerOnly")
+    method void EnqueueGrants(Entity recipient, table grants)
+        if not isvalid(recipient) or not isvalid(recipient.PlayerComponent) then return end
+        if self.pendingRewardsByUserId == nil then self.pendingRewardsByUserId = {} end
+        local userId = recipient.PlayerComponent.UserId
+        if self.pendingRewardsByUserId[userId] == nil then self.pendingRewardsByUserId[userId] = {} end
+        for _, grant in ipairs(grants) do
+            if grant.quantity > 0 and (grant.rewardType == "CURRENCY" or grant.rewardType == "ITEM") then
+                table.insert(self.pendingRewardsByUserId[userId], grant)
+                log("[Combat] Queued reward " .. grant.rewardType .. ":" .. grant.rewardKey .. " x" .. tostring(grant.quantity))
+            else
+                log_error("[Combat] Rejected invalid reward grant")
+            end
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method table DrainPendingRewards(string userId)
+        if self.pendingRewardsByUserId == nil then self.pendingRewardsByUserId = {} end
+        local rewards = self.pendingRewardsByUserId[userId] or {}
+        self.pendingRewardsByUserId[userId] = {}
+        return rewards
+    end
+end

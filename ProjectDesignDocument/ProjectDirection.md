@@ -68,3 +68,40 @@ Based on this sprint definition, the PM Agent must assign only slot-machine deep
 * Keep the approved imagegen-based integrated cabinet as the visual baseline.
 * Phase1 UI work is limited to win highlight, payout/count-up, jackpot-ready presentation hooks, symbol readability, and small alignment fixes.
 * Do not replace the approved cabinet art or return to deterministic/vector-style redraws without user approval.
+
+---
+
+# [Current Sprint Override: Combat Foundation]
+
+This section supersedes the earlier `Slot Phase1 - Deepening` sprint assignment. The slot-machine phase is complete and remains a regression-protected dependency. The active sprint is Combat Foundation.
+
+## Approved Decisions
+
+1. Combat balancing and tier links are authored in `ExcelTable/Combat.xlsx`.
+2. The combat player uses the MSW `DefaultPlayer` appearance and core player components. Manual input is disabled only inside the combat harness; shared `Global/DefaultPlayer.model` is not modified globally.
+3. Monster rewards are not fixed in combat code. Each monster references a drop group defined in `ExcelTable/Drop.xlsx` so currencies and future item rewards share one extensible contract.
+
+## Active Scope
+
+- Build an isolated real-map `Test_Sandbox` harness using MapleTile physics, actual footholds, a DefaultPlayer-derived combat player, and real monster entities.
+- Implement server-authoritative auto targeting, movement, attacks, damage, death, respawn, and drop rolls.
+- Keep map combat independent from the slot UI. Combat publishes state and rewards through explicit runtime contracts; UI only renders those values.
+- Link the selected Base Bet region to a hunting tier, player stat profile, spawn group, and monster definition through data.
+- Apply the 300-second player death penalty from data and revive at full HP.
+- Start with one Tier 1 slime and a variable Common Coin drop. Preserve support for future item rewards without adding fake item rows.
+
+## Guardrails
+
+- Do not hand-edit `TileMapMode`, tile arrays, or foothold chains. Those are authored in Maker and inspected through `MapBuilder`.
+- Do not disable controls on `Global/DefaultPlayer.model`; scope control suppression to the combat test map/runtime.
+- Do not duplicate wallet authority. Combat emits validated reward grants to the shared economy boundary.
+- Do not hardcode display strings that belong in `GameString.xlsx`.
+- Do not regress the completed slot phase while building combat.
+
+## Exit Criteria
+
+- `Combat.xlsx` and `Drop.xlsx` pass structural and cross-workbook validation.
+- A deterministic simulator proves combat timing, death pause, respawn, and drop-roll behavior.
+- The Test Sandbox map preflight confirms MapleTile mode and valid footholds before entity placement.
+- The combat runtime is server-authoritative and its map, model, and script attachments validate without console errors.
+- Slot regression checks and `git diff --check` remain green.

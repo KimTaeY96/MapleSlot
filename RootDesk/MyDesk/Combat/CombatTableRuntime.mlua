@@ -1,0 +1,105 @@
+@Logic
+script CombatTableRuntime extends Logic
+    property any config = nil
+    property any huntingGroundTiers = nil
+    property any playerStatsProfiles = nil
+    property any monsterDefinitions = nil
+    property any monsterSpawnGroups = nil
+    property any dropGroups = nil
+    property any dropEntriesByGroup = nil
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        self:EnsureLoaded()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void EnsureLoaded()
+        if self.config ~= nil then return end
+        self.config = { ServerTickSeconds = 0.1, PlayerDeathPenaltySeconds = 300, PlayerReviveHpPermille = 1000, DisableManualControlInSandbox = true, InitialHuntingGroundTierIndex = 1, RuntimeKind = "TEST_SANDBOX" }
+        self.huntingGroundTiers = {
+            [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerStatsProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
+        }
+        self.playerStatsProfiles = {
+            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1.5, MoveSpeed = 2.5, CriticalChancePermille = 0, CriticalDamagePermille = 1500, AggroRange = 8, Enabled = true, Notes = "Initial auto-battle profile" },
+        }
+        self.monsterDefinitions = {
+            [1] = { MonsterDefinitionsIndex = 1, MonsterKey = "SLIME_TIER_1", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 6, AttackRange = 1.1, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 2, Enabled = true, Notes = "Classic Tier 1 Slime" },
+        }
+        self.monsterSpawnGroups = {
+            [1] = { MonsterSpawnGroupsIndex = 1, SpawnGroupKey = "SPAWN_SLIME_TIER_1", MonsterDefinitionIndex = 1, SpawnCount = 1, SpawnAnchorKey = "CombatHarness/MonsterSpawn/Tier1", BoundsLeftAnchorKey = "CombatHarness/CombatBoundsLeft", BoundsRightAnchorKey = "CombatHarness/CombatBoundsRight", SpawnYOffset = 0.4, Enabled = true, Notes = "Single Slime foundation group" },
+        }
+        self.dropGroups = {
+            ["DROP_SLIME_TIER1"] = { DropGroupsIndex = 1, DropGroupId = "DROP_SLIME_TIER1", RollMode = "INDEPENDENT", RollCount = 1, EmptyResultAllowed = true, Enabled = true, Notes = "Tier 1 Slime reward group" },
+        }
+        self.dropEntriesByGroup = {
+            ["DROP_SLIME_TIER1"] = {
+                { DropEntriesIndex = 1, DropGroupId = "DROP_SLIME_TIER1", RewardType = "CURRENCY", RewardKey = "COMMON_COIN", MinQuantity = 1, MaxQuantity = 3, ChancePermille = 1000, RollWeight = 1, Enabled = true, Notes = "Variable Common Coin drop" },
+            },
+        }
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetConfig()
+        self:EnsureLoaded()
+        return self.config
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetHuntingGroundTier(integer index)
+        self:EnsureLoaded()
+        return self.huntingGroundTiers[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetPlayerStatsProfile(integer index)
+        self:EnsureLoaded()
+        return self.playerStatsProfiles[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetMonsterDefinition(integer index)
+        self:EnsureLoaded()
+        return self.monsterDefinitions[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetMonsterSpawnGroup(integer index)
+        self:EnsureLoaded()
+        return self.monsterSpawnGroups[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table ResolveDropGroup(string dropGroupId)
+        self:EnsureLoaded()
+        local group = self.dropGroups[dropGroupId]
+        if group == nil or group.Enabled == false then
+            log_error("[Combat] Missing enabled drop group: " .. tostring(dropGroupId))
+            return {}
+        end
+        if group.RollMode ~= "INDEPENDENT" then
+            log_error("[Combat] Unsupported drop RollMode: " .. tostring(group.RollMode))
+            return {}
+        end
+        local entries = self.dropEntriesByGroup[dropGroupId] or {}
+        local grants = {}
+        for rollIndex = 1, group.RollCount do
+            for _, entry in ipairs(entries) do
+                if entry.Enabled and _UtilLogic:RandomIntegerRange(1, 1000) <= entry.ChancePermille then
+                    local quantity = _UtilLogic:RandomIntegerRange(entry.MinQuantity, entry.MaxQuantity)
+                    table.insert(grants, {
+                        rewardType = entry.RewardType,
+                        rewardKey = entry.RewardKey,
+                        quantity = quantity,
+                        sourceDropGroupId = dropGroupId,
+                        sourceEntryIndex = entry.DropEntriesIndex,
+                    })
+                end
+            end
+        end
+        if group.EmptyResultAllowed == false and #grants == 0 then
+            log_error("[Combat] Non-empty drop group produced no reward: " .. tostring(dropGroupId))
+        end
+        return grants
+    end
+end

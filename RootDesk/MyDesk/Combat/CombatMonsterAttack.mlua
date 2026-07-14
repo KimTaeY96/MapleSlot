@@ -1,0 +1,39 @@
+@Component
+script CombatMonsterAttack extends AttackComponent
+    property integer MonsterDefinitionIndex = 1
+    property number AttackDamage = 3
+    property number AttackRange = 1.1
+    @HideFromInspector property any AttackShape = nil
+    @HideFromInspector property Entity IntendedTarget = nil
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
+        if definition == nil or definition.Enabled == false then return end
+        self.AttackDamage = definition.AttackPower
+        self.AttackRange = definition.AttackRange
+        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, 1.5), 0)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void DoAttack(Entity target)
+        if not isvalid(target) or self.AttackShape == nil then return end
+        self.IntendedTarget = target
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
+        self.AttackShape.Size = Vector2(self.AttackRange * 2, 1.5)
+        self:AttackFast(self.AttackShape, "COMBAT_MONSTER", CollisionGroups.Player)
+        self.IntendedTarget = nil
+    end
+
+    method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
+        return math.floor(self.AttackDamage)
+    end
+
+    method boolean IsAttackTarget(Entity defender, string attackInfo)
+        if defender ~= self.IntendedTarget then return false end
+        if not isvalid(defender.PlayerComponent) or defender.PlayerComponent:IsDead() then return false end
+        return __base:IsAttackTarget(defender, attackInfo)
+    end
+end

@@ -1,0 +1,172 @@
+@Component
+script CombatPlayerAutoBattle extends AttackComponent
+    property integer ProfileIndex = 1
+    @Sync property string SandboxMapId = ""
+    @Sync property string CombatState = "ACQUIRE"
+    @Sync property boolean DisableManualControl = true
+    @HideFromInspector property Entity TargetEntity = nil
+    @HideFromInspector property any AttackShape = nil
+    @HideFromInspector property number AttackTimer = 0
+    @HideFromInspector property number AttackPower = 1
+    @HideFromInspector property number AttackIntervalSeconds = 1
+    @HideFromInspector property number AttackRange = 1
+    @HideFromInspector property number MoveSpeed = 1
+    @HideFromInspector property number AggroRange = 5
+    @HideFromInspector property integer CriticalChancePermille = 0
+    @HideFromInspector property integer CriticalDamagePermille = 1500
+    @HideFromInspector property boolean PreviousUseCustomScript = false
+    @HideFromInspector property boolean ManualControlChanged = false
+
+    method void OnBeginPlay()
+        if self:IsClient() then
+            local controller = self.Entity.PlayerControllerComponent
+            if isvalid(controller) and self.DisableManualControl then
+                self.PreviousUseCustomScript = controller.UseCustomScript
+                controller.UseCustomScript = true
+                self.ManualControlChanged = true
+            end
+            return
+        end
+
+        self.SandboxMapId = self.Entity.CurrentMap.Id
+        local profile = _CombatTableRuntime:GetPlayerStatsProfile(self.ProfileIndex)
+        local config = _CombatTableRuntime:GetConfig()
+        if profile == nil or profile.Enabled == false then
+            log_error("[Combat] Missing enabled player profile: " .. tostring(self.ProfileIndex))
+            return
+        end
+        self.AttackPower = profile.AttackPower
+        self.AttackIntervalSeconds = profile.AttackIntervalSeconds
+        self.AttackRange = profile.AttackRange
+        self.MoveSpeed = profile.MoveSpeed
+        self.AggroRange = profile.AggroRange
+        self.CriticalChancePermille = profile.CriticalChancePermille
+        self.CriticalDamagePermille = profile.CriticalDamagePermille
+        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, 1.5), 0)
+
+        local player = self.Entity.PlayerComponent
+        if isvalid(player) then
+            player.MaxHp = profile.MaxHp
+            player.Hp = profile.MaxHp
+            player.RespawnDuration = config.PlayerDeathPenaltySeconds
+        end
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
+    end
+
+    method void OnEndPlay()
+        if self:IsClient() then
+            local controller = self.Entity.PlayerControllerComponent
+            if isvalid(controller) and self.ManualControlChanged then controller.UseCustomScript = self.PreviousUseCustomScript end
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void OnUpdate(number delta)
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) or map.Id ~= self.SandboxMapId then
+            self:StopMovement()
+            self.Entity:RemoveComponent("CombatPlayerAutoBattle")
+            return
+        end
+
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) then return end
+        if player:IsDead() then
+            self.CombatState = "DEAD_WAIT"
+            self.TargetEntity = nil
+            self:StopMovement()
+            return
+        elseif self.CombatState == "DEAD_WAIT" then
+            local config = _CombatTableRuntime:GetConfig()
+            player.Hp = math.max(1, math.floor(player.MaxHp * config.PlayerReviveHpPermille / 1000))
+            self.CombatState = "ACQUIRE"
+        end
+
+        self.AttackTimer = math.max(0, self.AttackTimer - delta)
+        if not self:IsValidTarget(self.TargetEntity) then
+            self.TargetEntity = _CombatRuntime:FindNearestMonster(self.Entity, self.AggroRange)
+        end
+        if not self:IsValidTarget(self.TargetEntity) then
+            self.CombatState = "ACQUIRE"
+            self:StopMovement()
+            return
+        end
+
+        local distance = self:DistanceTo(self.TargetEntity)
+        if distance > self.AttackRange then
+            self.CombatState = "CHASE"
+            self:MoveToward(self.TargetEntity, delta)
+            return
+        end
+
+        self.CombatState = "ATTACK"
+        self:StopMovement()
+        if self.AttackTimer <= 0 then self:DoAttack() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean IsValidTarget(Entity target)
+        if not isvalid(target) or target.CurrentMap ~= self.Entity.CurrentMap then return false end
+        local health = target:GetComponent("script.CombatMonsterHealth")
+        return isvalid(health) and health.IsDead == false
+    end
+
+    @ExecSpace("ServerOnly")
+    method number DistanceTo(Entity target)
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        local dx = b.x - a.x
+        local dy = b.y - a.y
+        return math.sqrt(dx * dx + dy * dy)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void MoveToward(Entity target, number delta)
+        local selfPosition = self.Entity.TransformComponent.WorldPosition
+        local targetPosition = target.TransformComponent.WorldPosition
+        local direction = (targetPosition.x >= selfPosition.x) and 1 or -1
+        local controller = self.Entity.PlayerControllerComponent
+        if isvalid(controller) then controller.LookDirectionX = direction end
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement:MoveToDirection(Vector2(direction, 0), delta) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void StopMovement()
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement:Stop() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void DoAttack()
+        if not self:IsValidTarget(self.TargetEntity) then return end
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = self.TargetEntity.TransformComponent.WorldPosition
+        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
+        self.AttackShape.Size = Vector2(self.AttackRange * 2, 1.5)
+        local state = self.Entity.StateComponent
+        if isvalid(state) then state:ChangeState("ATTACK") end
+        self:AttackFast(self.AttackShape, "COMBAT_AUTO", CollisionGroups.Monster)
+        self.AttackTimer = self.AttackIntervalSeconds
+    end
+
+    method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
+        return math.floor(self.AttackPower)
+    end
+
+    method boolean CalcCritical(Entity attacker, Entity defender, string attackInfo)
+        return _UtilLogic:RandomIntegerRange(1, 1000) <= self.CriticalChancePermille
+    end
+
+    method float GetCriticalDamageRate()
+        return self.CriticalDamagePermille / 1000
+    end
+
+    method boolean IsAttackTarget(Entity defender, string attackInfo)
+        if defender ~= self.TargetEntity then return false end
+        local health = defender:GetComponent("script.CombatMonsterHealth")
+        if not isvalid(health) or health.IsDead then return false end
+        return __base:IsAttackTarget(defender, attackInfo)
+    end
+end

@@ -1,0 +1,131 @@
+@Component
+script CombatMonsterAI extends Component
+    property integer MonsterDefinitionIndex = 1
+    property string StandRUID = "50faf654ee5d479cb2958edce9feaef0"
+    property string MoveRUID = "dc932872543f4a02bf41e977ab79e5ad"
+    property string DieRUID = "31ecb6c7cbc24599881f00cb01599f09"
+    property number AttackRange = 1.1
+    property number ChaseRange = 6
+    property number AttackCooldown = 1.5
+    property number MoveSpeed = 1.2
+    @HideFromInspector property Entity TargetEntity = nil
+    @HideFromInspector property number AttackTimer = 0
+    @HideFromInspector property boolean DeathPlayed = false
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
+        if definition == nil or definition.Enabled == false then return end
+        self.StandRUID = definition.StandAnimationRuid
+        self.MoveRUID = definition.MoveAnimationRuid
+        self.DieRUID = definition.DieAnimationRuid
+        self.AttackRange = definition.AttackRange
+        self.ChaseRange = definition.ChaseRange
+        self.AttackCooldown = definition.AttackIntervalSeconds
+        self.MoveSpeed = definition.MoveSpeed
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
+        self:SetSprite(self.StandRUID)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void OnUpdate(number delta)
+        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
+        if not isvalid(health) then return end
+        if health.IsDead then
+            if self.DeathPlayed == false then
+                self.DeathPlayed = true
+                self:SetSprite(self.DieRUID)
+                self:StopMovement()
+            end
+            return
+        elseif self.DeathPlayed then
+            self.DeathPlayed = false
+            self:SetSprite(self.StandRUID)
+        end
+
+        self.AttackTimer = math.max(0, self.AttackTimer - delta)
+        if not self:IsValidPlayer(self.TargetEntity) then self.TargetEntity = self:FindNearestPlayer() end
+        if not self:IsValidPlayer(self.TargetEntity) then
+            self:SetSprite(self.StandRUID)
+            self:StopMovement()
+            return
+        end
+
+        local distance = self:DistanceTo(self.TargetEntity)
+        if distance > self.ChaseRange then
+            self.TargetEntity = nil
+            self:SetSprite(self.StandRUID)
+            self:StopMovement()
+        elseif distance > self.AttackRange then
+            self:SetSprite(self.MoveRUID)
+            self:MoveToward(self.TargetEntity, delta)
+        else
+            self:SetSprite(self.StandRUID)
+            self:StopMovement()
+            if self.AttackTimer <= 0 then
+                local attack = self.Entity:GetComponent("script.CombatMonsterAttack")
+                if isvalid(attack) then attack:DoAttack(self.TargetEntity) end
+                self.AttackTimer = self.AttackCooldown
+            end
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindNearestPlayer()
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) or not isvalid(map.MapComponent) then return nil end
+        local users = _UserService:GetUsersByMapComponent(map.MapComponent)
+        if users == nil then return nil end
+        local nearest = nil
+        local nearestDistance = self.ChaseRange
+        for _, user in pairs(users) do
+            if self:IsValidPlayer(user) then
+                local distance = self:DistanceTo(user)
+                if distance <= nearestDistance then
+                    nearest = user
+                    nearestDistance = distance
+                end
+            end
+        end
+        return nearest
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean IsValidPlayer(Entity player)
+        return isvalid(player) and player.CurrentMap == self.Entity.CurrentMap and isvalid(player.PlayerComponent) and player.PlayerComponent:IsDead() == false
+    end
+
+    @ExecSpace("ServerOnly")
+    method number DistanceTo(Entity target)
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        local dx = b.x - a.x
+        local dy = b.y - a.y
+        return math.sqrt(dx * dx + dy * dy)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void MoveToward(Entity target, number delta)
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        local direction = (b.x >= a.x) and 1 or -1
+        local transform = self.Entity.TransformComponent
+        local scale = transform.Scale
+        transform.Scale = Vector3(math.abs(scale.x) * -direction, scale.y, scale.z)
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement:MoveToDirection(Vector2(direction, 0), delta) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void StopMovement()
+        local movement = self.Entity.MovementComponent
+        if isvalid(movement) then movement:Stop() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void SetSprite(string ruid)
+        local sprite = self.Entity.SpriteRendererComponent
+        if isvalid(sprite) and sprite.SpriteRUID ~= ruid then sprite.SpriteRUID = ruid end
+    end
+end

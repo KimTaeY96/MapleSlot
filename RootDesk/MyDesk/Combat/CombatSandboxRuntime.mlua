@@ -1,0 +1,52 @@
+@Component
+script CombatSandboxRuntime extends Component
+    property integer HuntingGroundTierIndex = 1
+    @HideFromInspector property integer AttachTimerId = 0
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        local config = _CombatTableRuntime:GetConfig()
+        self.HuntingGroundTierIndex = config.InitialHuntingGroundTierIndex
+        self:AttachAutoBattlePlayers()
+        self.AttachTimerId = _TimerService:SetTimerRepeat(function()
+            self:AttachAutoBattlePlayers()
+        end, config.ServerTickSeconds)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void OnEndPlay()
+        if self.AttachTimerId ~= 0 then
+            _TimerService:ClearTimer(self.AttachTimerId)
+            self.AttachTimerId = 0
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void AttachAutoBattlePlayers()
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) or not isvalid(map.MapComponent) then return end
+        local tier = _CombatTableRuntime:GetHuntingGroundTier(self.HuntingGroundTierIndex)
+        if tier == nil or tier.Enabled == false then return end
+        local spawnGroup = _CombatTableRuntime:GetMonsterSpawnGroup(tier.SpawnGroupIndex)
+        if spawnGroup == nil or spawnGroup.Enabled == false then
+            log_error("[Combat] Missing enabled spawn group: " .. tostring(tier.SpawnGroupIndex))
+            return
+        end
+        local config = _CombatTableRuntime:GetConfig()
+        local users = _UserService:GetUsersByMapComponent(map.MapComponent)
+        if users == nil then return end
+        for _, user in pairs(users) do
+            if isvalid(user) then
+                local autoBattle = user:GetComponent("script.CombatPlayerAutoBattle")
+                if not isvalid(autoBattle) then
+                    autoBattle = user:AddComponent("CombatPlayerAutoBattle")
+                end
+                if isvalid(autoBattle) then
+                    autoBattle.ProfileIndex = tier.PlayerStatsProfileIndex
+                    autoBattle.SandboxMapId = map.Id
+                    autoBattle.DisableManualControl = config.DisableManualControlInSandbox
+                end
+            end
+        end
+    end
+end
