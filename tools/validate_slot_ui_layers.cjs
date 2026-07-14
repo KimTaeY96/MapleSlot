@@ -638,6 +638,60 @@ if (!runtime.includes("_TimerService:SetTimerRepeat(function()") || !runtime.inc
 if (!runtime.includes("_TimerService:ClearTimer(self.winVfxTimerId)")) {
   fail("Runtime does not clear the win VFX frame timer");
 }
+const coinAnimationFrames = Object.values(coinAnimationManifest.frames ?? {})
+  .sort((left, right) => String(left.key).localeCompare(String(right.key)));
+if (coinAnimationFrames.length !== coinAnimationManifest.frameCount) {
+  fail(`Mileage coin manifest frame count mismatch: ${coinAnimationFrames.length}; expected ${coinAnimationManifest.frameCount}`);
+}
+if (!runtime.includes(`property string winSymbolAnimationClipRuid = "${coinAnimationManifest.animationClipRuid}"`)) {
+  fail("Runtime mileage coin fallback is not keyed by the table AnimationClip RUID");
+}
+if (!runtime.includes(`property float winSymbolFrameInterval = ${coinAnimationManifest.frameDurationMs / 1000}`)) {
+  fail("Runtime mileage coin fallback does not use the manifest frame duration");
+}
+if (!runtime.includes("method table BuildWinSymbolFrameRuids")) {
+  fail("Runtime mileage coin fallback frame RUID table is missing");
+}
+for (const frame of coinAnimationFrames) {
+  if (!runtime.includes(frame.ruid)) {
+    fail(`Runtime mileage coin fallback frame RUID is missing: ${frame.key}`);
+  }
+}
+if (
+  !runtime.includes("method void StartWinSymbolFrameLoop()")
+  || !runtime.includes("cell.winAnimationRuid == self.winSymbolAnimationClipRuid")
+  || !runtime.includes("cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = frameRuid")
+  || !runtime.includes("self:StartWinSymbolFrameLoop()")
+) {
+  fail("Runtime does not animate the mileage coin by cycling its uploaded frame sprites");
+}
+if (
+  !runtime.includes("method void StopWinSymbolFrameLoop()")
+  || !runtime.includes("_TimerService:ClearTimer(self.winSymbolFrameTimerId)")
+  || !runtime.includes("self:StopWinSymbolFrameLoop()")
+) {
+  fail("Runtime does not clean up the mileage coin frame timer");
+}
+if (!runtime.includes("winAnimationRuid = winAnimationRuid,")) {
+  fail("Runtime active win cells do not retain the table AnimationClip RUID for fallback selection");
+}
+const activateWinCellStart = runtime.indexOf("method void ActivateWinCell(integer rowIndex, integer col, string symbolId)");
+const playWinCellStart = runtime.indexOf("method void PlayWinCellAnimation()", activateWinCellStart);
+const activateWinCellMethod = activateWinCellStart >= 0 && playWinCellStart > activateWinCellStart
+  ? runtime.slice(activateWinCellStart, playWinCellStart)
+  : "";
+const overlayDisableIndex = activateWinCellMethod.indexOf("symbolEntity.Enable = false");
+const overlayConfigureIndex = activateWinCellMethod.indexOf("symbolEntity.SpriteGUIRendererComponent.AnimClipPlayType");
+const overlayRuidIndex = activateWinCellMethod.indexOf("symbolEntity.SpriteGUIRendererComponent.ImageRUID = symbolRuid");
+const overlayEnableIndex = activateWinCellMethod.indexOf("symbolEntity.Enable = true");
+if (
+  overlayDisableIndex < 0
+  || overlayConfigureIndex <= overlayDisableIndex
+  || overlayRuidIndex <= overlayConfigureIndex
+  || overlayEnableIndex <= overlayRuidIndex
+) {
+  fail("Runtime win-symbol overlay must disable, configure, assign the RUID, then enable to restart playback");
+}
 if (runtime.includes("vfx.SpriteGUIRendererComponent.FillMethod = FillMethodType.Radial360")) {
   fail("Runtime still uses static radial-fill win VFX instead of sprite animation");
 }

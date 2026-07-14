@@ -501,6 +501,11 @@ script SlotMachineRuntime extends Logic
     property any winCellVfx = nil
     property any winSymbolOverlays = nil
     property any activeWinCells = nil
+    property any winSymbolFrameRuids = nil
+    property any winSymbolFrameTimerId = nil
+    property integer winSymbolFrameIndex = 1
+    property string winSymbolAnimationClipRuid = "464a7603c344480aaa3b085b81152cb8"
+    property float winSymbolFrameInterval = 0.15
     property any winVfxFrameRuids = nil
     property any winVfxTimerId = nil
     property integer winVfxFrameIndex = 1
@@ -599,6 +604,9 @@ script SlotMachineRuntime extends Logic
         self.winCellVfx = self:BuildWinCellVfxRefs()
         self.winSymbolOverlays = self:BuildWinSymbolOverlayRefs()
         self.activeWinCells = {}
+        self.winSymbolFrameRuids = self:BuildWinSymbolFrameRuids()
+        self.winSymbolFrameIndex = 1
+        self.winSymbolFrameTimerId = nil
         self.winVfxFrameRuids = self:BuildWinVfxFrameRuids()
         self.winVfxFrameIndex = 1
         self.winVfxTimerId = nil
@@ -699,6 +707,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void OnEndPlay()
+        self:StopWinSymbolFrameLoop()
         self:StopWinVfxFrameLoop()
         self:HideScreenSprayVfx()
         self:HideBonus777Panel()
@@ -4377,6 +4386,68 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method table BuildWinSymbolFrameRuids()
+        return {
+            "4609ba14a7c94485bbe02523a3eb14c0",
+            "16a65f72df394312840b5f85f20b3959",
+            "f578d76998a94ea09f0481c7618caa07",
+            "ddbb88f3578b49afac3f517f84695191",
+        }
+    end
+
+    @ExecSpace("ClientOnly")
+    method void StartWinSymbolFrameLoop()
+        self:StopWinSymbolFrameLoop()
+        if self.winSymbolFrameRuids == nil or #self.winSymbolFrameRuids == 0 then
+            return
+        end
+
+        local hasFallbackCell = false
+        for _, cell in ipairs(self.activeWinCells) do
+            if cell.winAnimationRuid == self.winSymbolAnimationClipRuid and cell.symbolEntity ~= nil and cell.symbolEntity.SpriteGUIRendererComponent ~= nil then
+                cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = self.winSymbolFrameRuids[1]
+                hasFallbackCell = true
+            end
+        end
+        if not hasFallbackCell then
+            return
+        end
+
+        self.winSymbolFrameIndex = 1
+        self.winSymbolFrameTimerId = _TimerService:SetTimerRepeat(function()
+            if self.activeWinCells == nil or #self.activeWinCells == 0 then
+                self:StopWinSymbolFrameLoop()
+                return
+            end
+
+            self.winSymbolFrameIndex = self.winSymbolFrameIndex + 1
+            if self.winSymbolFrameIndex > #self.winSymbolFrameRuids then
+                self.winSymbolFrameIndex = 1
+            end
+
+            local frameRuid = self.winSymbolFrameRuids[self.winSymbolFrameIndex]
+            local updatedFallbackCell = false
+            for _, cell in ipairs(self.activeWinCells) do
+                if cell.winAnimationRuid == self.winSymbolAnimationClipRuid and cell.symbolEntity ~= nil and cell.symbolEntity.SpriteGUIRendererComponent ~= nil then
+                    cell.symbolEntity.SpriteGUIRendererComponent.ImageRUID = frameRuid
+                    updatedFallbackCell = true
+                end
+            end
+            if not updatedFallbackCell then
+                self:StopWinSymbolFrameLoop()
+            end
+        end, self.winSymbolFrameInterval)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void StopWinSymbolFrameLoop()
+        if self.winSymbolFrameTimerId ~= nil then
+            _TimerService:ClearTimer(self.winSymbolFrameTimerId)
+            self.winSymbolFrameTimerId = nil
+        end
+    end
+
+    @ExecSpace("ClientOnly")
     method void ApplyWinPresentation(table lineWins)
         self:ResetWinHighlights()
         if lineWins == nil then
@@ -4458,28 +4529,34 @@ script SlotMachineRuntime extends Logic
         if self.winSymbolOverlays ~= nil and self.winSymbolOverlays[rowIndex] ~= nil then
             symbolEntity = self.winSymbolOverlays[rowIndex][col]
         end
+        local winAnimationRuid = nil
         if symbolEntity ~= nil then
             local symbolDataForOverlay = self.slotSymbols[symbolId]
-            local symbolRuid = nil
             if cellData ~= nil then
-                symbolRuid = cellData.winAnimationRuid
+                winAnimationRuid = cellData.winAnimationRuid
             end
-            if (symbolRuid == nil or symbolRuid == "") and symbolDataForOverlay ~= nil then
-                symbolRuid = symbolDataForOverlay.winAnimationRuid
+            if (winAnimationRuid == nil or winAnimationRuid == "") and symbolDataForOverlay ~= nil then
+                winAnimationRuid = symbolDataForOverlay.winAnimationRuid
             end
+            local symbolRuid = winAnimationRuid
             if (symbolRuid == nil or symbolRuid == "") and symbolDataForOverlay ~= nil then
                 symbolRuid = symbolDataForOverlay.resourcePath
             end
-            if symbolRuid ~= nil and symbolRuid ~= "" then
-                symbolEntity.SpriteGUIRendererComponent.ImageRUID = symbolRuid
+            if winAnimationRuid == self.winSymbolAnimationClipRuid and self.winSymbolFrameRuids ~= nil and self.winSymbolFrameRuids[1] ~= nil then
+                symbolRuid = self.winSymbolFrameRuids[1]
             end
             symbolEntity.Enable = false
             symbolEntity.UITransformComponent.UIScale = Vector3(1.0, 1.0, 1.0)
-            symbolEntity.SpriteGUIRendererComponent.AnimClipPlayType = SpriteAnimClipPlayType.Loop
-            symbolEntity.SpriteGUIRendererComponent.StartFrameIndex = 0
-            symbolEntity.SpriteGUIRendererComponent.EndFrameIndex = 2147483647
-            symbolEntity.SpriteGUIRendererComponent.PlayRate = 1.0
-            symbolEntity.SpriteGUIRendererComponent.Color = Color(1.0, 1.0, 1.0, 1.0)
+            if symbolEntity.SpriteGUIRendererComponent ~= nil then
+                symbolEntity.SpriteGUIRendererComponent.AnimClipPlayType = SpriteAnimClipPlayType.Loop
+                symbolEntity.SpriteGUIRendererComponent.StartFrameIndex = 0
+                symbolEntity.SpriteGUIRendererComponent.EndFrameIndex = 2147483647
+                symbolEntity.SpriteGUIRendererComponent.PlayRate = 1.0
+                symbolEntity.SpriteGUIRendererComponent.Color = Color(1.0, 1.0, 1.0, 1.0)
+                if symbolRuid ~= nil and symbolRuid ~= "" then
+                    symbolEntity.SpriteGUIRendererComponent.ImageRUID = symbolRuid
+                end
+            end
             symbolEntity.Enable = true
         end
 
@@ -4501,6 +4578,7 @@ script SlotMachineRuntime extends Logic
             symbolEntity = symbolEntity,
             vfxEntity = vfx,
             animationId = animationId,
+            winAnimationRuid = winAnimationRuid,
         })
     end
 
@@ -4524,6 +4602,7 @@ script SlotMachineRuntime extends Logic
             end
         end
         self:StartWinVfxFrameLoop()
+        self:StartWinSymbolFrameLoop()
     end
 
     @ExecSpace("ClientOnly")
@@ -4539,6 +4618,7 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method void ResetWinCellPresentation()
         self:StopWinVfxFrameLoop()
+        self:StopWinSymbolFrameLoop()
         if self.activeWinCells ~= nil then
             for _, cell in ipairs(self.activeWinCells) do
                 self:SetVisibleWinBaseSymbolAlpha(cell.rowIndex, cell.col, 1.0)

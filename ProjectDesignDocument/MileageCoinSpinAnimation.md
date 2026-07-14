@@ -30,3 +30,9 @@
 ImageGen으로 기준 코인의 붉은색, 흰색 테두리, 중앙 `M` 문양을 유지한 4프레임 회전 시트를 생성했다. 레퍼런스의 프레임별 폭 변화와 도트 실루엣을 반영한 뒤 투명 배경으로 변환하고, `tools/build_mileage_coin_spin_animation.py`에서 프레임 폭 범위와 중앙 정렬을 검증한다.
 
 MSW AnimationClip Editor에서 위 프레임을 순서대로 연결했으며 각 프레임 Delay를 `150ms`로 설정했다. 최종 RUID와 개별 프레임 RUID는 `GeneratedAssets/CoinAnimation/msw_resource_manifest.json`을 기준으로 사용한다.
+
+## 런타임 재생 보장
+
+MSW AnimationClip Editor와 SpriteGUIRenderer에서 사용자 AnimationClip이 첫 프레임에 정지하는 경우를 대비해, 런타임은 테이블의 `WinAnimationRuid`가 위 AnimationClip RUID와 일치할 때 매니페스트의 개별 프레임을 `150ms` 간격으로 순환한다. AnimationClip RUID는 어떤 애니메이션을 재생할지 판별하는 데이터 키로 유지하며, 다른 심볼의 AnimationClip 재생에는 이 폴백을 적용하지 않는다.
+
+당첨 연출 시작 시 오버레이를 비활성화한 뒤 재생 속성과 범위를 설정하고 리소스를 할당한 다음 다시 활성화한다. 당첨 연출 초기화와 `OnEndPlay`에서는 프레임 타이머를 반드시 해제한다.
