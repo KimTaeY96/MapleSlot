@@ -670,11 +670,11 @@ script SlotMachineRuntime extends Logic
             return
         end
 
-        local hudScale = math.min(1.0, math.max(0.72, (screenWidth - 80.0) / 780.0))
+        local hudScale = math.min(1.0, math.max(0.72, (screenWidth - 80.0) / 740.0))
         self.topHudTransform.UIScale = Vector3(hudScale, hudScale, 1.0)
         self.topHudTransform.anchoredPosition = Vector2(0.0, -18.0)
 
-        local topBand = 18.0 + (60.0 * hudScale) + 36.0
+        local topBand = 18.0 + (88.0 * hudScale) + 36.0
         local leftMargin = 42.0
         local bottomMargin = 24.0
         local slotWidth = 893.0
@@ -729,8 +729,8 @@ script SlotMachineRuntime extends Logic
     method table BuildTextTemplates()
         return {
             BaseBetLabel = "{0} - {1}\236\189\148\236\157\184",
-            PremiumAmount = "\237\148\132\235\166\172\235\175\184\236\151\132 {0}",
-            CommonAmount = "\236\157\188\235\176\152 {0}",
+            PremiumAmount = "{0}",
+            CommonAmount = "{0}",
             WinStatus = "\235\139\185\236\178\168 {0}\235\157\188\236\157\184",
             NotEnoughCoins = "\236\189\148\236\157\184\236\157\180 \235\182\128\236\161\177\237\149\169\235\139\136\235\139\164",
             MultiplierLabel = "x{0}",

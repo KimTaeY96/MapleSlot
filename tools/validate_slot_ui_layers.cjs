@@ -16,6 +16,8 @@ const coinAnimationManifest = JSON.parse(fs.readFileSync(coinAnimationManifestPa
 const bonus777Structure = JSON.parse(fs.readFileSync(bonus777StructurePath, "utf8"));
 const runtime = fs.readFileSync(runtimePath, "utf8");
 const screenSprayAnimationRuid = "b21f6d1b6d8d4c5ebe36b6d5b4503553";
+const premiumCoinRuid = "9f4a925aa417482c82e2c683e6d863b9";
+const commonCoinRuid = "4cc5ffc272224edc809a792b8efa16e3";
 const entities = ui.ContentProto.Entities;
 const entityRecordByPath = new Map(entities.map((entity) => [entity.path, entity]));
 const byPath = new Map(entities.map((entity) => [entity.path, entity.jsonString]));
@@ -100,6 +102,88 @@ function expectSprite(relativePath, key) {
   }
 }
 
+function expectSpriteRuid(relativePath, expected) {
+  const renderer = getComponent(relativePath, "MOD.Core.SpriteGUIRendererComponent");
+  if (renderer.ImageRUID?.DataId !== expected) {
+    fail(`Unexpected RUID on ${relativePath}: ${renderer.ImageRUID?.DataId}; expected ${expected}`);
+  }
+}
+
+function expectWhiteSprite(relativePath, preserveAspect = false) {
+  const renderer = getComponent(relativePath, "MOD.Core.SpriteGUIRendererComponent");
+  const color = renderer.Color;
+  if (color?.r !== 1 || color?.g !== 1 || color?.b !== 1 || color?.a !== 1) {
+    fail(`Unexpected sprite tint on ${relativePath}: ${JSON.stringify(color)}; expected opaque white`);
+  }
+  if (preserveAspect && renderer.PreserveAspect !== true) {
+    fail(`${relativePath} must preserve the source icon aspect ratio`);
+  }
+}
+
+function expectText(relativePath, expected) {
+  const text = getComponent(relativePath, "MOD.Core.TextComponent");
+  if (text.Text !== expected) {
+    fail(`Unexpected text on ${relativePath}: ${text.Text}; expected ${expected}`);
+  }
+}
+
+function expectHorizontalSafeArea(relativePath, minX, maxX) {
+  const transform = getComponent(relativePath, "MOD.Core.UITransformComponent");
+  if (transform.OffsetMin.x < minX || transform.OffsetMax.x > maxX) {
+    fail(
+      `${relativePath} leaves its HUD bay: ${transform.OffsetMin.x}..${transform.OffsetMax.x}; expected inside ${minX}..${maxX}`,
+    );
+  }
+}
+
+function expectHorizontalGap(leftPath, rightPath, minGap) {
+  const left = getComponent(leftPath, "MOD.Core.UITransformComponent");
+  const right = getComponent(rightPath, "MOD.Core.UITransformComponent");
+  const gap = right.OffsetMin.x - left.OffsetMax.x;
+  if (gap < minGap) {
+    fail(`Insufficient gap between ${leftPath} and ${rightPath}: ${gap}; expected at least ${minGap}`);
+  }
+}
+
+function expectBestFit(relativePath, minSize, maxSize) {
+  const text = getComponent(relativePath, "MOD.Core.TextComponent");
+  if (text.BestFit !== true || text.MinSize !== minSize || text.MaxSize !== maxSize) {
+    fail(
+      `Unexpected BestFit on ${relativePath}: enabled=${text.BestFit}, range=${text.MinSize}..${text.MaxSize}; expected true/${minSize}..${maxSize}`,
+    );
+  }
+}
+
+expectRect("TopHUD_Currency", 740, 88);
+expectRect("TopHUD_Currency/Bg", 740, 88);
+expectRect("TopHUD_Currency/Icon_PremiumCoin", 40, 40);
+expectRect("TopHUD_Currency/Text_PremiumCoinAmount", 240, 48);
+expectRect("TopHUD_Currency/Icon_CommonCoin", 42, 36);
+expectRect("TopHUD_Currency/Text_CommonCoinAmount", 240, 48);
+expectPosition("TopHUD_Currency", 0, -18);
+expectPosition("TopHUD_Currency/Icon_PremiumCoin", 44, 0);
+expectPosition("TopHUD_Currency/Text_PremiumCoinAmount", 96, 0);
+expectPosition("TopHUD_Currency/Icon_CommonCoin", 404, 0);
+expectPosition("TopHUD_Currency/Text_CommonCoinAmount", 458, 0);
+expectSprite("TopHUD_Currency/Bg", "currencyHudMinimal");
+expectSpriteRuid("TopHUD_Currency/Icon_PremiumCoin", premiumCoinRuid);
+expectSpriteRuid("TopHUD_Currency/Icon_CommonCoin", commonCoinRuid);
+expectWhiteSprite("TopHUD_Currency/Bg");
+expectWhiteSprite("TopHUD_Currency/Icon_PremiumCoin", true);
+expectWhiteSprite("TopHUD_Currency/Icon_CommonCoin", true);
+expectText("TopHUD_Currency/Text_PremiumCoinAmount", "0");
+expectText("TopHUD_Currency/Text_CommonCoinAmount", "0");
+expectTextAlignment("TopHUD_Currency/Text_PremiumCoinAmount", 3);
+expectTextAlignment("TopHUD_Currency/Text_CommonCoinAmount", 3);
+expectHorizontalSafeArea("TopHUD_Currency/Icon_PremiumCoin", 28, 348);
+expectHorizontalSafeArea("TopHUD_Currency/Text_PremiumCoinAmount", 28, 348);
+expectHorizontalSafeArea("TopHUD_Currency/Icon_CommonCoin", 391, 712);
+expectHorizontalSafeArea("TopHUD_Currency/Text_CommonCoinAmount", 391, 712);
+expectHorizontalGap("TopHUD_Currency/Icon_PremiumCoin", "TopHUD_Currency/Text_PremiumCoinAmount", 12);
+expectHorizontalGap("TopHUD_Currency/Icon_CommonCoin", "TopHUD_Currency/Text_CommonCoinAmount", 12);
+expectBestFit("TopHUD_Currency/Text_PremiumCoinAmount", 16, 26);
+expectBestFit("TopHUD_Currency/Text_CommonCoinAmount", 16, 26);
+
 expectRect("Panel_LeftSlotMachine", 893, 1020);
 expectRect("Panel_LeftSlotMachine/Bg_CabinetFrame", 893, 1020);
 expectRect("Panel_LeftSlotMachine/Bg_CabinetInterior", 689, 870);
@@ -156,6 +240,10 @@ expectSprite("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Ornament_BaseBetTitle
 expectSprite("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Ornament_MultiplierTitle", "slotWideTitleOrnament");
 expectSprite("Panel_LeftSlotMachine/Panel_BetMultiplierRow/Divider_BaseBetMultiplier", "slotWideBaseBetMultiplierDivider");
 expectSpriteOrder("TopHUD_Currency/Bg", 300);
+expectSpriteOrder("TopHUD_Currency/Icon_PremiumCoin", 301);
+expectSpriteOrder("TopHUD_Currency/Text_PremiumCoinAmount", 302);
+expectSpriteOrder("TopHUD_Currency/Icon_CommonCoin", 301);
+expectSpriteOrder("TopHUD_Currency/Text_CommonCoinAmount", 302);
 expectSpriteOrder("Panel_LeftSlotMachine/Bg_CabinetInterior", 0);
 expectSpriteOrder("Panel_LeftSlotMachine/Decoration_TopEmblem", 10);
 expectSpriteOrder("Panel_LeftSlotMachine/Bg_CabinetFrame", 20);
@@ -999,8 +1087,19 @@ if (runtime.includes("displayName =")) {
   fail("Runtime CheatCommands must not carry a DisplayName/displayName field");
 }
 
+for (const snippet of [
+  'PremiumAmount = "{0}",',
+  'CommonAmount = "{0}",',
+  "(screenWidth - 80.0) / 740.0",
+  "18.0 + (88.0 * hudScale) + 36.0",
+]) {
+  if (!runtime.includes(snippet)) {
+    fail(`Runtime missing top currency HUD snippet: ${snippet}`);
+  }
+}
+
 console.log(`Validated ${entities.length} UI entities.`);
 console.log(`Validated 5 reel columns, ${reelCells.length} reel-strip cells, and ${reelSymbolSprites.length} monster symbol sprites.`);
 console.log(`Validated ${winCellVfxEntities.length} win-cell glow sprites, ${winSymbolOverlayEntities.length} symbol animation overlays, screen spray VFX, and the resource-backed 777 bonus overlay.`);
 console.log("Validated layered RUIDs, split bottom-panel RUIDs, and Spin SpriteSwap states.");
-console.log("Validated responsive dimensions, runtime cell height, and current runtime bindings.");
+console.log("Validated responsive dimensions, top currency HUD resources, runtime cell height, and current runtime bindings.");

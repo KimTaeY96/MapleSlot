@@ -502,5 +502,11 @@
     "fileName": "bonus777_slot_lever_base_compact.png",
     "ruid": "a79e0ada6cf94a5985a6d7b1d4bed4ed",
     "size": 235395
+  },
+  "currencyHudMinimal": {
+    "key": "currencyHudMinimal",
+    "fileName": "slot_currency_hud_minimal.png",
+    "ruid": "e91423e98d5442a38cb4a3582a1ba54d",
+    "size": 70476
   }
 }

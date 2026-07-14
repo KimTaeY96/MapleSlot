@@ -125,7 +125,9 @@ UIRoot_TestSandbox_MainPlay
 | Reel frame | Layer 3 generated reel-window frame | Manifest key `slotLayerReelWindowFrame` | Applied to `Panel_LeftSlotMachine/ReelFrame_BG` at 620x300 above the reel masks. |
 | Reel column background | Layer 4 generated recessed column | Manifest key `slotLayerReelColumnBackground` | Repeated at 88x244 under each independently moving reel strip. |
 | Bet/multiplier panel | Layer 5 generated info panel | Manifest key `slotLayerInfoPanel` | Applied to `Panel_BetMultiplierRow/Bg` at 620x170; boxes remain empty for live labels. |
-| Currency HUD | Generated currency bar frame | `f3e3b3f00fc34012bab90aecb84a8a54` | Applied to `TopHUD_Currency/Bg`. Verify aspect in Maker because the generated source is shorter than the current HUD width. |
+| Currency HUD | ImageGen minimal navy/gold two-bay currency frame | Manifest key `currencyHudMinimal` / `e91423e98d5442a38cb4a3582a1ba54d` | Applied to `TopHUD_Currency/Bg` at its native 740x88 aspect. The center divider and left/right bays stay symmetric and contain no baked labels, icons, gems, or live values. |
+| Premium currency icon | Existing item sprite | `9f4a925aa417482c82e2c683e6d863b9` | Rendered untinted at 40x40 with aspect preservation, followed by the value-only GameString 202. |
+| Common currency icon | Existing item sprite | `4cc5ffc272224edc809a792b8efa16e3` | Rendered untinted at 42x36 with aspect preservation, followed by the value-only GameString 203. |
 | Combat HUD | Generated compact panel | `747efdda9e98478cb54c7aac431da554` | Applied to `BattleHUD_Right/Bg`. |
 | Reel cell fill | No structural sprite | n/a | Reel cells render live text/future symbol sprites only; Layer 3 and Layer 4 own the frame and recessed surface. |
 | Multiplier cell fill | Generated square blue casino cell | `1cd9fefcb2be4824a94bfd317ae14796` | Applied to multiplier buttons. Runtime tint controls red selected and blue inactive states. |
@@ -217,12 +219,18 @@ Generated asset source:
 - Required validation: active `.ui` must contain the two clean RUIDs and must not contain the old reel-frame/control-panel RUIDs.
 
 2026-06-21 responsive layout pass:
-- Static fallback layout now keeps major panels separated: `TopHUD_Currency` is top-center at 780x60, `Panel_LeftSlotMachine` starts below the HUD at 700x1020, and `BattleHUD_Right` starts below the top HUD band.
+- Static fallback layout now keeps major panels separated: `TopHUD_Currency` is top-center at 740x88, `Panel_LeftSlotMachine` starts below the HUD at 700x1020, and `BattleHUD_Right` starts below the top HUD band.
 - Runtime calls `ApplyResponsiveLayout()` on client begin play and recalculates major panel scale/position from `_UILogic.ScreenWidth` and `_UILogic.ScreenHeight`.
 - Top currency HUD scales between 0.72 and 1.0, anchored top-center.
 - Slot machine panel scales down from 1.0 using both available width and available height, with a lower clamp of 0.48. Its pivot remains top-left so shrinking preserves the top safe gap and prevents bottom overflow.
 - Battle HUD is hidden on widths below 1500 because it competes with the slot panel on compact resolutions. On wide screens it is placed below the same top-safe band.
 - Baseline validation targets are 1366x768 and 1920x1080. At 1366x768, the slot panel scales to roughly 0.62 and fits below the top HUD without covering the screen bottom. At 1920x1080, it scales to roughly 0.92, leaving the same safe gaps without overlap.
+
+2026-07-14 currency HUD resource pass:
+- `TopHUD_Currency` keeps the existing node IDs and runtime bindings; only the panel background, two icon sprites, two value text layouts, and the responsive size constants changed.
+- Premium and common values are displayed as `{icon} {value}`. GameString indices 202 and 203 intentionally contain only `{0}` so localized labels cannot duplicate the icon meaning or consume the value safe area.
+- Both value text boxes use left alignment and BestFit from 26 down to 16 so long runtime values remain inside their own 240x48 bay.
+- `tools/patch_currency_hud_ui.cjs` is the narrow update path for the active `.ui`; do not regenerate the full UI for this resource-only change.
 
 ## Binding Surface
 | Dynamic Value | UI Node |

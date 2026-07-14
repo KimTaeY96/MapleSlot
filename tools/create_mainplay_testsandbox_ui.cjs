@@ -22,7 +22,9 @@ const CASINO_UI_RUIDS = {
   mainPanel: "637248687ada4e45b2ab4882f4763257",
   reelFrame: "48a496fc054542eebf9c177f0b38a229",
   hudPanel: "747efdda9e98478cb54c7aac431da554",
-  currencyBar: "f3e3b3f00fc34012bab90aecb84a8a54",
+  currencyBar: manifestRuid("currencyHudMinimal"),
+  premiumCoin: "9f4a925aa417482c82e2c683e6d863b9",
+  commonCoin: "4cc5ffc272224edc809a792b8efa16e3",
   dropdown: "54d92389927a4acd817173cc7c7bfd8e",
   dropdownList: "f322a2f674b54448a2481008b6b8f4a9",
   cellBlue: "1cd9fefcb2be4824a94bfd317ae14796",
@@ -321,8 +323,8 @@ function ensureRuntimeBindingProperties() {
   fs.writeFileSync(runtimePath, runtime, "utf8");
 }
 
-const PREMIUM_AMOUNT_TEMPLATE = "Premium {0}";
-const COMMON_AMOUNT_TEMPLATE = "Common {0}";
+const PREMIUM_AMOUNT_TEMPLATE = "{0}";
+const COMMON_AMOUNT_TEMPLATE = "{0}";
 const MULTIPLIER_LABEL_TEMPLATE = "x{0}";
 const BASE_BET_CONFIRM_LOCK_TEMPLATE = "Apply new Base Bet? Lock starts for {0}.";
 const BASE_BET_CONFIRM_LOCK_TIME = "05:00";
@@ -521,7 +523,7 @@ function multiplierButton(pathName, text, options = {}) {
 b.panel("TopHUD_Currency", {
   anchor: "top-center",
   pos: [0, -18],
-  rect_size: [780, 60],
+  rect_size: [740, 88],
 });
 bg("TopHUD_Currency", "#FFFFFF", 1, {
   image_ruid: CASINO_UI_RUIDS.currencyBar,
@@ -531,38 +533,46 @@ bg("TopHUD_Currency", "#FFFFFF", 1, {
 });
 b.sprite("TopHUD_Currency/Icon_PremiumCoin", {
   anchor: "middle-left",
-  pos: [36, 0],
-  rect_size: [42, 42],
-  color: "#F5CE4A",
+  pos: [44, 0],
+  rect_size: [40, 40],
+  color: "#FFFFFF",
+  image_ruid: CASINO_UI_RUIDS.premiumCoin,
+  preserve_aspect: true,
   sorting_layer: "UI",
   order_in_layer: Z.topHud + 1,
   override_sorting: true,
 });
 label("TopHUD_Currency/Text_PremiumCoinAmount", formatTemplate(PREMIUM_AMOUNT_TEMPLATE, [0]), {
   anchor: "middle-left",
-  pos: [158, 0],
-  rect_size: [220, 42],
+  pos: [96, 0],
+  rect_size: [240, 48],
   alignment: 3,
-  size: 24,
+  size: 26,
+  bestfit: true,
+  min_size: 16,
   sorting_layer: "UI",
   order_in_layer: Z.topHud + 2,
   override_sorting: true,
 });
 b.sprite("TopHUD_Currency/Icon_CommonCoin", {
   anchor: "middle-left",
-  pos: [442, 0],
-  rect_size: [42, 42],
-  color: "#80D3FF",
+  pos: [404, 0],
+  rect_size: [42, 36],
+  color: "#FFFFFF",
+  image_ruid: CASINO_UI_RUIDS.commonCoin,
+  preserve_aspect: true,
   sorting_layer: "UI",
   order_in_layer: Z.topHud + 1,
   override_sorting: true,
 });
 label("TopHUD_Currency/Text_CommonCoinAmount", formatTemplate(COMMON_AMOUNT_TEMPLATE, [0]), {
   anchor: "middle-left",
-  pos: [568, 0],
-  rect_size: [220, 42],
+  pos: [458, 0],
+  rect_size: [240, 48],
   alignment: 3,
-  size: 24,
+  size: 26,
+  bestfit: true,
+  min_size: 16,
   sorting_layer: "UI",
   order_in_layer: Z.topHud + 2,
   override_sorting: true,
