@@ -1,6 +1,7 @@
 @Component
 script CombatMonsterHealth extends Component
     property integer MonsterDefinitionIndex = 1
+    @Sync property string LaneKey = "CENTER"
     @Sync property number MaxHp = 30
     @Sync property number Hp = 30
     @Sync @HideFromInspector property boolean IsDead = false
@@ -11,6 +12,7 @@ script CombatMonsterHealth extends Component
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
+        -- Loads monster data and registers this instance on its combat lane.
         local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
         if definition == nil or definition.Enabled == false then
             log_error("[Combat] Missing enabled monster definition: " .. tostring(self.MonsterDefinitionIndex))
@@ -22,15 +24,18 @@ script CombatMonsterHealth extends Component
         self.RespawnSeconds = definition.RespawnSeconds
         self.SpawnWorldPosition = self.Entity.TransformComponent.WorldPosition
         _CombatRuntime:RegisterMonster(self.Entity)
+        log("[Combat] Monster registered on lane " .. self.LaneKey)
     end
 
     @ExecSpace("ServerOnly")
     method void OnEndPlay()
+        -- Removes this instance from the shared target registry.
         _CombatRuntime:UnregisterMonster(self.Entity)
     end
 
     @ExecSpace("ServerOnly")
     method void Dead(Entity killer)
+        -- Resolves one death, rewards the killer, and schedules respawn.
         if self.IsDead then return end
         self.IsDead = true
         self.Hp = 0
@@ -49,7 +54,13 @@ script CombatMonsterHealth extends Component
 
     @ExecSpace("ServerOnly")
     method void Respawn()
-        self.Entity.TransformComponent.WorldPosition = self.SpawnWorldPosition
+        -- Restores this monster at its original position and lane.
+        local body = self.Entity.RigidbodyComponent
+        if isvalid(body) then
+            body:SetWorldPosition(Vector2(self.SpawnWorldPosition.x, self.SpawnWorldPosition.y))
+        else
+            self.Entity.TransformComponent.WorldPosition = self.SpawnWorldPosition
+        end
         self.Hp = self.MaxHp
         self.IsDead = false
         self.Entity:SetVisible(true)
@@ -61,6 +72,7 @@ script CombatMonsterHealth extends Component
     @ExecSpace("ServerOnly")
     @EventSender("Self")
     handler HandleHitEvent(HitEvent event)
+        -- Applies native hit damage and triggers death exactly once at zero HP.
         local originalHp = self.Hp
         self.Hp = math.max(0, self.Hp - event.TotalDamage)
         if self.Hp > 0 or originalHp <= 0 then return end

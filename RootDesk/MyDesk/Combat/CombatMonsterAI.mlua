@@ -14,6 +14,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
+        -- Loads the monster movement and animation profile from Combat.xlsx.
         local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
         if definition == nil or definition.Enabled == false then return end
         self.StandRUID = definition.StandAnimationRuid
@@ -30,6 +31,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void OnUpdate(number delta)
+        -- Runs same-lane target acquisition, chase, attack, and death visuals.
         local health = self.Entity:GetComponent("script.CombatMonsterHealth")
         if not isvalid(health) then return end
         if health.IsDead then
@@ -73,6 +75,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method Entity FindNearestPlayer()
+        -- Finds the closest living auto-battle player on this monster's lane.
         local map = self.Entity.CurrentMap
         if not isvalid(map) or not isvalid(map.MapComponent) then return nil end
         local users = _UserService:GetUsersByMapComponent(map.MapComponent)
@@ -93,11 +96,17 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method boolean IsValidPlayer(Entity player)
-        return isvalid(player) and player.CurrentMap == self.Entity.CurrentMap and isvalid(player.PlayerComponent) and player.PlayerComponent:IsDead() == false
+        -- Rejects dead players and players assigned to another combat lane.
+        if not isvalid(player) or player.CurrentMap ~= self.Entity.CurrentMap then return false end
+        if not isvalid(player.PlayerComponent) or player.PlayerComponent:IsDead() then return false end
+        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
+        local autoBattle = player:GetComponent("script.CombatPlayerAutoBattle")
+        return isvalid(health) and isvalid(autoBattle) and autoBattle.CombatLaneKey == health.LaneKey
     end
 
     @ExecSpace("ServerOnly")
     method number DistanceTo(Entity target)
+        -- Measures world-space distance to a same-lane player.
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         local dx = b.x - a.x
@@ -107,6 +116,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
+        -- Moves horizontally toward the target while preserving this lane.
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         local direction = (b.x >= a.x) and 1 or -1
@@ -119,12 +129,14 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void StopMovement()
+        -- Stops monster movement without changing its lane assignment.
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement:Stop() end
     end
 
     @ExecSpace("ServerOnly")
     method void SetSprite(string ruid)
+        -- Applies a table-backed animation RUID only when it changes.
         local sprite = self.Entity.SpriteRendererComponent
         if isvalid(sprite) and sprite.SpriteRUID ~= ruid then sprite.SpriteRUID = ruid end
     end

@@ -1,0 +1,33 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "codeblock://1d1da48d-5e19-491b-8192-c825dbdeb448",
+  "ContentType": "x-mod/codeblock",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.5.0.0",
+  "StudioVersion": "",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "CoreVersion": {
+        "Major": 0,
+        "Minor": 2
+      },
+      "ScriptVersion": {
+        "Major": 1,
+        "Minor": 1
+      },
+      "Description": "",
+      "Id": "1d1da48d-5e19-491b-8192-c825dbdeb448",
+      "Language": 1,
+      "Name": "CombatPlayerAutoBattle",
+      "Type": 1,
+      "Source": 0,
+      "Target": null
+    }
+  }
+}

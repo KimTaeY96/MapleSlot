@@ -3,6 +3,7 @@ script CombatTableRuntime extends Logic
     property any config = nil
     property any huntingGroundTiers = nil
     property any playerStatsProfiles = nil
+    property any combatLanesByTier = nil
     property any monsterDefinitions = nil
     property any monsterSpawnGroups = nil
     property any dropGroups = nil
@@ -10,24 +11,33 @@ script CombatTableRuntime extends Logic
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
+        -- Loads the generated combat and drop tables once on the server.
         self:EnsureLoaded()
     end
 
     @ExecSpace("ServerOnly")
     method void EnsureLoaded()
+        -- Initializes every table cache from the Excel-generated literals.
         if self.config ~= nil then return end
-        self.config = { ServerTickSeconds = 0.1, PlayerDeathPenaltySeconds = 300, PlayerReviveHpPermille = 1000, DisableManualControlInSandbox = true, InitialHuntingGroundTierIndex = 1, RuntimeKind = "TEST_SANDBOX" }
+        self.config = { ServerTickSeconds = 0.1, PlayerDeathPenaltySeconds = 300, PlayerReviveHpPermille = 1000, DisableManualControlInSandbox = true, InitialHuntingGroundTierIndex = 1, RuntimeKind = "HENESYS_TILE_LANES", HenesysMapKey = "map01", LaneMatchTolerance = 0.35, MinimumLaneSpacing = 1.8, PlayerSpawnNormalizedX = 0.32, MonsterSpawnNormalizedX = 0.68, CombatBoundsInset = 0.3, PlayerSpawnYOffset = 0.4, CombatAreaMinimumWorldX = 0, CombatAreaMaximumWorldX = 8 }
         self.huntingGroundTiers = {
             [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerStatsProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
         }
         self.playerStatsProfiles = {
-            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1.5, MoveSpeed = 2.5, CriticalChancePermille = 0, CriticalDamagePermille = 1500, AggroRange = 8, Enabled = true, Notes = "Initial auto-battle profile" },
+            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1.5, MoveSpeed = 2.5, CriticalChancePermille = 0, CriticalDamagePermille = 1500, AggroRange = 8, Enabled = true, Notes = "Initial auto-battle profile", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2 },
+        }
+        self.combatLanesByTier = {
+            [1] = {
+                ["UPPER"] = { CombatLanesIndex = 1, HuntingGroundTierIndex = 1, MapKey = "map01", LaneKey = "UPPER", LaneOrder = 1, WorldYOffset = 2.1, MinimumHorizontalSpan = 6, BasicAttackTargetable = false, InitialSpawnEnabled = false, SpawnAnchorKey = "CombatHarness/Lanes/UPPER/Spawn", BoundsLeftAnchorKey = "CombatHarness/Lanes/UPPER/BoundsLeft", BoundsRightAnchorKey = "CombatHarness/Lanes/UPPER/BoundsRight", Enabled = true, Notes = "Future upper-lane area skill target" },
+                ["CENTER"] = { CombatLanesIndex = 2, HuntingGroundTierIndex = 1, MapKey = "map01", LaneKey = "CENTER", LaneOrder = 2, WorldYOffset = 0, MinimumHorizontalSpan = 6, BasicAttackTargetable = true, InitialSpawnEnabled = true, SpawnAnchorKey = "CombatHarness/Lanes/CENTER/Spawn", BoundsLeftAnchorKey = "CombatHarness/Lanes/CENTER/BoundsLeft", BoundsRightAnchorKey = "CombatHarness/Lanes/CENTER/BoundsRight", Enabled = true, Notes = "Initial basic attack hunting lane" },
+                ["LOWER"] = { CombatLanesIndex = 3, HuntingGroundTierIndex = 1, MapKey = "map01", LaneKey = "LOWER", LaneOrder = 3, WorldYOffset = -2.1, MinimumHorizontalSpan = 6, BasicAttackTargetable = false, InitialSpawnEnabled = false, SpawnAnchorKey = "CombatHarness/Lanes/LOWER/Spawn", BoundsLeftAnchorKey = "CombatHarness/Lanes/LOWER/BoundsLeft", BoundsRightAnchorKey = "CombatHarness/Lanes/LOWER/BoundsRight", Enabled = true, Notes = "Future lower-lane area skill target" },
+            },
         }
         self.monsterDefinitions = {
-            [1] = { MonsterDefinitionsIndex = 1, MonsterKey = "SLIME_TIER_1", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 6, AttackRange = 1.1, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 2, Enabled = true, Notes = "Classic Tier 1 Slime" },
+            [1] = { MonsterDefinitionsIndex = 1, MonsterKey = "SLIME_TIER_1", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 6, AttackRange = 1.1, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 2, Enabled = true, Notes = "Classic Tier 1 Slime", AttackHitboxHeight = 1.2 },
         }
         self.monsterSpawnGroups = {
-            [1] = { MonsterSpawnGroupsIndex = 1, SpawnGroupKey = "SPAWN_SLIME_TIER_1", MonsterDefinitionIndex = 1, SpawnCount = 1, SpawnAnchorKey = "CombatHarness/MonsterSpawn/Tier1", BoundsLeftAnchorKey = "CombatHarness/CombatBoundsLeft", BoundsRightAnchorKey = "CombatHarness/CombatBoundsRight", SpawnYOffset = 0.4, Enabled = true, Notes = "Single Slime foundation group" },
+            [1] = { MonsterSpawnGroupsIndex = 1, SpawnGroupKey = "SPAWN_SLIME_TIER_1", MonsterDefinitionIndex = 1, SpawnCount = 1, SpawnAnchorKey = "CombatHarness/Lanes/CENTER/Spawn", BoundsLeftAnchorKey = "CombatHarness/Lanes/CENTER/BoundsLeft", BoundsRightAnchorKey = "CombatHarness/Lanes/CENTER/BoundsRight", SpawnYOffset = 0.4, Enabled = true, Notes = "Single Slime foundation group", LaneKey = "CENTER" },
         }
         self.dropGroups = {
             ["DROP_SLIME_TIER1"] = { DropGroupsIndex = 1, DropGroupId = "DROP_SLIME_TIER1", RollMode = "INDEPENDENT", RollCount = 1, EmptyResultAllowed = true, Enabled = true, Notes = "Tier 1 Slime reward group" },
@@ -41,36 +51,69 @@ script CombatTableRuntime extends Logic
 
     @ExecSpace("ServerOnly")
     method table GetConfig()
+        -- Returns the singleton combat configuration row.
         self:EnsureLoaded()
         return self.config
     end
 
     @ExecSpace("ServerOnly")
     method table GetHuntingGroundTier(integer index)
+        -- Resolves a hunting-ground tier by its numeric index.
         self:EnsureLoaded()
         return self.huntingGroundTiers[index]
     end
 
     @ExecSpace("ServerOnly")
     method table GetPlayerStatsProfile(integer index)
+        -- Resolves a player combat profile by its numeric index.
         self:EnsureLoaded()
         return self.playerStatsProfiles[index]
     end
 
     @ExecSpace("ServerOnly")
+    method table GetCombatLane(integer tierIndex, string laneKey)
+        -- Resolves one UPPER, CENTER, or LOWER lane for a tier.
+        self:EnsureLoaded()
+        local lanes = self.combatLanesByTier[tierIndex]
+        if lanes == nil then return nil end
+        return lanes[laneKey]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetCombatLanes(integer tierIndex)
+        -- Returns the lane-keyed table used by future area skills.
+        self:EnsureLoaded()
+        return self.combatLanesByTier[tierIndex] or {}
+    end
+
+    @ExecSpace("ServerOnly")
+    method string GetBasicAttackLaneKey(integer tierIndex)
+        -- Returns the only lane enabled for basic attacks in the tier.
+        self:EnsureLoaded()
+        for laneKey, lane in pairs(self.combatLanesByTier[tierIndex] or {}) do
+            if lane.Enabled and lane.BasicAttackTargetable then return laneKey end
+        end
+        log_error("[Combat] Missing basic attack lane for tier " .. tostring(tierIndex))
+        return "CENTER"
+    end
+
+    @ExecSpace("ServerOnly")
     method table GetMonsterDefinition(integer index)
+        -- Resolves a monster definition by its numeric index.
         self:EnsureLoaded()
         return self.monsterDefinitions[index]
     end
 
     @ExecSpace("ServerOnly")
     method table GetMonsterSpawnGroup(integer index)
+        -- Resolves a monster spawn group by its numeric index.
         self:EnsureLoaded()
         return self.monsterSpawnGroups[index]
     end
 
     @ExecSpace("ServerOnly")
     method table ResolveDropGroup(string dropGroupId)
+        -- Rolls an enabled drop group and returns normalized reward grants.
         self:EnsureLoaded()
         local group = self.dropGroups[dropGroupId]
         if group == nil or group.Enabled == false then

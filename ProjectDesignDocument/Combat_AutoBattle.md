@@ -2,13 +2,21 @@
 
 ## Authority
 
-All target selection, movement intent, attack cadence, damage acceptance, death transitions, respawn timing, and reward rolls are server-authoritative. Clients render replicated state and animation only.
+All target selection, lane filtering, movement intent, attack cadence, damage acceptance, death transitions, respawn timing, and reward rolls are server-authoritative. Clients render replicated state and animation only.
+
+## Lane Contract
+
+- Initial players and monsters are assigned to `CENTER`.
+- Basic attacks and low-tier skills can acquire and damage only the profile's `BasicAttackLaneKey`.
+- Monster chase and attack require the player's combat lane to match the monster's `LaneKey`.
+- Future area skills provide an explicit list of target lanes to `CombatRuntime:FindMonstersInLanes`.
+- Vertical lane spacing and attack hitbox heights are table data, not code constants.
 
 ## State Model
 
 | State | Entry | Behavior | Exit |
 |---|---|---|---|
-| `ACQUIRE` | No valid target | Select nearest live monster inside aggro range. | Target found -> `CHASE`; none -> remain. |
+| `ACQUIRE` | No valid target | Select nearest live monster inside aggro range on the allowed lane. | Target found -> `CHASE`; none -> remain. |
 | `CHASE` | Target outside attack range | Move toward target while respecting combat bounds and foothold edges. | In range -> `ATTACK`; invalid target -> `ACQUIRE`. |
 | `ATTACK` | Target inside range | Stop movement and attack at the profile interval. | Target dies/invalid -> `ACQUIRE`; target leaves range -> `CHASE`. |
 | `DEAD_WAIT` | Player HP reaches zero | Disable targeting, movement, attacks, and reward production. | Penalty timer completes -> `REVIVE`. |
@@ -45,3 +53,4 @@ Base Bet does not directly mutate combat stats. Its index selects one `HuntingGr
 - Missing runtime model/script attachment: stop the harness and log one actionable error.
 - Missing drop group during play: grant nothing; never substitute a hardcoded fallback reward.
 - Missing foothold: placement tool exits without writing the map.
+- Missing or misaligned three-lane foothold set: Henesys placement exits without writing the map.

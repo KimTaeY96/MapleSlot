@@ -1,5 +1,7 @@
 # Combat Map Test Sandbox Spec
 
+> Historical foundation harness. Production integration now targets the three-lane Henesys layout in `Combat_Henesys_ThreeLane_Map.md`; the Test Sandbox remains an isolated regression fixture only.
+
 > Active sprint: Combat Foundation. This file defines the real-map verification harness and supersedes earlier placeholder-only interpretation.
 
 ## Purpose

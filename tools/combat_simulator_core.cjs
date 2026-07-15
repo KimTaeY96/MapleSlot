@@ -58,9 +58,10 @@ class CombatSimulator {
     this.grants = [];
   }
 
-  playerAttack() {
+  playerAttack(monsterLaneKey = "CENTER") {
     if (this.playerState === "DEAD_WAIT") return [];
     if (this.monsterDeathResolved) return [];
+    if (String(monsterLaneKey) !== String(this.playerProfile.BasicAttackLaneKey)) return [];
     this.monsterHp = Math.max(0, this.monsterHp - Number(this.playerProfile.AttackPower));
     if (this.monsterHp > 0) return [];
     this.monsterDeathResolved = true;

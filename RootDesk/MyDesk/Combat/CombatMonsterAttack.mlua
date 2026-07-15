@@ -3,37 +3,49 @@ script CombatMonsterAttack extends AttackComponent
     property integer MonsterDefinitionIndex = 1
     property number AttackDamage = 3
     property number AttackRange = 1.1
+    property number AttackHitboxHeight = 1.2
     @HideFromInspector property any AttackShape = nil
     @HideFromInspector property Entity IntendedTarget = nil
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
+        -- Loads damage, range, and hitbox height from Combat.xlsx.
         local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
         if definition == nil or definition.Enabled == false then return end
         self.AttackDamage = definition.AttackPower
         self.AttackRange = definition.AttackRange
-        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, 1.5), 0)
+        self.AttackHitboxHeight = definition.AttackHitboxHeight
+        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
     end
 
     @ExecSpace("ServerOnly")
     method void DoAttack(Entity target)
+        -- Executes one attack only against a player assigned to the same lane.
         if not isvalid(target) or self.AttackShape == nil then return end
+        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
+        local autoBattle = target:GetComponent("script.CombatPlayerAutoBattle")
+        if not isvalid(health) or not isvalid(autoBattle) or health.LaneKey ~= autoBattle.CombatLaneKey then return end
         self.IntendedTarget = target
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
-        self.AttackShape.Size = Vector2(self.AttackRange * 2, 1.5)
+        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
         self:AttackFast(self.AttackShape, "COMBAT_MONSTER", CollisionGroups.Player)
         self.IntendedTarget = nil
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
+        -- Returns the table-backed monster attack damage.
         return math.floor(self.AttackDamage)
     end
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)
+        -- Rejects collision candidates outside the intended same-lane player.
         if defender ~= self.IntendedTarget then return false end
         if not isvalid(defender.PlayerComponent) or defender.PlayerComponent:IsDead() then return false end
+        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
+        local autoBattle = defender:GetComponent("script.CombatPlayerAutoBattle")
+        if not isvalid(health) or not isvalid(autoBattle) or health.LaneKey ~= autoBattle.CombatLaneKey then return false end
         return __base:IsAttackTarget(defender, attackInfo)
     end
 end

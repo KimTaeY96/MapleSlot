@@ -3,6 +3,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     property integer ProfileIndex = 1
     @Sync property string SandboxMapId = ""
     @Sync property string CombatState = "ACQUIRE"
+    @Sync property string CombatLaneKey = "CENTER"
     @Sync property boolean DisableManualControl = true
     @HideFromInspector property Entity TargetEntity = nil
     @HideFromInspector property any AttackShape = nil
@@ -10,6 +11,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AttackPower = 1
     @HideFromInspector property number AttackIntervalSeconds = 1
     @HideFromInspector property number AttackRange = 1
+    @HideFromInspector property number AttackHitboxHeight = 1.2
     @HideFromInspector property number MoveSpeed = 1
     @HideFromInspector property number AggroRange = 5
     @HideFromInspector property integer CriticalChancePermille = 0
@@ -18,6 +20,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property boolean ManualControlChanged = false
 
     method void OnBeginPlay()
+        -- Loads the active profile and locks basic combat to its configured lane.
         if self:IsClient() then
             local controller = self.Entity.PlayerControllerComponent
             if isvalid(controller) and self.DisableManualControl then
@@ -38,11 +41,13 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackPower = profile.AttackPower
         self.AttackIntervalSeconds = profile.AttackIntervalSeconds
         self.AttackRange = profile.AttackRange
+        self.AttackHitboxHeight = profile.AttackHitboxHeight
         self.MoveSpeed = profile.MoveSpeed
         self.AggroRange = profile.AggroRange
+        self.CombatLaneKey = profile.BasicAttackLaneKey
         self.CriticalChancePermille = profile.CriticalChancePermille
         self.CriticalDamagePermille = profile.CriticalDamagePermille
-        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, 1.5), 0)
+        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
 
         local player = self.Entity.PlayerComponent
         if isvalid(player) then
@@ -52,9 +57,11 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
+        log("[Combat] Auto battle ready on lane " .. self.CombatLaneKey)
     end
 
     method void OnEndPlay()
+        -- Restores client control settings changed for auto battle.
         if self:IsClient() then
             local controller = self.Entity.PlayerControllerComponent
             if isvalid(controller) and self.ManualControlChanged then controller.UseCustomScript = self.PreviousUseCustomScript end
@@ -63,6 +70,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void OnUpdate(number delta)
+        -- Runs the acquire, chase, attack, death-wait, and revive state loop.
         local map = self.Entity.CurrentMap
         if not isvalid(map) or map.Id ~= self.SandboxMapId then
             self:StopMovement()
@@ -85,7 +93,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
         if not self:IsValidTarget(self.TargetEntity) then
-            self.TargetEntity = _CombatRuntime:FindNearestMonster(self.Entity, self.AggroRange)
+            self.TargetEntity = _CombatRuntime:FindNearestMonster(self.Entity, self.AggroRange, self.CombatLaneKey)
         end
         if not self:IsValidTarget(self.TargetEntity) then
             self.CombatState = "ACQUIRE"
@@ -107,13 +115,15 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method boolean IsValidTarget(Entity target)
+        -- Accepts only a live monster on the player's configured combat lane.
         if not isvalid(target) or target.CurrentMap ~= self.Entity.CurrentMap then return false end
         local health = target:GetComponent("script.CombatMonsterHealth")
-        return isvalid(health) and health.IsDead == false
+        return isvalid(health) and health.IsDead == false and health.LaneKey == self.CombatLaneKey
     end
 
     @ExecSpace("ServerOnly")
     method number DistanceTo(Entity target)
+        -- Measures world-space distance to the current same-lane target.
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         local dx = b.x - a.x
@@ -123,6 +133,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
+        -- Moves horizontally toward a target without changing combat lanes.
         local selfPosition = self.Entity.TransformComponent.WorldPosition
         local targetPosition = target.TransformComponent.WorldPosition
         local direction = (targetPosition.x >= selfPosition.x) and 1 or -1
@@ -134,17 +145,19 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void StopMovement()
+        -- Stops horizontal auto-battle movement immediately.
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement:Stop() end
     end
 
     @ExecSpace("ServerOnly")
     method void DoAttack()
+        -- Executes one table-sized hitbox against the selected center-lane target.
         if not self:IsValidTarget(self.TargetEntity) then return end
         local a = self.Entity.TransformComponent.WorldPosition
         local b = self.TargetEntity.TransformComponent.WorldPosition
         self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
-        self.AttackShape.Size = Vector2(self.AttackRange * 2, 1.5)
+        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
         local state = self.Entity.StateComponent
         if isvalid(state) then state:ChangeState("ATTACK") end
         self:AttackFast(self.AttackShape, "COMBAT_AUTO", CollisionGroups.Monster)
@@ -152,21 +165,25 @@ script CombatPlayerAutoBattle extends AttackComponent
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
+        -- Returns the table-backed basic attack damage.
         return math.floor(self.AttackPower)
     end
 
     method boolean CalcCritical(Entity attacker, Entity defender, string attackInfo)
+        -- Rolls the table-backed critical chance in permille.
         return _UtilLogic:RandomIntegerRange(1, 1000) <= self.CriticalChancePermille
     end
 
     method float GetCriticalDamageRate()
+        -- Converts the critical damage permille to an engine multiplier.
         return self.CriticalDamagePermille / 1000
     end
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)
+        -- Rejects collision candidates outside the selected target and lane.
         if defender ~= self.TargetEntity then return false end
         local health = defender:GetComponent("script.CombatMonsterHealth")
-        if not isvalid(health) or health.IsDead then return false end
+        if not isvalid(health) or health.IsDead or health.LaneKey ~= self.CombatLaneKey then return false end
         return __base:IsAttackTarget(defender, attackInfo)
     end
 end

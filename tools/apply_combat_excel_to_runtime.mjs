@@ -53,11 +53,28 @@ function groupedEntries(rows) {
   }).join("\n");
 }
 
+function groupedLanes(rows) {
+  const groups = new Map();
+  for (const row of rows) {
+    const tierIndex = Number(row.HuntingGroundTierIndex);
+    if (!groups.has(tierIndex)) groups.set(tierIndex, []);
+    groups.get(tierIndex).push(row);
+  }
+  return [...groups.entries()].map(([tierIndex, lanes]) => {
+    const body = lanes
+      .sort((a, b) => Number(a.LaneOrder) - Number(b.LaneOrder))
+      .map((lane) => `                [${luaString(lane.LaneKey)}] = ${luaRow(lane)},`)
+      .join("\n");
+    return `            [${tierIndex}] = {\n${body}\n            },`;
+  }).join("\n");
+}
+
 const source = `@Logic
 script CombatTableRuntime extends Logic
     property any config = nil
     property any huntingGroundTiers = nil
     property any playerStatsProfiles = nil
+    property any combatLanesByTier = nil
     property any monsterDefinitions = nil
     property any monsterSpawnGroups = nil
     property any dropGroups = nil
@@ -65,11 +82,13 @@ script CombatTableRuntime extends Logic
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
+        -- Loads the generated combat and drop tables once on the server.
         self:EnsureLoaded()
     end
 
     @ExecSpace("ServerOnly")
     method void EnsureLoaded()
+        -- Initializes every table cache from the Excel-generated literals.
         if self.config ~= nil then return end
         self.config = ${luaRow(combat.CombatConfig[0])}
         self.huntingGroundTiers = {
@@ -77,6 +96,9 @@ ${indexedRows(combat.HuntingGroundTiers, "HuntingGroundTiersIndex")}
         }
         self.playerStatsProfiles = {
 ${indexedRows(combat.PlayerStatsProfiles, "PlayerStatsProfilesIndex")}
+        }
+        self.combatLanesByTier = {
+${groupedLanes(combat.CombatLanes)}
         }
         self.monsterDefinitions = {
 ${indexedRows(combat.MonsterDefinitions, "MonsterDefinitionsIndex")}
@@ -94,36 +116,69 @@ ${groupedEntries(drop.DropEntries)}
 
     @ExecSpace("ServerOnly")
     method table GetConfig()
+        -- Returns the singleton combat configuration row.
         self:EnsureLoaded()
         return self.config
     end
 
     @ExecSpace("ServerOnly")
     method table GetHuntingGroundTier(integer index)
+        -- Resolves a hunting-ground tier by its numeric index.
         self:EnsureLoaded()
         return self.huntingGroundTiers[index]
     end
 
     @ExecSpace("ServerOnly")
     method table GetPlayerStatsProfile(integer index)
+        -- Resolves a player combat profile by its numeric index.
         self:EnsureLoaded()
         return self.playerStatsProfiles[index]
     end
 
     @ExecSpace("ServerOnly")
+    method table GetCombatLane(integer tierIndex, string laneKey)
+        -- Resolves one UPPER, CENTER, or LOWER lane for a tier.
+        self:EnsureLoaded()
+        local lanes = self.combatLanesByTier[tierIndex]
+        if lanes == nil then return nil end
+        return lanes[laneKey]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetCombatLanes(integer tierIndex)
+        -- Returns the lane-keyed table used by future area skills.
+        self:EnsureLoaded()
+        return self.combatLanesByTier[tierIndex] or {}
+    end
+
+    @ExecSpace("ServerOnly")
+    method string GetBasicAttackLaneKey(integer tierIndex)
+        -- Returns the only lane enabled for basic attacks in the tier.
+        self:EnsureLoaded()
+        for laneKey, lane in pairs(self.combatLanesByTier[tierIndex] or {}) do
+            if lane.Enabled and lane.BasicAttackTargetable then return laneKey end
+        end
+        log_error("[Combat] Missing basic attack lane for tier " .. tostring(tierIndex))
+        return "CENTER"
+    end
+
+    @ExecSpace("ServerOnly")
     method table GetMonsterDefinition(integer index)
+        -- Resolves a monster definition by its numeric index.
         self:EnsureLoaded()
         return self.monsterDefinitions[index]
     end
 
     @ExecSpace("ServerOnly")
     method table GetMonsterSpawnGroup(integer index)
+        -- Resolves a monster spawn group by its numeric index.
         self:EnsureLoaded()
         return self.monsterSpawnGroups[index]
     end
 
     @ExecSpace("ServerOnly")
     method table ResolveDropGroup(string dropGroupId)
+        -- Rolls an enabled drop group and returns normalized reward grants.
         self:EnsureLoaded()
         local group = self.dropGroups[dropGroupId]
         if group == nil or group.Enabled == false then

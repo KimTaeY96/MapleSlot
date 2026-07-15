@@ -1,0 +1,33 @@
+{
+  "Id": "",
+  "GameId": "",
+  "EntryKey": "codeblock://8f5f6149-e2bb-4e96-a2a1-93f0aacb9fef",
+  "ContentType": "x-mod/codeblock",
+  "Content": "",
+  "Usage": 0,
+  "UsePublish": 1,
+  "UseService": 0,
+  "CoreVersion": "26.5.0.0",
+  "StudioVersion": "",
+  "DynamicLoading": 0,
+  "ContentProto": {
+    "Use": "Json",
+    "Json": {
+      "CoreVersion": {
+        "Major": 0,
+        "Minor": 2
+      },
+      "ScriptVersion": {
+        "Major": 1,
+        "Minor": 1
+      },
+      "Description": "",
+      "Id": "8f5f6149-e2bb-4e96-a2a1-93f0aacb9fef",
+      "Language": 1,
+      "Name": "CombatRuntime",
+      "Type": 5,
+      "Source": 0,
+      "Target": null
+    }
+  }
+}

@@ -10,7 +10,7 @@ const root = rootArg >= 0 ? path.resolve(process.argv[rootArg + 1]) : process.cw
 const sdkRoot = sdkArg >= 0 ? path.resolve(process.argv[sdkArg + 1]) : root;
 const combatDir = path.join(root, "RootDesk/MyDesk/Combat");
 const modelPath = path.join(root, "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model");
-const mapPath = path.join(root, "map/Test_Sandbox.map");
+const mapPath = path.join(root, "map/map01.map");
 const { ModelBuilder } = require(path.join(sdkRoot, ".agents/skills/msw-general/scripts/model/msw_model_builder.cjs"));
 
 const scriptNames = [
@@ -35,9 +35,12 @@ assert(playerSource.includes("controller.UseCustomScript = true"), "Sandbox play
 assert(playerSource.includes("self.DisableManualControl"), "Sandbox manual input gate must consume CombatConfig");
 assert(playerSource.includes("controller.UseCustomScript = self.PreviousUseCustomScript"), "Sandbox player must restore prior input mode");
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
+assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
+assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
 assert(monsterAttackSource.includes("CollisionGroups.Player"), "Monster attacks must target the Player collision group");
+assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Combat.xlsx");
 for (const method of ["CalcDamage", "IsAttackTarget"]) {
   const pattern = new RegExp(`@ExecSpace\\([^\\n]+\\)\\s*method [^\\n]+ ${method}\\(`);
   assert(!pattern.test(playerSource), `CombatPlayerAutoBattle.${method} override must not change ExecSpace`);
@@ -48,6 +51,10 @@ const tableSource = fs.readFileSync(path.join(combatDir, "CombatTableRuntime.mlu
 assert(tableSource.includes('PlayerDeathPenaltySeconds = 300'), "Generated runtime must contain the configured death penalty");
 assert(tableSource.includes('["DROP_SLIME_TIER1"]'), "Generated runtime must contain the Slime drop group");
 assert(tableSource.includes('MinQuantity = 1') && tableSource.includes('MaxQuantity = 3'), "Generated runtime must preserve the variable Slime reward range");
+assert(tableSource.includes('RuntimeKind = "HENESYS_TILE_LANES"'), "Generated runtime must enable the Henesys lane runtime");
+assert(tableSource.includes('CombatAreaMinimumWorldX = 0') && tableSource.includes('CombatAreaMaximumWorldX = 8'), "Generated runtime must constrain combat to the screen-right world-X range");
+assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must lock basic attacks to CENTER");
+assert(tableSource.includes('["UPPER"]') && tableSource.includes('["CENTER"]') && tableSource.includes('["LOWER"]'), "Generated runtime must contain all three combat lanes");
 
 assert(fs.existsSync(modelPath), `Missing Slime model: ${modelPath}`);
 const model = ModelBuilder.read(modelPath);
@@ -70,17 +77,22 @@ assert(!components.has("MOD.Core.StateAnimationComponent"), "Direct SpriteRUID A
 if (fs.existsSync(mapPath)) {
   const { MapBuilder } = require(path.join(sdkRoot, ".agents/skills/msw-general/scripts/map/msw_map_builder.cjs"));
   const map = MapBuilder.read(mapPath);
-  assert.equal(map.getTileMapMode(), 0, "Test_Sandbox must use MapleTile mode");
-  assert(map.getMapInfo().footholdCount > 0, "Test_Sandbox must contain at least one foothold");
-  for (const entityPath of [
-    "CombatHarness/PlayerSpawn",
-    "CombatHarness/MonsterSpawn/Tier1",
-    "CombatHarness/Runtime",
-    "CombatHarness/Monsters/SlimeTier1",
-  ]) {
-    assert(map.find(entityPath), `Test_Sandbox is missing ${entityPath}`);
+  assert.equal(map.getTileMapMode(), 0, "Henesys map01 must use MapleTile mode");
+  if (map.getMapInfo().footholdCount >= 3) {
+    for (const entityPath of [
+      "CombatHarness/PlayerSpawn",
+      "CombatHarness/Runtime",
+      "CombatHarness/Monsters/SlimeTier1",
+      "CombatHarness/Lanes/UPPER/Spawn",
+      "CombatHarness/Lanes/CENTER/Spawn",
+      "CombatHarness/Lanes/LOWER/Spawn",
+    ]) {
+      assert(map.find(entityPath), `Henesys map01 is missing ${entityPath}`);
+    }
+    console.log("Combat foundation valid: data runtime, scripts, model, and Henesys three-lane harness");
+  } else {
+    console.log("Combat foundation valid: data runtime, scripts, and model; Henesys map01 awaits three Maker-authored foothold rows");
   }
-  console.log("Combat foundation valid: data runtime, scripts, model, and Test_Sandbox harness");
 } else {
-  console.log("Combat foundation valid: data runtime, scripts, and model; Test_Sandbox map awaits Maker foothold authoring");
+  console.log("Combat foundation valid: data runtime, scripts, and model; Henesys map01 is missing");
 }

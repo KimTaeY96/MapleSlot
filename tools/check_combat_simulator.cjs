@@ -19,6 +19,12 @@ async function main() {
   const monster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 1);
   assert(player && monster, "Initial player/monster data must exist");
 
+  const laneGuard = new CombatSimulator({ config, playerProfile: player, monsterDefinition: monster, drop, random: createSeededRandom(1) });
+  const untouchedHp = laneGuard.monsterHp;
+  assert.deepEqual(laneGuard.playerAttack("UPPER"), [], "Initial basic attack must not hit the upper lane");
+  assert.deepEqual(laneGuard.playerAttack("LOWER"), [], "Initial basic attack must not hit the lower lane");
+  assert.equal(laneGuard.monsterHp, untouchedHp, "Off-lane attacks must not change monster HP");
+
   const simulator = new CombatSimulator({ config, playerProfile: player, monsterDefinition: monster, drop, random: createSeededRandom(777) });
   assert.deepEqual(simulator.playerAttack(), []);
   assert.deepEqual(simulator.playerAttack(), []);
