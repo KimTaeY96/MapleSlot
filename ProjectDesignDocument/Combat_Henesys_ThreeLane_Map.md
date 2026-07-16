@@ -15,7 +15,7 @@ The active combat area is framed inside the right half of the screen. The slot U
 | Lower | `LOWER` | `-2.1` | No | No |
 
 - All three rows are horizontal Layer 1 MapleTile footholds.
-- Each row has at least `6.0` common world units of walkable width.
+- Each row has at least `5.0` common world units of walkable width.
 - Adjacent rows keep at least `1.8` world units of vertical separation.
 - The three rows share a common X span so future multi-lane skills can resolve one horizontal cast range across them.
 - Initial content places the player and Tier 1 Slime on `CENTER` only.
@@ -26,7 +26,7 @@ Tile painting and foothold creation are Maker operations. For the initial layout
 
 1. Open `map01` and select `Layer1`.
 2. Assign a Henesys-compatible MapleTile tileset to the existing `TileMap` entity.
-3. Paint three straight rows with the same X span, targeting `x=0.3..7.3`.
+3. Paint three straight rows with the same X span. The initial Maker layout uses approximately `x=0.05..5.35`.
 4. Place the rows at `y=+2.1`, `0.0`, and `-2.1` within `LaneMatchTolerance=0.35`.
 5. Keep each row continuous and avoid slopes in the initial pass.
 6. Save the map, then run `node tools/create_henesys_combat_harness.mjs --apply`.

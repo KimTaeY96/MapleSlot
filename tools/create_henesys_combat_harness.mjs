@@ -88,6 +88,15 @@ function readComponentOrNull(map, entityPath, componentType) {
   }
 }
 
+function verifyPosition(map, entityPath, expected, tolerance = 0.001) {
+  const transform = readComponentOrNull(map, entityPath, "MOD.Core.TransformComponent");
+  const position = transform?.Position;
+  if (!position) fail(`Placement verification is missing TransformComponent on ${entityPath}`);
+  if (Math.abs(Number(position.x) - expected.x) > tolerance || Math.abs(Number(position.y) - expected.y) > tolerance) {
+    fail(`${entityPath} is at (${position.x}, ${position.y}), expected (${expected.x}, ${expected.y}).`);
+  }
+}
+
 const slotMachinePath = path.join(excelDir, "SlotMachine.xlsx");
 const { combat } = await loadAndValidateCombatTables({ excelDir, slotMachinePath });
 const config = combat.CombatConfig[0];
@@ -165,9 +174,8 @@ if (applyChanges) {
   const monsterPath = "CombatHarness/Monsters/SlimeTier1";
   if (!map.find(monsterPath)) {
     map.placeModel(monsterPath, modelPath, { pos: [monsterX, monsterY, 0] });
-  } else {
-    map.patch(monsterPath, { pos: [monsterX, monsterY, 0], enable: true });
   }
+  map.patch(monsterPath, { pos: [monsterX, monsterY, 0], enable: true });
   if (readComponentOrNull(map, monsterPath, "script.CombatMonsterHealth")) {
     map.patchComponent(monsterPath, "script.CombatMonsterHealth", { LaneKey: "CENTER" });
   } else {
@@ -186,6 +194,8 @@ if (applyChanges) {
   const written = MapBuilder.read(mapPath);
   const missing = requiredPaths.filter((entityPath) => !written.find(String(entityPath)));
   if (missing.length) fail(`Placement verification is missing: ${missing.join(", ")}`);
+  verifyPosition(written, "CombatHarness/PlayerSpawn", { x: playerX, y: playerY });
+  verifyPosition(written, "CombatHarness/Monsters/SlimeTier1", { x: monsterX, y: monsterY });
 }
 
 console.log(JSON.stringify({
