@@ -300,7 +300,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         local climbDirection = (nextLane.LaneOrder < currentLane.LaneOrder) and 1 or -1
         local targetY = nextFloorAnchor.TransformComponent.WorldPosition.y
-        local arrived = (climbDirection > 0 and selfPosition.y >= targetY - self.LadderExitTolerance)
+        local arrived = (climbDirection > 0 and selfPosition.y >= targetY)
             or (climbDirection < 0 and selfPosition.y <= targetY + self.LadderExitTolerance)
         if arrived then
             local previousLaneKey = self.CombatLaneKey
@@ -380,9 +380,12 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("Client")
     method void PlayAttackAnimation()
-        -- Changes the avatar attack state on the client that owns the player entity.
+        -- Starts attack animation only from states that accept the native ATTACK transition.
         local state = self.Entity.StateComponent
-        if isvalid(state) then state:ChangeState("ATTACK") end
+        if not isvalid(state) then return end
+        if state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE" then
+            state:ChangeState("ATTACK")
+        end
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)

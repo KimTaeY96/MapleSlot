@@ -27,7 +27,7 @@ script CombatPlayerMovementDriver extends Component
                 controller.LookDirectionX = autoBattle.MoveDirectionX
                 controller.AlwaysMovingState = true
             end
-            if isvalid(state) and (state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE") then
+            if isvalid(state) and state.CurrentStateName ~= "MOVE" and state.CurrentStateName ~= "DEAD" then
                 state:ChangeState("MOVE")
             end
             movement:MoveToDirection(Vector2(autoBattle.MoveDirectionX, 0), 0)

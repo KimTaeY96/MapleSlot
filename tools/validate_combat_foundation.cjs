@@ -47,6 +47,8 @@ assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox heigh
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from Combat.xlsx");
 assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
 assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
+assert(playerSource.includes("climbDirection > 0 and selfPosition.y >= targetY"), "Upward climbing must reach the platform before releasing the ladder");
+assert(!playerSource.includes("selfPosition.y >= targetY - self.LadderExitTolerance"), "Upward climbing must not release below the destination platform");
 assert(playerSource.includes("FindNearestMonsterAcrossLanes"), "Player AI must acquire targets on other floors when its lane is empty");
 assert(/@ExecSpace\("ServerOnly"\)\s*method void OnUpdate\(/.test(playerSource), "Player target selection must remain server-authoritative");
 assert(playerSource.includes('MovementIntent = "HORIZONTAL"'), "Player AI must publish horizontal movement intent");
@@ -54,12 +56,15 @@ assert(playerSource.includes("RetaliationTargetEntity"), "Player AI must priorit
 assert(playerSource.includes("RequestImmediateMonsterPopulation"), "Player AI must recover an empty map before retrying acquisition");
 assert(/@ExecSpace\("Client"\)\s*method void PlayAttackAnimation\(/.test(playerSource), "Player attack state changes must use a targeted client RPC");
 assert(playerSource.includes("self:PlayAttackAnimation(player.UserId)"), "Server attack resolution must target the owning player client for animation");
+assert(playerSource.includes('state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE"'), "Player attack animation must reject ladder, dead, and retained attack states");
 
 const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
 assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
 assert(movementDriverSource.includes("ActionClimb"), "Player movement driver must mount Maker-authored ladders through PlayerControllerComponent");
 assert(movementDriverSource.includes('MovementIntent == "HORIZONTAL"'), "Player movement driver must consume horizontal movement intent");
 assert(movementDriverSource.includes('state:ChangeState("MOVE")'), "Player horizontal movement must drive the avatar MOVE animation state");
+assert(movementDriverSource.includes('state.CurrentStateName ~= "DEAD"'), "Player movement must recover from retained attack or hit states without moving while dead");
+assert(!movementDriverSource.includes('state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE"'), "Player movement must not stay blocked by a retained ATTACK state");
 assert(movementDriverSource.includes("AlwaysMovingState = true"), "Player horizontal movement must preserve MOVE animation without manual input");
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
