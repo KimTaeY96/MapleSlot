@@ -78,12 +78,11 @@ script CombatPlayerAutoBattle extends AttackComponent
 
         local map = self.Entity.CurrentMap
         if not isvalid(map) or self.CameraSwitched then return end
-        local cameraPath = "/maps/" .. map.Id .. "/" .. self.CombatCameraAnchorKey
-        local cameraAnchor = _EntityService:GetEntityByPath(cameraPath)
+        local cameraAnchor = map:GetChildByName("CameraAnchor", true)
         local camera = nil
         if isvalid(cameraAnchor) then camera = cameraAnchor.CameraComponent end
         if not isvalid(camera) then
-            log_error("[Combat] Missing fixed combat camera: " .. cameraPath)
+            log_error("[Combat] Missing fixed combat camera: " .. self.CombatCameraAnchorKey)
             return
         end
         self.PreviousCameraComponent = _CameraService:GetCurrentCameraComponent()

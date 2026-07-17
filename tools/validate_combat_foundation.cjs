@@ -36,6 +36,8 @@ assert(playerSource.includes("RemoveAllActionKeyByActionName"), "Sandbox player 
 assert(playerSource.includes("SetActionKey"), "Sandbox player must restore default action bindings when combat ends");
 assert(playerSource.includes("_CameraService:SwitchCameraTo"), "Sandbox player must switch to and restore a dedicated combat camera");
 assert(playerSource.includes("self.CombatCameraAnchorKey"), "Sandbox player must resolve the table-backed fixed camera anchor");
+assert(playerSource.includes('map:GetChildByName("CameraAnchor", true)'), "Sandbox player must resolve CameraAnchor below the current runtime map");
+assert(!playerSource.includes('"/maps/" .. map.Id'), "Runtime map GUID must not be used as a world path key");
 assert(!playerSource.includes("self.Entity.CameraComponent"), "Combat framing must not keep following the player camera");
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
