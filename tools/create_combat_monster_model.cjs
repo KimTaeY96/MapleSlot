@@ -26,10 +26,6 @@ for (const component of [
 ]) {
   if (model.hasComponent(component)) model.removeComponent(component);
 }
-if (model.hasValue("MOD.Core.StateComponent", "IsLegacy")) {
-  model.removeValue("MOD.Core.StateComponent", "IsLegacy");
-}
-
 for (const component of [
   "script.CombatMonsterHealth",
   "script.CombatMonsterAI",
@@ -43,6 +39,7 @@ model
   .value("MOD.Core.SpriteRendererComponent", "SortingLayer", "MapLayer0", "string")
   .value("MOD.Core.SpriteRendererComponent", "OrderInLayer", 2, "int")
   .value("MOD.Core.MovementComponent", "InputSpeed", 1.2, "float")
+  .value("MOD.Core.StateComponent", "IsLegacy", false, "bool")
   .value("MOD.Core.HitComponent", "BoxSize", vector2(0.72, 0.64), "vector2")
   .value("MOD.Core.HitComponent", "ColliderOffset", vector2(0, 0.32), "vector2")
   .value("MOD.Core.HitComponent", "CollisionGroup", collisionGroup("8992acd1e8cd45838db6f10a7b41df09"), "collision_group")

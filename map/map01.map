@@ -1550,11 +1550,11 @@
       },
       {
         "id": "7ddc2250-c4d8-43a7-88e7-a0fe4351c03a",
-        "path": "/maps/map01/CombatHarness/PlayerSpawn",
+        "path": "/maps/map01/CombatHarness/SpawnLocation",
         "componentNames": "MOD.Core.TransformComponent,MOD.Core.SpawnLocationComponent",
         "jsonString": {
-          "name": "PlayerSpawn",
-          "path": "/maps/map01/CombatHarness/PlayerSpawn",
+          "name": "SpawnLocation",
+          "path": "/maps/map01/CombatHarness/SpawnLocation",
           "nameEditable": true,
           "enable": true,
           "visible": true,
@@ -1731,7 +1731,8 @@
             },
             {
               "@type": "MOD.Core.StateComponent",
-              "Enable": true
+              "Enable": true,
+              "IsLegacy": false
             },
             {
               "@type": "MOD.Core.HitComponent",

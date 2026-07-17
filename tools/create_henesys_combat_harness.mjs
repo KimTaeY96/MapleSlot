@@ -167,8 +167,12 @@ if (applyChanges) {
     map.empty(String(lane.BoundsLeftAnchorKey), { pos: [commonMinX + Number(config.CombatBoundsInset), group.y, 0] });
     map.empty(String(lane.BoundsRightAnchorKey), { pos: [commonMaxX - Number(config.CombatBoundsInset), group.y, 0] });
   });
-  map.empty("CombatHarness/PlayerSpawn", { pos: [playerX, playerY, 0] });
-  map.upsertComponent("CombatHarness/PlayerSpawn", "MOD.Core.SpawnLocationComponent", { Enable: true });
+  const playerSpawnPath = "CombatHarness/SpawnLocation";
+  if (map.find("CombatHarness/PlayerSpawn") && !map.find(playerSpawnPath)) {
+    map.rename("CombatHarness/PlayerSpawn", "SpawnLocation");
+  }
+  map.empty(playerSpawnPath, { pos: [playerX, playerY, 0] });
+  map.upsertComponent(playerSpawnPath, "MOD.Core.SpawnLocationComponent", { Enable: true });
   map.empty("CombatHarness/Runtime", { pos: [(commonMinX + commonMaxX) * 0.5, centerGroup.y, 0], scripts: ["script.CombatSandboxRuntime"] });
 
   const monsterPath = "CombatHarness/Monsters/SlimeTier1";
@@ -181,11 +185,14 @@ if (applyChanges) {
   } else {
     map.upsertComponent(monsterPath, "script.CombatMonsterHealth", { Enable: true, LaneKey: "CENTER" });
   }
+  if (readComponentOrNull(map, monsterPath, "MOD.Core.StateComponent")) {
+    map.patchComponent(monsterPath, "MOD.Core.StateComponent", { IsLegacy: false });
+  }
   map.write(mapPath);
 }
 
 const requiredPaths = [
-  "CombatHarness/PlayerSpawn",
+  "CombatHarness/SpawnLocation",
   "CombatHarness/Runtime",
   "CombatHarness/Monsters/SlimeTier1",
   ...lanes.flatMap((lane) => [lane.SpawnAnchorKey, lane.BoundsLeftAnchorKey, lane.BoundsRightAnchorKey]),
@@ -194,8 +201,10 @@ if (applyChanges) {
   const written = MapBuilder.read(mapPath);
   const missing = requiredPaths.filter((entityPath) => !written.find(String(entityPath)));
   if (missing.length) fail(`Placement verification is missing: ${missing.join(", ")}`);
-  verifyPosition(written, "CombatHarness/PlayerSpawn", { x: playerX, y: playerY });
+  verifyPosition(written, "CombatHarness/SpawnLocation", { x: playerX, y: playerY });
   verifyPosition(written, "CombatHarness/Monsters/SlimeTier1", { x: monsterX, y: monsterY });
+  const state = readComponentOrNull(written, "CombatHarness/Monsters/SlimeTier1", "MOD.Core.StateComponent");
+  if (state?.IsLegacy !== false) fail("SlimeTier1 StateComponent.IsLegacy must be false.");
 }
 
 console.log(JSON.stringify({

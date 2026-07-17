@@ -73,6 +73,7 @@ for (const required of [
 assert(!components.has("MOD.Core.AIChaseComponent"), "Slime model must not combine custom AI with AIChaseComponent");
 assert(!components.has("MOD.Core.AIWanderComponent"), "Slime model must not combine custom AI with AIWanderComponent");
 assert(!components.has("MOD.Core.StateAnimationComponent"), "Direct SpriteRUID AI must not be overwritten by StateAnimationComponent");
+assert.equal(model.getValue("MOD.Core.StateComponent", "IsLegacy"), false, "Slime StateComponent.IsLegacy must be false");
 
 if (fs.existsSync(mapPath)) {
   const { MapBuilder } = require(path.join(sdkRoot, ".agents/skills/msw-general/scripts/map/msw_map_builder.cjs"));
@@ -80,7 +81,7 @@ if (fs.existsSync(mapPath)) {
   assert.equal(map.getTileMapMode(), 0, "Henesys map01 must use MapleTile mode");
   if (map.getMapInfo().footholdCount >= 3) {
     for (const entityPath of [
-      "CombatHarness/PlayerSpawn",
+      "CombatHarness/SpawnLocation",
       "CombatHarness/Runtime",
       "CombatHarness/Monsters/SlimeTier1",
       "CombatHarness/Lanes/UPPER/Spawn",

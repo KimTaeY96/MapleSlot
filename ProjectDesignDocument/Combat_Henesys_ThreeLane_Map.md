@@ -47,7 +47,7 @@ The placement tool refuses to write when three valid foothold rows are not prese
 ```text
 map01
   CombatHarness
-    PlayerSpawn
+    SpawnLocation
     Runtime
     Lanes
       UPPER
