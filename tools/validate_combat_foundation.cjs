@@ -45,6 +45,8 @@ assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must ta
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
 assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from Combat.xlsx");
+assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
+assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
 assert(playerSource.includes("FindNearestMonsterAcrossLanes"), "Player AI must acquire targets on other floors when its lane is empty");
 assert(/@ExecSpace\("ServerOnly"\)\s*method void OnUpdate\(/.test(playerSource), "Player target selection must remain server-authoritative");
 assert(playerSource.includes('MovementIntent = "HORIZONTAL"'), "Player AI must publish horizontal movement intent");

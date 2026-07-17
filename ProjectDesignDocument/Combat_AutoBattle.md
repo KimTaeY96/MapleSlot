@@ -11,6 +11,7 @@ All target selection, lane filtering, movement intent, attack cadence, damage ac
 - Monster chase and attack require the player's combat lane to match the monster's `LaneKey`.
 - Target acquisition covers the entire map. A valid target is retained until death unless a monster damages the player; that attacker becomes the highest-priority retaliation target.
 - If the target is on another lane, the player walks to the adjacent `CombatLadders.LadderKey`, climbs through its `ClimbableComponent`, and resumes pursuit after exiting on the destination lane.
+- Ladder arrival compares the player Y with the destination lane's `BoundsLeftAnchorKey` platform height. `SpawnAnchorKey` is elevated for monster spawning and must not be used as the floor height.
 - If no live monster exists, the runtime immediately restores every configured lane population and retries acquisition in the same decision tick.
 - Future area skills provide an explicit list of target lanes to `CombatRuntime:FindMonstersInLanes`.
 - Vertical lane spacing and attack hitbox heights are table data, not code constants.

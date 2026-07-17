@@ -292,14 +292,14 @@ script CombatPlayerAutoBattle extends AttackComponent
 
         self:StopMovement()
 
-        local nextAnchor = self:FindMapEntityByKey(map, nextLane.SpawnAnchorKey)
-        if not isvalid(nextAnchor) or not isvalid(nextAnchor.TransformComponent) then
-            self:LogLadderErrorOnce("Missing lane anchor " .. tostring(nextLane.SpawnAnchorKey))
+        local nextFloorAnchor = self:FindMapEntityByKey(map, nextLane.BoundsLeftAnchorKey)
+        if not isvalid(nextFloorAnchor) or not isvalid(nextFloorAnchor.TransformComponent) then
+            self:LogLadderErrorOnce("Missing lane floor anchor " .. tostring(nextLane.BoundsLeftAnchorKey))
             self:StopMovement()
             return
         end
         local climbDirection = (nextLane.LaneOrder < currentLane.LaneOrder) and 1 or -1
-        local targetY = nextAnchor.TransformComponent.WorldPosition.y
+        local targetY = nextFloorAnchor.TransformComponent.WorldPosition.y
         local arrived = (climbDirection > 0 and selfPosition.y >= targetY - self.LadderExitTolerance)
             or (climbDirection < 0 and selfPosition.y <= targetY + self.LadderExitTolerance)
         if arrived then
