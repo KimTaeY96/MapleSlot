@@ -72,6 +72,7 @@ script CombatMonsterHealth extends Component
     @ExecSpace("ServerOnly")
     method void Respawn()
         -- Restores this monster at its original position and lane.
+        self:ClearRespawnTimers()
         local body = self.Entity.RigidbodyComponent
         if isvalid(body) then
             body:SetWorldPosition(Vector2(self.SpawnWorldPosition.x, self.SpawnWorldPosition.y))
@@ -83,12 +84,33 @@ script CombatMonsterHealth extends Component
         self.Entity:SetVisible(true)
         local state = self.Entity.StateComponent
         if isvalid(state) then state:ChangeState("IDLE") end
+        local ai = self.Entity:GetComponent("script.CombatMonsterAI")
+        if isvalid(ai) then ai:ResetAfterRespawn() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RespawnNow()
+        -- Cancels the normal wait so an empty map can restore all floor populations immediately.
+        if self.IsDead == false then return end
+        self:ClearRespawnTimers()
+        self:Respawn()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ClearRespawnTimers()
+        -- Prevents an early population recovery from leaving stale hide or respawn callbacks.
+        if self.HideTimerId ~= 0 then _TimerService:ClearTimer(self.HideTimerId) end
+        if self.RespawnTimerId ~= 0 then _TimerService:ClearTimer(self.RespawnTimerId) end
+        self.HideTimerId = 0
+        self.RespawnTimerId = 0
     end
 
     @ExecSpace("ServerOnly")
     @EventSender("Self")
     handler HandleHitEvent(HitEvent event)
-        -- Applies native hit damage and triggers death exactly once at zero HP.
+        -- Aggros passive monsters on hit, then resolves damage and death once.
+        local ai = self.Entity:GetComponent("script.CombatMonsterAI")
+        if isvalid(ai) then ai:NotifyAttacked(event.AttackerEntity) end
         local originalHp = self.Hp
         self.Hp = math.max(0, self.Hp - event.TotalDamage)
         if self.Hp > 0 or originalHp <= 0 then return end

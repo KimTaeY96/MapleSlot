@@ -17,6 +17,7 @@ script CombatSandboxRuntime extends Component
         self.HuntingGroundTierIndex = config.InitialHuntingGroundTierIndex
         self:RemoveLegacyPlacedMonster()
         self:AttachAutoBattlePlayers()
+        self:EnsureMonsterPopulation()
         self.AttachTimerId = _TimerService:SetTimerRepeat(function()
             self:AttachAutoBattlePlayers()
             self:EnsureMonsterPopulation()
@@ -35,7 +36,7 @@ script CombatSandboxRuntime extends Component
 
     @ExecSpace("ServerOnly")
     method void AttachAutoBattlePlayers()
-        -- Attaches center-lane auto battle to every player in Henesys.
+        -- Attaches three-lane ladder auto battle to every player in Henesys.
         local map = self.Entity.CurrentMap
         if not isvalid(map) or not isvalid(map.MapComponent) then return end
         local tier = _CombatTableRuntime:GetHuntingGroundTier(self.HuntingGroundTierIndex)
@@ -51,17 +52,26 @@ script CombatSandboxRuntime extends Component
         for _, user in pairs(users) do
             if isvalid(user) then
                 local autoBattle = user:GetComponent("script.CombatPlayerAutoBattle")
-                if not isvalid(autoBattle) then autoBattle = user:AddComponent("CombatPlayerAutoBattle") end
+                local newlyAttached = false
+                if not isvalid(autoBattle) then
+                    autoBattle = user:AddComponent("CombatPlayerAutoBattle")
+                    newlyAttached = true
+                end
                 if isvalid(autoBattle) then
                     autoBattle.ProfileIndex = tier.PlayerStatsProfileIndex
+                    autoBattle.HuntingGroundTierIndex = self.HuntingGroundTierIndex
                     autoBattle.SandboxMapId = map.Id
-                    autoBattle.CombatLaneKey = _CombatTableRuntime:GetBasicAttackLaneKey(self.HuntingGroundTierIndex)
+                    if newlyAttached then
+                        autoBattle.CombatLaneKey = _CombatTableRuntime:GetBasicAttackLaneKey(self.HuntingGroundTierIndex)
+                    end
                     autoBattle.DisableManualControl = config.DisableManualControlInSandbox
                     autoBattle.CombatCameraScreenOffsetX = config.CombatCameraScreenOffsetX
                     autoBattle.CombatCameraScreenOffsetY = config.CombatCameraScreenOffsetY
                     autoBattle.CombatCameraConfineArea = config.CombatCameraConfineArea
                     autoBattle.CombatCameraAnchorKey = config.CombatCameraAnchorKey
                 end
+                local movementDriver = user:GetComponent("script.CombatPlayerMovementDriver")
+                if not isvalid(movementDriver) then user:AddComponent("CombatPlayerMovementDriver") end
                 local walletBridge = user:GetComponent("script.CombatWalletBridge")
                 if not isvalid(walletBridge) then user:AddComponent("CombatWalletBridge") end
             end
@@ -93,16 +103,59 @@ script CombatSandboxRuntime extends Component
         if not isvalid(map) then return end
         local tier = _CombatTableRuntime:GetHuntingGroundTier(self.HuntingGroundTierIndex)
         if tier == nil or tier.Enabled == false then return end
-        local spawnGroup = _CombatTableRuntime:GetMonsterSpawnGroup(tier.SpawnGroupIndex)
-        if spawnGroup == nil or spawnGroup.Enabled == false then return end
-        local currentCount = _CombatRuntime:CountMonsterInstances(
-            map,
-            spawnGroup.MonsterDefinitionIndex,
-            spawnGroup.LaneKey
-        )
-        local missingCount = math.max(0, spawnGroup.SpawnCount - currentCount)
-        for index = 1, missingCount do
-            if self:SpawnMonster(spawnGroup) == false then return end
+        local spawnGroups = _CombatTableRuntime:GetMonsterSpawnGroupsForTier(tier.HuntingGroundTiersIndex)
+        for _, spawnGroup in ipairs(spawnGroups) do
+            if spawnGroup.Enabled then
+                local currentCount = _CombatRuntime:CountMonsterInstances(
+                    map,
+                    spawnGroup.MonsterDefinitionIndex,
+                    spawnGroup.LaneKey
+                )
+                local missingCount = math.max(0, spawnGroup.SpawnCount - currentCount)
+                for index = 1, missingCount do
+                    if self:SpawnMonster(spawnGroup) == false then return end
+                end
+            end
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void EnsureImmediateMonsterPopulation()
+        -- Guarantees a live target on every configured floor when the player exhausts the map.
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) then return end
+        local tier = _CombatTableRuntime:GetHuntingGroundTier(self.HuntingGroundTierIndex)
+        if tier == nil or tier.Enabled == false then return end
+        local spawnGroups = _CombatTableRuntime:GetMonsterSpawnGroupsForTier(tier.HuntingGroundTiersIndex)
+        local recoveredCount = 0
+        for _, spawnGroup in ipairs(spawnGroups) do
+            if spawnGroup.Enabled then
+                local liveCount = _CombatRuntime:CountLiveMonsterInstances(
+                    map,
+                    spawnGroup.MonsterDefinitionIndex,
+                    spawnGroup.LaneKey
+                )
+                local missingLiveCount = math.max(0, spawnGroup.SpawnCount - liveCount)
+                for index = 1, missingLiveCount do
+                    local deadMonster = _CombatRuntime:FindDeadMonsterInstance(
+                        map,
+                        spawnGroup.MonsterDefinitionIndex,
+                        spawnGroup.LaneKey
+                    )
+                    if isvalid(deadMonster) then
+                        local health = deadMonster:GetComponent("script.CombatMonsterHealth")
+                        if isvalid(health) then
+                            health:RespawnNow()
+                            recoveredCount = recoveredCount + 1
+                        end
+                    elseif self:SpawnMonster(spawnGroup) then
+                        recoveredCount = recoveredCount + 1
+                    end
+                end
+            end
+        end
+        if recoveredCount > 0 then
+            log("[Combat] Immediately restored " .. tostring(recoveredCount) .. " live monster(s) across all lanes")
         end
     end
 
@@ -119,6 +172,13 @@ script CombatSandboxRuntime extends Component
         local spawnAnchor = self:FindMapEntityByKey(map, spawnGroup.SpawnAnchorKey)
         if not isvalid(spawnAnchor) or not isvalid(spawnAnchor.TransformComponent) then
             self:LogSpawnErrorOnce("Missing monster spawn anchor: " .. tostring(spawnGroup.SpawnAnchorKey))
+            return false
+        end
+        local boundsLeft = self:FindMapEntityByKey(map, spawnGroup.BoundsLeftAnchorKey)
+        local boundsRight = self:FindMapEntityByKey(map, spawnGroup.BoundsRightAnchorKey)
+        if not isvalid(boundsLeft) or not isvalid(boundsLeft.TransformComponent)
+            or not isvalid(boundsRight) or not isvalid(boundsRight.TransformComponent) then
+            self:LogSpawnErrorOnce("Missing monster movement bounds for " .. tostring(spawnGroup.SpawnGroupKey))
             return false
         end
         local modelId = string.match(tostring(definition.ModelPath), "([^/]+)%.model$")
@@ -148,7 +208,12 @@ script CombatSandboxRuntime extends Component
             return false
         end
         health:ApplyDefinition(spawnGroup.MonsterDefinitionIndex, spawnGroup.LaneKey)
-        ai:ApplyDefinition(spawnGroup.MonsterDefinitionIndex)
+        ai:ApplyDefinition(
+            spawnGroup.MonsterDefinitionIndex,
+            spawnGroup.LaneKey,
+            boundsLeft.TransformComponent.WorldPosition.x,
+            boundsRight.TransformComponent.WorldPosition.x
+        )
         attack:ApplyDefinition(spawnGroup.MonsterDefinitionIndex)
         self.SpawnErrorLogged = false
         log("[Combat] Spawned " .. tostring(definition.MonsterKey) .. " on lane " .. tostring(spawnGroup.LaneKey))

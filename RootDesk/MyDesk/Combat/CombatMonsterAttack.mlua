@@ -4,12 +4,17 @@ script CombatMonsterAttack extends AttackComponent
     property number AttackDamage = 3
     property number AttackRange = 1.1
     property number AttackHitboxHeight = 1.2
+    property number ContactDamageIntervalSeconds = 1.5
+    property string AttackMode = "CONTACT"
+    property string AttackAnimationRuid = ""
     @HideFromInspector property any AttackShape = nil
     @HideFromInspector property Entity IntendedTarget = nil
+    @HideFromInspector property string CurrentAttackKind = ""
+    @HideFromInspector property number NextContactDamageTime = 0
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
-        -- Loads damage, range, and hitbox height from Combat.xlsx.
+        -- Loads contact and optional active-attack values from Combat.xlsx.
         self:ApplyDefinition(self.MonsterDefinitionIndex)
     end
 
@@ -22,37 +27,91 @@ script CombatMonsterAttack extends AttackComponent
         self.AttackDamage = definition.AttackPower
         self.AttackRange = definition.AttackRange
         self.AttackHitboxHeight = definition.AttackHitboxHeight
+        self.ContactDamageIntervalSeconds = definition.AttackIntervalSeconds
+        self.AttackMode = definition.AttackMode
+        self.AttackAnimationRuid = definition.AttackAnimationRuid or ""
         self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
+        self.NextContactDamageTime = 0
     end
 
     @ExecSpace("ServerOnly")
     method void DoAttack(Entity target)
-        -- Executes one attack only against a player assigned to the same lane.
-        if not isvalid(target) or self.AttackShape == nil then return end
-        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
-        local autoBattle = target:GetComponent("script.CombatPlayerAutoBattle")
-        if not isvalid(health) or not isvalid(autoBattle) or health.LaneKey ~= autoBattle.CombatLaneKey then return end
+        -- Compatibility wrapper for explicit active-attack callers.
+        self:TryActiveAttack(target)
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean TryAttack(Entity target)
+        -- Compatibility wrapper retained for existing active-attack callers.
+        return self:TryActiveAttack(target)
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean TryActiveAttack(Entity target)
+        -- Active attacks require both the ACTIVE mode and a dedicated animation resource.
+        if self.AttackMode ~= "ACTIVE" or self.AttackAnimationRuid == "" then return false end
+        return self:ResolveAttack(target, "ACTIVE", "COMBAT_MONSTER_ACTIVE")
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean TryContactDamage(Entity target)
+        -- Contact damage is available to every monster and is rate-limited per monster body.
+        if _UtilLogic.ElapsedSeconds < self.NextContactDamageTime then return false end
+        if self:IsValidPlayerTarget(target) == false then return false end
+        self.NextContactDamageTime = _UtilLogic.ElapsedSeconds + self.ContactDamageIntervalSeconds
+        return self:ResolveAttack(target, "CONTACT", "COMBAT_MONSTER_CONTACT")
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean ResolveAttack(Entity target, string attackKind, string attackInfo)
+        -- Resolves either contact or active damage through the native Attack/Hit pipeline.
+        if self.AttackShape == nil or self:IsValidPlayerTarget(target) == false then return false end
         self.IntendedTarget = target
+        self.CurrentAttackKind = attackKind
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
         self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
-        self:AttackFast(self.AttackShape, "COMBAT_MONSTER", CollisionGroups.Player)
+        self:AttackFast(self.AttackShape, attackInfo, CollisionGroups.Player)
         self.IntendedTarget = nil
+        self.CurrentAttackKind = ""
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean IsValidPlayerTarget(Entity target)
+        -- Restricts damage to a living player physically assigned to this monster's floor.
+        if not isvalid(target) or not isvalid(target.PlayerComponent) or target.PlayerComponent:IsDead() then return false end
+        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
+        local autoBattle = target:GetComponent("script.CombatPlayerAutoBattle")
+        return isvalid(health) and health.IsDead == false and isvalid(autoBattle) and health.LaneKey == autoBattle.CombatLaneKey
+    end
+
+    @ExecSpace("ServerOnly")
+    @EventSender("Self")
+    handler HandleTriggerStayEvent(TriggerStayEvent event)
+        -- The monster body trigger, rather than AI distance polling, is the source of contact damage.
+        self:TryContactDamage(event.TriggerBodyEntity)
+    end
+
+    method void OnAttack(Entity defender)
+        -- Successful damage immediately makes this monster the player's highest-priority target.
+        local autoBattle = defender:GetComponent("script.CombatPlayerAutoBattle")
+        if isvalid(autoBattle) then autoBattle:NotifyDamagedByMonster(self.Entity) end
+        if self.CurrentAttackKind == "CONTACT" then
+            local ai = self.Entity:GetComponent("script.CombatMonsterAI")
+            if isvalid(ai) then ai:NotifyContactDamage(defender) end
+        end
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
-        -- Returns the table-backed monster attack damage.
+        -- Returns the table-backed monster damage for contact and active attacks.
         return math.floor(self.AttackDamage)
     end
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)
         -- Rejects collision candidates outside the intended same-lane player.
-        if defender ~= self.IntendedTarget then return false end
-        if not isvalid(defender.PlayerComponent) or defender.PlayerComponent:IsDead() then return false end
-        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
-        local autoBattle = defender:GetComponent("script.CombatPlayerAutoBattle")
-        if not isvalid(health) or not isvalid(autoBattle) or health.LaneKey ~= autoBattle.CombatLaneKey then return false end
+        if defender ~= self.IntendedTarget or self:IsValidPlayerTarget(defender) == false then return false end
         return __base:IsAttackTarget(defender, attackInfo)
     end
 end

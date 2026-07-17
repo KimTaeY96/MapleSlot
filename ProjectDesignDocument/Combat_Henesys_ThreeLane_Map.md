@@ -12,15 +12,16 @@ World X placement and viewport composition are separate concerns. During combat,
 
 | Lane | `LaneKey` | Expected Y offset | Initial basic attack | Initial monster spawn |
 |---|---|---:|---:|---:|
-| Upper | `UPPER` | `+2.1` | No | No |
+| Upper | `UPPER` | `+2.1` | Yes, while standing here | Yes |
 | Center | `CENTER` | `0.0` | Yes | Yes |
-| Lower | `LOWER` | `-2.1` | No | No |
+| Lower | `LOWER` | `-2.1` | Yes, while standing here | Yes |
 
 - All three rows are horizontal Layer 1 MapleTile footholds.
 - Each row has at least `4.5` common world units of walkable width inside the left/right blocking walls.
 - Adjacent rows keep at least `1.8` world units of vertical separation.
 - The three rows share a common X span so future multi-lane skills can resolve one horizontal cast range across them.
-- Initial content places the player and Tier 1 Slime on `CENTER` only.
+- Initial content places the player on `CENTER` and maintains one Tier 1 Slime on each lane.
+- `ladder-3` connects `LOWER` to `CENTER`; `ladder-3_1` connects `CENTER` to `UPPER`. Both remain Maker-authored entities with `ClimbableComponent`.
 
 ## Maker Terrain Pass
 
@@ -38,18 +39,20 @@ The placement tool refuses to write when three valid foothold rows are not prese
 ## Runtime Contract
 
 - Every monster exposes `CombatMonsterHealth.LaneKey`.
-- `CombatSandboxRuntime` maintains `MonsterSpawnGroups.SpawnCount` with real `SpawnByModelId` instances at `SpawnAnchorKey`.
+- `CombatSandboxRuntime` maintains all tier-owned `MonsterSpawnGroups.SpawnCount` values with real `SpawnByModelId` instances at each lane's `SpawnAnchorKey`.
 - A dead monster remains enabled as a server entity, leaves target selection through `IsDead`, hides after its death clip, and respawns after `MonsterDefinitions.RespawnSeconds`.
-- `CombatPlayerAutoBattle.CombatLaneKey` comes from `PlayerStatsProfiles.BasicAttackLaneKey`.
+- `CombatPlayerAutoBattle.CombatLaneKey` starts from `PlayerStatsProfiles.BasicAttackLaneKey` and changes only after native ladder navigation reaches an adjacent lane.
 - Basic attack target selection and hit acceptance require matching lane keys.
-- Initial profile data fixes basic attacks and low-tier skills to `CENTER`.
+- Basic attacks and low-tier skills remain single-lane attacks, but follow the player's physical floor.
 - Future area skills call `CombatRuntime:FindMonstersInLanes` with an explicit lane list. A three-floor skill passes `{"UPPER", "CENTER", "LOWER"}`.
-- A monster does not chase or attack a player assigned to another lane.
+- A monster does not chase or attack a player assigned to another lane. Passive monsters wander inside their spawn bounds until damaged; contact damage still applies when a player touches them.
 
 ## Map Hierarchy
 
 ```text
 map01
+  ladder-3 (LOWER <-> CENTER)
+  ladder-3_1 (CENTER <-> UPPER)
   CombatHarness
     SpawnLocation
     Runtime
@@ -78,8 +81,9 @@ Runtime-spawned monsters are direct dynamic children of the map because `SpawnBy
 - Three visible, uncut, horizontal tile rows exist in the right-side combat composition.
 - `CameraAnchor` remains at the common center of all three rows and owns the active combat `CameraComponent`.
 - Player movement does not pan the combat field or push a lane beyond the right edge.
-- Player and Slime stand on the center foothold without falling.
-- Basic attacks cannot acquire or damage monsters whose `LaneKey` is `UPPER` or `LOWER`.
-- Center-lane Slime death resolves `DROP_SLIME_TIER1` and respawns on the same lane.
+- Player and all three Slimes stand on their assigned footholds without falling.
+- When the current floor is empty, the player reaches the next target through the correct native ladder and attacks only after `CombatLaneKey` matches.
+- Slimes idle and wander inside lane bounds, aggro after being attacked, deal contact damage, and continue moving for `0.5` seconds after contact.
+- Every lane's Slime death resolves `DROP_SLIME_TIER1` and respawns on the same lane after `5` seconds.
 - The runtime population returns to `MonsterSpawnGroups.SpawnCount` if a spawned entity is unexpectedly destroyed.
 - Build and runtime logs contain no errors and include the Henesys runtime and lane registration evidence logs.

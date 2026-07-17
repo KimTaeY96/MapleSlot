@@ -1,6 +1,7 @@
 @Component
 script CombatPlayerAutoBattle extends AttackComponent
     property integer ProfileIndex = 1
+    property integer HuntingGroundTierIndex = 1
     @Sync property string SandboxMapId = ""
     @Sync property string CombatState = "ACQUIRE"
     @Sync property string CombatLaneKey = "CENTER"
@@ -10,6 +11,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property boolean CombatCameraConfineArea = false
     @Sync property string CombatCameraAnchorKey = "CombatHarness/CameraAnchor"
     @HideFromInspector property Entity TargetEntity = nil
+    @HideFromInspector property Entity RetaliationTargetEntity = nil
     @HideFromInspector property any AttackShape = nil
     @HideFromInspector property number AttackTimer = 0
     @HideFromInspector property number AttackPower = 1
@@ -18,11 +20,17 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AttackHitboxHeight = 1.2
     @HideFromInspector property number MoveSpeed = 1
     @HideFromInspector property number AggroRange = 5
+    @HideFromInspector property number LadderApproachTolerance = 0.12
+    @HideFromInspector property number LadderExitTolerance = 0.18
     @HideFromInspector property integer CriticalChancePermille = 0
     @HideFromInspector property integer CriticalDamagePermille = 1500
     @HideFromInspector property boolean InputBindingsRemoved = false
     @HideFromInspector property any PreviousCameraComponent = nil
     @HideFromInspector property boolean CameraSwitched = false
+    @HideFromInspector property boolean LadderErrorLogged = false
+    @Sync @HideFromInspector property string MovementIntent = "STOP"
+    @Sync @HideFromInspector property number MoveDirectionX = 0
+    @Sync @HideFromInspector property number ClimbDirectionY = 0
 
     method void OnBeginPlay()
         -- Loads the active profile and locks basic combat to its configured lane.
@@ -45,6 +53,8 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.MoveSpeed = profile.MoveSpeed
         self.AggroRange = profile.AggroRange
         self.CombatLaneKey = profile.BasicAttackLaneKey
+        self.LadderApproachTolerance = profile.LadderApproachTolerance
+        self.LadderExitTolerance = profile.LadderExitTolerance
         self.CriticalChancePermille = profile.CriticalChancePermille
         self.CriticalDamagePermille = profile.CriticalDamagePermille
         self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
@@ -57,7 +67,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
-        log("[Combat] Auto battle ready on lane " .. self.CombatLaneKey)
+        log("[Combat] Three-lane auto battle ready on lane " .. self.CombatLaneKey)
     end
 
     method void OnEndPlay()
@@ -125,6 +135,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         local map = self.Entity.CurrentMap
         if not isvalid(map) or map.Id ~= self.SandboxMapId then
             self:StopMovement()
+            self.Entity:RemoveComponent("CombatPlayerMovementDriver")
             self.Entity:RemoveComponent("CombatWalletBridge")
             self.Entity:RemoveComponent("CombatPlayerAutoBattle")
             return
@@ -135,6 +146,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         if player:IsDead() then
             self.CombatState = "DEAD_WAIT"
             self.TargetEntity = nil
+            self.RetaliationTargetEntity = nil
             self:StopMovement()
             return
         elseif self.CombatState == "DEAD_WAIT" then
@@ -144,12 +156,26 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
+        if not self:IsValidTarget(self.RetaliationTargetEntity) then self.RetaliationTargetEntity = nil end
+        if isvalid(self.RetaliationTargetEntity) then
+            self.TargetEntity = self.RetaliationTargetEntity
+        elseif not self:IsValidTarget(self.TargetEntity) then
+            self.TargetEntity = self:FindMapWideTarget()
+        end
         if not self:IsValidTarget(self.TargetEntity) then
-            self.TargetEntity = _CombatRuntime:FindNearestMonster(self.Entity, self.AggroRange, self.CombatLaneKey)
+            self:RequestImmediateMonsterPopulation()
+            self.TargetEntity = self:FindMapWideTarget()
         end
         if not self:IsValidTarget(self.TargetEntity) then
             self.CombatState = "ACQUIRE"
             self:StopMovement()
+            return
+        end
+
+
+        local targetHealth = self.TargetEntity:GetComponent("script.CombatMonsterHealth")
+        if targetHealth.LaneKey ~= self.CombatLaneKey then
+            self:NavigateToLane(targetHealth.LaneKey, delta)
             return
         end
 
@@ -167,10 +193,43 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method boolean IsValidTarget(Entity target)
-        -- Accepts only a live monster on the player's configured combat lane.
+        -- Keeps a live target across floors while navigation is in progress.
         if not isvalid(target) or target.CurrentMap ~= self.Entity.CurrentMap then return false end
         local health = target:GetComponent("script.CombatMonsterHealth")
-        return isvalid(health) and health.IsDead == false and health.LaneKey == self.CombatLaneKey
+        return isvalid(health) and health.IsDead == false
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindMapWideTarget()
+        -- Searches every configured floor without a local aggro-radius cutoff.
+        return _CombatRuntime:FindNearestMonsterAcrossLanes(
+            self.Entity,
+            self.HuntingGroundTierIndex,
+            self.CombatLaneKey,
+            self.AggroRange
+        )
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RequestImmediateMonsterPopulation()
+        -- Rebuilds all missing live floor populations before target acquisition retries.
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) then return end
+        local harness = map:GetChildByName("CombatHarness", false)
+        if not isvalid(harness) then return end
+        local runtimeEntity = harness:GetChildByName("Runtime", false)
+        if not isvalid(runtimeEntity) then return end
+        local runtime = runtimeEntity:GetComponent("script.CombatSandboxRuntime")
+        if isvalid(runtime) then runtime:EnsureImmediateMonsterPopulation() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void NotifyDamagedByMonster(Entity monster)
+        -- Damage retaliation outranks distance and floor-based target selection until the attacker dies.
+        if not self:IsValidTarget(monster) then return end
+        self.RetaliationTargetEntity = monster
+        self.TargetEntity = monster
+        self.CombatState = "RETALIATE"
     end
 
     @ExecSpace("ServerOnly")
@@ -185,35 +244,145 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
-        -- Moves horizontally toward a target without changing combat lanes.
+        -- Moves horizontally toward a target on the current combat lane.
         local selfPosition = self.Entity.TransformComponent.WorldPosition
         local targetPosition = target.TransformComponent.WorldPosition
         local direction = (targetPosition.x >= selfPosition.x) and 1 or -1
-        local controller = self.Entity.PlayerControllerComponent
-        if isvalid(controller) then controller.LookDirectionX = direction end
-        local movement = self.Entity.MovementComponent
-        if isvalid(movement) then movement:MoveToDirection(Vector2(direction, 0), delta) end
+        self:MoveHorizontal(direction, delta)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void NavigateToLane(string targetLaneKey, number delta)
+        -- Walks to the adjacent table-backed ladder, climbs it, then resumes pursuit.
+        local currentLane = _CombatTableRuntime:GetCombatLane(self.HuntingGroundTierIndex, self.CombatLaneKey)
+        local targetLane = _CombatTableRuntime:GetCombatLane(self.HuntingGroundTierIndex, targetLaneKey)
+        if currentLane == nil or targetLane == nil then
+            self:LogLadderErrorOnce("Missing combat lane while navigating to " .. tostring(targetLaneKey))
+            self:StopMovement()
+            return
+        end
+        local nextLaneKey = self:FindAdjacentLaneKey(currentLane.LaneOrder, targetLane.LaneOrder)
+        if nextLaneKey == "" then
+            self:LogLadderErrorOnce("Missing adjacent lane route from " .. tostring(self.CombatLaneKey))
+            self:StopMovement()
+            return
+        end
+        local nextLane = _CombatTableRuntime:GetCombatLane(self.HuntingGroundTierIndex, nextLaneKey)
+        local ladder = _CombatTableRuntime:GetCombatLadder(self.HuntingGroundTierIndex, self.CombatLaneKey, nextLaneKey)
+        if ladder == nil or nextLane == nil then
+            self:LogLadderErrorOnce("Missing ladder route from " .. tostring(self.CombatLaneKey) .. " to " .. tostring(nextLaneKey))
+            self:StopMovement()
+            return
+        end
+        local map = self.Entity.CurrentMap
+        local ladderEntity = self:FindMapEntityByKey(map, ladder.LadderKey)
+        if not isvalid(ladderEntity) or not isvalid(ladderEntity.ClimbableComponent) then
+            self:LogLadderErrorOnce("Missing climbable entity " .. tostring(ladder.LadderKey))
+            self:StopMovement()
+            return
+        end
+        local selfPosition = self.Entity.TransformComponent.WorldPosition
+        local ladderPosition = ladderEntity.TransformComponent.WorldPosition
+        local dx = ladderPosition.x - selfPosition.x
+        if math.abs(dx) > self.LadderApproachTolerance then
+            self.CombatState = "APPROACH_LADDER"
+            self:MoveHorizontal((dx >= 0) and 1 or -1, delta)
+            return
+        end
+
+        self:StopMovement()
+
+        local nextAnchor = self:FindMapEntityByKey(map, nextLane.SpawnAnchorKey)
+        if not isvalid(nextAnchor) or not isvalid(nextAnchor.TransformComponent) then
+            self:LogLadderErrorOnce("Missing lane anchor " .. tostring(nextLane.SpawnAnchorKey))
+            self:StopMovement()
+            return
+        end
+        local climbDirection = (nextLane.LaneOrder < currentLane.LaneOrder) and 1 or -1
+        local targetY = nextAnchor.TransformComponent.WorldPosition.y
+        local arrived = (climbDirection > 0 and selfPosition.y >= targetY - self.LadderExitTolerance)
+            or (climbDirection < 0 and selfPosition.y <= targetY + self.LadderExitTolerance)
+        if arrived then
+            local previousLaneKey = self.CombatLaneKey
+            self.CombatLaneKey = nextLaneKey
+            self.CombatState = "LADDER_EXIT"
+            self.LadderErrorLogged = false
+            log("[Combat] Player climbed from " .. tostring(previousLaneKey) .. " to " .. tostring(nextLaneKey))
+            local targetPosition = self.TargetEntity.TransformComponent.WorldPosition
+            self:MoveHorizontal((targetPosition.x >= selfPosition.x) and 1 or -1, delta)
+            return
+        end
+
+        self.CombatState = "CLIMB_LADDER"
+        self.MovementIntent = "CLIMB"
+        self.MoveDirectionX = 0
+        self.ClimbDirectionY = climbDirection
+    end
+
+    @ExecSpace("ServerOnly")
+    method string FindAdjacentLaneKey(integer currentOrder, integer targetOrder)
+        -- Returns the next floor key along the shortest vertical route.
+        local desiredOrder = currentOrder + ((targetOrder > currentOrder) and 1 or -1)
+        for laneKey, lane in pairs(_CombatTableRuntime:GetCombatLanes(self.HuntingGroundTierIndex)) do
+            if lane.Enabled and lane.LaneOrder == desiredOrder then return laneKey end
+        end
+        return ""
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindMapEntityByKey(Entity map, string entityKey)
+        -- Resolves a slash-delimited table key below the active map root.
+        local current = map
+        for name in string.gmatch(tostring(entityKey), "[^/]+") do
+            if not isvalid(current) then return nil end
+            current = current:GetChildByName(name, false)
+        end
+        return current
+    end
+
+    @ExecSpace("ServerOnly")
+    method void MoveHorizontal(number direction, number delta)
+        -- Publishes horizontal movement intent for the avatar-owning client driver.
+        self.MovementIntent = "HORIZONTAL"
+        self.MoveDirectionX = direction
+        self.ClimbDirectionY = 0
+    end
+
+    @ExecSpace("ServerOnly")
+    method void LogLadderErrorOnce(string message)
+        -- Reports one ladder configuration failure without flooding the runtime console.
+        if self.LadderErrorLogged then return end
+        self.LadderErrorLogged = true
+        log_error("[Combat] " .. message)
     end
 
     @ExecSpace("ServerOnly")
     method void StopMovement()
-        -- Stops horizontal auto-battle movement immediately.
-        local movement = self.Entity.MovementComponent
-        if isvalid(movement) then movement:Stop() end
+        -- Publishes a stop intent for the avatar-owning client driver.
+        self.MovementIntent = "STOP"
+        self.MoveDirectionX = 0
+        self.ClimbDirectionY = 0
     end
 
     @ExecSpace("ServerOnly")
     method void DoAttack()
-        -- Executes one table-sized hitbox against the selected center-lane target.
+        -- Executes one table-sized hitbox against the selected target on the current floor.
         if not self:IsValidTarget(self.TargetEntity) then return end
         local a = self.Entity.TransformComponent.WorldPosition
         local b = self.TargetEntity.TransformComponent.WorldPosition
         self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
         self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
-        local state = self.Entity.StateComponent
-        if isvalid(state) then state:ChangeState("ATTACK") end
+        local player = self.Entity.PlayerComponent
+        if isvalid(player) then self:PlayAttackAnimation(player.UserId) end
         self:AttackFast(self.AttackShape, "COMBAT_AUTO", CollisionGroups.Monster)
         self.AttackTimer = self.AttackIntervalSeconds
+    end
+
+    @ExecSpace("Client")
+    method void PlayAttackAnimation()
+        -- Changes the avatar attack state on the client that owns the player entity.
+        local state = self.Entity.StateComponent
+        if isvalid(state) then state:ChangeState("ATTACK") end
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)

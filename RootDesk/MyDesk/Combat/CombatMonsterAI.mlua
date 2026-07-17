@@ -3,92 +3,220 @@ script CombatMonsterAI extends Component
     property integer MonsterDefinitionIndex = 1
     property string StandRUID = "50faf654ee5d479cb2958edce9feaef0"
     property string MoveRUID = "dc932872543f4a02bf41e977ab79e5ad"
+    property string AttackRUID = ""
     property string DieRUID = "31ecb6c7cbc24599881f00cb01599f09"
-    property number AttackRange = 1.1
+    property string AttackMode = "CONTACT"
+    property boolean Aggressive = false
+    property number AttackRange = 0.65
     property number ChaseRange = 6
     property number AttackCooldown = 1.5
     property number MoveSpeed = 1.2
+    property number IdleMinSeconds = 1
+    property number IdleMaxSeconds = 2.5
+    property number WanderMinSeconds = 0.8
+    property number WanderMaxSeconds = 1.8
+    property number ContactMoveThroughSeconds = 0.5
+    @HideFromInspector property boolean ActiveAttackEnabled = false
+    @Sync property string AIState = "IDLE"
+    @HideFromInspector property string LaneKey = "CENTER"
     @HideFromInspector property Entity TargetEntity = nil
     @HideFromInspector property number AttackTimer = 0
+    @HideFromInspector property number StateTimer = 0
+    @HideFromInspector property number ContactMoveTimer = 0
+    @HideFromInspector property number ActiveAttackVisualTimer = 0
+    @HideFromInspector property number MoveDirection = 1
+    @HideFromInspector property number ContactDirection = 1
+    @HideFromInspector property number BoundsLeftX = -1000
+    @HideFromInspector property number BoundsRightX = 1000
     @HideFromInspector property boolean DeathPlayed = false
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
-        -- Loads the monster movement and animation profile from Combat.xlsx.
-        self:ApplyDefinition(self.MonsterDefinitionIndex)
+        -- Starts from a safe local range until the runtime applies spawn-group bounds.
+        local x = self.Entity.TransformComponent.WorldPosition.x
+        self:ApplyDefinition(self.MonsterDefinitionIndex, self.LaneKey, x - 2, x + 2)
     end
 
     @ExecSpace("ServerOnly")
-    method void ApplyDefinition(integer definitionIndex)
-        -- Reloads AI values when a spawn group selects this model.
+    method void ApplyDefinition(integer definitionIndex, string laneKey, number boundsLeftX, number boundsRightX)
+        -- Loads Maple-style autonomy, aggro, contact, and movement values from Combat.xlsx.
         self.MonsterDefinitionIndex = definitionIndex
+        self.LaneKey = laneKey
+        self.BoundsLeftX = math.min(boundsLeftX, boundsRightX)
+        self.BoundsRightX = math.max(boundsLeftX, boundsRightX)
         local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
         if definition == nil or definition.Enabled == false then return end
         self.StandRUID = definition.StandAnimationRuid
         self.MoveRUID = definition.MoveAnimationRuid
+        self.AttackRUID = definition.AttackAnimationRuid or ""
         self.DieRUID = definition.DieAnimationRuid
+        self.AttackMode = definition.AttackMode
+        self.Aggressive = definition.Aggressive
         self.AttackRange = definition.AttackRange
         self.ChaseRange = definition.ChaseRange
         self.AttackCooldown = definition.AttackIntervalSeconds
         self.MoveSpeed = definition.MoveSpeed
+        self.IdleMinSeconds = definition.IdleMinSeconds
+        self.IdleMaxSeconds = definition.IdleMaxSeconds
+        self.WanderMinSeconds = definition.WanderMinSeconds
+        self.WanderMaxSeconds = definition.WanderMaxSeconds
+        self.ContactMoveThroughSeconds = definition.ContactMoveThroughSeconds
+        self.ActiveAttackEnabled = self.AttackMode == "ACTIVE" and self.AttackRUID ~= ""
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
-        self:SetSprite(self.StandRUID)
+        self:ResetAutonomy()
     end
 
     @ExecSpace("ServerOnly")
     method void OnUpdate(number delta)
-        -- Runs same-lane target acquisition, chase, attack, and death visuals.
+        -- Runs idle/wander, conditional aggro, active attacks, and Maple-style contact damage.
         local health = self.Entity:GetComponent("script.CombatMonsterHealth")
         if not isvalid(health) then return end
         if health.IsDead then
             if self.DeathPlayed == false then
                 self.DeathPlayed = true
+                self.AIState = "DEAD"
                 self:SetSprite(self.DieRUID)
                 self:StopMovement()
             end
             return
         elseif self.DeathPlayed then
-            self.DeathPlayed = false
-            self:SetSprite(self.StandRUID)
+            self:ResetAfterRespawn()
         end
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
-        if not self:IsValidPlayer(self.TargetEntity) then self.TargetEntity = self:FindNearestPlayer() end
-        if not self:IsValidPlayer(self.TargetEntity) then
-            self:SetSprite(self.StandRUID)
+        self.StateTimer = math.max(0, self.StateTimer - delta)
+        self.ContactMoveTimer = math.max(0, self.ContactMoveTimer - delta)
+        self.ActiveAttackVisualTimer = math.max(0, self.ActiveAttackVisualTimer - delta)
+
+        if self.ContactMoveTimer > 0 then
+            self.AIState = "CONTACT_MOVE"
+            self:SetSprite(self.MoveRUID)
+            self:MoveInDirection(self.ContactDirection, delta)
+            return
+        end
+        if self.ActiveAttackVisualTimer > 0 then
+            self.AIState = "ATTACK"
             self:StopMovement()
             return
         end
 
-        local distance = self:DistanceTo(self.TargetEntity)
-        if distance > self.ChaseRange then
-            self.TargetEntity = nil
-            self:SetSprite(self.StandRUID)
-            self:StopMovement()
-        elseif distance > self.AttackRange then
-            self:SetSprite(self.MoveRUID)
-            self:MoveToward(self.TargetEntity, delta)
-        else
-            self:SetSprite(self.StandRUID)
-            self:StopMovement()
-            if self.AttackTimer <= 0 then
-                local attack = self.Entity:GetComponent("script.CombatMonsterAttack")
-                if isvalid(attack) then attack:DoAttack(self.TargetEntity) end
-                self.AttackTimer = self.AttackCooldown
+        if not self:IsValidPlayer(self.TargetEntity) then self.TargetEntity = nil end
+        if not isvalid(self.TargetEntity) and self.Aggressive then
+            self.TargetEntity = self:FindNearestPlayer(self.ChaseRange)
+        end
+
+        if isvalid(self.TargetEntity) then
+            local distance = self:DistanceTo(self.TargetEntity)
+            if distance > self.ChaseRange then
+                self.TargetEntity = nil
+                self:StartIdle()
+            elseif self.ActiveAttackEnabled and distance <= self.AttackRange then
+                self.AIState = "ATTACK_READY"
+                self:StopMovement()
+                if self.AttackTimer <= 0 then self:AttackPlayer(self.TargetEntity) end
+                return
+            else
+                self.AIState = "CHASE"
+                self:SetSprite(self.MoveRUID)
+                self:MoveToward(self.TargetEntity, delta)
+                return
             end
         end
+
+        self:UpdateAutonomy(delta)
     end
 
     @ExecSpace("ServerOnly")
-    method Entity FindNearestPlayer()
-        -- Finds the closest living auto-battle player on this monster's lane.
+    method void NotifyAttacked(Entity attacker)
+        -- Passive monsters aggro only after a valid player damages them.
+        if not self:IsValidPlayer(attacker) then return end
+        local newlyAggroed = self.TargetEntity ~= attacker
+        self.TargetEntity = attacker
+        self.StateTimer = 0
+        self.AIState = "CHASE"
+        if newlyAggroed then log("[Combat] " .. tostring(self.Entity.Name) .. " aggroed after being hit") end
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean AttackPlayer(Entity target)
+        -- Only definitions with a real attack animation perform an active attack.
+        if self.ActiveAttackEnabled == false then return false end
+        local attack = self.Entity:GetComponent("script.CombatMonsterAttack")
+        if not isvalid(attack) or attack:TryActiveAttack(target) == false then return false end
+        self.AttackTimer = self.AttackCooldown
+        self.ActiveAttackVisualTimer = math.min(0.45, self.AttackCooldown)
+        self.AIState = "ATTACK"
+        self:SetSprite(self.AttackRUID)
+        self:StopMovement()
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method void NotifyContactDamage(Entity target)
+        -- Contact damage never pauses the monster; it keeps its incoming direction for the configured duration.
+        if not self:IsValidPlayer(target) then return end
+        if self.MoveDirection == 0 then
+            local a = self.Entity.TransformComponent.WorldPosition
+            local b = target.TransformComponent.WorldPosition
+            self.MoveDirection = (b.x >= a.x) and 1 or -1
+        end
+        self.ContactDirection = self.MoveDirection
+        self.ContactMoveTimer = self.ContactMoveThroughSeconds
+        self.AIState = "CONTACT_MOVE"
+        self:SetSprite(self.MoveRUID)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void UpdateAutonomy(number delta)
+        -- Alternates short idle and movement periods inside the spawn group's bounds.
+        if self.AIState == "WANDER" then
+            self:SetSprite(self.MoveRUID)
+            self:MoveInDirection(self.MoveDirection, delta)
+            if self.StateTimer <= 0 then self:StartIdle() end
+            return
+        end
+        if self.AIState ~= "IDLE" then self:StartIdle() end
+        self:SetSprite(self.StandRUID)
+        self:StopMovement()
+        if self.StateTimer <= 0 then self:StartWander() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void StartIdle()
+        -- Enters a data-timed passive stand period.
+        self.AIState = "IDLE"
+        self.StateTimer = self:RandomDuration(self.IdleMinSeconds, self.IdleMaxSeconds)
+        self:SetSprite(self.StandRUID)
+        self:StopMovement()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void StartWander()
+        -- Picks a direction and starts a data-timed autonomous walk period.
+        self.AIState = "WANDER"
+        self.MoveDirection = (_UtilLogic:RandomIntegerRange(0, 1) == 0) and -1 or 1
+        self.StateTimer = self:RandomDuration(self.WanderMinSeconds, self.WanderMaxSeconds)
+        self:SetSprite(self.MoveRUID)
+    end
+
+    @ExecSpace("ServerOnly")
+    method number RandomDuration(number minimum, number maximum)
+        -- Returns a millisecond-granular random duration inside the configured range.
+        local low = math.floor(math.min(minimum, maximum) * 1000)
+        local high = math.floor(math.max(minimum, maximum) * 1000)
+        return _UtilLogic:RandomIntegerRange(low, high) / 1000
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindNearestPlayer(number maximumDistance)
+        -- Contact and aggro checks are limited to this monster's physical lane.
         local map = self.Entity.CurrentMap
         if not isvalid(map) or not isvalid(map.MapComponent) then return nil end
         local users = _UserService:GetUsersByMapComponent(map.MapComponent)
         if users == nil then return nil end
         local nearest = nil
-        local nearestDistance = self.ChaseRange
+        local nearestDistance = maximumDistance
         for _, user in pairs(users) do
             if self:IsValidPlayer(user) then
                 local distance = self:DistanceTo(user)
@@ -103,17 +231,16 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method boolean IsValidPlayer(Entity player)
-        -- Rejects dead players and players assigned to another combat lane.
+        -- Accepts only a living auto-battle player on this monster's floor.
         if not isvalid(player) or player.CurrentMap ~= self.Entity.CurrentMap then return false end
         if not isvalid(player.PlayerComponent) or player.PlayerComponent:IsDead() then return false end
-        local health = self.Entity:GetComponent("script.CombatMonsterHealth")
         local autoBattle = player:GetComponent("script.CombatPlayerAutoBattle")
-        return isvalid(health) and isvalid(autoBattle) and autoBattle.CombatLaneKey == health.LaneKey
+        return isvalid(autoBattle) and autoBattle.CombatLaneKey == self.LaneKey
     end
 
     @ExecSpace("ServerOnly")
     method number DistanceTo(Entity target)
-        -- Measures world-space distance to a same-lane player.
+        -- Measures world-space distance to a same-floor player target.
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
         local dx = b.x - a.x
@@ -123,10 +250,19 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
-        -- Moves horizontally toward the target while preserving this lane.
+        -- Converts a target position into bounded horizontal chase movement.
         local a = self.Entity.TransformComponent.WorldPosition
         local b = target.TransformComponent.WorldPosition
-        local direction = (b.x >= a.x) and 1 or -1
+        self:MoveInDirection((b.x >= a.x) and 1 or -1, delta)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void MoveInDirection(number direction, number delta)
+        -- Moves inside spawn-group bounds and mirrors the sprite toward travel.
+        local x = self.Entity.TransformComponent.WorldPosition.x
+        if direction < 0 and x <= self.BoundsLeftX then direction = 1 end
+        if direction > 0 and x >= self.BoundsRightX then direction = -1 end
+        self.MoveDirection = direction
         local transform = self.Entity.TransformComponent
         local scale = transform.Scale
         transform.Scale = Vector3(math.abs(scale.x) * -direction, scale.y, scale.z)
@@ -136,14 +272,32 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void StopMovement()
-        -- Stops monster movement without changing its lane assignment.
+        -- Stops the monster body without changing its current AI state.
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement:Stop() end
     end
 
     @ExecSpace("ServerOnly")
+    method void ResetAutonomy()
+        -- Clears combat state and starts a fresh idle cycle.
+        self.DeathPlayed = false
+        self.TargetEntity = nil
+        self.AttackTimer = 0
+        self.ContactMoveTimer = 0
+        self.ActiveAttackVisualTimer = 0
+        self:StartIdle()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ResetAfterRespawn()
+        -- Restores idle and wander behavior after the health component respawns the monster.
+        self:ResetAutonomy()
+    end
+
+    @ExecSpace("ServerOnly")
     method void SetSprite(string ruid)
-        -- Applies a table-backed animation RUID only when it changes.
+        -- Swaps the Pattern A animation clip only when a valid RUID changed.
+        if ruid == nil or ruid == "" then return end
         local sprite = self.Entity.SpriteRendererComponent
         if isvalid(sprite) and sprite.SpriteRUID ~= ruid then sprite.SpriteRUID = ruid end
     end

@@ -30,23 +30,27 @@ Horizontal configuration used by the server runtime.
 
 ### HuntingGroundTiers
 
-Maps one `BaseBetRegionIndex` to one player profile and one monster spawn group. The index is the combat tier key.
+Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. Every enabled spawn group with the same `HuntingGroundTierIndex` belongs to that tier.
 
 ### PlayerStatsProfiles
 
-Defines player HP, attack power, cadence, attack range, move speed, critical values, aggro range, `BasicAttackLaneKey`, and table-backed hitbox height. It contains balance only, not player appearance.
+Defines player HP, attack power, cadence, attack range, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, hitbox height, and ladder approach/exit tolerances. It contains balance only, not player appearance.
 
 ### CombatLanes
 
-Defines the `UPPER`, `CENTER`, and `LOWER` rows for each hunting-ground tier. The table owns expected Y offsets, minimum common width, map anchors, basic-attack eligibility, and initial-spawn eligibility. The initial Henesys contract enables targeting and spawning on `CENTER` only.
+Defines the `UPPER`, `CENTER`, and `LOWER` rows for each hunting-ground tier. The table owns expected Y offsets, minimum common width, map anchors, basic-attack eligibility, and initial-spawn eligibility. Initial Henesys enables all three physical lanes.
+
+### CombatLadders
+
+Defines the Maker-authored `ClimbableComponent` entity path and the adjacent lower/upper lanes it connects. Initial Henesys uses `ladder-3` for `LOWER <-> CENTER` and `ladder-3_1` for `CENTER <-> UPPER`.
 
 ### MonsterDefinitions
 
-Defines monster resource/model identity, stats, table-backed attack hitbox height, respawn behavior, and `DropGroupId`. The drop group is a string cross-workbook key intentionally independent from row order.
+Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, contact move-through time, respawn behavior, and `DropGroupId`. Contact damage is common to every definition; `AttackMode=ACTIVE` adds a separate attack action and requires `AttackAnimationRuid`.
 
 ### MonsterSpawnGroups
 
-Defines which monster appears, how many instances are maintained, its `LaneKey`, and which map anchor/bounds are used.
+Defines which monster appears, how many instances are maintained, its tier and `LaneKey`, and which map anchor/bounds are used.
 
 ## Drop.xlsx
 
@@ -63,9 +67,10 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 - Every enabled `HuntingGroundTiers.PlayerStatsProfileIndex` exists.
 - Every enabled `HuntingGroundTiers.SpawnGroupIndex` exists.
 - Every enabled tier has exactly `UPPER`, `CENTER`, and `LOWER` lanes in that order.
-- Exactly one initial basic-attack lane and one initial spawn lane exist; both are `CENTER`.
+- All three lanes allow physical same-lane basic attacks and initial monster spawning.
+- Every tier defines exactly two adjacent ladder routes and exactly one enabled spawn group per lane.
 - Player and monster hitbox heights remain smaller than `MinimumLaneSpacing`.
-- Spawn-group lane and anchor keys match the tier's initial `CombatLanes` row.
+- Spawn-group lane and anchor keys match the corresponding `CombatLanes` row.
 - Every enabled `MonsterSpawnGroups.MonsterDefinitionIndex` exists.
 - Every enabled `MonsterDefinitions.DropGroupId` exists in `DropGroups`.
 - Every enabled `DropEntries.DropGroupId` exists in `DropGroups`.
@@ -75,6 +80,8 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 
 ## Initial Content
 
-- Tier 1 links Base Bet region `1` to the Tier 1 player profile and a single center-lane Slime spawn group in `map01`.
+- Tier 1 links Base Bet region `1` to the Tier 1 player profile and one Slime spawn group on each `map01` lane.
+- Center/lower Tier 1 Slimes are passive contact-only monsters. The upper-lane test Slime is aggressive, keeps the same contact damage, and additionally uses the resource pack's active attack animation.
+- All Tier 1 Slimes move through contact for `0.5` seconds and respawn after `5` seconds; if the whole map has no live target, all three lane populations are restored immediately.
 - Slime uses the classic `mob/0210100.img` resource pack and references `DROP_SLIME_TIER1`.
 - `DROP_SLIME_TIER1` independently grants `1..3` Common Coins at `1000` permille.

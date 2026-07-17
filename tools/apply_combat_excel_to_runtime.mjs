@@ -69,14 +69,29 @@ function groupedLanes(rows) {
   }).join("\n");
 }
 
+function groupedListRows(rows, tierKey) {
+  const groups = new Map();
+  for (const row of rows) {
+    const tierIndex = Number(row[tierKey]);
+    if (!groups.has(tierIndex)) groups.set(tierIndex, []);
+    groups.get(tierIndex).push(row);
+  }
+  return [...groups.entries()].map(([tierIndex, entries]) => {
+    const body = entries.map((entry) => `                ${luaRow(entry)},`).join("\n");
+    return `            [${tierIndex}] = {\n${body}\n            },`;
+  }).join("\n");
+}
+
 const source = `@Logic
 script CombatTableRuntime extends Logic
     property any config = nil
     property any huntingGroundTiers = nil
     property any playerStatsProfiles = nil
     property any combatLanesByTier = nil
+    property any combatLaddersByTier = nil
     property any monsterDefinitions = nil
     property any monsterSpawnGroups = nil
+    property any monsterSpawnGroupsByTier = nil
     property any dropGroups = nil
     property any dropEntriesByGroup = nil
 
@@ -100,11 +115,17 @@ ${indexedRows(combat.PlayerStatsProfiles, "PlayerStatsProfilesIndex")}
         self.combatLanesByTier = {
 ${groupedLanes(combat.CombatLanes)}
         }
+        self.combatLaddersByTier = {
+${groupedListRows(combat.CombatLadders, "HuntingGroundTierIndex")}
+        }
         self.monsterDefinitions = {
 ${indexedRows(combat.MonsterDefinitions, "MonsterDefinitionsIndex")}
         }
         self.monsterSpawnGroups = {
 ${indexedRows(combat.MonsterSpawnGroups, "MonsterSpawnGroupsIndex")}
+        }
+        self.monsterSpawnGroupsByTier = {
+${groupedListRows(combat.MonsterSpawnGroups, "HuntingGroundTierIndex")}
         }
         self.dropGroups = {
 ${keyedRows(drop.DropGroups, "DropGroupId")}
@@ -152,13 +173,28 @@ ${groupedEntries(drop.DropEntries)}
     end
 
     @ExecSpace("ServerOnly")
-    method string GetBasicAttackLaneKey(integer tierIndex)
-        -- Returns the only lane enabled for basic attacks in the tier.
+    method table GetCombatLadder(integer tierIndex, string currentLaneKey, string nextLaneKey)
+        -- Resolves the adjacent ladder connecting two combat lanes.
         self:EnsureLoaded()
-        for laneKey, lane in pairs(self.combatLanesByTier[tierIndex] or {}) do
-            if lane.Enabled and lane.BasicAttackTargetable then return laneKey end
+        for _, ladder in ipairs(self.combatLaddersByTier[tierIndex] or {}) do
+            if ladder.Enabled and ((ladder.LowerLaneKey == currentLaneKey and ladder.UpperLaneKey == nextLaneKey)
+                or (ladder.UpperLaneKey == currentLaneKey and ladder.LowerLaneKey == nextLaneKey)) then
+                return ladder
+            end
         end
-        log_error("[Combat] Missing basic attack lane for tier " .. tostring(tierIndex))
+        return nil
+    end
+
+    @ExecSpace("ServerOnly")
+    method string GetBasicAttackLaneKey(integer tierIndex)
+        -- Returns the player profile's initial lane without constraining later ladder navigation.
+        self:EnsureLoaded()
+        local tier = self.huntingGroundTiers[tierIndex]
+        if tier ~= nil then
+            local profile = self.playerStatsProfiles[tier.PlayerStatsProfileIndex]
+            if profile ~= nil and profile.BasicAttackLaneKey ~= nil then return profile.BasicAttackLaneKey end
+        end
+        log_error("[Combat] Missing initial player lane for tier " .. tostring(tierIndex))
         return "CENTER"
     end
 
@@ -174,6 +210,13 @@ ${groupedEntries(drop.DropEntries)}
         -- Resolves a monster spawn group by its numeric index.
         self:EnsureLoaded()
         return self.monsterSpawnGroups[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetMonsterSpawnGroupsForTier(integer tierIndex)
+        -- Returns every enabled lane spawn group belonging to a hunting tier.
+        self:EnsureLoaded()
+        return self.monsterSpawnGroupsByTier[tierIndex] or {}
     end
 
     @ExecSpace("ServerOnly")

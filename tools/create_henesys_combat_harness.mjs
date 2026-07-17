@@ -105,8 +105,12 @@ if (!tier || !enabled(tier.Enabled)) fail("Initial hunting-ground tier is missin
 const lanes = combat.CombatLanes
   .filter((row) => enabled(row.Enabled) && Number(row.HuntingGroundTierIndex) === Number(tier.HuntingGroundTiersIndex))
   .sort((a, b) => Number(a.LaneOrder) - Number(b.LaneOrder));
-const spawnGroup = combat.MonsterSpawnGroups.find((row) => Number(row.MonsterSpawnGroupsIndex) === Number(tier.SpawnGroupIndex));
-if (!spawnGroup || !enabled(spawnGroup.Enabled)) fail("Initial monster spawn group is missing or disabled.");
+const spawnGroups = combat.MonsterSpawnGroups.filter((row) => enabled(row.Enabled)
+  && Number(row.HuntingGroundTierIndex) === Number(tier.HuntingGroundTiersIndex));
+const ladders = combat.CombatLadders.filter((row) => enabled(row.Enabled)
+  && Number(row.HuntingGroundTierIndex) === Number(tier.HuntingGroundTiersIndex));
+if (spawnGroups.length !== 3) fail("The initial tier must define three enabled lane spawn groups.");
+if (ladders.length !== 2) fail("The initial tier must define two enabled ladder routes.");
 
 if (path.parse(mapPath).name !== String(config.HenesysMapKey)) {
   fail(`Refusing a non-Henesys map. Expected ${config.HenesysMapKey}.map, got ${mapPath}`);
@@ -156,7 +160,6 @@ const centerLaneIndex = lanes.findIndex((lane) => String(lane.LaneKey) === "CENT
 if (centerLaneIndex < 0) fail("CombatLanes is missing CENTER.");
 const centerGroup = laneGroups[centerLaneIndex];
 const playerY = centerGroup.y + Number(config.PlayerSpawnYOffset);
-const monsterY = centerGroup.y + Number(spawnGroup.SpawnYOffset);
 const cameraAnchorPath = String(config.CombatCameraAnchorKey);
 const cameraAnchorX = (commonMinX + commonMaxX) * 0.5;
 const cameraAnchorY = centerGroup.y;
@@ -165,6 +168,7 @@ if (applyChanges) {
   if (!map.find("CombatHarness")) map.empty("CombatHarness", { pos: [0, 0, 0] });
   lanes.forEach((lane, index) => {
     const group = laneGroups[index];
+    const spawnGroup = spawnGroups.find((entry) => String(entry.LaneKey) === String(lane.LaneKey));
     const anchorY = group.y + Number(spawnGroup.SpawnYOffset);
     map.empty(String(lane.SpawnAnchorKey), { pos: [monsterX, anchorY, 0] });
     map.empty(String(lane.BoundsLeftAnchorKey), { pos: [commonMinX + Number(config.CombatBoundsInset), group.y, 0] });
@@ -197,7 +201,14 @@ const requiredPaths = [
   "CombatHarness/Runtime",
   cameraAnchorPath,
   ...lanes.flatMap((lane) => [lane.SpawnAnchorKey, lane.BoundsLeftAnchorKey, lane.BoundsRightAnchorKey]),
+  ...ladders.map((ladder) => ladder.LadderKey),
 ];
+for (const ladder of ladders) {
+  if (!map.find(String(ladder.LadderKey))) fail(`Missing Maker-authored ladder ${ladder.LadderKey}.`);
+  if (!readComponentOrNull(map, String(ladder.LadderKey), "MOD.Core.ClimbableComponent")) {
+    fail(`${ladder.LadderKey} is missing ClimbableComponent.`);
+  }
+}
 if (applyChanges) {
   const written = MapBuilder.read(mapPath);
   const missing = requiredPaths.filter((entityPath) => !written.find(String(entityPath)));
@@ -224,7 +235,12 @@ console.log(JSON.stringify({
     maxX: laneGroups[index].maxX,
   })),
   playerSpawn: { x: playerX, y: playerY, laneKey: "CENTER" },
-  monsterSpawn: { x: monsterX, y: monsterY, laneKey: "CENTER" },
+  monsterSpawns: lanes.map((lane, index) => ({
+    laneKey: lane.LaneKey,
+    x: monsterX,
+    y: laneGroups[index].y + Number(spawnGroups.find((entry) => String(entry.LaneKey) === String(lane.LaneKey)).SpawnYOffset),
+  })),
+  ladders: ladders.map((ladder) => ({ key: ladder.LadderKey, lower: ladder.LowerLaneKey, upper: ladder.UpperLaneKey })),
   cameraAnchor: { path: cameraAnchorPath, x: cameraAnchorX, y: cameraAnchorY },
 }, null, 2));
-if (!applyChanges) console.log("Preflight passed. Re-run with --apply to write Henesys combat anchors; the runtime spawns the center-lane monster.");
+if (!applyChanges) console.log("Preflight passed. Re-run with --apply to write Henesys combat anchors; runtime spawning covers all three lanes.");

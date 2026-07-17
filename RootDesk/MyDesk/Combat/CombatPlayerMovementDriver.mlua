@@ -1,0 +1,41 @@
+@Component
+script CombatPlayerMovementDriver extends Component
+    @ExecSpace("ClientOnly")
+    method void OnUpdate(number delta)
+        -- Executes server-selected auto-battle movement on the client that owns the avatar.
+        local autoBattle = self.Entity:GetComponent("script.CombatPlayerAutoBattle")
+        if not isvalid(autoBattle) then return end
+        local movement = self.Entity.MovementComponent
+        if not isvalid(movement) then return end
+        local controller = self.Entity.PlayerControllerComponent
+        local state = self.Entity.StateComponent
+
+        if autoBattle.MovementIntent == "CLIMB" and autoBattle.ClimbDirectionY ~= 0 then
+            if not isvalid(controller) then return end
+            controller.AlwaysMovingState = false
+            controller:ActionClimb(
+                Vector2(0, autoBattle.ClimbDirectionY),
+                movement:GetClimbableHeight(),
+                0
+            )
+            movement:MoveToDirection(Vector2(0, autoBattle.ClimbDirectionY), delta)
+            return
+        end
+
+        if autoBattle.MovementIntent == "HORIZONTAL" and autoBattle.MoveDirectionX ~= 0 then
+            if isvalid(controller) then
+                controller.LookDirectionX = autoBattle.MoveDirectionX
+                controller.AlwaysMovingState = true
+            end
+            if isvalid(state) and (state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE") then
+                state:ChangeState("MOVE")
+            end
+            movement:MoveToDirection(Vector2(autoBattle.MoveDirectionX, 0), 0)
+            return
+        end
+
+        movement:Stop()
+        if isvalid(controller) then controller.AlwaysMovingState = false end
+        if isvalid(state) and state.CurrentStateName == "MOVE" then state:ChangeState("IDLE") end
+    end
+end

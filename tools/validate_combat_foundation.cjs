@@ -18,6 +18,7 @@ const scriptNames = [
   "CombatRuntime.mlua",
   "CombatSandboxRuntime.mlua",
   "CombatPlayerAutoBattle.mlua",
+  "CombatPlayerMovementDriver.mlua",
   "CombatWalletBridge.mlua",
   "CombatMonsterHealth.mlua",
   "CombatMonsterAI.mlua",
@@ -43,10 +44,28 @@ assert(!playerSource.includes("self.Entity.CameraComponent"), "Combat framing mu
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
 assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
+assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from Combat.xlsx");
+assert(playerSource.includes("FindNearestMonsterAcrossLanes"), "Player AI must acquire targets on other floors when its lane is empty");
+assert(/@ExecSpace\("ServerOnly"\)\s*method void OnUpdate\(/.test(playerSource), "Player target selection must remain server-authoritative");
+assert(playerSource.includes('MovementIntent = "HORIZONTAL"'), "Player AI must publish horizontal movement intent");
+assert(playerSource.includes("RetaliationTargetEntity"), "Player AI must prioritize the monster that damaged it");
+assert(playerSource.includes("RequestImmediateMonsterPopulation"), "Player AI must recover an empty map before retrying acquisition");
+assert(/@ExecSpace\("Client"\)\s*method void PlayAttackAnimation\(/.test(playerSource), "Player attack state changes must use a targeted client RPC");
+assert(playerSource.includes("self:PlayAttackAnimation(player.UserId)"), "Server attack resolution must target the owning player client for animation");
+
+const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
+assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
+assert(movementDriverSource.includes("ActionClimb"), "Player movement driver must mount Maker-authored ladders through PlayerControllerComponent");
+assert(movementDriverSource.includes('MovementIntent == "HORIZONTAL"'), "Player movement driver must consume horizontal movement intent");
+assert(movementDriverSource.includes('state:ChangeState("MOVE")'), "Player horizontal movement must drive the avatar MOVE animation state");
+assert(movementDriverSource.includes("AlwaysMovingState = true"), "Player horizontal movement must preserve MOVE animation without manual input");
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
 assert(monsterAttackSource.includes("CollisionGroups.Player"), "Monster attacks must target the Player collision group");
 assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Combat.xlsx");
+assert(monsterAttackSource.includes("HandleTriggerStayEvent"), "Monster contact damage must originate from body overlap events");
+assert(monsterAttackSource.includes("TryActiveAttack"), "Monster attack must keep active attacks separate from contact damage");
+assert(monsterAttackSource.includes("NotifyDamagedByMonster"), "Successful monster damage must update player retaliation priority");
 for (const method of ["CalcDamage", "IsAttackTarget"]) {
   const pattern = new RegExp(`@ExecSpace\\([^\\n]+\\)\\s*method [^\\n]+ ${method}\\(`);
   assert(!pattern.test(playerSource), `CombatPlayerAutoBattle.${method} override must not change ExecSpace`);
@@ -56,8 +75,11 @@ for (const method of ["CalcDamage", "IsAttackTarget"]) {
 const sandboxSource = fs.readFileSync(path.join(combatDir, "CombatSandboxRuntime.mlua"), "utf8");
 assert(sandboxSource.includes("_SpawnService:SpawnByModelId"), "Combat runtime must spawn real monster model instances");
 assert(sandboxSource.includes("spawnGroup.SpawnCount"), "Combat runtime must maintain the table-backed spawn count");
+assert(sandboxSource.includes("GetMonsterSpawnGroupsForTier"), "Combat runtime must maintain spawn groups on all three lanes");
 assert(sandboxSource.includes("spawnGroup.SpawnAnchorKey"), "Combat runtime must resolve the table-backed spawn anchor");
 assert(sandboxSource.includes("definition.ModelPath"), "Combat runtime must derive the model id from table-backed model data");
+assert(sandboxSource.includes("EnsureImmediateMonsterPopulation"), "Combat runtime must immediately restore all live floor populations when empty");
+assert(sandboxSource.includes('AddComponent("CombatPlayerMovementDriver")'), "Combat runtime must attach the client player movement driver");
 assert(sandboxSource.includes('AddComponent("CombatWalletBridge")'), "Combat runtime must attach the reward wallet bridge");
 
 const walletSource = fs.readFileSync(path.join(combatDir, "CombatWalletBridge.mlua"), "utf8");
@@ -67,6 +89,15 @@ assert(walletSource.includes("GrantCombatCommonCoins"), "Combat wallet must appl
 
 const combatRuntimeSource = fs.readFileSync(path.join(combatDir, "CombatRuntime.mlua"), "utf8");
 assert(combatRuntimeSource.includes("self.pendingRewardsByUserId[userId] = remaining"), "Currency draining must preserve future item grants");
+assert(combatRuntimeSource.includes("floorDistance * 100"), "Cross-floor targeting must prioritize the nearest lane before horizontal distance");
+assert(combatRuntimeSource.includes("CountLiveMonsterInstances"), "Combat runtime must distinguish live monsters from respawn-waiting instances");
+
+const monsterAiSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAI.mlua"), "utf8");
+assert(monsterAiSource.includes('AIState = "IDLE"') && monsterAiSource.includes('AIState = "WANDER"'), "Monster AI must alternate idle and autonomous movement");
+assert(monsterAiSource.includes("self.Aggressive"), "Monster AI must distinguish aggressive and passive definitions");
+assert(monsterAiSource.includes("NotifyAttacked"), "Passive monsters must enter chase after being attacked");
+assert(monsterAiSource.includes("ContactMoveThroughSeconds"), "Contact monsters must continue moving after player contact");
+assert(monsterAiSource.includes("ActiveAttackEnabled"), "Only monsters with an active attack definition may use attack animation logic");
 
 const healthSource = fs.readFileSync(path.join(combatDir, "CombatMonsterHealth.mlua"), "utf8");
 assert(!healthSource.includes("self.Entity:SetEnable(false)"), "Respawning monsters must not disable their own timer owner");
@@ -81,8 +112,14 @@ assert(tableSource.includes('CombatAreaMinimumWorldX = 0') && tableSource.includ
 assert(tableSource.includes('CombatCameraScreenOffsetX = 0.75') && tableSource.includes('CombatCameraScreenOffsetY = 0.655'), "Generated runtime must frame combat in the screen-right region");
 assert(tableSource.includes('CombatCameraConfineArea = false'), "Generated runtime must not recenter the camera from foothold bounds");
 assert(tableSource.includes('CombatCameraAnchorKey = "CombatHarness/CameraAnchor"'), "Generated runtime must contain the fixed combat camera anchor key");
-assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must lock basic attacks to CENTER");
+assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must start the player on CENTER");
 assert(tableSource.includes('["UPPER"]') && tableSource.includes('["CENTER"]') && tableSource.includes('["LOWER"]'), "Generated runtime must contain all three combat lanes");
+assert(tableSource.includes('LadderKey = "ladder-3"') && tableSource.includes('LadderKey = "ladder-3_1"'), "Generated runtime must contain both Maker-authored ladder routes");
+assert(tableSource.includes('AttackMode = "CONTACT"') && tableSource.includes('ContactMoveThroughSeconds = 0.5'), "Generated runtime must contain contact-damage behavior");
+assert(tableSource.includes('MonsterKey = "SLIME_TIER_1_ACTIVE"') && tableSource.includes('AttackMode = "ACTIVE"'), "Generated runtime must contain the upper-lane active attack test definition");
+assert(tableSource.includes('MonsterDefinitionIndex = 2') && tableSource.includes('LaneKey = "UPPER"'), "Upper spawn group must reference the active attack definition");
+assert(tableSource.includes('RespawnSeconds = 5'), "Generated runtime must contain the longer Slime respawn delay");
+assert((tableSource.match(/SpawnGroupKey = "SPAWN_SLIME_TIER_1_/g) || []).length >= 6, "Generated runtime must index all three lane spawn groups");
 
 assert(fs.existsSync(modelPath), `Missing Slime model: ${modelPath}`);
 const model = ModelBuilder.read(modelPath);
@@ -92,6 +129,7 @@ for (const required of [
   "MOD.Core.MovementComponent",
   "MOD.Core.StateComponent",
   "MOD.Core.HitComponent",
+  "MOD.Core.TriggerComponent",
   "script.CombatMonsterHealth",
   "script.CombatMonsterAI",
   "script.CombatMonsterAttack",
@@ -115,12 +153,16 @@ if (fs.existsSync(mapPath)) {
       "CombatHarness/Lanes/UPPER/Spawn",
       "CombatHarness/Lanes/CENTER/Spawn",
       "CombatHarness/Lanes/LOWER/Spawn",
+      "ladder-3",
+      "ladder-3_1",
     ]) {
       assert(map.find(entityPath), `Henesys map01 is missing ${entityPath}`);
     }
     const fixedCamera = map.component("CombatHarness/CameraAnchor", "MOD.Core.CameraComponent");
     assert.equal(fixedCamera.ConfineCameraArea, false, "Fixed combat camera must not use foothold confinement");
     assert.deepEqual(fixedCamera.ScreenOffset, { x: 0.75, y: 0.655 }, "Fixed combat camera must use the table-backed screen offset");
+    assert(map.component("ladder-3", "MOD.Core.ClimbableComponent"), "Lower-center ladder must be climbable");
+    assert(map.component("ladder-3_1", "MOD.Core.ClimbableComponent"), "Center-upper ladder must be climbable");
     console.log("Combat foundation valid: data runtime, scripts, model, and Henesys three-lane harness");
   } else {
     console.log("Combat foundation valid: data runtime, scripts, and model; Henesys map01 awaits three Maker-authored foothold rows");

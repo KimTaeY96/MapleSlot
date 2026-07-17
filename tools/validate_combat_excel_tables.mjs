@@ -118,6 +118,7 @@ export async function loadAndValidateCombatTables(options = {}) {
   const playerIndexes = unique(combat.PlayerStatsProfiles, "PlayerStatsProfilesIndex", "PlayerStatsProfiles");
   unique(combat.PlayerStatsProfiles, "ProfileKey", "PlayerStatsProfiles");
   unique(combat.CombatLanes, "CombatLanesIndex", "CombatLanes");
+  unique(combat.CombatLadders, "CombatLaddersIndex", "CombatLadders");
   const monsterIndexes = unique(combat.MonsterDefinitions, "MonsterDefinitionsIndex", "MonsterDefinitions");
   unique(combat.MonsterDefinitions, "MonsterKey", "MonsterDefinitions");
   const spawnIndexes = unique(combat.MonsterSpawnGroups, "MonsterSpawnGroupsIndex", "MonsterSpawnGroups");
@@ -147,6 +148,25 @@ export async function loadAndValidateCombatTables(options = {}) {
     }
   }
 
+  const ladderIdentity = new Set();
+  for (const row of combat.CombatLadders.filter((entry) => enabled(entry.Enabled))) {
+    const tierIndex = String(row.HuntingGroundTierIndex);
+    const lowerLaneKey = String(row.LowerLaneKey);
+    const upperLaneKey = String(row.UpperLaneKey);
+    if (!tierIndexes.has(tierIndex)) fail(`Combat ladder ${row.CombatLaddersIndex} has dangling HuntingGroundTierIndex`);
+    if (String(row.MapKey) !== String(config.HenesysMapKey)) fail(`Combat ladder ${row.LadderKey} must use map ${config.HenesysMapKey}`);
+    if (isBlank(row.LadderKey)) fail(`Combat ladder ${row.CombatLaddersIndex}.LadderKey cannot be blank`);
+    if (!supportedLaneKeys.has(lowerLaneKey) || !supportedLaneKeys.has(upperLaneKey)) fail(`Combat ladder ${row.LadderKey} has an invalid lane key`);
+    const lowerLane = combat.CombatLanes.find((lane) => String(lane.HuntingGroundTierIndex) === tierIndex && String(lane.LaneKey) === lowerLaneKey);
+    const upperLane = combat.CombatLanes.find((lane) => String(lane.HuntingGroundTierIndex) === tierIndex && String(lane.LaneKey) === upperLaneKey);
+    if (!lowerLane || !upperLane || Number(lowerLane.LaneOrder) - Number(upperLane.LaneOrder) !== 1) {
+      fail(`Combat ladder ${row.LadderKey} must connect adjacent lower and upper lanes`);
+    }
+    const identity = `${tierIndex}:${lowerLaneKey}:${upperLaneKey}`;
+    if (ladderIdentity.has(identity)) fail(`CombatLadders contains duplicate ${identity}`);
+    ladderIdentity.add(identity);
+  }
+
   for (const row of combat.HuntingGroundTiers.filter((entry) => enabled(entry.Enabled))) {
     if (!baseBetIndexes.has(String(row.BaseBetRegionIndex))) fail(`Tier ${row.TierKey} has dangling BaseBetRegionIndex`);
     if (!playerIndexes.has(String(row.PlayerStatsProfileIndex))) fail(`Tier ${row.TierKey} has dangling PlayerStatsProfileIndex`);
@@ -169,24 +189,28 @@ export async function loadAndValidateCombatTables(options = {}) {
       if (spacing < minimumLaneSpacing) fail(`${row.TierKey} adjacent lane spacing must be >= ${minimumLaneSpacing}`);
     }
     const basicAttackLanes = lanes.filter((lane) => enabled(lane.BasicAttackTargetable));
-    if (basicAttackLanes.length !== 1 || String(basicAttackLanes[0].LaneKey) !== "CENTER") {
-      fail(`${row.TierKey} basic attacks must target CENTER only`);
-    }
+    if (basicAttackLanes.length !== 3) fail(`${row.TierKey} basic attacks must follow the player across all three lanes`);
     const initialSpawnLanes = lanes.filter((lane) => enabled(lane.InitialSpawnEnabled));
-    if (initialSpawnLanes.length !== 1 || String(initialSpawnLanes[0].LaneKey) !== "CENTER") {
-      fail(`${row.TierKey} initial monster spawn must use CENTER only`);
-    }
+    if (initialSpawnLanes.length !== 3) fail(`${row.TierKey} must spawn monsters on all three lanes`);
     const profile = combat.PlayerStatsProfiles.find((entry) => String(entry.PlayerStatsProfilesIndex) === String(row.PlayerStatsProfileIndex));
-    if (String(profile?.BasicAttackLaneKey) !== String(basicAttackLanes[0].LaneKey)) {
-      fail(`${row.TierKey} player profile BasicAttackLaneKey does not match CombatLanes`);
+    if (!supportedLaneKeys.has(String(profile?.BasicAttackLaneKey))) fail(`${row.TierKey} player profile has an invalid starting lane`);
+    const spawnGroups = combat.MonsterSpawnGroups.filter((entry) => enabled(entry.Enabled)
+      && String(entry.HuntingGroundTierIndex) === String(row.HuntingGroundTiersIndex));
+    if (spawnGroups.length !== 3) fail(`${row.TierKey} must define exactly three enabled lane spawn groups`);
+    const spawnGroupLaneKeys = spawnGroups.map((entry) => String(entry.LaneKey)).sort();
+    if (spawnGroupLaneKeys.join(",") !== "CENTER,LOWER,UPPER") fail(`${row.TierKey} spawn groups must cover UPPER, CENTER, and LOWER once each`);
+    if (!spawnGroups.some((entry) => String(entry.MonsterSpawnGroupsIndex) === String(row.SpawnGroupIndex))) {
+      fail(`${row.TierKey} primary SpawnGroupIndex must belong to the tier`);
     }
-    const spawnGroup = combat.MonsterSpawnGroups.find((entry) => String(entry.MonsterSpawnGroupsIndex) === String(row.SpawnGroupIndex));
-    if (String(spawnGroup?.LaneKey) !== String(initialSpawnLanes[0].LaneKey)) {
-      fail(`${row.TierKey} spawn group LaneKey does not match the initial spawn lane`);
+    for (const spawnGroup of spawnGroups) {
+      const lane = lanes.find((entry) => String(entry.LaneKey) === String(spawnGroup.LaneKey));
+      for (const key of ["SpawnAnchorKey", "BoundsLeftAnchorKey", "BoundsRightAnchorKey"]) {
+        if (String(spawnGroup[key]) !== String(lane?.[key])) fail(`${spawnGroup.SpawnGroupKey}.${key} does not match CombatLanes`);
+      }
     }
-    for (const key of ["SpawnAnchorKey", "BoundsLeftAnchorKey", "BoundsRightAnchorKey"]) {
-      if (String(spawnGroup?.[key]) !== String(initialSpawnLanes[0][key])) fail(`${row.TierKey} spawn group ${key} does not match CombatLanes`);
-    }
+    const ladders = combat.CombatLadders.filter((entry) => enabled(entry.Enabled)
+      && String(entry.HuntingGroundTierIndex) === String(row.HuntingGroundTiersIndex));
+    if (ladders.length !== 2) fail(`${row.TierKey} must define exactly two adjacent ladder routes`);
   }
 
   for (const row of combat.PlayerStatsProfiles.filter((entry) => enabled(entry.Enabled))) {
@@ -199,12 +223,21 @@ export async function loadAndValidateCombatTables(options = {}) {
     if (!supportedLaneKeys.has(String(row.BasicAttackLaneKey))) fail(`${row.ProfileKey}.BasicAttackLaneKey is invalid`);
     const hitboxHeight = number(row.AttackHitboxHeight, `${row.ProfileKey}.AttackHitboxHeight`);
     if (hitboxHeight <= 0 || hitboxHeight >= minimumLaneSpacing) fail(`${row.ProfileKey}.AttackHitboxHeight must be > 0 and < MinimumLaneSpacing`);
+    for (const key of ["LadderApproachTolerance", "LadderExitTolerance"]) {
+      if (number(row[key], `${row.ProfileKey}.${key}`) <= 0) fail(`${row.ProfileKey}.${key} must be > 0`);
+    }
   }
 
   for (const row of combat.MonsterDefinitions.filter((entry) => enabled(entry.Enabled))) {
-    for (const key of ["MaxHp", "AttackPower", "AttackIntervalSeconds", "MoveSpeed", "ChaseRange", "AttackRange", "RespawnSeconds"]) {
+    for (const key of ["MaxHp", "AttackPower", "AttackIntervalSeconds", "MoveSpeed", "ChaseRange", "AttackRange", "RespawnSeconds", "IdleMinSeconds", "IdleMaxSeconds", "WanderMinSeconds", "WanderMaxSeconds", "ContactMoveThroughSeconds"]) {
       if (number(row[key], `${row.MonsterKey}.${key}`) < (key === "RespawnSeconds" ? 0 : Number.EPSILON)) fail(`${row.MonsterKey}.${key} is invalid`);
     }
+    if (Number(row.IdleMaxSeconds) < Number(row.IdleMinSeconds)) fail(`${row.MonsterKey}.IdleMaxSeconds must be >= IdleMinSeconds`);
+    if (Number(row.WanderMaxSeconds) < Number(row.WanderMinSeconds)) fail(`${row.MonsterKey}.WanderMaxSeconds must be >= WanderMinSeconds`);
+    if (typeof row.Aggressive !== "boolean") fail(`${row.MonsterKey}.Aggressive must be boolean`);
+    if (!new Set(["CONTACT", "ACTIVE"]).has(String(row.AttackMode))) fail(`${row.MonsterKey}.AttackMode is invalid`);
+    if (String(row.AttackMode) === "CONTACT" && !isBlank(row.AttackAnimationRuid)) fail(`${row.MonsterKey} CONTACT mode must not define AttackAnimationRuid`);
+    if (String(row.AttackMode) === "ACTIVE" && isBlank(row.AttackAnimationRuid)) fail(`${row.MonsterKey} ACTIVE mode requires AttackAnimationRuid`);
     if (!dropGroupIds.has(String(row.DropGroupId))) fail(`${row.MonsterKey} has dangling DropGroupId ${row.DropGroupId}`);
     if (isBlank(row.ModelPath) || isBlank(row.StandAnimationRuid) || isBlank(row.DieAnimationRuid)) fail(`${row.MonsterKey} is missing required model/animation data`);
     const hitboxHeight = number(row.AttackHitboxHeight, `${row.MonsterKey}.AttackHitboxHeight`);
@@ -212,6 +245,7 @@ export async function loadAndValidateCombatTables(options = {}) {
   }
 
   for (const row of combat.MonsterSpawnGroups.filter((entry) => enabled(entry.Enabled))) {
+    if (!tierIndexes.has(String(row.HuntingGroundTierIndex))) fail(`${row.SpawnGroupKey} has dangling HuntingGroundTierIndex`);
     if (!monsterIndexes.has(String(row.MonsterDefinitionIndex))) fail(`${row.SpawnGroupKey} has dangling MonsterDefinitionIndex`);
     if (!Number.isInteger(number(row.SpawnCount, `${row.SpawnGroupKey}.SpawnCount`)) || Number(row.SpawnCount) < 1) fail(`${row.SpawnGroupKey}.SpawnCount must be a positive integer`);
     for (const key of ["SpawnAnchorKey", "BoundsLeftAnchorKey", "BoundsRightAnchorKey"]) {

@@ -17,7 +17,22 @@ async function main() {
   const config = combat.CombatConfig[0];
   const player = combat.PlayerStatsProfiles.find((row) => Number(row.PlayerStatsProfilesIndex) === 1);
   const monster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 1);
-  assert(player && monster, "Initial player/monster data must exist");
+  const activeMonster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 2);
+  assert(player && monster && activeMonster, "Initial contact and upper active monster data must exist");
+  assert.equal(Number(player.AggroRange), 9999, "Player acquisition must cover the whole test map");
+  assert.equal(Number(monster.RespawnSeconds), 5, "Tier 1 Slime respawn must use the longer table-backed delay");
+  assert.equal(monster.AttackMode, "CONTACT");
+  assert.equal(monster.Aggressive, false);
+  assert.equal(Number(monster.ContactMoveThroughSeconds), 0.5);
+  assert(!monster.AttackAnimationRuid, "Contact-only Slime must not define an active attack animation");
+  assert.equal(activeMonster.AttackMode, "ACTIVE");
+  assert.equal(activeMonster.Aggressive, true);
+  assert(activeMonster.AttackAnimationRuid, "Upper active Slime must define an attack animation");
+  const tierSpawns = combat.MonsterSpawnGroups.filter((row) => Number(row.HuntingGroundTierIndex) === 1 && row.Enabled);
+  assert.deepEqual(tierSpawns.map((row) => row.LaneKey).sort(), ["CENTER", "LOWER", "UPPER"]);
+  assert.equal(Number(tierSpawns.find((row) => row.LaneKey === "UPPER").MonsterDefinitionIndex), 2);
+  const tierLadders = combat.CombatLadders.filter((row) => Number(row.HuntingGroundTierIndex) === 1 && row.Enabled);
+  assert.deepEqual(tierLadders.map((row) => `${row.LowerLaneKey}>${row.UpperLaneKey}`).sort(), ["CENTER>UPPER", "LOWER>CENTER"]);
 
   const laneGuard = new CombatSimulator({ config, playerProfile: player, monsterDefinition: monster, drop, random: createSeededRandom(1) });
   const untouchedHp = laneGuard.monsterHp;
@@ -65,7 +80,7 @@ async function main() {
     sourceEntryIndex: 99,
   });
 
-  console.log(`Combat simulator valid: death=${config.PlayerDeathPenaltySeconds}s, Slime drop quantities=${[...observedQuantities].sort().join(",")}`);
+  console.log(`Combat simulator valid: three lanes, two ladders, respawn=${monster.RespawnSeconds}s, Slime drops=${[...observedQuantities].sort().join(",")}`);
 }
 
 main().catch((error) => {

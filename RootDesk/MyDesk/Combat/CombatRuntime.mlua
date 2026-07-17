@@ -46,6 +46,47 @@ script CombatRuntime extends Logic
     end
 
     @ExecSpace("ServerOnly")
+    method integer CountLiveMonsterInstances(Entity map, integer monsterDefinitionIndex, string laneKey)
+        -- Counts only currently targetable instances for immediate population recovery.
+        if not isvalid(map) or self.monstersById == nil then return 0 end
+        local count = 0
+        for id, monster in pairs(self.monstersById) do
+            if not isvalid(monster) then
+                self.monstersById[id] = nil
+            elseif monster.CurrentMap == map then
+                local health = monster:GetComponent("script.CombatMonsterHealth")
+                if isvalid(health)
+                    and health.IsDead == false
+                    and health.MonsterDefinitionIndex == monsterDefinitionIndex
+                    and health.LaneKey == laneKey then
+                    count = count + 1
+                end
+            end
+        end
+        return count
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindDeadMonsterInstance(Entity map, integer monsterDefinitionIndex, string laneKey)
+        -- Reuses a dead runtime instance before creating another entity for the same spawn group.
+        if not isvalid(map) or self.monstersById == nil then return nil end
+        for id, monster in pairs(self.monstersById) do
+            if not isvalid(monster) then
+                self.monstersById[id] = nil
+            elseif monster.CurrentMap == map then
+                local health = monster:GetComponent("script.CombatMonsterHealth")
+                if isvalid(health)
+                    and health.IsDead
+                    and health.MonsterDefinitionIndex == monsterDefinitionIndex
+                    and health.LaneKey == laneKey then
+                    return monster
+                end
+            end
+        end
+        return nil
+    end
+
+    @ExecSpace("ServerOnly")
     method Entity FindNearestMonster(Entity seeker, number maxRange, string laneKey)
         -- Finds the closest live monster on the requested combat lane.
         if not isvalid(seeker) or self.monstersById == nil then return nil end
@@ -68,6 +109,43 @@ script CombatRuntime extends Logic
                     if distanceSquared <= nearestDistanceSquared then
                         nearest = monster
                         nearestDistanceSquared = distanceSquared
+                    end
+                end
+            end
+        end
+        return nearest
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindNearestMonsterAcrossLanes(Entity seeker, integer tierIndex, string currentLaneKey, number maxRange)
+        -- Chooses the closest live target within the table-backed map-wide range.
+        if not isvalid(seeker) or self.monstersById == nil then return nil end
+        local seekerTransform = seeker.TransformComponent
+        local currentLane = _CombatTableRuntime:GetCombatLane(tierIndex, currentLaneKey)
+        if not isvalid(seekerTransform) or currentLane == nil then return nil end
+        local seekerPosition = seekerTransform.WorldPosition
+        local nearest = nil
+        local nearestScore = 1000000
+        local maxDistanceSquared = maxRange * maxRange
+        for id, monster in pairs(self.monstersById) do
+            if not isvalid(monster) then
+                self.monstersById[id] = nil
+            elseif monster.CurrentMap == seeker.CurrentMap then
+                local health = monster:GetComponent("script.CombatMonsterHealth")
+                local transform = monster.TransformComponent
+                local lane = nil
+                if isvalid(health) then lane = _CombatTableRuntime:GetCombatLane(tierIndex, health.LaneKey) end
+                if isvalid(health) and health.IsDead == false and lane ~= nil and isvalid(transform) then
+                    local position = transform.WorldPosition
+                    local dx = position.x - seekerPosition.x
+                    local dy = position.y - seekerPosition.y
+                    if dx * dx + dy * dy <= maxDistanceSquared then
+                        local floorDistance = math.abs(lane.LaneOrder - currentLane.LaneOrder)
+                        local score = floorDistance * 100 + math.abs(dx)
+                        if score < nearestScore then
+                            nearest = monster
+                            nearestScore = score
+                        end
                     end
                 end
             end
