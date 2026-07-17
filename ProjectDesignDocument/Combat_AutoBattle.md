@@ -51,8 +51,9 @@ Base Bet does not directly mutate combat stats. Its index selects one `HuntingGr
 
 - `PlayerControllerComponent.UseCustomScript` is read-only at runtime and must never be assigned.
 - The sandbox disables manual movement and attack by removing documented action bindings, then restores the default bindings when the combat component ends.
-- The combat camera uses the `CombatConfig` screen offsets and disables foothold-area confinement by default. This keeps the player and three lanes in the screen-right composition regardless of tile world position.
-- Camera values changed for combat are restored when the combat component ends.
+- The combat camera is attached to `CombatCameraAnchorKey`, positioned at the common center of the three foothold rows. It does not follow player movement.
+- The fixed camera uses the `CombatConfig` screen offsets and disables foothold-area confinement by default. This keeps the three lanes in the screen-right composition regardless of tile world position.
+- The previously active camera is restored when the combat component ends.
 
 ## Failure Policy
 

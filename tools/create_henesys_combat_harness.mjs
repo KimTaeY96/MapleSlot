@@ -157,6 +157,9 @@ if (centerLaneIndex < 0) fail("CombatLanes is missing CENTER.");
 const centerGroup = laneGroups[centerLaneIndex];
 const playerY = centerGroup.y + Number(config.PlayerSpawnYOffset);
 const monsterY = centerGroup.y + Number(spawnGroup.SpawnYOffset);
+const cameraAnchorPath = String(config.CombatCameraAnchorKey);
+const cameraAnchorX = (commonMinX + commonMaxX) * 0.5;
+const cameraAnchorY = centerGroup.y;
 
 if (applyChanges) {
   if (!map.find("CombatHarness")) map.empty("CombatHarness", { pos: [0, 0, 0] });
@@ -174,6 +177,15 @@ if (applyChanges) {
   map.empty(playerSpawnPath, { pos: [playerX, playerY, 0] });
   map.upsertComponent(playerSpawnPath, "MOD.Core.SpawnLocationComponent", { Enable: true });
   map.empty("CombatHarness/Runtime", { pos: [(commonMinX + commonMaxX) * 0.5, centerGroup.y, 0], scripts: ["script.CombatSandboxRuntime"] });
+  map.empty(cameraAnchorPath, { pos: [cameraAnchorX, cameraAnchorY, 0] });
+  map.upsertComponent(cameraAnchorPath, "MOD.Core.CameraComponent", {
+    Enable: true,
+    ConfineCameraArea: enabled(config.CombatCameraConfineArea),
+    ScreenOffset: {
+      x: Number(config.CombatCameraScreenOffsetX),
+      y: Number(config.CombatCameraScreenOffsetY),
+    },
+  });
 
   const monsterPath = "CombatHarness/Monsters/SlimeTier1";
   if (!map.find(monsterPath)) {
@@ -194,6 +206,7 @@ if (applyChanges) {
 const requiredPaths = [
   "CombatHarness/SpawnLocation",
   "CombatHarness/Runtime",
+  cameraAnchorPath,
   "CombatHarness/Monsters/SlimeTier1",
   ...lanes.flatMap((lane) => [lane.SpawnAnchorKey, lane.BoundsLeftAnchorKey, lane.BoundsRightAnchorKey]),
 ];
@@ -203,6 +216,14 @@ if (applyChanges) {
   if (missing.length) fail(`Placement verification is missing: ${missing.join(", ")}`);
   verifyPosition(written, "CombatHarness/SpawnLocation", { x: playerX, y: playerY });
   verifyPosition(written, "CombatHarness/Monsters/SlimeTier1", { x: monsterX, y: monsterY });
+  verifyPosition(written, cameraAnchorPath, { x: cameraAnchorX, y: cameraAnchorY });
+  const fixedCamera = readComponentOrNull(written, cameraAnchorPath, "MOD.Core.CameraComponent");
+  if (!fixedCamera) fail(`${cameraAnchorPath} is missing CameraComponent.`);
+  if (fixedCamera.ConfineCameraArea !== enabled(config.CombatCameraConfineArea)) fail(`${cameraAnchorPath} has an invalid ConfineCameraArea value.`);
+  if (Math.abs(Number(fixedCamera.ScreenOffset?.x) - Number(config.CombatCameraScreenOffsetX)) > 0.001
+    || Math.abs(Number(fixedCamera.ScreenOffset?.y) - Number(config.CombatCameraScreenOffsetY)) > 0.001) {
+    fail(`${cameraAnchorPath} has an invalid ScreenOffset.`);
+  }
   const state = readComponentOrNull(written, "CombatHarness/Monsters/SlimeTier1", "MOD.Core.StateComponent");
   if (state?.IsLegacy !== false) fail("SlimeTier1 StateComponent.IsLegacy must be false.");
 }
@@ -219,5 +240,6 @@ console.log(JSON.stringify({
   })),
   playerSpawn: { x: playerX, y: playerY, laneKey: "CENTER" },
   monsterSpawn: { x: monsterX, y: monsterY, laneKey: "CENTER" },
+  cameraAnchor: { path: cameraAnchorPath, x: cameraAnchorX, y: cameraAnchorY },
 }, null, 2));
 if (!applyChanges) console.log("Preflight passed. Re-run with --apply to write Henesys combat anchors and the center-lane Slime.");

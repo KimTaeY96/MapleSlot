@@ -23,9 +23,10 @@ Horizontal configuration used by the server runtime.
 | `PlayerSpawnYOffset` | Player height above the center foothold. |
 | `CombatAreaMinimumWorldX` | Minimum world X for the screen-right combat area. Initial value: `0`. |
 | `CombatAreaMaximumWorldX` | Maximum world X for the screen-right combat area. Initial value: `8`. |
-| `CombatCameraScreenOffsetX` | Horizontal viewport ratio for the tracked player. Initial value: `0.75`. |
-| `CombatCameraScreenOffsetY` | Vertical viewport ratio for the tracked player. Initial value: `0.655`. |
+| `CombatCameraScreenOffsetX` | Horizontal viewport ratio for the fixed camera anchor. Initial value: `0.75`. |
+| `CombatCameraScreenOffsetY` | Vertical viewport ratio for the fixed camera anchor. Initial value: `0.655`. |
 | `CombatCameraConfineArea` | Whether foothold bounds may recenter the combat camera. Initial value: `false`. |
+| `CombatCameraAnchorKey` | Fixed camera entity path generated at the common lane center. Initial value: `CombatHarness/CameraAnchor`. |
 
 ### HuntingGroundTiers
 

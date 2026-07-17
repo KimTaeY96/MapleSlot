@@ -8,6 +8,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property number CombatCameraScreenOffsetX = 0.75
     @Sync property number CombatCameraScreenOffsetY = 0.655
     @Sync property boolean CombatCameraConfineArea = false
+    @Sync property string CombatCameraAnchorKey = "CombatHarness/CameraAnchor"
     @HideFromInspector property Entity TargetEntity = nil
     @HideFromInspector property any AttackShape = nil
     @HideFromInspector property number AttackTimer = 0
@@ -20,9 +21,8 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property integer CriticalChancePermille = 0
     @HideFromInspector property integer CriticalDamagePermille = 1500
     @HideFromInspector property boolean InputBindingsRemoved = false
-    @HideFromInspector property Vector2 PreviousCameraScreenOffset = Vector2(0.5, 0.655)
-    @HideFromInspector property boolean PreviousCameraConfineArea = true
-    @HideFromInspector property boolean CameraLayoutChanged = false
+    @HideFromInspector property any PreviousCameraComponent = nil
+    @HideFromInspector property boolean CameraSwitched = false
 
     method void OnBeginPlay()
         -- Loads the active profile and locks basic combat to its configured lane.
@@ -76,14 +76,21 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.InputBindingsRemoved = true
         end
 
-        local camera = self.Entity.CameraComponent
-        if isvalid(camera) and self.CameraLayoutChanged == false then
-            self.PreviousCameraScreenOffset = camera.ScreenOffset
-            self.PreviousCameraConfineArea = camera.ConfineCameraArea
-            camera.ConfineCameraArea = self.CombatCameraConfineArea
-            camera.ScreenOffset = Vector2(self.CombatCameraScreenOffsetX, self.CombatCameraScreenOffsetY)
-            self.CameraLayoutChanged = true
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) or self.CameraSwitched then return end
+        local cameraPath = "/maps/" .. map.Id .. "/" .. self.CombatCameraAnchorKey
+        local cameraAnchor = _EntityService:GetEntityByPath(cameraPath)
+        local camera = nil
+        if isvalid(cameraAnchor) then camera = cameraAnchor.CameraComponent end
+        if not isvalid(camera) then
+            log_error("[Combat] Missing fixed combat camera: " .. cameraPath)
+            return
         end
+        self.PreviousCameraComponent = _CameraService:GetCurrentCameraComponent()
+        camera.ConfineCameraArea = self.CombatCameraConfineArea
+        camera.ScreenOffset = Vector2(self.CombatCameraScreenOffsetX, self.CombatCameraScreenOffsetY)
+        _CameraService:SwitchCameraTo(camera)
+        self.CameraSwitched = true
     end
 
     @ExecSpace("ClientOnly")
@@ -106,12 +113,11 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.InputBindingsRemoved = false
         end
 
-        local camera = self.Entity.CameraComponent
-        if isvalid(camera) and self.CameraLayoutChanged then
-            camera.ConfineCameraArea = self.PreviousCameraConfineArea
-            camera.ScreenOffset = self.PreviousCameraScreenOffset
-            self.CameraLayoutChanged = false
+        if self.CameraSwitched and isvalid(self.PreviousCameraComponent) then
+            _CameraService:SwitchCameraTo(self.PreviousCameraComponent)
         end
+        self.PreviousCameraComponent = nil
+        self.CameraSwitched = false
     end
 
     @ExecSpace("ServerOnly")

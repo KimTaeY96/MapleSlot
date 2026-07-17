@@ -34,8 +34,9 @@ const playerSource = fs.readFileSync(path.join(combatDir, "CombatPlayerAutoBattl
 assert(!playerSource.includes("UseCustomScript"), "Combat scripts must not write the read-only UseCustomScript field");
 assert(playerSource.includes("RemoveAllActionKeyByActionName"), "Sandbox player must disable manual input through documented action bindings");
 assert(playerSource.includes("SetActionKey"), "Sandbox player must restore default action bindings when combat ends");
-assert(playerSource.includes("camera.ScreenOffset"), "Sandbox player must apply the configured screen-right camera offset");
-assert(playerSource.includes("camera.ConfineCameraArea"), "Sandbox player must explicitly control camera area confinement");
+assert(playerSource.includes("_CameraService:SwitchCameraTo"), "Sandbox player must switch to and restore a dedicated combat camera");
+assert(playerSource.includes("self.CombatCameraAnchorKey"), "Sandbox player must resolve the table-backed fixed camera anchor");
+assert(!playerSource.includes("self.Entity.CameraComponent"), "Combat framing must not keep following the player camera");
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
 assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
@@ -57,6 +58,7 @@ assert(tableSource.includes('RuntimeKind = "HENESYS_TILE_LANES"'), "Generated ru
 assert(tableSource.includes('CombatAreaMinimumWorldX = 0') && tableSource.includes('CombatAreaMaximumWorldX = 8'), "Generated runtime must constrain combat to the screen-right world-X range");
 assert(tableSource.includes('CombatCameraScreenOffsetX = 0.75') && tableSource.includes('CombatCameraScreenOffsetY = 0.655'), "Generated runtime must frame combat in the screen-right region");
 assert(tableSource.includes('CombatCameraConfineArea = false'), "Generated runtime must not recenter the camera from foothold bounds");
+assert(tableSource.includes('CombatCameraAnchorKey = "CombatHarness/CameraAnchor"'), "Generated runtime must contain the fixed combat camera anchor key");
 assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must lock basic attacks to CENTER");
 assert(tableSource.includes('["UPPER"]') && tableSource.includes('["CENTER"]') && tableSource.includes('["LOWER"]'), "Generated runtime must contain all three combat lanes");
 
@@ -87,6 +89,7 @@ if (fs.existsSync(mapPath)) {
     for (const entityPath of [
       "CombatHarness/SpawnLocation",
       "CombatHarness/Runtime",
+      "CombatHarness/CameraAnchor",
       "CombatHarness/Monsters/SlimeTier1",
       "CombatHarness/Lanes/UPPER/Spawn",
       "CombatHarness/Lanes/CENTER/Spawn",
@@ -94,6 +97,9 @@ if (fs.existsSync(mapPath)) {
     ]) {
       assert(map.find(entityPath), `Henesys map01 is missing ${entityPath}`);
     }
+    const fixedCamera = map.component("CombatHarness/CameraAnchor", "MOD.Core.CameraComponent");
+    assert.equal(fixedCamera.ConfineCameraArea, false, "Fixed combat camera must not use foothold confinement");
+    assert.deepEqual(fixedCamera.ScreenOffset, { x: 0.75, y: 0.655 }, "Fixed combat camera must use the table-backed screen offset");
     console.log("Combat foundation valid: data runtime, scripts, model, and Henesys three-lane harness");
   } else {
     console.log("Combat foundation valid: data runtime, scripts, and model; Henesys map01 awaits three Maker-authored foothold rows");

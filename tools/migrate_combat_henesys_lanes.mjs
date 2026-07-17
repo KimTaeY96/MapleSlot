@@ -114,6 +114,9 @@ appendColumn(configSheet, combatSheets.CombatConfig.columns[14], () => 8);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[15], () => 0.75);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[16], () => 0.655);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[17], () => false);
+appendColumn(configSheet, combatSheets.CombatConfig.columns[18], () => "CombatHarness/CameraAnchor");
+replaceExact(configSheet, "P3", "\uC804\uD22C \uC911 \uD50C\uB808\uC774\uC5B4\uAC00 \uD654\uBA74 \uAC00\uB85C\uC5D0\uC11C \uD45C\uC2DC\uB420 0~1 \uBE44\uC728\uC785\uB2C8\uB2E4.", combatSheets.CombatConfig.columns[15][2]);
+replaceExact(configSheet, "Q3", "\uC804\uD22C \uC911 \uD50C\uB808\uC774\uC5B4\uAC00 \uD654\uBA74 \uC138\uB85C\uC5D0\uC11C \uD45C\uC2DC\uB420 0~1 \uBE44\uC728\uC785\uB2C8\uB2E4.", combatSheets.CombatConfig.columns[16][2]);
 replaceExact(configSheet, "F5", "TEST_SANDBOX", "HENESYS_TILE_LANES");
 
 const profileSheet = workbook.worksheets.getItem("PlayerStatsProfiles");

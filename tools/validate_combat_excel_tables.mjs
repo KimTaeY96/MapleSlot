@@ -110,6 +110,8 @@ export async function loadAndValidateCombatTables(options = {}) {
   if (cameraScreenOffsetX <= 0.5 || cameraScreenOffsetX >= 1) fail("CombatCameraScreenOffsetX must place combat in the screen-right half");
   if (cameraScreenOffsetY <= 0 || cameraScreenOffsetY >= 1) fail("CombatCameraScreenOffsetY must be within 0..1 exclusive");
   if (typeof config.CombatCameraConfineArea !== "boolean") fail("CombatCameraConfineArea must be boolean");
+  if (isBlank(config.CombatCameraAnchorKey)) fail("CombatCameraAnchorKey cannot be blank");
+  if (!String(config.CombatCameraAnchorKey).startsWith("CombatHarness/")) fail("CombatCameraAnchorKey must stay under CombatHarness");
 
   const tierIndexes = unique(combat.HuntingGroundTiers, "HuntingGroundTiersIndex", "HuntingGroundTiers");
   unique(combat.HuntingGroundTiers, "TierKey", "HuntingGroundTiers");

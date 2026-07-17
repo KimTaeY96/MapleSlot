@@ -55,6 +55,7 @@ script CombatSandboxRuntime extends Component
                     autoBattle.CombatCameraScreenOffsetX = config.CombatCameraScreenOffsetX
                     autoBattle.CombatCameraScreenOffsetY = config.CombatCameraScreenOffsetY
                     autoBattle.CombatCameraConfineArea = config.CombatCameraConfineArea
+                    autoBattle.CombatCameraAnchorKey = config.CombatCameraAnchorKey
                 end
             end
         end

@@ -1786,6 +1786,62 @@
             "replaced_model_id": null
           }
         }
+      },
+      {
+        "id": "b24807fc-be5e-40e5-bfcd-ec0b83b5bd76",
+        "path": "/maps/map01/CombatHarness/CameraAnchor",
+        "componentNames": "MOD.Core.TransformComponent,MOD.Core.CameraComponent",
+        "jsonString": {
+          "name": "CameraAnchor",
+          "path": "/maps/map01/CombatHarness/CameraAnchor",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": false,
+          "displayOrder": 16,
+          "pathConstraints": "////",
+          "revision": 1,
+          "modelId": "mapempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.TransformComponent",
+              "Position": {
+                "x": 2.69999997615,
+                "y": -0.020000009999999995,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "Enable": true,
+              "ConfineCameraArea": false,
+              "ScreenOffset": {
+                "x": 0.75,
+                "y": 0.655
+              },
+              "@type": "MOD.Core.CameraComponent"
+            }
+          ],
+          "@version": 1,
+          "origin": {
+            "type": "Model",
+            "entry_id": "mapempty",
+            "sub_entity_id": null,
+            "root_entity_id": "b24807fc-be5e-40e5-bfcd-ec0b83b5bd76",
+            "replaced_model_id": null
+          }
+        }
       }
     ]
   }
