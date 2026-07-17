@@ -19,7 +19,7 @@ script CombatTableRuntime extends Logic
     method void EnsureLoaded()
         -- Initializes every table cache from the Excel-generated literals.
         if self.config ~= nil then return end
-        self.config = { ServerTickSeconds = 0.1, PlayerDeathPenaltySeconds = 300, PlayerReviveHpPermille = 1000, DisableManualControlInSandbox = true, InitialHuntingGroundTierIndex = 1, RuntimeKind = "HENESYS_TILE_LANES", HenesysMapKey = "map01", LaneMatchTolerance = 0.35, MinimumLaneSpacing = 1.8, PlayerSpawnNormalizedX = 0.32, MonsterSpawnNormalizedX = 0.68, CombatBoundsInset = 0.3, PlayerSpawnYOffset = 0.4, CombatAreaMinimumWorldX = 0, CombatAreaMaximumWorldX = 8 }
+        self.config = { ServerTickSeconds = 0.1, PlayerDeathPenaltySeconds = 300, PlayerReviveHpPermille = 1000, DisableManualControlInSandbox = true, InitialHuntingGroundTierIndex = 1, RuntimeKind = "HENESYS_TILE_LANES", HenesysMapKey = "map01", LaneMatchTolerance = 0.35, MinimumLaneSpacing = 1.8, PlayerSpawnNormalizedX = 0.32, MonsterSpawnNormalizedX = 0.68, CombatBoundsInset = 0.3, PlayerSpawnYOffset = 0.4, CombatAreaMinimumWorldX = 0, CombatAreaMaximumWorldX = 8, CombatCameraScreenOffsetX = 0.75, CombatCameraScreenOffsetY = 0.655, CombatCameraConfineArea = false }
         self.huntingGroundTiers = {
             [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerStatsProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
         }

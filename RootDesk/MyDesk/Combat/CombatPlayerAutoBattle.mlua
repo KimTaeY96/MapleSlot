@@ -5,6 +5,9 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property string CombatState = "ACQUIRE"
     @Sync property string CombatLaneKey = "CENTER"
     @Sync property boolean DisableManualControl = true
+    @Sync property number CombatCameraScreenOffsetX = 0.75
+    @Sync property number CombatCameraScreenOffsetY = 0.655
+    @Sync property boolean CombatCameraConfineArea = false
     @HideFromInspector property Entity TargetEntity = nil
     @HideFromInspector property any AttackShape = nil
     @HideFromInspector property number AttackTimer = 0
@@ -16,18 +19,15 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AggroRange = 5
     @HideFromInspector property integer CriticalChancePermille = 0
     @HideFromInspector property integer CriticalDamagePermille = 1500
-    @HideFromInspector property boolean PreviousUseCustomScript = false
-    @HideFromInspector property boolean ManualControlChanged = false
+    @HideFromInspector property boolean InputBindingsRemoved = false
+    @HideFromInspector property Vector2 PreviousCameraScreenOffset = Vector2(0.5, 0.655)
+    @HideFromInspector property boolean PreviousCameraConfineArea = true
+    @HideFromInspector property boolean CameraLayoutChanged = false
 
     method void OnBeginPlay()
         -- Loads the active profile and locks basic combat to its configured lane.
         if self:IsClient() then
-            local controller = self.Entity.PlayerControllerComponent
-            if isvalid(controller) and self.DisableManualControl then
-                self.PreviousUseCustomScript = controller.UseCustomScript
-                controller.UseCustomScript = true
-                self.ManualControlChanged = true
-            end
+            self:ApplyClientCombatLayout()
             return
         end
 
@@ -62,9 +62,55 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     method void OnEndPlay()
         -- Restores client control settings changed for auto battle.
-        if self:IsClient() then
-            local controller = self.Entity.PlayerControllerComponent
-            if isvalid(controller) and self.ManualControlChanged then controller.UseCustomScript = self.PreviousUseCustomScript end
+        if self:IsClient() then self:RestoreClientCombatLayout() end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ApplyClientCombatLayout()
+        -- Blocks default controls through action bindings and frames combat in the screen-right region.
+        local controller = self.Entity.PlayerControllerComponent
+        if isvalid(controller) and self.DisableManualControl and self.InputBindingsRemoved == false then
+            for _, actionName in ipairs({ "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Jump2", "Attack", "Sit" }) do
+                controller:RemoveAllActionKeyByActionName(actionName)
+            end
+            self.InputBindingsRemoved = true
+        end
+
+        local camera = self.Entity.CameraComponent
+        if isvalid(camera) and self.CameraLayoutChanged == false then
+            self.PreviousCameraScreenOffset = camera.ScreenOffset
+            self.PreviousCameraConfineArea = camera.ConfineCameraArea
+            camera.ConfineCameraArea = self.CombatCameraConfineArea
+            camera.ScreenOffset = Vector2(self.CombatCameraScreenOffsetX, self.CombatCameraScreenOffsetY)
+            self.CameraLayoutChanged = true
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RestoreClientCombatLayout()
+        -- Restores the default player bindings and the camera layout used before combat.
+        local controller = self.Entity.PlayerControllerComponent
+        if isvalid(controller) and self.InputBindingsRemoved then
+            controller:SetActionKey(KeyboardKey.W, "MoveUp")
+            controller:SetActionKey(KeyboardKey.UpArrow, "MoveUp")
+            controller:SetActionKey(KeyboardKey.S, "MoveDown")
+            controller:SetActionKey(KeyboardKey.DownArrow, "MoveDown")
+            controller:SetActionKey(KeyboardKey.A, "MoveLeft")
+            controller:SetActionKey(KeyboardKey.LeftArrow, "MoveLeft")
+            controller:SetActionKey(KeyboardKey.D, "MoveRight")
+            controller:SetActionKey(KeyboardKey.RightArrow, "MoveRight")
+            controller:SetActionKey(KeyboardKey.Space, "Jump")
+            controller:SetActionKey(KeyboardKey.LeftAlt, "Jump2")
+            controller:SetActionKey(KeyboardKey.LeftControl, "Attack")
+            controller:SetActionKey(KeyboardKey.C, "Sit")
+            self.InputBindingsRemoved = false
+        end
+
+        local camera = self.Entity.CameraComponent
+        if isvalid(camera) and self.CameraLayoutChanged then
+            camera.ConfineCameraArea = self.PreviousCameraConfineArea
+            camera.ScreenOffset = self.PreviousCameraScreenOffset
+            self.CameraLayoutChanged = false
         end
     end
 

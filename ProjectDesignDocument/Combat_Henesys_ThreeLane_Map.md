@@ -6,6 +6,8 @@
 
 The active combat area is framed inside the right half of the screen. The slot UI may continue to occupy the left 40%, but combat-critical actors and effects must remain between `CombatAreaMinimumWorldX=0.0` and `CombatAreaMaximumWorldX=8.0`.
 
+World X placement and viewport composition are separate concerns. During combat, `CombatCameraScreenOffsetX=0.75` places the tracked player in the center of the screen-right half, while `CombatCameraConfineArea=false` prevents a small foothold set from being recentered automatically.
+
 ## Lane Layout
 
 | Lane | `LaneKey` | Expected Y offset | Initial basic attack | Initial monster spawn |
@@ -70,6 +72,7 @@ map01
 
 - `map01` remains `TileMapMode=0`.
 - Three visible, uncut, horizontal tile rows exist in the right-side combat composition.
+- Moving the tile rows in Maker preserves their world placement; camera confinement does not force the rows back to screen center.
 - Player and Slime stand on the center foothold without falling.
 - Basic attacks cannot acquire or damage monsters whose `LaneKey` is `UPPER` or `LOWER`.
 - Center-lane Slime death resolves `DROP_SLIME_TIER1` and respawns on the same lane.

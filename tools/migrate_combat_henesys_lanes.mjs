@@ -111,6 +111,9 @@ appendColumn(configSheet, combatSheets.CombatConfig.columns[11], () => 0.3);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[12], () => 0.4);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[13], () => 0);
 appendColumn(configSheet, combatSheets.CombatConfig.columns[14], () => 8);
+appendColumn(configSheet, combatSheets.CombatConfig.columns[15], () => 0.75);
+appendColumn(configSheet, combatSheets.CombatConfig.columns[16], () => 0.655);
+appendColumn(configSheet, combatSheets.CombatConfig.columns[17], () => false);
 replaceExact(configSheet, "F5", "TEST_SANDBOX", "HENESYS_TILE_LANES");
 
 const profileSheet = workbook.worksheets.getItem("PlayerStatsProfiles");

@@ -47,6 +47,13 @@ Initial `INDEPENDENT` mode rolls every enabled entry once. The schema reserves `
 
 Base Bet does not directly mutate combat stats. Its index selects one `HuntingGroundTiers` row, which then selects the player profile and monster spawn group. This keeps slot economy values separate from combat balance.
 
+## Client Input And Camera
+
+- `PlayerControllerComponent.UseCustomScript` is read-only at runtime and must never be assigned.
+- The sandbox disables manual movement and attack by removing documented action bindings, then restores the default bindings when the combat component ends.
+- The combat camera uses the `CombatConfig` screen offsets and disables foothold-area confinement by default. This keeps the player and three lanes in the screen-right composition regardless of tile world position.
+- Camera values changed for combat are restored when the combat component ends.
+
 ## Failure Policy
 
 - Missing table, duplicate key, dangling reference, invalid numeric range, or unsupported enum: fail validation before runtime generation.

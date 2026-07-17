@@ -17,8 +17,11 @@ export const combatSheets = {
       ["PlayerSpawnYOffset", "design", "\uC911\uC559\uCE35 \uBC1C\uD310 \uC704\uB85C \uD50C\uB808\uC774\uC5B4\uB97C \uC62C\uB9B4 Y \uC624\uD504\uC14B\uC785\uB2C8\uB2E4.", "float"],
       ["CombatAreaMinimumWorldX", "design", "\uD654\uBA74 \uC624\uB978\uCABD \uC804\uD22C \uAD6C\uC5ED\uC758 \uCD5C\uC18C \uC138\uACC4 X \uC88C\uD45C\uC785\uB2C8\uB2E4.", "float"],
       ["CombatAreaMaximumWorldX", "design", "\uD654\uBA74 \uC624\uB978\uCABD \uC804\uD22C \uAD6C\uC5ED\uC758 \uCD5C\uB300 \uC138\uACC4 X \uC88C\uD45C\uC785\uB2C8\uB2E4.", "float"],
+      ["CombatCameraScreenOffsetX", "design", "\uC804\uD22C \uC911 \uD50C\uB808\uC774\uC5B4\uAC00 \uD654\uBA74 \uAC00\uB85C\uC5D0\uC11C \uD45C\uC2DC\uB420 0~1 \uBE44\uC728\uC785\uB2C8\uB2E4.", "float"],
+      ["CombatCameraScreenOffsetY", "design", "\uC804\uD22C \uC911 \uD50C\uB808\uC774\uC5B4\uAC00 \uD654\uBA74 \uC138\uB85C\uC5D0\uC11C \uD45C\uC2DC\uB420 0~1 \uBE44\uC728\uC785\uB2C8\uB2E4.", "float"],
+      ["CombatCameraConfineArea", "design", "\uC804\uD22C \uC911 \uCE74\uBA54\uB77C\uB97C \uBC1C\uD310 \uC601\uC5ED\uC5D0 \uC790\uB3D9 \uAD6C\uC18D\uD560\uC9C0 \uC5EC\uBD80\uC785\uB2C8\uB2E4.", "bool"],
     ],
-    rows: [[0.1, 300, 1000, true, 1, "HENESYS_TILE_LANES", "map01", 0.35, 1.8, 0.32, 0.68, 0.3, 0.4, 0, 8]],
+    rows: [[0.1, 300, 1000, true, 1, "HENESYS_TILE_LANES", "map01", 0.35, 1.8, 0.32, 0.68, 0.3, 0.4, 0, 8, 0.75, 0.655, false]],
   },
   HuntingGroundTiers: {
     columns: [

@@ -105,6 +105,11 @@ export async function loadAndValidateCombatTables(options = {}) {
   const combatAreaMaximumX = number(config.CombatAreaMaximumWorldX, "CombatConfig.CombatAreaMaximumWorldX");
   if (combatAreaMinimumX < 0) fail("CombatAreaMinimumWorldX must stay on the right side of the screen");
   if (combatAreaMaximumX <= combatAreaMinimumX) fail("CombatAreaMaximumWorldX must be greater than CombatAreaMinimumWorldX");
+  const cameraScreenOffsetX = number(config.CombatCameraScreenOffsetX, "CombatConfig.CombatCameraScreenOffsetX");
+  const cameraScreenOffsetY = number(config.CombatCameraScreenOffsetY, "CombatConfig.CombatCameraScreenOffsetY");
+  if (cameraScreenOffsetX <= 0.5 || cameraScreenOffsetX >= 1) fail("CombatCameraScreenOffsetX must place combat in the screen-right half");
+  if (cameraScreenOffsetY <= 0 || cameraScreenOffsetY >= 1) fail("CombatCameraScreenOffsetY must be within 0..1 exclusive");
+  if (typeof config.CombatCameraConfineArea !== "boolean") fail("CombatCameraConfineArea must be boolean");
 
   const tierIndexes = unique(combat.HuntingGroundTiers, "HuntingGroundTiersIndex", "HuntingGroundTiers");
   unique(combat.HuntingGroundTiers, "TierKey", "HuntingGroundTiers");
