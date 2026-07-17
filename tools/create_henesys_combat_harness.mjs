@@ -187,19 +187,8 @@ if (applyChanges) {
     },
   });
 
-  const monsterPath = "CombatHarness/Monsters/SlimeTier1";
-  if (!map.find(monsterPath)) {
-    map.placeModel(monsterPath, modelPath, { pos: [monsterX, monsterY, 0] });
-  }
-  map.patch(monsterPath, { pos: [monsterX, monsterY, 0], enable: true });
-  if (readComponentOrNull(map, monsterPath, "script.CombatMonsterHealth")) {
-    map.patchComponent(monsterPath, "script.CombatMonsterHealth", { LaneKey: "CENTER" });
-  } else {
-    map.upsertComponent(monsterPath, "script.CombatMonsterHealth", { Enable: true, LaneKey: "CENTER" });
-  }
-  if (readComponentOrNull(map, monsterPath, "MOD.Core.StateComponent")) {
-    map.patchComponent(monsterPath, "MOD.Core.StateComponent", { IsLegacy: false });
-  }
+  const legacyMonsterPath = "CombatHarness/Monsters/SlimeTier1";
+  if (map.find(legacyMonsterPath)) map.remove(legacyMonsterPath);
   map.write(mapPath);
 }
 
@@ -207,7 +196,6 @@ const requiredPaths = [
   "CombatHarness/SpawnLocation",
   "CombatHarness/Runtime",
   cameraAnchorPath,
-  "CombatHarness/Monsters/SlimeTier1",
   ...lanes.flatMap((lane) => [lane.SpawnAnchorKey, lane.BoundsLeftAnchorKey, lane.BoundsRightAnchorKey]),
 ];
 if (applyChanges) {
@@ -215,7 +203,6 @@ if (applyChanges) {
   const missing = requiredPaths.filter((entityPath) => !written.find(String(entityPath)));
   if (missing.length) fail(`Placement verification is missing: ${missing.join(", ")}`);
   verifyPosition(written, "CombatHarness/SpawnLocation", { x: playerX, y: playerY });
-  verifyPosition(written, "CombatHarness/Monsters/SlimeTier1", { x: monsterX, y: monsterY });
   verifyPosition(written, cameraAnchorPath, { x: cameraAnchorX, y: cameraAnchorY });
   const fixedCamera = readComponentOrNull(written, cameraAnchorPath, "MOD.Core.CameraComponent");
   if (!fixedCamera) fail(`${cameraAnchorPath} is missing CameraComponent.`);
@@ -224,8 +211,6 @@ if (applyChanges) {
     || Math.abs(Number(fixedCamera.ScreenOffset?.y) - Number(config.CombatCameraScreenOffsetY)) > 0.001) {
     fail(`${cameraAnchorPath} has an invalid ScreenOffset.`);
   }
-  const state = readComponentOrNull(written, "CombatHarness/Monsters/SlimeTier1", "MOD.Core.StateComponent");
-  if (state?.IsLegacy !== false) fail("SlimeTier1 StateComponent.IsLegacy must be false.");
 }
 
 console.log(JSON.stringify({
@@ -242,4 +227,4 @@ console.log(JSON.stringify({
   monsterSpawn: { x: monsterX, y: monsterY, laneKey: "CENTER" },
   cameraAnchor: { path: cameraAnchorPath, x: cameraAnchorX, y: cameraAnchorY },
 }, null, 2));
-if (!applyChanges) console.log("Preflight passed. Re-run with --apply to write Henesys combat anchors and the center-lane Slime.");
+if (!applyChanges) console.log("Preflight passed. Re-run with --apply to write Henesys combat anchors; the runtime spawns the center-lane monster.");

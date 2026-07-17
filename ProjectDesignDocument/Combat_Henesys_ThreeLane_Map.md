@@ -17,7 +17,7 @@ World X placement and viewport composition are separate concerns. During combat,
 | Lower | `LOWER` | `-2.1` | No | No |
 
 - All three rows are horizontal Layer 1 MapleTile footholds.
-- Each row has at least `5.0` common world units of walkable width.
+- Each row has at least `4.5` common world units of walkable width inside the left/right blocking walls.
 - Adjacent rows keep at least `1.8` world units of vertical separation.
 - The three rows share a common X span so future multi-lane skills can resolve one horizontal cast range across them.
 - Initial content places the player and Tier 1 Slime on `CENTER` only.
@@ -38,6 +38,8 @@ The placement tool refuses to write when three valid foothold rows are not prese
 ## Runtime Contract
 
 - Every monster exposes `CombatMonsterHealth.LaneKey`.
+- `CombatSandboxRuntime` maintains `MonsterSpawnGroups.SpawnCount` with real `SpawnByModelId` instances at `SpawnAnchorKey`.
+- A dead monster remains enabled as a server entity, leaves target selection through `IsDead`, hides after its death clip, and respawns after `MonsterDefinitions.RespawnSeconds`.
 - `CombatPlayerAutoBattle.CombatLaneKey` comes from `PlayerStatsProfiles.BasicAttackLaneKey`.
 - Basic attack target selection and hit acceptance require matching lane keys.
 - Initial profile data fixes basic attacks and low-tier skills to `CENTER`.
@@ -65,9 +67,10 @@ map01
         Spawn
         BoundsLeft
         BoundsRight
-    Monsters
-      SlimeTier1
+    Monsters (legacy placed instances are removed at runtime)
 ```
+
+Runtime-spawned monsters are direct dynamic children of the map because `SpawnByModelId` requires the map entity as its parent.
 
 ## Acceptance
 
@@ -78,4 +81,5 @@ map01
 - Player and Slime stand on the center foothold without falling.
 - Basic attacks cannot acquire or damage monsters whose `LaneKey` is `UPPER` or `LOWER`.
 - Center-lane Slime death resolves `DROP_SLIME_TIER1` and respawns on the same lane.
+- The runtime population returns to `MonsterSpawnGroups.SpawnCount` if a spawned entity is unexpectedly destroyed.
 - Build and runtime logs contain no errors and include the Henesys runtime and lane registration evidence logs.

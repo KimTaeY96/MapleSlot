@@ -1,0 +1,38 @@
+@Component
+script CombatWalletBridge extends Component
+    @Sync property integer EarnedCommonCoins = 0
+    @HideFromInspector property integer AppliedCommonCoins = 0
+
+    method void OnUpdate(number delta)
+        -- Drains server grants and applies only the replicated delta on the owning client.
+        if self:IsClient() then
+            self:ApplyClientRewardDelta()
+            return
+        end
+        self:DrainServerRewards()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void DrainServerRewards()
+        -- Converts validated typed grants into the session wallet counter exactly once.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) then return end
+        local rewards = _CombatRuntime:DrainPendingCurrencyRewards(player.UserId)
+        for _, reward in ipairs(rewards) do
+            if reward.rewardType == "CURRENCY" and reward.rewardKey == "COMMON_COIN" then
+                self.EarnedCommonCoins = self.EarnedCommonCoins + reward.quantity
+            else
+                log_error("[Combat] Wallet rejected reward " .. tostring(reward.rewardType) .. ":" .. tostring(reward.rewardKey))
+            end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ApplyClientRewardDelta()
+        -- Adds new combat earnings without overwriting slot-machine wallet state.
+        if self.EarnedCommonCoins <= self.AppliedCommonCoins then return end
+        local quantity = self.EarnedCommonCoins - self.AppliedCommonCoins
+        self.AppliedCommonCoins = self.EarnedCommonCoins
+        _SlotMachineRuntime:GrantCombatCommonCoins(quantity)
+    end
+end

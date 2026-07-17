@@ -125,6 +125,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         local map = self.Entity.CurrentMap
         if not isvalid(map) or map.Id ~= self.SandboxMapId then
             self:StopMovement()
+            self.Entity:RemoveComponent("CombatWalletBridge")
             self.Entity:RemoveComponent("CombatPlayerAutoBattle")
             return
         end

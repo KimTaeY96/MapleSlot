@@ -9,27 +9,43 @@ script CombatMonsterHealth extends Component
     property number RespawnSeconds = 2
     property number DestroyDelay = 0.6
     @HideFromInspector property Vector3 SpawnWorldPosition = Vector3(0, 0, 0)
+    @HideFromInspector property integer HideTimerId = 0
+    @HideFromInspector property integer RespawnTimerId = 0
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
         -- Loads monster data and registers this instance on its combat lane.
-        local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
-        if definition == nil or definition.Enabled == false then
-            log_error("[Combat] Missing enabled monster definition: " .. tostring(self.MonsterDefinitionIndex))
-            return
-        end
-        self.MaxHp = definition.MaxHp
-        self.Hp = definition.MaxHp
-        self.DropGroupId = definition.DropGroupId
-        self.RespawnSeconds = definition.RespawnSeconds
-        self.SpawnWorldPosition = self.Entity.TransformComponent.WorldPosition
+        if self:ApplyDefinition(self.MonsterDefinitionIndex, self.LaneKey) == false then return end
         _CombatRuntime:RegisterMonster(self.Entity)
         log("[Combat] Monster registered on lane " .. self.LaneKey)
     end
 
     @ExecSpace("ServerOnly")
+    method boolean ApplyDefinition(integer definitionIndex, string laneKey)
+        -- Applies the spawn group's definition before entering the combat loop.
+        self.MonsterDefinitionIndex = definitionIndex
+        self.LaneKey = laneKey
+        local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
+        if definition == nil or definition.Enabled == false then
+            log_error("[Combat] Missing enabled monster definition: " .. tostring(self.MonsterDefinitionIndex))
+            return false
+        end
+        self.MaxHp = definition.MaxHp
+        self.Hp = definition.MaxHp
+        self.IsDead = false
+        self.DropGroupId = definition.DropGroupId
+        self.RespawnSeconds = definition.RespawnSeconds
+        self.SpawnWorldPosition = self.Entity.TransformComponent.WorldPosition
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
     method void OnEndPlay()
         -- Removes this instance from the shared target registry.
+        if self.HideTimerId ~= 0 then _TimerService:ClearTimer(self.HideTimerId) end
+        if self.RespawnTimerId ~= 0 then _TimerService:ClearTimer(self.RespawnTimerId) end
+        self.HideTimerId = 0
+        self.RespawnTimerId = 0
         _CombatRuntime:UnregisterMonster(self.Entity)
     end
 
@@ -43,13 +59,14 @@ script CombatMonsterHealth extends Component
         if isvalid(state) then state:ChangeState("DEAD") end
         local grants = _CombatTableRuntime:ResolveDropGroup(self.DropGroupId)
         _CombatRuntime:EnqueueGrants(killer, grants)
-        _TimerService:SetTimerOnce(function()
-            self.Entity:SetVisible(false)
-            self.Entity:SetEnable(false)
+        self.HideTimerId = _TimerService:SetTimerOnce(function()
+            self.HideTimerId = 0
+            if self.IsDead then self.Entity:SetVisible(false) end
         end, self.DestroyDelay)
-        _TimerService:SetTimerOnce(function()
-            self:Respawn()
-        end, self.RespawnSeconds)
+        self.RespawnTimerId = _TimerService:SetTimerOnce(function()
+            self.RespawnTimerId = 0
+            if self.IsDead then self:Respawn() end
+        end, math.max(self.DestroyDelay, self.RespawnSeconds))
     end
 
     @ExecSpace("ServerOnly")
@@ -64,7 +81,6 @@ script CombatMonsterHealth extends Component
         self.Hp = self.MaxHp
         self.IsDead = false
         self.Entity:SetVisible(true)
-        self.Entity:SetEnable(true)
         local state = self.Entity.StateComponent
         if isvalid(state) then state:ChangeState("IDLE") end
     end

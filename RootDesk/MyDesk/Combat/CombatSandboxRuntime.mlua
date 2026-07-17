@@ -2,6 +2,9 @@
 script CombatSandboxRuntime extends Component
     property integer HuntingGroundTierIndex = 1
     @HideFromInspector property integer AttachTimerId = 0
+    @HideFromInspector property integer SpawnSerial = 0
+    @HideFromInspector property boolean LegacyMonsterRemoved = false
+    @HideFromInspector property boolean SpawnErrorLogged = false
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
@@ -12,11 +15,13 @@ script CombatSandboxRuntime extends Component
             return
         end
         self.HuntingGroundTierIndex = config.InitialHuntingGroundTierIndex
+        self:RemoveLegacyPlacedMonster()
         self:AttachAutoBattlePlayers()
         self.AttachTimerId = _TimerService:SetTimerRepeat(function()
             self:AttachAutoBattlePlayers()
+            self:EnsureMonsterPopulation()
         end, config.ServerTickSeconds)
-        log("[Combat] Henesys three-lane runtime started")
+        log("[Combat] Henesys three-lane runtime and monster spawner started")
     end
 
     @ExecSpace("ServerOnly")
@@ -57,7 +62,115 @@ script CombatSandboxRuntime extends Component
                     autoBattle.CombatCameraConfineArea = config.CombatCameraConfineArea
                     autoBattle.CombatCameraAnchorKey = config.CombatCameraAnchorKey
                 end
+                local walletBridge = user:GetComponent("script.CombatWalletBridge")
+                if not isvalid(walletBridge) then user:AddComponent("CombatWalletBridge") end
             end
         end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RemoveLegacyPlacedMonster()
+        -- Migrates the old map-authored test Slime to runtime-managed spawning.
+        if self.LegacyMonsterRemoved then return end
+        self.LegacyMonsterRemoved = true
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) then return end
+        local harness = map:GetChildByName("CombatHarness", false)
+        if not isvalid(harness) then return end
+        local monsters = harness:GetChildByName("Monsters", false)
+        if not isvalid(monsters) then return end
+        local legacyMonster = monsters:GetChildByName("SlimeTier1", false)
+        if not isvalid(legacyMonster) then return end
+        _CombatRuntime:UnregisterMonster(legacyMonster)
+        legacyMonster:Destroy()
+        log("[Combat] Removed legacy placed monster before runtime spawning")
+    end
+
+    @ExecSpace("ServerOnly")
+    method void EnsureMonsterPopulation()
+        -- Maintains the table-defined monster population for the active tier.
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) then return end
+        local tier = _CombatTableRuntime:GetHuntingGroundTier(self.HuntingGroundTierIndex)
+        if tier == nil or tier.Enabled == false then return end
+        local spawnGroup = _CombatTableRuntime:GetMonsterSpawnGroup(tier.SpawnGroupIndex)
+        if spawnGroup == nil or spawnGroup.Enabled == false then return end
+        local currentCount = _CombatRuntime:CountMonsterInstances(
+            map,
+            spawnGroup.MonsterDefinitionIndex,
+            spawnGroup.LaneKey
+        )
+        local missingCount = math.max(0, spawnGroup.SpawnCount - currentCount)
+        for index = 1, missingCount do
+            if self:SpawnMonster(spawnGroup) == false then return end
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean SpawnMonster(table spawnGroup)
+        -- Spawns one real model instance at the exact table-backed map anchor.
+        local map = self.Entity.CurrentMap
+        if not isvalid(map) then return false end
+        local definition = _CombatTableRuntime:GetMonsterDefinition(spawnGroup.MonsterDefinitionIndex)
+        if definition == nil or definition.Enabled == false then
+            self:LogSpawnErrorOnce("Missing enabled monster definition: " .. tostring(spawnGroup.MonsterDefinitionIndex))
+            return false
+        end
+        local spawnAnchor = self:FindMapEntityByKey(map, spawnGroup.SpawnAnchorKey)
+        if not isvalid(spawnAnchor) or not isvalid(spawnAnchor.TransformComponent) then
+            self:LogSpawnErrorOnce("Missing monster spawn anchor: " .. tostring(spawnGroup.SpawnAnchorKey))
+            return false
+        end
+        local modelId = string.match(tostring(definition.ModelPath), "([^/]+)%.model$")
+        if modelId == nil or modelId == "" then
+            self:LogSpawnErrorOnce("Invalid monster ModelPath: " .. tostring(definition.ModelPath))
+            return false
+        end
+        self.SpawnSerial = self.SpawnSerial + 1
+        local entityName = tostring(definition.MonsterKey) .. "_" .. tostring(self.SpawnSerial)
+        local monster = _SpawnService:SpawnByModelId(
+            string.lower(modelId),
+            entityName,
+            spawnAnchor.TransformComponent.WorldPosition,
+            map
+        )
+        if not isvalid(monster) then
+            self:LogSpawnErrorOnce("SpawnByModelId returned nil for " .. tostring(modelId))
+            return false
+        end
+
+        local health = monster:GetComponent("script.CombatMonsterHealth")
+        local ai = monster:GetComponent("script.CombatMonsterAI")
+        local attack = monster:GetComponent("script.CombatMonsterAttack")
+        if not isvalid(health) or not isvalid(ai) or not isvalid(attack) then
+            monster:Destroy()
+            self:LogSpawnErrorOnce("Spawned model is missing combat components: " .. tostring(modelId))
+            return false
+        end
+        health:ApplyDefinition(spawnGroup.MonsterDefinitionIndex, spawnGroup.LaneKey)
+        ai:ApplyDefinition(spawnGroup.MonsterDefinitionIndex)
+        attack:ApplyDefinition(spawnGroup.MonsterDefinitionIndex)
+        self.SpawnErrorLogged = false
+        log("[Combat] Spawned " .. tostring(definition.MonsterKey) .. " on lane " .. tostring(spawnGroup.LaneKey))
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method Entity FindMapEntityByKey(Entity map, string entityKey)
+        -- Resolves slash-delimited table paths without using the runtime map GUID.
+        local current = map
+        for name in string.gmatch(tostring(entityKey), "[^/]+") do
+            if not isvalid(current) then return nil end
+            current = current:GetChildByName(name, false)
+        end
+        return current
+    end
+
+    @ExecSpace("ServerOnly")
+    method void LogSpawnErrorOnce(string message)
+        -- Prevents the population tick from flooding the console on one bad row.
+        if self.SpawnErrorLogged then return end
+        self.SpawnErrorLogged = true
+        log_error("[Combat] " .. message)
     end
 end

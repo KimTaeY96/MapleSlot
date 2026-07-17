@@ -39,7 +39,8 @@ Monster controllers use their own small state machine and never coexist with `AI
 3. The resolver evaluates enabled `DropEntries` for that group.
 4. Quantity is rolled inclusively from `MinQuantity` through `MaxQuantity`.
 5. Successful results become typed reward grants such as `CURRENCY:COMMON_COIN`.
-6. The wallet boundary validates and applies each grant once.
+6. `CombatWalletBridge` drains each server currency entry once, validates its key, and replicates the cumulative earned Common Coin count; future item entries remain queued for the inventory boundary.
+7. The client applies only the new replicated delta to the existing slot wallet, so slot winnings and combat drops do not overwrite each other.
 
 Initial `INDEPENDENT` mode rolls every enabled entry once. The schema reserves `WEIGHTED_ONE` for future groups but the runtime must reject unsupported modes explicitly until implemented.
 

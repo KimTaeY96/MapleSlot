@@ -26,6 +26,26 @@ script CombatRuntime extends Logic
     end
 
     @ExecSpace("ServerOnly")
+    method integer CountMonsterInstances(Entity map, integer monsterDefinitionIndex, string laneKey)
+        -- Counts entity instances, including monsters waiting to respawn.
+        if not isvalid(map) or self.monstersById == nil then return 0 end
+        local count = 0
+        for id, monster in pairs(self.monstersById) do
+            if not isvalid(monster) then
+                self.monstersById[id] = nil
+            elseif monster.CurrentMap == map then
+                local health = monster:GetComponent("script.CombatMonsterHealth")
+                if isvalid(health)
+                    and health.MonsterDefinitionIndex == monsterDefinitionIndex
+                    and health.LaneKey == laneKey then
+                    count = count + 1
+                end
+            end
+        end
+        return count
+    end
+
+    @ExecSpace("ServerOnly")
     method Entity FindNearestMonster(Entity seeker, number maxRange, string laneKey)
         -- Finds the closest live monster on the requested combat lane.
         if not isvalid(seeker) or self.monstersById == nil then return nil end
@@ -114,5 +134,23 @@ script CombatRuntime extends Logic
         local rewards = self.pendingRewardsByUserId[userId] or {}
         self.pendingRewardsByUserId[userId] = {}
         return rewards
+    end
+
+    @ExecSpace("ServerOnly")
+    method table DrainPendingCurrencyRewards(string userId)
+        -- Drains currency grants while preserving future item grants for inventory.
+        if self.pendingRewardsByUserId == nil then self.pendingRewardsByUserId = {} end
+        local rewards = self.pendingRewardsByUserId[userId] or {}
+        local currencies = {}
+        local remaining = {}
+        for _, reward in ipairs(rewards) do
+            if reward.rewardType == "CURRENCY" then
+                table.insert(currencies, reward)
+            else
+                table.insert(remaining, reward)
+            end
+        end
+        self.pendingRewardsByUserId[userId] = remaining
+        return currencies
     end
 end

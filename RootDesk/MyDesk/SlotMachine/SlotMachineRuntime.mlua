@@ -3451,9 +3451,9 @@ script SlotMachineRuntime extends Logic
         end
         if self.devCheatItemRows ~= nil and self.devCheatItemClickHandlers ~= nil then
             for index, row in ipairs(self.devCheatItemRows) do
-                local handler = self.devCheatItemClickHandlers[index]
-                if row ~= nil and handler ~= nil then
-                    row:DisconnectEvent(ButtonClickEvent, handler)
+                local clickHandler = self.devCheatItemClickHandlers[index]
+                if row ~= nil and clickHandler ~= nil then
+                    row:DisconnectEvent(ButtonClickEvent, clickHandler)
                 end
             end
             self.devCheatItemClickHandlers = nil
@@ -4648,6 +4648,15 @@ script SlotMachineRuntime extends Logic
     method void RefreshCurrency()
         self.premiumText.Text = self:FormatTemplate(self.textTemplates.PremiumAmount, { self:FormatUnits(self.premiumUnits) })
         self.commonText.Text = self:FormatTemplate(self.textTemplates.CommonAmount, { self:FormatUnits(self.commonUnits) })
+    end
+
+    @ExecSpace("ClientOnly")
+    method void GrantCombatCommonCoins(integer quantity)
+        -- Applies a server-validated combat reward without resetting slot winnings.
+        if quantity <= 0 then return end
+        self.commonUnits = self.commonUnits + quantity * self.coinUnitPerCoin
+        self:RefreshCurrency()
+        log("[SlotMachineRuntime] Applied combat reward COMMON_COIN x" .. tostring(quantity))
     end
 
     @ExecSpace("ClientOnly")

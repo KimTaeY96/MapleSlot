@@ -15,6 +15,13 @@ script CombatMonsterAI extends Component
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
         -- Loads the monster movement and animation profile from Combat.xlsx.
+        self:ApplyDefinition(self.MonsterDefinitionIndex)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ApplyDefinition(integer definitionIndex)
+        -- Reloads AI values when a spawn group selects this model.
+        self.MonsterDefinitionIndex = definitionIndex
         local definition = _CombatTableRuntime:GetMonsterDefinition(self.MonsterDefinitionIndex)
         if definition == nil or definition.Enabled == false then return end
         self.StandRUID = definition.StandAnimationRuid

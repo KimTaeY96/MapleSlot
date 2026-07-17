@@ -73,9 +73,9 @@ export const combatSheets = {
       ["Notes", "design", "\uAE30\uD68D \uCC38\uACE0 \uBA54\uBAA8\uC785\uB2C8\uB2E4.", "string"],
     ],
     rows: [
-      [1, 1, "map01", "UPPER", 1, 2.1, 5, false, false, "CombatHarness/Lanes/UPPER/Spawn", "CombatHarness/Lanes/UPPER/BoundsLeft", "CombatHarness/Lanes/UPPER/BoundsRight", true, "Future upper-lane area skill target"],
-      [2, 1, "map01", "CENTER", 2, 0, 5, true, true, "CombatHarness/Lanes/CENTER/Spawn", "CombatHarness/Lanes/CENTER/BoundsLeft", "CombatHarness/Lanes/CENTER/BoundsRight", true, "Initial basic attack hunting lane"],
-      [3, 1, "map01", "LOWER", 3, -2.1, 5, false, false, "CombatHarness/Lanes/LOWER/Spawn", "CombatHarness/Lanes/LOWER/BoundsLeft", "CombatHarness/Lanes/LOWER/BoundsRight", true, "Future lower-lane area skill target"],
+      [1, 1, "map01", "UPPER", 1, 2.1, 4.5, false, false, "CombatHarness/Lanes/UPPER/Spawn", "CombatHarness/Lanes/UPPER/BoundsLeft", "CombatHarness/Lanes/UPPER/BoundsRight", true, "Future upper-lane area skill target"],
+      [2, 1, "map01", "CENTER", 2, 0, 4.5, true, true, "CombatHarness/Lanes/CENTER/Spawn", "CombatHarness/Lanes/CENTER/BoundsLeft", "CombatHarness/Lanes/CENTER/BoundsRight", true, "Initial basic attack hunting lane"],
+      [3, 1, "map01", "LOWER", 3, -2.1, 4.5, false, false, "CombatHarness/Lanes/LOWER/Spawn", "CombatHarness/Lanes/LOWER/BoundsLeft", "CombatHarness/Lanes/LOWER/BoundsRight", true, "Future lower-lane area skill target"],
     ],
   },
   MonsterDefinitions: {

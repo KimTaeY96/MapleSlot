@@ -18,6 +18,7 @@ const scriptNames = [
   "CombatRuntime.mlua",
   "CombatSandboxRuntime.mlua",
   "CombatPlayerAutoBattle.mlua",
+  "CombatWalletBridge.mlua",
   "CombatMonsterHealth.mlua",
   "CombatMonsterAI.mlua",
   "CombatMonsterAttack.mlua",
@@ -51,6 +52,25 @@ for (const method of ["CalcDamage", "IsAttackTarget"]) {
   assert(!pattern.test(playerSource), `CombatPlayerAutoBattle.${method} override must not change ExecSpace`);
   assert(!pattern.test(monsterAttackSource), `CombatMonsterAttack.${method} override must not change ExecSpace`);
 }
+
+const sandboxSource = fs.readFileSync(path.join(combatDir, "CombatSandboxRuntime.mlua"), "utf8");
+assert(sandboxSource.includes("_SpawnService:SpawnByModelId"), "Combat runtime must spawn real monster model instances");
+assert(sandboxSource.includes("spawnGroup.SpawnCount"), "Combat runtime must maintain the table-backed spawn count");
+assert(sandboxSource.includes("spawnGroup.SpawnAnchorKey"), "Combat runtime must resolve the table-backed spawn anchor");
+assert(sandboxSource.includes("definition.ModelPath"), "Combat runtime must derive the model id from table-backed model data");
+assert(sandboxSource.includes('AddComponent("CombatWalletBridge")'), "Combat runtime must attach the reward wallet bridge");
+
+const walletSource = fs.readFileSync(path.join(combatDir, "CombatWalletBridge.mlua"), "utf8");
+assert(walletSource.includes("DrainPendingCurrencyRewards"), "Combat wallet must consume only server-validated currency grants");
+assert(walletSource.includes('reward.rewardKey == "COMMON_COIN"'), "Combat wallet must explicitly validate the Common Coin key");
+assert(walletSource.includes("GrantCombatCommonCoins"), "Combat wallet must apply replicated reward deltas to the slot wallet");
+
+const combatRuntimeSource = fs.readFileSync(path.join(combatDir, "CombatRuntime.mlua"), "utf8");
+assert(combatRuntimeSource.includes("self.pendingRewardsByUserId[userId] = remaining"), "Currency draining must preserve future item grants");
+
+const healthSource = fs.readFileSync(path.join(combatDir, "CombatMonsterHealth.mlua"), "utf8");
+assert(!healthSource.includes("self.Entity:SetEnable(false)"), "Respawning monsters must not disable their own timer owner");
+assert(healthSource.includes("math.max(self.DestroyDelay, self.RespawnSeconds)"), "Monster respawn must respect death visibility and respawn timing");
 
 const tableSource = fs.readFileSync(path.join(combatDir, "CombatTableRuntime.mlua"), "utf8");
 assert(tableSource.includes('PlayerDeathPenaltySeconds = 300'), "Generated runtime must contain the configured death penalty");
@@ -92,7 +112,6 @@ if (fs.existsSync(mapPath)) {
       "CombatHarness/SpawnLocation",
       "CombatHarness/Runtime",
       "CombatHarness/CameraAnchor",
-      "CombatHarness/Monsters/SlimeTier1",
       "CombatHarness/Lanes/UPPER/Spawn",
       "CombatHarness/Lanes/CENTER/Spawn",
       "CombatHarness/Lanes/LOWER/Spawn",
