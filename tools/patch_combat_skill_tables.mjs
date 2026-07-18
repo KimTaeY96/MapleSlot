@@ -113,7 +113,8 @@ await fs.mkdir(previewDir, { recursive: true });
 
 const character = await importWorkbook("Character.xlsx");
 const characterSheet = character.worksheets.getItem("PlayerStatsProfiles");
-appendColumn(characterSheet, combatSheets.PlayerStatsProfiles.columns.at(-1), () => 1);
+appendColumn(characterSheet, combatSheets.PlayerStatsProfiles.columns.find(([name]) => name === "BasicAttackSkillInfoIndex"), () => 1);
+appendColumn(characterSheet, combatSheets.PlayerStatsProfiles.columns.find(([name]) => name === "LadderClimbSpeed"), () => 1);
 await verifyAndSave(character, "Character.xlsx", ["PlayerStatsProfiles"]);
 
 const monster = await importWorkbook("Monster.xlsx");

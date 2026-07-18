@@ -58,8 +58,9 @@ export const combatSheets = {
       ["AttackHitDelaySeconds", "server", "\uACF5\uACA9 \uC2DC\uC791 \uD6C4 \uC2E4\uC81C \uB300\uBBF8\uC9C0\uB97C \uD310\uC815\uD558\uB294 \uD0C0\uACA9 \uD504\uB808\uC784 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["HitAnimationDurationSeconds", "server", "\uD53C\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uD53C\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["BasicAttackSkillInfoIndex", "server", "Skill.xlsx/SkillInfo\uC758 \uAE30\uBCF8 \uACF5\uACA9 \uD589 \uC778\uB371\uC2A4\uC785\uB2C8\uB2E4.", "int"],
+      ["LadderClimbSpeed", "server", "\uC0AC\uB2E4\uB9AC \uD0D1\uC2B9 \uC911 \uCD08\uB2F9 \uC138\uACC4 Y \uC774\uB3D9 \uC18D\uB3C4\uC785\uB2C8\uB2E4.", "float"],
     ],
-    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1, 1, 100, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile", 0.8, 0.35, 0.5, 1]],
+    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1, 1, 100, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile", 0.8, 0.35, 0.5, 1, 1]],
   },
   CombatLanes: {
     columns: [

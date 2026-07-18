@@ -41,7 +41,7 @@ Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. E
 
 ## Character.xlsx / PlayerStatsProfiles
 
-Defines player HP, attack power, legacy cadence/range compatibility values, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, ladder approach/exit tolerances, and action timing. `BasicAttackSkillInfoIndex` selects the actual basic attack contract from `Skill.xlsx`. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
+Defines player HP, attack power, legacy cadence/range compatibility values, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, ladder movement balance, and action timing. `LadderClimbSpeed` is the vertical world-unit speed used after one native ladder mount until the destination platform is reached. `BasicAttackSkillInfoIndex` selects the actual basic attack contract from `Skill.xlsx`. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
 
 ## HuntingGround.xlsx / CombatLanes
 
@@ -80,6 +80,7 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 - Every tier defines exactly two adjacent ladder routes and exactly one enabled spawn group per lane.
 - Player and monster hitbox heights remain smaller than `MinimumLaneSpacing`.
 - Player and monster attack durations are positive, hit delays are within the attack duration, hit durations are positive, and attack intervals are not shorter than attack durations.
+- Player move, aggro, and ladder climb speeds are positive.
 - Spawn-group lane and anchor keys match the corresponding `CombatLanes` row.
 - Every enabled `MonsterSpawnGroups.MonsterDefinitionIndex` exists.
 - Every enabled `MonsterDefinitions.DropGroupId` exists in `DropGroups`.

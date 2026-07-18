@@ -1,6 +1,7 @@
 @Component
 script CombatPlayerMovementDriver extends Component
     @HideFromInspector property integer AppliedLadderMountSequence = 0
+    @HideFromInspector property boolean LadderLocallyArrived = false
 
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
@@ -35,21 +36,51 @@ script CombatPlayerMovementDriver extends Component
 
         if autoBattle.MovementIntent == "CLIMB" and autoBattle.ClimbDirectionY ~= 0 then
             if not isvalid(controller) then return end
-            local currentPosition = self.Entity.TransformComponent.WorldPosition
             controller.AlwaysMovingState = false
-            controller:ActionClimb(
-                Vector2(0, autoBattle.ClimbDirectionY),
-                movement:GetClimbableHeight(),
-                0
-            )
             if self.AppliedLadderMountSequence ~= autoBattle.LadderMountSequence then
+                local currentPosition = self.Entity.TransformComponent.WorldPosition
+                movement:Stop()
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
+                controller:ActionClimb(
+                    Vector2(0, autoBattle.ClimbDirectionY),
+                    movement:GetClimbableHeight(),
+                    0
+                )
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
                 movement:UpdateClimbableOffset()
+                if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("LADDER") end
                 self.AppliedLadderMountSequence = autoBattle.LadderMountSequence
+                self.LadderLocallyArrived = false
             end
-            movement:MoveToDirection(Vector2(0, autoBattle.ClimbDirectionY), delta)
+
+            if self.LadderLocallyArrived then
+                movement:Stop()
+                if isvalid(state) and state.CurrentStateName ~= "IDLE" and state.CurrentStateName ~= "DEAD" then
+                    state:ChangeState("IDLE")
+                end
+                return
+            end
+
+            local currentPosition = self.Entity.TransformComponent.WorldPosition
+            local direction = (autoBattle.ClimbDirectionY >= 0) and 1 or -1
+            local climbDistance = math.max(0, autoBattle.LadderClimbSpeed) * delta
+            local nextY = currentPosition.y + direction * climbDistance
+            local reachedTarget = (direction > 0 and nextY >= autoBattle.LadderTargetWorldY)
+                or (direction < 0 and nextY <= autoBattle.LadderTargetWorldY)
+            if reachedTarget then nextY = autoBattle.LadderTargetWorldY end
+            movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, nextY))
+            movement:UpdateClimbableOffset()
+
+            if reachedTarget then
+                movement:Stop()
+                controller.AlwaysMovingState = false
+                if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("IDLE") end
+                self.LadderLocallyArrived = true
+            end
             return
         end
+
+        self.LadderLocallyArrived = false
 
         if autoBattle.MovementIntent == "HORIZONTAL" and autoBattle.MoveDirectionX ~= 0 then
             if isvalid(controller) then

@@ -47,6 +47,9 @@ assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox heigh
 assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && playerSource.includes("profile.AttackHitDelaySeconds") && playerSource.includes("profile.HitAnimationDurationSeconds"), "Player action timing must come from Character.xlsx");
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from HuntingGround.xlsx");
 assert(!playerSource.includes("LadderMountWorldY"), "Server ladder data must not overwrite the client-authoritative mount Y");
+assert(playerSource.includes("profile.LadderClimbSpeed"), "Player ladder speed must come from Character.xlsx");
+assert(playerSource.includes("LadderTargetWorldY"), "Player AI must replicate the destination platform height to the movement client");
+assert(playerSource.includes("ActiveLadderDestinationLaneKey"), "A started ladder route must remain locked until its destination lane is reached");
 assert(playerSource.includes("CreateAttackShape"), "Player attacks must build their hit shape from SkillInfo");
 assert(playerSource.includes("origin.x + direction * self.AttackHitRangeX * 0.5"), "Player rectangle attacks must extend forward from their origin");
 assert(playerSource.includes("AttackFacingDirectionX"), "Player skill direction must lock onto its target");
@@ -72,6 +75,12 @@ assert(playerSource.includes("FinishAttackAnimation") && playerSource.includes("
 const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
 assert(movementDriverSource.includes("AppliedLadderMountSequence"), "Client movement must apply each ladder mount correction once");
 assert(movementDriverSource.includes("Vector2(autoBattle.LadderMountWorldX, currentPosition.y)"), "Ladder entry must preserve the client's current world Y");
+assert.equal((movementDriverSource.match(/ActionClimb/g) || []).length, 1, "Native ladder attachment must be entered once per mount sequence");
+assert(movementDriverSource.indexOf("ActionClimb") > movementDriverSource.indexOf("AppliedLadderMountSequence ~= autoBattle.LadderMountSequence"), "ActionClimb must only run when a new ladder mount sequence begins");
+assert(movementDriverSource.includes('state:ChangeState("LADDER")'), "A new ladder mount must enter the avatar ladder animation state");
+assert(movementDriverSource.includes("autoBattle.LadderClimbSpeed) * delta"), "Client ladder travel must use the table-backed climb speed");
+assert(movementDriverSource.includes("nextY = autoBattle.LadderTargetWorldY"), "Client ladder travel must clamp exactly to the destination platform height");
+assert(movementDriverSource.includes("LadderLocallyArrived"), "Client ladder arrival must remain idle while server position replication catches up");
 assert(movementDriverSource.includes("controller.LookDirectionX = autoBattle.AttackFacingDirectionX"), "Client attack animation must face the locked target direction");
 assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
 assert(movementDriverSource.includes("ActionClimb"), "Player movement driver must mount Maker-authored ladders through PlayerControllerComponent");

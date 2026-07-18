@@ -31,6 +31,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AttackHitRadius = 0
     @HideFromInspector property number MoveSpeed = 1
     @HideFromInspector property number AggroRange = 5
+    @Sync @HideFromInspector property number LadderClimbSpeed = 1
     @HideFromInspector property number LadderApproachTolerance = 0.12
     @HideFromInspector property number LadderExitTolerance = 0.18
     @HideFromInspector property integer CriticalChancePermille = 0
@@ -45,11 +46,13 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property boolean CameraSwitched = false
     @HideFromInspector property boolean LadderErrorLogged = false
     @HideFromInspector property string ActiveLadderKey = ""
+    @HideFromInspector property string ActiveLadderDestinationLaneKey = ""
     @Sync @HideFromInspector property string MovementIntent = "STOP"
     @Sync @HideFromInspector property number MoveDirectionX = 0
     @Sync @HideFromInspector property number ClimbDirectionY = 0
     @Sync @HideFromInspector property number AttackFacingDirectionX = 1
     @Sync @HideFromInspector property number LadderMountWorldX = 0
+    @Sync @HideFromInspector property number LadderTargetWorldY = 0
     @Sync @HideFromInspector property integer LadderMountSequence = 0
 
     method void OnBeginPlay()
@@ -90,6 +93,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackHitRadius = basicAttack.HitRadius
         self.MoveSpeed = profile.MoveSpeed
         self.AggroRange = profile.AggroRange
+        self.LadderClimbSpeed = profile.LadderClimbSpeed
         self.CombatLaneKey = profile.BasicAttackLaneKey
         self.LadderApproachTolerance = profile.LadderApproachTolerance
         self.LadderExitTolerance = profile.LadderExitTolerance
@@ -187,6 +191,7 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.TargetEntity = nil
             self.RetaliationTargetEntity = nil
             self.ActiveLadderKey = ""
+            self.ActiveLadderDestinationLaneKey = ""
             self:StopMovement()
             return
         elseif self.CombatState == "DEAD_WAIT" then
@@ -197,6 +202,10 @@ script CombatPlayerAutoBattle extends AttackComponent
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
         if self:UpdateActionPhase(delta) then return end
+        if self.ActiveLadderKey ~= "" and self.ActiveLadderDestinationLaneKey ~= "" then
+            self:NavigateToLane(self.ActiveLadderDestinationLaneKey, delta)
+            return
+        end
         if not self:IsValidTarget(self.RetaliationTargetEntity) then self.RetaliationTargetEntity = nil end
         if isvalid(self.RetaliationTargetEntity) then
             self.TargetEntity = self.RetaliationTargetEntity
@@ -210,6 +219,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         if not self:IsValidTarget(self.TargetEntity) then
             self.CombatState = "ACQUIRE"
             self.ActiveLadderKey = ""
+            self.ActiveLadderDestinationLaneKey = ""
             self:StopMovement()
             return
         end
@@ -351,25 +361,31 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         local climbDirection = (nextLane.LaneOrder < currentLane.LaneOrder) and 1 or -1
         local targetY = nextFloorAnchor.TransformComponent.WorldPosition.y
+        if self.ActiveLadderKey ~= ladder.LadderKey then
+            self.ActiveLadderKey = ladder.LadderKey
+            self.ActiveLadderDestinationLaneKey = nextLaneKey
+            self.LadderMountWorldX = ladderWorldX
+            self.LadderTargetWorldY = targetY
+            self.LadderMountSequence = self.LadderMountSequence + 1
+            self.CombatState = "CLIMB_LADDER"
+            self.MovementIntent = "CLIMB"
+            self.MoveDirectionX = 0
+            self.ClimbDirectionY = climbDirection
+            return
+        end
+
         local arrived = (climbDirection > 0 and selfPosition.y >= targetY)
-            or (climbDirection < 0 and selfPosition.y <= targetY + self.LadderExitTolerance)
+            or (climbDirection < 0 and selfPosition.y <= targetY)
         if arrived then
             local previousLaneKey = self.CombatLaneKey
             self.CombatLaneKey = nextLaneKey
             self.CombatState = "LADDER_EXIT"
             self.LadderErrorLogged = false
             self.ActiveLadderKey = ""
+            self.ActiveLadderDestinationLaneKey = ""
+            self:StopMovement()
             log("[Combat] Player climbed from " .. tostring(previousLaneKey) .. " to " .. tostring(nextLaneKey))
-            local targetPosition = self.TargetEntity.TransformComponent.WorldPosition
-            self:MoveHorizontal((targetPosition.x >= selfPosition.x) and 1 or -1, delta)
             return
-        end
-
-
-        if self.ActiveLadderKey ~= ladder.LadderKey then
-            self.ActiveLadderKey = ladder.LadderKey
-            self.LadderMountWorldX = ladderWorldX
-            self.LadderMountSequence = self.LadderMountSequence + 1
         end
 
         self.CombatState = "CLIMB_LADDER"
@@ -547,6 +563,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackHitResolved = false
         self.PendingHitReaction = false
         self.ActiveLadderKey = ""
+        self.ActiveLadderDestinationLaneKey = ""
     end
 
     @ExecSpace("ServerOnly")
