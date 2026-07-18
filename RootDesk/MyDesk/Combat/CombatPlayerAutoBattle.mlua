@@ -16,6 +16,9 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AttackTimer = 0
     @HideFromInspector property number AttackPower = 1
     @HideFromInspector property number AttackIntervalSeconds = 1
+    @HideFromInspector property number AttackAnimationDurationSeconds = 0.8
+    @HideFromInspector property number AttackHitDelaySeconds = 0.35
+    @HideFromInspector property number HitAnimationDurationSeconds = 0.5
     @HideFromInspector property number AttackRange = 1
     @HideFromInspector property number AttackHitboxHeight = 1.2
     @HideFromInspector property number MoveSpeed = 1
@@ -24,6 +27,11 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number LadderExitTolerance = 0.18
     @HideFromInspector property integer CriticalChancePermille = 0
     @HideFromInspector property integer CriticalDamagePermille = 1500
+    @Sync @HideFromInspector property string ActionPhase = "NONE"
+    @HideFromInspector property number ActionElapsedSeconds = 0
+    @HideFromInspector property Entity AttackActionTargetEntity = nil
+    @HideFromInspector property boolean AttackHitResolved = false
+    @HideFromInspector property boolean PendingHitReaction = false
     @HideFromInspector property boolean InputBindingsRemoved = false
     @HideFromInspector property any PreviousCameraComponent = nil
     @HideFromInspector property boolean CameraSwitched = false
@@ -48,6 +56,9 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         self.AttackPower = profile.AttackPower
         self.AttackIntervalSeconds = profile.AttackIntervalSeconds
+        self.AttackAnimationDurationSeconds = profile.AttackAnimationDurationSeconds
+        self.AttackHitDelaySeconds = profile.AttackHitDelaySeconds
+        self.HitAnimationDurationSeconds = profile.HitAnimationDurationSeconds
         self.AttackRange = profile.AttackRange
         self.AttackHitboxHeight = profile.AttackHitboxHeight
         self.MoveSpeed = profile.MoveSpeed
@@ -122,7 +133,7 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.InputBindingsRemoved = false
         end
 
-        if self.CameraSwitched and isvalid(self.PreviousCameraComponent) then
+        if self.CameraSwitched and isvalid(self.PreviousCameraComponent) and self.PreviousCameraComponent.EnableInHierarchy then
             _CameraService:SwitchCameraTo(self.PreviousCameraComponent)
         end
         self.PreviousCameraComponent = nil
@@ -134,6 +145,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         -- Runs the acquire, chase, attack, death-wait, and revive state loop.
         local map = self.Entity.CurrentMap
         if not isvalid(map) or map.Id ~= self.SandboxMapId then
+            self:CancelActionPhase()
             self:StopMovement()
             self.Entity:RemoveComponent("CombatPlayerMovementDriver")
             self.Entity:RemoveComponent("CombatWalletBridge")
@@ -144,6 +156,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         local player = self.Entity.PlayerComponent
         if not isvalid(player) then return end
         if player:IsDead() then
+            self:CancelActionPhase()
             self.CombatState = "DEAD_WAIT"
             self.TargetEntity = nil
             self.RetaliationTargetEntity = nil
@@ -156,6 +169,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
+        if self:UpdateActionPhase(delta) then return end
         if not self:IsValidTarget(self.RetaliationTargetEntity) then self.RetaliationTargetEntity = nil end
         if isvalid(self.RetaliationTargetEntity) then
             self.TargetEntity = self.RetaliationTargetEntity
@@ -186,9 +200,9 @@ script CombatPlayerAutoBattle extends AttackComponent
             return
         end
 
-        self.CombatState = "ATTACK"
+        self.CombatState = "ATTACK_READY"
         self:StopMovement()
-        if self.AttackTimer <= 0 then self:DoAttack() end
+        if self.AttackTimer <= 0 then self:BeginAttackAction() end
     end
 
     @ExecSpace("ServerOnly")
@@ -229,7 +243,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         if not self:IsValidTarget(monster) then return end
         self.RetaliationTargetEntity = monster
         self.TargetEntity = monster
-        self.CombatState = "RETALIATE"
+        if self.ActionPhase == "NONE" then self.CombatState = "RETALIATE" end
     end
 
     @ExecSpace("ServerOnly")
@@ -366,26 +380,166 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void DoAttack()
-        -- Executes one table-sized hitbox against the selected target on the current floor.
-        if not self:IsValidTarget(self.TargetEntity) then return end
-        local a = self.Entity.TransformComponent.WorldPosition
-        local b = self.TargetEntity.TransformComponent.WorldPosition
-        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
-        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
+        -- Compatibility entry point now starts a timed attack action instead of resolving damage immediately.
+        self:BeginAttackAction()
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean BeginAttackAction()
+        -- Locks the current target and starts the attack animation timeline.
+        if self.ActionPhase ~= "NONE" or not self:IsValidTarget(self.TargetEntity) then return false end
+        self.ActionPhase = "ATTACK"
+        self.ActionElapsedSeconds = 0
+        self.AttackActionTargetEntity = self.TargetEntity
+        self.AttackHitResolved = false
+        self.PendingHitReaction = false
+        self.AttackTimer = self.AttackIntervalSeconds
+        self.CombatState = "ATTACK"
+        self:StopMovement()
         local player = self.Entity.PlayerComponent
         if isvalid(player) then self:PlayAttackAnimation(player.UserId) end
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean UpdateActionPhase(number delta)
+        -- Resolves hit frames and unlocks state transitions only when the configured animation time ends.
+        if self.ActionPhase == "ATTACK" then
+            self:StopMovement()
+            self.ActionElapsedSeconds = self.ActionElapsedSeconds + delta
+            if self.AttackHitResolved == false and self.ActionElapsedSeconds >= self.AttackHitDelaySeconds then
+                self:ResolveAttackHitFrame()
+            end
+            if self.ActionElapsedSeconds >= self.AttackAnimationDurationSeconds then self:CompleteAttackAction() end
+            return true
+        end
+        if self.ActionPhase == "HIT" then
+            self:StopMovement()
+            self.ActionElapsedSeconds = self.ActionElapsedSeconds + delta
+            if self.ActionElapsedSeconds >= self.HitAnimationDurationSeconds then self:CompleteHitReaction() end
+            return true
+        end
+        return false
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ResolveAttackHitFrame()
+        -- Applies damage once at the table-backed impact point of the locked attack animation.
+        if self.ActionPhase ~= "ATTACK" or self.AttackHitResolved then return end
+        self.AttackHitResolved = true
+        local target = self.AttackActionTargetEntity
+        if not self:IsValidTarget(target) or self:DistanceTo(target) > self.AttackRange then return end
+        local health = target:GetComponent("script.CombatMonsterHealth")
+        if not isvalid(health) or health.LaneKey ~= self.CombatLaneKey then return end
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
+        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
         self:AttackFast(self.AttackShape, "COMBAT_AUTO", CollisionGroups.Monster)
-        self.AttackTimer = self.AttackIntervalSeconds
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CompleteAttackAction()
+        -- Releases ATTACK after its animation and then plays a hit reaction queued during the attack.
+        if self.ActionPhase ~= "ATTACK" then return end
+        local shouldPlayHit = self.PendingHitReaction
+        self.ActionPhase = "NONE"
+        self.ActionElapsedSeconds = 0
+        self.AttackActionTargetEntity = nil
+        self.AttackHitResolved = false
+        self.PendingHitReaction = false
+        local player = self.Entity.PlayerComponent
+        if isvalid(player) then self:FinishAttackAnimation(player.UserId) end
+        if shouldPlayHit and isvalid(player) and player:IsDead() == false then
+            self:BeginHitReaction()
+        else
+            self.CombatState = "ACQUIRE"
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void BeginHitReaction()
+        -- Starts an uninterruptible hit reaction after any current action has finished.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or player:IsDead() then return end
+        self.ActionPhase = "HIT"
+        self.ActionElapsedSeconds = 0
+        self.CombatState = "HIT"
+        self:StopMovement()
+        self:PlayHitAnimation(player.UserId)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CompleteHitReaction()
+        -- Returns control to target acquisition only after the hit animation lock expires.
+        if self.ActionPhase ~= "HIT" then return end
+        self.ActionPhase = "NONE"
+        self.ActionElapsedSeconds = 0
+        self.CombatState = "ACQUIRE"
+        local player = self.Entity.PlayerComponent
+        if isvalid(player) then self:FinishHitAnimation(player.UserId) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CancelActionPhase()
+        -- Clears pending action work when the player dies or leaves the combat map.
+        self.ActionPhase = "NONE"
+        self.ActionElapsedSeconds = 0
+        self.AttackActionTargetEntity = nil
+        self.AttackHitResolved = false
+        self.PendingHitReaction = false
+    end
+
+    @ExecSpace("ServerOnly")
+    @EventSender("Self")
+    handler HandlePlayerHitEvent(HitEvent event)
+        -- Damage may select retaliation immediately, but its HIT state waits for the current action to finish.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or player:IsDead() then return end
+        if self.ActionPhase == "ATTACK" then
+            self.PendingHitReaction = true
+            return
+        end
+        if self.ActionPhase == "HIT" then
+            self.ActionElapsedSeconds = 0
+            self:PlayHitAnimation(player.UserId)
+            return
+        end
+        self:BeginHitReaction()
     end
 
     @ExecSpace("Client")
     method void PlayAttackAnimation()
-        -- Starts attack animation only from states that accept the native ATTACK transition.
+        -- Enters ATTACK once; the movement driver preserves it until the server releases ActionPhase.
+        local state = self.Entity.StateComponent
+        if not isvalid(state) or state.CurrentStateName == "DEAD" then return end
+        if state.CurrentStateName ~= "ATTACK" then state:ChangeState("ATTACK") end
+    end
+
+    @ExecSpace("Client")
+    method void FinishAttackAnimation()
+        -- Explicitly releases native retained attack states at the configured animation end.
         local state = self.Entity.StateComponent
         if not isvalid(state) then return end
-        if state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE" then
-            state:ChangeState("ATTACK")
+        if state.CurrentStateName == "ATTACK" or state.CurrentStateName == "ATTACK_WAIT" then
+            state:ChangeState("IDLE")
         end
+    end
+
+    @ExecSpace("Client")
+    method void PlayHitAnimation()
+        -- Restarts HIT cleanly when another hit arrives instead of leaving a frozen retained pose.
+        local state = self.Entity.StateComponent
+        if not isvalid(state) or state.CurrentStateName == "DEAD" then return end
+        if state.CurrentStateName == "HIT" then state:ChangeState("IDLE") end
+        state:ChangeState("HIT")
+    end
+
+    @ExecSpace("Client")
+    method void FinishHitAnimation()
+        -- Releases HIT if the native auto-transition has not already returned to IDLE.
+        local state = self.Entity.StateComponent
+        if isvalid(state) and state.CurrentStateName == "HIT" then state:ChangeState("IDLE") end
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
@@ -405,7 +559,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)
         -- Rejects collision candidates outside the selected target and lane.
-        if defender ~= self.TargetEntity then return false end
+        if defender ~= self.AttackActionTargetEntity then return false end
         local health = defender:GetComponent("script.CombatMonsterHealth")
         if not isvalid(health) or health.IsDead or health.LaneKey ~= self.CombatLaneKey then return false end
         return __base:IsAttackTarget(defender, attackInfo)

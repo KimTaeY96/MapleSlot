@@ -24,23 +24,27 @@ All target selection, lane filtering, movement intent, attack cadence, damage ac
 | `APPROACH_LADDER` | Target is on another floor | Move horizontally to the table-backed adjacent ladder. | Within approach tolerance -> `CLIMB_LADDER`. |
 | `CLIMB_LADDER` | Player is aligned with the ladder | Enter the native climb state and move vertically toward the adjacent lane. | Destination height reached -> `LADDER_EXIT`. |
 | `LADDER_EXIT` | Adjacent lane reached | Update `CombatLaneKey` and move horizontally off the ladder. | Immediately -> `CHASE` or the next ladder route. |
-| `CHASE` | Target outside attack range | Move toward target while respecting combat bounds and foothold edges. | In range -> `ATTACK`; invalid target -> `ACQUIRE`. |
-| `ATTACK` | Target inside range | Stop movement and attack at the profile interval. | Target dies/invalid -> `ACQUIRE`; target leaves range -> `CHASE`. |
+| `CHASE` | Target outside attack range | Move toward target while respecting combat bounds and foothold edges. | In range -> `ATTACK_READY`; invalid target -> `ACQUIRE`. |
+| `ATTACK_READY` | Target inside range while attack cooldown remains | Stop movement without entering the attack animation state. | Cooldown ready -> `ATTACK`; target leaves range -> `CHASE`. |
+| `ATTACK` | Attack cooldown is ready | Lock movement and targeting, play the attack animation, and resolve damage at `AttackHitDelaySeconds`. | `AttackAnimationDurationSeconds` completes -> queued `HIT` or `ACQUIRE`. |
+| `HIT` | Damage lands while no action is active, or a hit reaction was queued during `ATTACK` | Lock movement and play the native hit reaction. Repeated hits restart the hit timer. | `HitAnimationDurationSeconds` completes -> `ACQUIRE`. |
 | `DEAD_WAIT` | Player HP reaches zero | Disable targeting, movement, attacks, and reward production. | Penalty timer completes -> `REVIVE`. |
 | `REVIVE` | Death timer completes | Restore configured HP, reset transient target state. | Immediately -> `ACQUIRE`. |
 
-Monster controllers use `IDLE`, `WANDER`, `CHASE`, `ATTACK`, and `CONTACT_MOVE` states and never coexist with `AIChaseComponent` or `AIWanderComponent`. Passive monsters alternate table-timed idle and wander periods, aggro only after being damaged, and return to autonomy after losing the player. Aggressive definitions may acquire a same-lane player first.
+Monster controllers use `IDLE`, `WANDER`, `CHASE`, `ATTACK`, `HIT`, and `CONTACT_MOVE` states and never coexist with `AIChaseComponent` or `AIWanderComponent`. `ATTACK` and `HIT` are exclusive action phases: movement, contact damage, and another state transition remain blocked until their configured animation duration completes. Passive monsters alternate table-timed idle and wander periods, aggro only after being damaged, and return to autonomy after losing the player. Aggressive definitions may acquire a same-lane player first.
 
 ## Damage Contract
 
 - Attack cadence and attack power come from `Combat.xlsx` profiles/definitions.
+- Attack start, impact, and completion are separate server phases. Damage is applied at `AttackHitDelaySeconds`, never on the same tick that the attack animation starts.
+- `AttackAnimationDurationSeconds` and `HitAnimationDurationSeconds` are action locks. A hit received during `ATTACK` queues `HIT` after attack completion instead of interrupting or freezing the current motion.
 - Hit delivery uses native `AttackComponent` and `HitComponent` collision groups.
 - Damage and death are accepted only on the server.
 - A death is idempotent. Repeated hit/death events must not produce additional drops.
-- Movement and attack visual timing may lag the authoritative outcome slightly, but may not change it.
+- Client movement mirrors the replicated action lock and cannot overwrite `ATTACK` or `HIT` with `MOVE` or `CLIMB`.
 - Every monster deals contact damage from `TriggerStayEvent` overlap and continues in the same direction for `ContactMoveThroughSeconds` after a successful hit.
 - `AttackMode=CONTACT` definitions have no separate attack animation or attack action.
-- `AttackMode=ACTIVE` definitions additionally stop inside range, play `AttackAnimationRuid`, and resolve a server-authoritative active attack.
+- `AttackMode=ACTIVE` definitions additionally stop inside range, play `AttackAnimationRuid`, and resolve a server-authoritative active attack at the configured hit frame.
 
 ## Drop Contract
 
@@ -63,8 +67,8 @@ Base Bet does not directly mutate combat stats. Its index selects one `HuntingGr
 - `PlayerControllerComponent.UseCustomScript` is read-only at runtime and must never be assigned.
 - The sandbox disables manual movement and attack by removing documented action bindings, then restores the default bindings when the combat component ends.
 - Server AI publishes movement intent; the owning client executes avatar movement and changes `StateComponent` to `MOVE`, so automatic walking uses the normal avatar walk animation.
-- A horizontal movement intent clears any retained `ATTACK` or `HIT` animation state before moving; only `DEAD` blocks this recovery transition.
-- The attack animation RPC enters `ATTACK` only from `IDLE` or `MOVE`; ladder, dead, and already-attacking states reject the visual transition while server damage resolution remains authoritative.
+- Replicated `ActionPhase=ATTACK|HIT` stops movement first and preserves that animation state even if native hit handling attempts an intermediate transition.
+- Completion RPCs release retained `ATTACK`, `ATTACK_WAIT`, and `HIT` states only after the corresponding table-backed duration expires.
 - The combat camera is attached to `CombatCameraAnchorKey`, positioned at the common center of the three foothold rows. It does not follow player movement.
 - The fixed camera uses the `CombatConfig` screen offsets and disables foothold-area confinement by default. This keeps the three lanes in the screen-right composition regardless of tile world position.
 - The previously active camera is restored when the combat component ends.

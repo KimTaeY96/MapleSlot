@@ -57,6 +57,8 @@ script CombatMonsterAttack extends AttackComponent
     method boolean TryContactDamage(Entity target)
         -- Contact damage is available to every monster and is rate-limited per monster body.
         if _UtilLogic.ElapsedSeconds < self.NextContactDamageTime then return false end
+        local ai = self.Entity:GetComponent("script.CombatMonsterAI")
+        if isvalid(ai) and ai.ActionPhase ~= "NONE" then return false end
         if self:IsValidPlayerTarget(target) == false then return false end
         self.NextContactDamageTime = _UtilLogic.ElapsedSeconds + self.ContactDamageIntervalSeconds
         return self:ResolveAttack(target, "CONTACT", "COMBAT_MONSTER_CONTACT")

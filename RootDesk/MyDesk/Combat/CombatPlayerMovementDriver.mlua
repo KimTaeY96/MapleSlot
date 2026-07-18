@@ -10,6 +10,24 @@ script CombatPlayerMovementDriver extends Component
         local controller = self.Entity.PlayerControllerComponent
         local state = self.Entity.StateComponent
 
+        if autoBattle.ActionPhase == "ATTACK" then
+            movement:Stop()
+            if isvalid(controller) then controller.AlwaysMovingState = false end
+            if isvalid(state) and state.CurrentStateName ~= "ATTACK" and state.CurrentStateName ~= "ATTACK_WAIT" and state.CurrentStateName ~= "DEAD" then
+                state:ChangeState("ATTACK")
+            end
+            return
+        end
+
+        if autoBattle.ActionPhase == "HIT" then
+            movement:Stop()
+            if isvalid(controller) then controller.AlwaysMovingState = false end
+            if isvalid(state) and state.CurrentStateName ~= "HIT" and state.CurrentStateName ~= "DEAD" then
+                state:ChangeState("HIT")
+            end
+            return
+        end
+
         if autoBattle.MovementIntent == "CLIMB" and autoBattle.ClimbDirectionY ~= 0 then
             if not isvalid(controller) then return end
             controller.AlwaysMovingState = false

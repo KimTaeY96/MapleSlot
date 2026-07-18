@@ -44,6 +44,7 @@ assert(!playerSource.includes("self.Entity.CameraComponent"), "Combat framing mu
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
 assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
+assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && playerSource.includes("profile.AttackHitDelaySeconds") && playerSource.includes("profile.HitAnimationDurationSeconds"), "Player action timing must come from Combat.xlsx");
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from Combat.xlsx");
 assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
 assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
@@ -55,8 +56,14 @@ assert(playerSource.includes('MovementIntent = "HORIZONTAL"'), "Player AI must p
 assert(playerSource.includes("RetaliationTargetEntity"), "Player AI must prioritize the monster that damaged it");
 assert(playerSource.includes("RequestImmediateMonsterPopulation"), "Player AI must recover an empty map before retrying acquisition");
 assert(/@ExecSpace\("Client"\)\s*method void PlayAttackAnimation\(/.test(playerSource), "Player attack state changes must use a targeted client RPC");
-assert(playerSource.includes("self:PlayAttackAnimation(player.UserId)"), "Server attack resolution must target the owning player client for animation");
-assert(playerSource.includes('state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE"'), "Player attack animation must reject ladder, dead, and retained attack states");
+assert(playerSource.includes("self:PlayAttackAnimation(player.UserId)"), "Server attack start must target the owning player client for animation");
+assert(playerSource.includes('@Sync @HideFromInspector property string ActionPhase = "NONE"'), "Player attack and hit locks must replicate to the movement client");
+assert(playerSource.includes("BeginAttackAction") && playerSource.includes("ResolveAttackHitFrame") && playerSource.includes("CompleteAttackAction"), "Player attacks must use a begin, hit-frame, and completion timeline");
+assert(playerSource.indexOf("method boolean BeginAttackAction") < playerSource.indexOf("method void ResolveAttackHitFrame"), "Player damage resolution must follow attack start");
+assert(playerSource.includes("self.ActionElapsedSeconds >= self.AttackHitDelaySeconds"), "Player damage must wait for the configured hit frame");
+assert(playerSource.includes("self.ActionElapsedSeconds >= self.AttackAnimationDurationSeconds"), "Player ATTACK must remain locked for the configured animation duration");
+assert(playerSource.includes("PendingHitReaction") && playerSource.includes("HandlePlayerHitEvent"), "Player hits during attack must queue a post-attack reaction");
+assert(playerSource.includes("FinishAttackAnimation") && playerSource.includes("FinishHitAnimation"), "Player retained action states must be released explicitly");
 
 const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
 assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
@@ -64,7 +71,7 @@ assert(movementDriverSource.includes("ActionClimb"), "Player movement driver mus
 assert(movementDriverSource.includes('MovementIntent == "HORIZONTAL"'), "Player movement driver must consume horizontal movement intent");
 assert(movementDriverSource.includes('state:ChangeState("MOVE")'), "Player horizontal movement must drive the avatar MOVE animation state");
 assert(movementDriverSource.includes('state.CurrentStateName ~= "DEAD"'), "Player movement must recover from retained attack or hit states without moving while dead");
-assert(!movementDriverSource.includes('state.CurrentStateName == "IDLE" or state.CurrentStateName == "MOVE"'), "Player movement must not stay blocked by a retained ATTACK state");
+assert(movementDriverSource.includes('autoBattle.ActionPhase == "ATTACK"') && movementDriverSource.includes('autoBattle.ActionPhase == "HIT"'), "Player movement must stop while attack or hit animation locks are active");
 assert(movementDriverSource.includes("AlwaysMovingState = true"), "Player horizontal movement must preserve MOVE animation without manual input");
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
@@ -72,6 +79,7 @@ assert(monsterAttackSource.includes("CollisionGroups.Player"), "Monster attacks 
 assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Combat.xlsx");
 assert(monsterAttackSource.includes("HandleTriggerStayEvent"), "Monster contact damage must originate from body overlap events");
 assert(monsterAttackSource.includes("TryActiveAttack"), "Monster attack must keep active attacks separate from contact damage");
+assert(monsterAttackSource.includes('ai.ActionPhase ~= "NONE"'), "Monster contact damage must pause during attack and hit animation locks");
 assert(monsterAttackSource.includes("NotifyDamagedByMonster"), "Successful monster damage must update player retaliation priority");
 for (const method of ["CalcDamage", "IsAttackTarget"]) {
   const pattern = new RegExp(`@ExecSpace\\([^\\n]+\\)\\s*method [^\\n]+ ${method}\\(`);
@@ -105,6 +113,9 @@ assert(monsterAiSource.includes("self.Aggressive"), "Monster AI must distinguish
 assert(monsterAiSource.includes("NotifyAttacked"), "Passive monsters must enter chase after being attacked");
 assert(monsterAiSource.includes("ContactMoveThroughSeconds"), "Contact monsters must continue moving after player contact");
 assert(monsterAiSource.includes("ActiveAttackEnabled"), "Only monsters with an active attack definition may use attack animation logic");
+assert(monsterAiSource.includes("definition.AttackAnimationDurationSeconds") && monsterAiSource.includes("definition.AttackHitDelaySeconds") && monsterAiSource.includes("definition.HitAnimationDurationSeconds"), "Monster action timing must come from Combat.xlsx");
+assert(monsterAiSource.includes("ResolveActiveAttackHitFrame") && monsterAiSource.includes("CompleteAttackAction"), "Monster active attacks must resolve on a delayed hit frame and complete their animation lock");
+assert(monsterAiSource.includes("PendingHitReaction") && monsterAiSource.includes("BeginHitReaction"), "Monster hit reactions must queue behind active attacks");
 
 const healthSource = fs.readFileSync(path.join(combatDir, "CombatMonsterHealth.mlua"), "utf8");
 assert(!healthSource.includes("self.Entity:SetEnable(false)"), "Respawning monsters must not disable their own timer owner");
@@ -120,6 +131,8 @@ assert(tableSource.includes('CombatCameraScreenOffsetX = 0.75') && tableSource.i
 assert(tableSource.includes('CombatCameraConfineArea = false'), "Generated runtime must not recenter the camera from foothold bounds");
 assert(tableSource.includes('CombatCameraAnchorKey = "CombatHarness/CameraAnchor"'), "Generated runtime must contain the fixed combat camera anchor key");
 assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must start the player on CENTER");
+assert(tableSource.includes('AttackAnimationDurationSeconds = 0.8') && tableSource.includes('AttackHitDelaySeconds = 0.35') && tableSource.includes('HitAnimationDurationSeconds = 0.5'), "Generated runtime must contain player animation timing");
+assert(tableSource.includes('HitAnimationDurationSeconds = 0.35'), "Generated runtime must contain monster hit animation timing");
 assert(tableSource.includes('["UPPER"]') && tableSource.includes('["CENTER"]') && tableSource.includes('["LOWER"]'), "Generated runtime must contain all three combat lanes");
 assert(tableSource.includes('LadderKey = "ladder-3"') && tableSource.includes('LadderKey = "ladder-3_1"'), "Generated runtime must contain both Maker-authored ladder routes");
 assert(tableSource.includes('AttackMode = "CONTACT"') && tableSource.includes('ContactMoveThroughSeconds = 0.5'), "Generated runtime must contain contact-damage behavior");

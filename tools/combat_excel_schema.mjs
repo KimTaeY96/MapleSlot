@@ -54,8 +54,11 @@ export const combatSheets = {
       ["LadderExitTolerance", "server", "\uBAA9\uD45C \uCE35\uC5D0 \uB3C4\uCC29\uD588\uB2E4\uACE0 \uBCF4\uB294 \uC138\uB85C \uD5C8\uC6A9 \uAC70\uB9AC\uC785\uB2C8\uB2E4.", "float"],
       ["Enabled", "all", "\uD574\uB2F9 \uD504\uB85C\uD544\uC744 \uC0AC\uC6A9\uD560\uC9C0 \uC5EC\uBD80\uC785\uB2C8\uB2E4.", "bool"],
       ["Notes", "design", "\uAE30\uD68D \uCC38\uACE0 \uBA54\uBAA8\uC785\uB2C8\uB2E4.", "string"],
+      ["AttackAnimationDurationSeconds", "server", "\uACF5\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uACF5\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC804\uCCB4 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["AttackHitDelaySeconds", "server", "\uACF5\uACA9 \uC2DC\uC791 \uD6C4 \uC2E4\uC81C \uB300\uBBF8\uC9C0\uB97C \uD310\uC815\uD558\uB294 \uD0C0\uACA9 \uD504\uB808\uC784 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["HitAnimationDurationSeconds", "server", "\uD53C\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uD53C\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
     ],
-    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1.5, 2.5, 0, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile"]],
+    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1.5, 2.5, 0, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile", 0.8, 0.35, 0.5]],
   },
   CombatLanes: {
     columns: [
@@ -126,10 +129,13 @@ export const combatSheets = {
       ["RespawnSeconds", "server", "\uC0AC\uB9DD \uD6C4 \uC7AC\uC0DD\uC131\uAE4C\uC9C0 \uB300\uAE30 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["Enabled", "all", "\uD574\uB2F9 \uBAAC\uC2A4\uD130 \uC815\uC758\uB97C \uC0AC\uC6A9\uD560\uC9C0 \uC5EC\uBD80\uC785\uB2C8\uB2E4.", "bool"],
       ["Notes", "design", "\uAE30\uD68D \uCC38\uACE0 \uBA54\uBAA8\uC785\uB2C8\uB2E4.", "string"],
+      ["AttackAnimationDurationSeconds", "server", "\uACF5\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uACF5\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC804\uCCB4 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["AttackHitDelaySeconds", "server", "\uACF5\uACA9 \uC2DC\uC791 \uD6C4 \uC2E4\uC81C \uB300\uBBF8\uC9C0\uB97C \uD310\uC815\uD558\uB294 \uD0C0\uACA9 \uD504\uB808\uC784 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["HitAnimationDurationSeconds", "server", "\uD53C\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uD53C\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
     ],
     rows: [
-      [1, "SLIME_TIER_1", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "", 30, 3, 1.5, 1.2, 6, 0.65, 1.2, "CONTACT", false, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Passive contact-damage Tier 1 Slime"],
-      [2, "SLIME_TIER_1_ACTIVE", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "8b89d86b1a9c4c4288650614c6f30e67", 30, 3, 1.5, 1.2, 9999, 0.9, 1.2, "ACTIVE", true, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Aggressive upper-lane Slime with contact and active attack"],
+      [1, "SLIME_TIER_1", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "", 30, 3, 1.5, 1.2, 6, 0.65, 1.2, "CONTACT", false, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Passive contact-damage Tier 1 Slime", 0.8, 0.35, 0.35],
+      [2, "SLIME_TIER_1_ACTIVE", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "8b89d86b1a9c4c4288650614c6f30e67", 30, 3, 1.5, 1.2, 9999, 0.9, 1.2, "ACTIVE", true, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Aggressive upper-lane Slime with contact and active attack", 0.8, 0.35, 0.35],
     ],
   },
   MonsterSpawnGroups: {

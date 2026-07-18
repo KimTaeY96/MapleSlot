@@ -226,6 +226,13 @@ export async function loadAndValidateCombatTables(options = {}) {
     for (const key of ["LadderApproachTolerance", "LadderExitTolerance"]) {
       if (number(row[key], `${row.ProfileKey}.${key}`) <= 0) fail(`${row.ProfileKey}.${key} must be > 0`);
     }
+    const attackDuration = number(row.AttackAnimationDurationSeconds, `${row.ProfileKey}.AttackAnimationDurationSeconds`);
+    const attackHitDelay = number(row.AttackHitDelaySeconds, `${row.ProfileKey}.AttackHitDelaySeconds`);
+    const hitDuration = number(row.HitAnimationDurationSeconds, `${row.ProfileKey}.HitAnimationDurationSeconds`);
+    if (attackDuration <= 0) fail(`${row.ProfileKey}.AttackAnimationDurationSeconds must be > 0`);
+    if (attackHitDelay < 0 || attackHitDelay >= attackDuration) fail(`${row.ProfileKey}.AttackHitDelaySeconds must be >= 0 and < AttackAnimationDurationSeconds`);
+    if (hitDuration <= 0) fail(`${row.ProfileKey}.HitAnimationDurationSeconds must be > 0`);
+    if (Number(row.AttackIntervalSeconds) < attackDuration) fail(`${row.ProfileKey}.AttackIntervalSeconds must be >= AttackAnimationDurationSeconds`);
   }
 
   for (const row of combat.MonsterDefinitions.filter((entry) => enabled(entry.Enabled))) {
@@ -242,6 +249,13 @@ export async function loadAndValidateCombatTables(options = {}) {
     if (isBlank(row.ModelPath) || isBlank(row.StandAnimationRuid) || isBlank(row.DieAnimationRuid)) fail(`${row.MonsterKey} is missing required model/animation data`);
     const hitboxHeight = number(row.AttackHitboxHeight, `${row.MonsterKey}.AttackHitboxHeight`);
     if (hitboxHeight <= 0 || hitboxHeight >= minimumLaneSpacing) fail(`${row.MonsterKey}.AttackHitboxHeight must be > 0 and < MinimumLaneSpacing`);
+    const attackDuration = number(row.AttackAnimationDurationSeconds, `${row.MonsterKey}.AttackAnimationDurationSeconds`);
+    const attackHitDelay = number(row.AttackHitDelaySeconds, `${row.MonsterKey}.AttackHitDelaySeconds`);
+    const hitDuration = number(row.HitAnimationDurationSeconds, `${row.MonsterKey}.HitAnimationDurationSeconds`);
+    if (attackDuration <= 0) fail(`${row.MonsterKey}.AttackAnimationDurationSeconds must be > 0`);
+    if (attackHitDelay < 0 || attackHitDelay >= attackDuration) fail(`${row.MonsterKey}.AttackHitDelaySeconds must be >= 0 and < AttackAnimationDurationSeconds`);
+    if (hitDuration <= 0) fail(`${row.MonsterKey}.HitAnimationDurationSeconds must be > 0`);
+    if (Number(row.AttackIntervalSeconds) < attackDuration) fail(`${row.MonsterKey}.AttackIntervalSeconds must be >= AttackAnimationDurationSeconds`);
   }
 
   for (const row of combat.MonsterSpawnGroups.filter((entry) => enabled(entry.Enabled))) {

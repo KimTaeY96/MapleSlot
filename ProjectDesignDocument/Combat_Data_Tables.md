@@ -34,7 +34,7 @@ Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. E
 
 ### PlayerStatsProfiles
 
-Defines player HP, attack power, cadence, attack range, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, hitbox height, and ladder approach/exit tolerances. It contains balance only, not player appearance.
+Defines player HP, attack power, cadence, attack range, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, hitbox height, ladder approach/exit tolerances, and action timing. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
 
 ### CombatLanes
 
@@ -46,7 +46,7 @@ Defines the Maker-authored `ClimbableComponent` entity path and the adjacent low
 
 ### MonsterDefinitions
 
-Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, contact move-through time, respawn behavior, and `DropGroupId`. Contact damage is common to every definition; `AttackMode=ACTIVE` adds a separate attack action and requires `AttackAnimationRuid`.
+Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, action timing, contact move-through time, respawn behavior, and `DropGroupId`. Contact damage is common to every definition; `AttackMode=ACTIVE` adds a separate attack action and requires `AttackAnimationRuid`. The same three timing columns used by player profiles control the monster attack lock, active-attack impact frame, and hit reaction lock.
 
 ### MonsterSpawnGroups
 
@@ -70,6 +70,7 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 - All three lanes allow physical same-lane basic attacks and initial monster spawning.
 - Every tier defines exactly two adjacent ladder routes and exactly one enabled spawn group per lane.
 - Player and monster hitbox heights remain smaller than `MinimumLaneSpacing`.
+- Player and monster attack durations are positive, hit delays are within the attack duration, hit durations are positive, and attack intervals are not shorter than attack durations.
 - Spawn-group lane and anchor keys match the corresponding `CombatLanes` row.
 - Every enabled `MonsterSpawnGroups.MonsterDefinitionIndex` exists.
 - Every enabled `MonsterDefinitions.DropGroupId` exists in `DropGroups`.
@@ -85,3 +86,7 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 - All Tier 1 Slimes move through contact for `0.5` seconds and respawn after `5` seconds; if the whole map has no live target, all three lane populations are restored immediately.
 - Slime uses the classic `mob/0210100.img` resource pack and references `DROP_SLIME_TIER1`.
 - `DROP_SLIME_TIER1` independently grants `1..3` Common Coins at `1000` permille.
+
+## Next Phase
+
+After this combat foundation is stable, weapons and armor become a separate equipment domain. Equipment data will modify resolved player stats through explicit slots and item definitions without replacing the combat action timeline.

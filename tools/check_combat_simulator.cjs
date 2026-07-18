@@ -20,6 +20,11 @@ async function main() {
   const activeMonster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 2);
   assert(player && monster && activeMonster, "Initial contact and upper active monster data must exist");
   assert.equal(Number(player.AggroRange), 9999, "Player acquisition must cover the whole test map");
+  assert.equal(Number(player.AttackAnimationDurationSeconds), 0.8);
+  assert.equal(Number(player.AttackHitDelaySeconds), 0.35);
+  assert.equal(Number(player.HitAnimationDurationSeconds), 0.5);
+  assert(Number(player.AttackHitDelaySeconds) < Number(player.AttackAnimationDurationSeconds), "Player hit frame must occur before attack animation completion");
+  assert(Number(player.AttackAnimationDurationSeconds) <= Number(player.AttackIntervalSeconds), "Player attack animation must complete before the next attack interval");
   assert.equal(Number(monster.RespawnSeconds), 5, "Tier 1 Slime respawn must use the longer table-backed delay");
   assert.equal(monster.AttackMode, "CONTACT");
   assert.equal(monster.Aggressive, false);
@@ -28,6 +33,13 @@ async function main() {
   assert.equal(activeMonster.AttackMode, "ACTIVE");
   assert.equal(activeMonster.Aggressive, true);
   assert(activeMonster.AttackAnimationRuid, "Upper active Slime must define an attack animation");
+  for (const definition of [monster, activeMonster]) {
+    assert.equal(Number(definition.AttackAnimationDurationSeconds), 0.8);
+    assert.equal(Number(definition.AttackHitDelaySeconds), 0.35);
+    assert.equal(Number(definition.HitAnimationDurationSeconds), 0.35);
+    assert(Number(definition.AttackHitDelaySeconds) < Number(definition.AttackAnimationDurationSeconds), `${definition.MonsterKey} hit frame must occur before attack completion`);
+    assert(Number(definition.AttackAnimationDurationSeconds) <= Number(definition.AttackIntervalSeconds), `${definition.MonsterKey} attack animation must complete before its next attack interval`);
+  }
   const tierSpawns = combat.MonsterSpawnGroups.filter((row) => Number(row.HuntingGroundTierIndex) === 1 && row.Enabled);
   assert.deepEqual(tierSpawns.map((row) => row.LaneKey).sort(), ["CENTER", "LOWER", "UPPER"]);
   assert.equal(Number(tierSpawns.find((row) => row.LaneKey === "UPPER").MonsterDefinitionIndex), 2);
