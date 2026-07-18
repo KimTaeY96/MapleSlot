@@ -43,9 +43,9 @@ assert(!playerSource.includes('"/maps/" .. map.Id'), "Runtime map GUID must not 
 assert(!playerSource.includes("self.Entity.CameraComponent"), "Combat framing must not keep following the player camera");
 assert(playerSource.includes("CollisionGroups.Monster"), "Player attacks must target the Monster collision group");
 assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consume the configured combat lane");
-assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Combat.xlsx");
-assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && playerSource.includes("profile.AttackHitDelaySeconds") && playerSource.includes("profile.HitAnimationDurationSeconds"), "Player action timing must come from Combat.xlsx");
-assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from Combat.xlsx");
+assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Character.xlsx");
+assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && playerSource.includes("profile.AttackHitDelaySeconds") && playerSource.includes("profile.HitAnimationDurationSeconds"), "Player action timing must come from Character.xlsx");
+assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from HuntingGround.xlsx");
 assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
 assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
 assert(playerSource.includes("climbDirection > 0 and selfPosition.y >= targetY"), "Upward climbing must reach the platform before releasing the ladder");
@@ -76,7 +76,7 @@ assert(movementDriverSource.includes("AlwaysMovingState = true"), "Player horizo
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
 assert(monsterAttackSource.includes("CollisionGroups.Player"), "Monster attacks must target the Player collision group");
-assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Combat.xlsx");
+assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Monster.xlsx");
 assert(monsterAttackSource.includes("HandleTriggerStayEvent"), "Monster contact damage must originate from body overlap events");
 assert(monsterAttackSource.includes("TryActiveAttack"), "Monster attack must keep active attacks separate from contact damage");
 assert(monsterAttackSource.includes('ai.ActionPhase ~= "NONE"'), "Monster contact damage must pause during attack and hit animation locks");
@@ -113,7 +113,7 @@ assert(monsterAiSource.includes("self.Aggressive"), "Monster AI must distinguish
 assert(monsterAiSource.includes("NotifyAttacked"), "Passive monsters must enter chase after being attacked");
 assert(monsterAiSource.includes("ContactMoveThroughSeconds"), "Contact monsters must continue moving after player contact");
 assert(monsterAiSource.includes("ActiveAttackEnabled"), "Only monsters with an active attack definition may use attack animation logic");
-assert(monsterAiSource.includes("definition.AttackAnimationDurationSeconds") && monsterAiSource.includes("definition.AttackHitDelaySeconds") && monsterAiSource.includes("definition.HitAnimationDurationSeconds"), "Monster action timing must come from Combat.xlsx");
+assert(monsterAiSource.includes("definition.AttackAnimationDurationSeconds") && monsterAiSource.includes("definition.AttackHitDelaySeconds") && monsterAiSource.includes("definition.HitAnimationDurationSeconds"), "Monster action timing must come from Monster.xlsx");
 assert(monsterAiSource.includes("ResolveActiveAttackHitFrame") && monsterAiSource.includes("CompleteAttackAction"), "Monster active attacks must resolve on a delayed hit frame and complete their animation lock");
 assert(monsterAiSource.includes("PendingHitReaction") && monsterAiSource.includes("BeginHitReaction"), "Monster hit reactions must queue behind active attacks");
 

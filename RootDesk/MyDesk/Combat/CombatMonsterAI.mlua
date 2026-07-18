@@ -47,7 +47,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method void ApplyDefinition(integer definitionIndex, string laneKey, number boundsLeftX, number boundsRightX)
-        -- Loads Maple-style autonomy, aggro, contact, and movement values from Combat.xlsx.
+        -- Loads Maple-style autonomy, aggro, contact, and movement values from Monster.xlsx.
         self.MonsterDefinitionIndex = definitionIndex
         self.LaneKey = laneKey
         self.BoundsLeftX = math.min(boundsLeftX, boundsRightX)

@@ -258,4 +258,4 @@ end
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, source, "utf8");
-console.log(`Applied Combat.xlsx and Drop.xlsx to ${outputPath}`);
+console.log(`Applied Combat.xlsx, Character.xlsx, Monster.xlsx, HuntingGround.xlsx, and Drop.xlsx to ${outputPath}`);

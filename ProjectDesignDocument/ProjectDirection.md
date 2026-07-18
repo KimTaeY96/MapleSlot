@@ -77,7 +77,7 @@ This section supersedes the earlier `Slot Phase1 - Deepening` sprint assignment.
 
 ## Approved Decisions
 
-1. Combat balancing and tier links are authored in `ExcelTable/Combat.xlsx`.
+1. Combat data is split by responsibility: global settings in `Combat.xlsx`, player profiles in `Character.xlsx`, monster definitions in `Monster.xlsx`, and tier/map/spawn/navigation links in `HuntingGround.xlsx`.
 2. The combat player uses the MSW `DefaultPlayer` appearance and core player components. Manual input is disabled only inside the combat harness; shared `Global/DefaultPlayer.model` is not modified globally.
 3. Monster rewards are not fixed in combat code. Each monster references a drop group defined in `ExcelTable/Drop.xlsx` so currencies and future item rewards share one extensible contract.
 
@@ -100,7 +100,7 @@ This section supersedes the earlier `Slot Phase1 - Deepening` sprint assignment.
 
 ## Exit Criteria
 
-- `Combat.xlsx` and `Drop.xlsx` pass structural and cross-workbook validation.
+- `Combat.xlsx`, `Character.xlsx`, `Monster.xlsx`, `HuntingGround.xlsx`, and `Drop.xlsx` pass structural and cross-workbook validation.
 - A deterministic simulator proves combat timing, death pause, respawn, and drop-roll behavior.
 - The Test Sandbox map preflight confirms MapleTile mode and valid footholds before entity placement.
 - The combat runtime is server-authoritative and its map, model, and script attachments validate without console errors.

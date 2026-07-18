@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
-import { combatSheets, dropSheets } from "./combat_excel_schema.mjs";
+import { combatWorkbookSheets, dropSheets } from "./combat_excel_schema.mjs";
 
 const require = createRequire(import.meta.url);
 const artifactPath = require.resolve("@oai/artifact-tool", { paths: ["C:/Users/ghddj/Documents/MSW"] });
@@ -82,7 +82,8 @@ async function writeWorkbook(filename, schemas) {
 }
 
 const results = [
-  await writeWorkbook("Combat.xlsx", combatSheets),
+  ...(await Promise.all(Object.entries(combatWorkbookSheets)
+    .map(([filename, schemas]) => writeWorkbook(filename, schemas)))),
   await writeWorkbook("Drop.xlsx", dropSheets),
 ];
 for (const result of results) console.log(`${result.status}: ${result.outputPath}`);

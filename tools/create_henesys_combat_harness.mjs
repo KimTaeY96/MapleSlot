@@ -131,7 +131,7 @@ const laneGroups = chooseLaneGroups(
   Number(config.LaneMatchTolerance),
 );
 if (!laneGroups) {
-  fail("Could not match UPPER/CENTER/LOWER footholds to Combat.xlsx offsets, spans, and tolerance. No map data was written.");
+  fail("Could not match UPPER/CENTER/LOWER footholds to HuntingGround.xlsx offsets, spans, and tolerance. No map data was written.");
 }
 
 for (let index = 1; index < laneGroups.length; index += 1) {

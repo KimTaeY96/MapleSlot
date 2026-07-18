@@ -35,7 +35,7 @@ Monster controllers use `IDLE`, `WANDER`, `CHASE`, `ATTACK`, `HIT`, and `CONTACT
 
 ## Damage Contract
 
-- Attack cadence and attack power come from `Combat.xlsx` profiles/definitions.
+- Attack cadence and attack power currently come from `Character.xlsx/PlayerStatsProfiles` and `Monster.xlsx/MonsterDefinitions` until the approved `Skill.xlsx` migration replaces attack timing.
 - Attack start, impact, and completion are separate server phases. Damage is applied at `AttackHitDelaySeconds`, never on the same tick that the attack animation starts.
 - `AttackAnimationDurationSeconds` and `HitAnimationDurationSeconds` are action locks. A hit received during `ATTACK` queues `HIT` after attack completion instead of interrupting or freezing the current motion.
 - Hit delivery uses native `AttackComponent` and `HitComponent` collision groups.

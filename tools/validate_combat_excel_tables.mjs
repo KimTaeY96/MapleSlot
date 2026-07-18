@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";
-import { combatSheets, dropSheets, columnNames } from "./combat_excel_schema.mjs";
+import { combatWorkbookSheets, dropSheets, columnNames } from "./combat_excel_schema.mjs";
 
 const require = createRequire(import.meta.url);
 const artifactPath = require.resolve("@oai/artifact-tool", { paths: ["C:/Users/ghddj/Documents/MSW"] });
@@ -78,7 +78,9 @@ function unique(rows, key, label) {
 export async function loadAndValidateCombatTables(options = {}) {
   const targetExcelDir = options.excelDir ? path.resolve(options.excelDir) : excelDir;
   const targetSlotMachinePath = options.slotMachinePath ? path.resolve(options.slotMachinePath) : slotMachinePath;
-  const combat = await readWorkbook(targetExcelDir, "Combat.xlsx", combatSheets);
+  const combatParts = await Promise.all(Object.entries(combatWorkbookSheets)
+    .map(([filename, schemas]) => readWorkbook(targetExcelDir, filename, schemas)));
+  const combat = Object.assign({}, ...combatParts);
   const drop = await readWorkbook(targetExcelDir, "Drop.xlsx", dropSheets);
   const baseBetRows = await readSheetRows(targetSlotMachinePath, "BaseBetRegions");
   const baseBetIndexes = unique(baseBetRows, "BaseBetRegionsIndex", "BaseBetRegions");

@@ -191,6 +191,24 @@ export const dropSheets = {
   },
 };
 
+export const combatWorkbookSheets = {
+  "Combat.xlsx": {
+    CombatConfig: combatSheets.CombatConfig,
+  },
+  "Character.xlsx": {
+    PlayerStatsProfiles: combatSheets.PlayerStatsProfiles,
+  },
+  "Monster.xlsx": {
+    MonsterDefinitions: combatSheets.MonsterDefinitions,
+  },
+  "HuntingGround.xlsx": {
+    HuntingGroundTiers: combatSheets.HuntingGroundTiers,
+    MonsterSpawnGroups: combatSheets.MonsterSpawnGroups,
+    CombatLanes: combatSheets.CombatLanes,
+    CombatLadders: combatSheets.CombatLadders,
+  },
+};
+
 export function columnNames(sheetSchema) {
   return sheetSchema.columns.map(([name]) => name);
 }

@@ -14,7 +14,7 @@ script CombatMonsterAttack extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
-        -- Loads contact and optional active-attack values from Combat.xlsx.
+        -- Loads contact and optional active-attack values from Monster.xlsx.
         self:ApplyDefinition(self.MonsterDefinitionIndex)
     end
 

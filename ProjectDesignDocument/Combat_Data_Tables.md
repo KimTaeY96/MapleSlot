@@ -1,8 +1,15 @@
 # Combat Data Table Contract
 
-## Combat.xlsx
+## Workbook Ownership
 
-### CombatConfig
+- `Combat.xlsx`: global combat runtime configuration only.
+- `Character.xlsx`: player stat profiles and future character-domain tables.
+- `Monster.xlsx`: monster definitions and future monster-domain tables.
+- `HuntingGround.xlsx`: hunting tiers, spawn groups, lanes, and ladders.
+- `Drop.xlsx`: reusable drop groups and typed reward entries.
+- `Skill.xlsx`: reserved for the next skill and animation-notify migration; it is not part of the current split.
+
+## Combat.xlsx / CombatConfig
 
 Horizontal configuration used by the server runtime.
 
@@ -28,37 +35,35 @@ Horizontal configuration used by the server runtime.
 | `CombatCameraConfineArea` | Whether foothold bounds may recenter the combat camera. Initial value: `false`. |
 | `CombatCameraAnchorKey` | Fixed camera entity path generated at the common lane center. Initial value: `CombatHarness/CameraAnchor`. |
 
-### HuntingGroundTiers
+## HuntingGround.xlsx / HuntingGroundTiers
 
 Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. Every enabled spawn group with the same `HuntingGroundTierIndex` belongs to that tier.
 
-### PlayerStatsProfiles
+## Character.xlsx / PlayerStatsProfiles
 
 Defines player HP, attack power, cadence, attack range, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, hitbox height, ladder approach/exit tolerances, and action timing. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
 
-### CombatLanes
+## HuntingGround.xlsx / CombatLanes
 
 Defines the `UPPER`, `CENTER`, and `LOWER` rows for each hunting-ground tier. The table owns expected Y offsets, minimum common width, map anchors, basic-attack eligibility, and initial-spawn eligibility. Initial Henesys enables all three physical lanes.
 
-### CombatLadders
+## HuntingGround.xlsx / CombatLadders
 
 Defines the Maker-authored `ClimbableComponent` entity path and the adjacent lower/upper lanes it connects. Initial Henesys uses `ladder-3` for `LOWER <-> CENTER` and `ladder-3_1` for `CENTER <-> UPPER`.
 
-### MonsterDefinitions
+## Monster.xlsx / MonsterDefinitions
 
 Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, action timing, contact move-through time, respawn behavior, and `DropGroupId`. Contact damage is common to every definition; `AttackMode=ACTIVE` adds a separate attack action and requires `AttackAnimationRuid`. The same three timing columns used by player profiles control the monster attack lock, active-attack impact frame, and hit reaction lock.
 
-### MonsterSpawnGroups
+## HuntingGround.xlsx / MonsterSpawnGroups
 
 Defines which monster appears, how many instances are maintained, its tier and `LaneKey`, and which map anchor/bounds are used.
 
-## Drop.xlsx
-
-### DropGroups
+## Drop.xlsx / DropGroups
 
 Defines roll behavior for a reusable drop group.
 
-### DropEntries
+## Drop.xlsx / DropEntries
 
 Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `COMMON_COIN`. `RewardType=ITEM` is accepted as a typed grant so future item rows do not require a drop-system rewrite; item-key existence validation is added when the item catalog is introduced.
 

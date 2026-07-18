@@ -69,13 +69,13 @@ The right-side combat area must show actual MSW world entities:
 - Disable manual movement and attack input only while the player is inside `Test_Sandbox`.
 - Do not edit `Global/DefaultPlayer.model` to disable controls for every map.
 - Auto battle selects the closest valid monster, moves into range, and attacks on the server.
-- At zero HP, stop targeting, movement, attacks, and farming for `PlayerDeathPenaltySeconds` from `Combat.xlsx`.
+- At zero HP, stop targeting, movement, attacks, and farming for `PlayerDeathPenaltySeconds` from `Combat.xlsx/CombatConfig`.
 - Revive at `PlayerReviveHpPermille` HP and resume auto battle.
 
 ### Monster
 
 - Tier 1 uses the classic Slime resource pack `mob/0210100.img`.
-- Each monster instance resolves combat stats and `DropGroupId` through `Combat.xlsx/MonsterDefinitions`.
+- Each monster instance resolves combat stats and `DropGroupId` through `Monster.xlsx/MonsterDefinitions`.
 - Monster hit detection uses the native `AttackComponent -> HitComponent -> DeadEvent` path wherever the runtime supports it.
 - MapleTile monsters require `RigidbodyComponent`, a valid foothold below their spawn position, and exactly one movement owner.
 - The initial controller is custom and data-driven; do not attach `AIChaseComponent` or `AIWanderComponent` beside it because those components overwrite body velocity every frame.
