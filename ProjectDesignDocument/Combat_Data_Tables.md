@@ -7,7 +7,7 @@
 - `Monster.xlsx`: monster definitions and future monster-domain tables.
 - `HuntingGround.xlsx`: hunting tiers, spawn groups, lanes, and ladders.
 - `Drop.xlsx`: reusable drop groups and typed reward entries.
-- `Skill.xlsx`: reserved for the next skill and animation-notify migration; it is not part of the current split.
+- `Skill.xlsx`: shared skill definitions for player, monster contact, and monster active attacks.
 
 ## Combat.xlsx / CombatConfig
 
@@ -41,7 +41,7 @@ Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. E
 
 ## Character.xlsx / PlayerStatsProfiles
 
-Defines player HP, attack power, cadence, attack range, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, hitbox height, ladder approach/exit tolerances, and action timing. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
+Defines player HP, attack power, legacy cadence/range compatibility values, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, ladder approach/exit tolerances, and action timing. `BasicAttackSkillInfoIndex` selects the actual basic attack contract from `Skill.xlsx`. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
 
 ## HuntingGround.xlsx / CombatLanes
 
@@ -53,7 +53,11 @@ Defines the Maker-authored `ClimbableComponent` entity path and the adjacent low
 
 ## Monster.xlsx / MonsterDefinitions
 
-Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, action timing, contact move-through time, respawn behavior, and `DropGroupId`. Contact damage is common to every definition; `AttackMode=ACTIVE` adds a separate attack action and requires `AttackAnimationRuid`. The same three timing columns used by player profiles control the monster attack lock, active-attack impact frame, and hit reaction lock.
+Defines monster resource/model identity, stats, passive/aggressive behavior, autonomous idle/wander durations, optional `ACTIVE` attack behavior, action timing, contact move-through time, respawn behavior, and `DropGroupId`. `ContactSkillInfoIndex` is required for every monster and `ActiveSkillInfoIndex` is required only for `AttackMode=ACTIVE`. The same three timing columns used by player profiles control the monster attack lock, active-attack impact frame, and hit reaction lock.
+
+## Skill.xlsx / SkillInfo
+
+Defines the shared attack contract. `CooldownSeconds` controls reuse after an action unlocks, `CastRangeX/Y` controls whether the skill may start, and `DamageCoefficientPermille` scales the owner's attack power. `HitOriginTypeEnumId` accepts `SELF` or `TARGET`. `HitShapeTypeEnumId=CIRCLE` uses `HitRadius` around the origin; `RECTANGLE` begins at the origin and extends `HitRangeX` only in the locked facing direction with vertical size `HitRangeY`.
 
 ## HuntingGround.xlsx / MonsterSpawnGroups
 
@@ -79,6 +83,8 @@ Defines typed rewards. `RewardType=CURRENCY` uses a currency enum key such as `C
 - Spawn-group lane and anchor keys match the corresponding `CombatLanes` row.
 - Every enabled `MonsterSpawnGroups.MonsterDefinitionIndex` exists.
 - Every enabled `MonsterDefinitions.DropGroupId` exists in `DropGroups`.
+- Every player basic, monster contact, and monster active skill index resolves to an enabled `SkillInfo` row.
+- Every `SkillInfo` enum reference resolves through `Enum.xlsx`; circle radius and rectangle dimensions must be positive for their selected shape.
 - Every enabled `DropEntries.DropGroupId` exists in `DropGroups`.
 - `MinQuantity <= MaxQuantity`, quantities are non-negative integers, and `ChancePermille` is within `0..1000`.
 - Initial content has no `ITEM` entry, while the resolver and simulator already preserve typed future item grants.

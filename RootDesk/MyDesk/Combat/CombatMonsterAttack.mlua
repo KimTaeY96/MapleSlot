@@ -7,9 +7,11 @@ script CombatMonsterAttack extends AttackComponent
     property number ContactDamageIntervalSeconds = 1.5
     property string AttackMode = "CONTACT"
     property string AttackAnimationRuid = ""
-    @HideFromInspector property any AttackShape = nil
+    @HideFromInspector property integer ContactSkillInfoIndex = 0
+    @HideFromInspector property integer ActiveSkillInfoIndex = 0
     @HideFromInspector property Entity IntendedTarget = nil
     @HideFromInspector property string CurrentAttackKind = ""
+    @HideFromInspector property integer CurrentDamageCoefficientPermille = 1000
     @HideFromInspector property number NextContactDamageTime = 0
 
     @ExecSpace("ServerOnly")
@@ -27,30 +29,32 @@ script CombatMonsterAttack extends AttackComponent
         self.AttackDamage = definition.AttackPower
         self.AttackRange = definition.AttackRange
         self.AttackHitboxHeight = definition.AttackHitboxHeight
-        self.ContactDamageIntervalSeconds = definition.AttackIntervalSeconds
+        self.ContactSkillInfoIndex = definition.ContactSkillInfoIndex
+        self.ActiveSkillInfoIndex = definition.ActiveSkillInfoIndex or 0
+        local contactSkill = _CombatTableRuntime:GetSkillInfo(self.ContactSkillInfoIndex)
+        if contactSkill ~= nil then self.ContactDamageIntervalSeconds = contactSkill.CooldownSeconds end
         self.AttackMode = definition.AttackMode
         self.AttackAnimationRuid = definition.AttackAnimationRuid or ""
-        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
         self.NextContactDamageTime = 0
     end
 
     @ExecSpace("ServerOnly")
     method void DoAttack(Entity target)
         -- Compatibility wrapper for explicit active-attack callers.
-        self:TryActiveAttack(target)
+        self:TryActiveAttack(target, self:GetFacingDirection(target))
     end
 
     @ExecSpace("ServerOnly")
     method boolean TryAttack(Entity target)
         -- Compatibility wrapper retained for existing active-attack callers.
-        return self:TryActiveAttack(target)
+        return self:TryActiveAttack(target, self:GetFacingDirection(target))
     end
 
     @ExecSpace("ServerOnly")
-    method boolean TryActiveAttack(Entity target)
+    method boolean TryActiveAttack(Entity target, number facingDirectionX)
         -- Active attacks require both the ACTIVE mode and a dedicated animation resource.
         if self.AttackMode ~= "ACTIVE" or self.AttackAnimationRuid == "" then return false end
-        return self:ResolveAttack(target, "ACTIVE", "COMBAT_MONSTER_ACTIVE")
+        return self:ResolveAttack(target, "ACTIVE", "COMBAT_MONSTER_ACTIVE", facingDirectionX)
     end
 
     @ExecSpace("ServerOnly")
@@ -61,23 +65,59 @@ script CombatMonsterAttack extends AttackComponent
         if isvalid(ai) and ai.ActionPhase ~= "NONE" then return false end
         if self:IsValidPlayerTarget(target) == false then return false end
         self.NextContactDamageTime = _UtilLogic.ElapsedSeconds + self.ContactDamageIntervalSeconds
-        return self:ResolveAttack(target, "CONTACT", "COMBAT_MONSTER_CONTACT")
+        return self:ResolveAttack(target, "CONTACT", "COMBAT_MONSTER_CONTACT", self:GetFacingDirection(target))
     end
 
     @ExecSpace("ServerOnly")
-    method boolean ResolveAttack(Entity target, string attackKind, string attackInfo)
+    method boolean ResolveAttack(Entity target, string attackKind, string attackInfo, number facingDirectionX)
         -- Resolves either contact or active damage through the native Attack/Hit pipeline.
-        if self.AttackShape == nil or self:IsValidPlayerTarget(target) == false then return false end
+        if self:IsValidPlayerTarget(target) == false then return false end
+        local skillIndex = (attackKind == "ACTIVE") and self.ActiveSkillInfoIndex or self.ContactSkillInfoIndex
+        local skill = _CombatTableRuntime:GetSkillInfo(skillIndex)
+        if skill == nil or self:IsTargetWithinSkillCast(target, skill) == false then return false end
         self.IntendedTarget = target
         self.CurrentAttackKind = attackKind
-        local a = self.Entity.TransformComponent.WorldPosition
-        local b = target.TransformComponent.WorldPosition
-        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
-        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
-        self:AttackFast(self.AttackShape, attackInfo, CollisionGroups.Player)
+        self.CurrentDamageCoefficientPermille = skill.DamageCoefficientPermille
+        local attackShape = self:CreateAttackShape(target, skill, facingDirectionX)
+        if attackShape == nil then
+            self.IntendedTarget = nil
+            self.CurrentAttackKind = ""
+            return false
+        end
+        self:AttackFast(attackShape, attackInfo, CollisionGroups.Player)
         self.IntendedTarget = nil
         self.CurrentAttackKind = ""
         return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean IsTargetWithinSkillCast(Entity target, table skill)
+        -- Uses the SkillInfo cast rectangle before resolving its independent hit shape.
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        return math.abs(b.x - a.x) <= skill.CastRangeX and math.abs(b.y - a.y) <= skill.CastRangeY
+    end
+
+    @ExecSpace("ServerOnly")
+    method any CreateAttackShape(Entity target, table skill, number facingDirectionX)
+        -- Builds a circle around the origin or a forward-only rectangle beginning at that origin.
+        local origin = self.Entity.TransformComponent.WorldPosition
+        if skill.HitOriginTypeEnumId == "TARGET" then origin = target.TransformComponent.WorldPosition end
+        if skill.HitShapeTypeEnumId == "CIRCLE" then
+            return CircleShape(Vector2(origin.x, origin.y), skill.HitRadius)
+        end
+        local direction = (facingDirectionX >= 0) and 1 or -1
+        local centerX = origin.x + direction * skill.HitRangeX * 0.5
+        return BoxShape(Vector2(centerX, origin.y), Vector2(skill.HitRangeX, skill.HitRangeY), 0)
+    end
+
+    @ExecSpace("ServerOnly")
+    method number GetFacingDirection(Entity target)
+        -- Resolves the horizontal direction toward the intended target.
+        if not isvalid(target) then return 1 end
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        return (b.x >= a.x) and 1 or -1
     end
 
     @ExecSpace("ServerOnly")
@@ -108,7 +148,7 @@ script CombatMonsterAttack extends AttackComponent
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
         -- Returns the table-backed monster damage for contact and active attacks.
-        return math.floor(self.AttackDamage)
+        return math.floor(self.AttackDamage * self.CurrentDamageCoefficientPermille / 1000)
     end
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)

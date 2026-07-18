@@ -57,8 +57,9 @@ export const combatSheets = {
       ["AttackAnimationDurationSeconds", "server", "\uACF5\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uACF5\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC804\uCCB4 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["AttackHitDelaySeconds", "server", "\uACF5\uACA9 \uC2DC\uC791 \uD6C4 \uC2E4\uC81C \uB300\uBBF8\uC9C0\uB97C \uD310\uC815\uD558\uB294 \uD0C0\uACA9 \uD504\uB808\uC784 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["HitAnimationDurationSeconds", "server", "\uD53C\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uD53C\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["BasicAttackSkillInfoIndex", "server", "Skill.xlsx/SkillInfo\uC758 \uAE30\uBCF8 \uACF5\uACA9 \uD589 \uC778\uB371\uC2A4\uC785\uB2C8\uB2E4.", "int"],
     ],
-    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1.5, 2.5, 0, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile", 0.8, 0.35, 0.5]],
+    rows: [[1, "PLAYER_TIER_1", 100, 10, 1, 1, 1, 100, 1500, 9999, "CENTER", 1.2, 0.35, 0.25, true, "Map-wide ladder auto-battle profile", 0.8, 0.35, 0.5, 1]],
   },
   CombatLanes: {
     columns: [
@@ -132,10 +133,12 @@ export const combatSheets = {
       ["AttackAnimationDurationSeconds", "server", "\uACF5\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uACF5\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC804\uCCB4 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["AttackHitDelaySeconds", "server", "\uACF5\uACA9 \uC2DC\uC791 \uD6C4 \uC2E4\uC81C \uB300\uBBF8\uC9C0\uB97C \uD310\uC815\uD558\uB294 \uD0C0\uACA9 \uD504\uB808\uC784 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
       ["HitAnimationDurationSeconds", "server", "\uD53C\uACA9 \uD589\uB3D9\uC744 \uC7A0\uADF8\uACE0 \uD53C\uACA9 \uC560\uB2C8\uBA54\uC774\uC158\uC744 \uC720\uC9C0\uD558\uB294 \uC2DC\uAC04\uC785\uB2C8\uB2E4.", "float"],
+      ["ContactSkillInfoIndex", "server", "Skill.xlsx/SkillInfo\uC758 \uC811\uCD09 \uD53C\uD574 \uD589 \uC778\uB371\uC2A4\uC785\uB2C8\uB2E4.", "int"],
+      ["ActiveSkillInfoIndex", "server", "Skill.xlsx/SkillInfo\uC758 \uB2A5\uB3D9 \uACF5\uACA9 \uD589 \uC778\uB371\uC2A4\uC785\uB2C8\uB2E4. CONTACT\uD615\uC740 \uBE44\uC6CC\uB461\uB2C8\uB2E4.", "int"],
     ],
     rows: [
-      [1, "SLIME_TIER_1", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "", 30, 3, 1.5, 1.2, 6, 0.65, 1.2, "CONTACT", false, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Passive contact-damage Tier 1 Slime", 0.8, 0.35, 0.35],
-      [2, "SLIME_TIER_1_ACTIVE", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "8b89d86b1a9c4c4288650614c6f30e67", 30, 3, 1.5, 1.2, 9999, 0.9, 1.2, "ACTIVE", true, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Aggressive upper-lane Slime with contact and active attack", 0.8, 0.35, 0.35],
+      [1, "SLIME_TIER_1", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "", 30, 3, 1.5, 1.2, 6, 0.65, 1.2, "CONTACT", false, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Passive contact-damage Tier 1 Slime", 0.8, 0.35, 0.35, 2, null],
+      [2, "SLIME_TIER_1_ACTIVE", "mob/0210100.img", "7fff84d9ffda46c0a0b4f5f223a26e18", "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", "50faf654ee5d479cb2958edce9feaef0", "dc932872543f4a02bf41e977ab79e5ad", "61c27025a8f14c478f30ede1b49758bc", "31ecb6c7cbc24599881f00cb01599f09", "8b89d86b1a9c4c4288650614c6f30e67", 30, 3, 1.5, 1.2, 9999, 0.9, 1.2, "ACTIVE", true, 1, 2.5, 0.8, 1.8, 0.5, "DROP_SLIME_TIER1", 5, true, "Aggressive upper-lane Slime with contact and active attack", 0.8, 0.35, 0.35, 2, 3],
     ],
   },
   MonsterSpawnGroups: {
@@ -157,6 +160,31 @@ export const combatSheets = {
       [1, "SPAWN_SLIME_TIER_1_CENTER", 1, 1, "CombatHarness/Lanes/CENTER/Spawn", "CombatHarness/Lanes/CENTER/BoundsLeft", "CombatHarness/Lanes/CENTER/BoundsRight", 0.4, "CENTER", 1, true, "Center-lane Slime group"],
       [2, "SPAWN_SLIME_TIER_1_UPPER", 2, 1, "CombatHarness/Lanes/UPPER/Spawn", "CombatHarness/Lanes/UPPER/BoundsLeft", "CombatHarness/Lanes/UPPER/BoundsRight", 0.4, "UPPER", 1, true, "Upper-lane active-attack Slime test group"],
       [3, "SPAWN_SLIME_TIER_1_LOWER", 1, 1, "CombatHarness/Lanes/LOWER/Spawn", "CombatHarness/Lanes/LOWER/BoundsLeft", "CombatHarness/Lanes/LOWER/BoundsRight", 0.4, "LOWER", 1, true, "Lower-lane Slime group"],
+    ],
+  },
+};
+
+export const skillSheets = {
+  SkillInfo: {
+    columns: [
+      ["SkillInfoIndex", "all", "\uC2A4\uD0AC \uC815\uC758 \uD589\uC744 \uC2DD\uBCC4\uD558\uB294 \uC778\uB371\uC2A4\uC785\uB2C8\uB2E4.", "int"],
+      ["SkillKeyEnumId", "all", "Enum.xlsx/SkillKey\uB97C \uCC38\uC870\uD558\uB294 \uC2A4\uD0AC \uD0A4\uC785\uB2C8\uB2E4.", "ref:Enums.SkillKey"],
+      ["CooldownSeconds", "server", "\uC2A4\uD0AC \uC7AC\uC0AC\uC6A9 \uB300\uAE30 \uC2DC\uAC04\uC785\uB2C8\uB2E4. 0\uC740 \uC560\uB2C8\uBA54\uC774\uC158 \uC885\uB8CC \uC9C1\uD6C4 \uC7AC\uC0AC\uC6A9\uD569\uB2C8\uB2E4.", "float"],
+      ["DamageCoefficientPermille", "server", "\uC2DC\uC804\uC790 \uACF5\uACA9\uB825\uC5D0 \uACF1\uD560 \uB300\uBBF8\uC9C0 \uCC9C\uBD84\uC728\uC785\uB2C8\uB2E4.", "int"],
+      ["CastRangeX", "server", "\uC2A4\uD0AC\uC744 \uC2DC\uC791\uD560 \uC218 \uC788\uB294 \uAC00\uB85C \uAC70\uB9AC\uC785\uB2C8\uB2E4.", "float"],
+      ["CastRangeY", "server", "\uC2A4\uD0AC\uC744 \uC2DC\uC791\uD560 \uC218 \uC788\uB294 \uC138\uB85C \uAC70\uB9AC\uC785\uB2C8\uB2E4.", "float"],
+      ["HitOriginTypeEnumId", "server", "Enum.xlsx/SkillHitOriginType\uC744 \uCC38\uC870\uD558\uB294 \uD788\uD2B8 \uBC94\uC704 \uC2DC\uC791\uC810\uC785\uB2C8\uB2E4.", "ref:Enums.SkillHitOriginType"],
+      ["HitShapeTypeEnumId", "server", "Enum.xlsx/SkillHitShapeType\uC744 \uCC38\uC870\uD558\uB294 \uD788\uD2B8 \uBC94\uC704 \uBAA8\uC591\uC785\uB2C8\uB2E4.", "ref:Enums.SkillHitShapeType"],
+      ["HitRangeX", "server", "RECTANGLE\uC774 \uC2DC\uC791\uC810\uC5D0\uC11C \uBC14\uB77C\uBCF4\uB294 \uBC29\uD5A5\uC73C\uB85C \uD3BC\uCCD0\uC9C0\uB294 \uAC00\uB85C \uAE38\uC774\uC785\uB2C8\uB2E4.", "float"],
+      ["HitRangeY", "server", "RECTANGLE \uD788\uD2B8 \uBC94\uC704\uC758 \uC138\uB85C \uAE38\uC774\uC785\uB2C8\uB2E4.", "float"],
+      ["HitRadius", "server", "CIRCLE \uD788\uD2B8 \uBC94\uC704\uC758 \uBC18\uC9C0\uB984\uC785\uB2C8\uB2E4.", "float"],
+      ["Enabled", "all", "\uD574\uB2F9 \uC2A4\uD0AC \uC815\uC758\uB97C \uC0AC\uC6A9\uD560\uC9C0 \uC5EC\uBD80\uC785\uB2C8\uB2E4.", "bool"],
+      ["Notes", "design", "\uAE30\uD68D \uCC38\uACE0 \uBA54\uBAA8\uC785\uB2C8\uB2E4.", "string"],
+    ],
+    rows: [
+      [1, "\uD50C\uB808\uC774\uC5B4 \uAE30\uBCF8 \uACF5\uACA9", 0, 1000, 1, 1.2, "\uB098", "\uC0AC\uAC01\uD615", 1, 1.2, 0, true, "Forward rectangle basic attack"],
+      [2, "\uC2AC\uB77C\uC784 \uC811\uCD09 \uD53C\uD574", 1.5, 1000, 0.65, 1.2, "\uB098", "\uC6D0", 0, 0, 0.65, true, "Self-centered contact circle"],
+      [3, "\uC2AC\uB77C\uC784 \uB2A5\uB3D9 \uACF5\uACA9", 1.5, 1000, 0.9, 1.2, "\uB098", "\uC0AC\uAC01\uD615", 0.9, 1.2, 0, true, "Forward rectangle active attack"],
     ],
   },
 };
@@ -201,6 +229,7 @@ export const combatWorkbookSheets = {
   "Monster.xlsx": {
     MonsterDefinitions: combatSheets.MonsterDefinitions,
   },
+  "Skill.xlsx": skillSheets,
   "HuntingGround.xlsx": {
     HuntingGroundTiers: combatSheets.HuntingGroundTiers,
     MonsterSpawnGroups: combatSheets.MonsterSpawnGroups,

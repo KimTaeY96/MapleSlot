@@ -46,6 +46,10 @@ assert(playerSource.includes("self.CombatLaneKey"), "Player targeting must consu
 assert(playerSource.includes("profile.AttackHitboxHeight"), "Player hitbox height must come from Character.xlsx");
 assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && playerSource.includes("profile.AttackHitDelaySeconds") && playerSource.includes("profile.HitAnimationDurationSeconds"), "Player action timing must come from Character.xlsx");
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from HuntingGround.xlsx");
+assert(playerSource.includes("LadderMountWorldY = selfPosition.y"), "Ladder entry must preserve the player's current world Y");
+assert(playerSource.includes("CreateAttackShape"), "Player attacks must build their hit shape from SkillInfo");
+assert(playerSource.includes("origin.x + direction * self.AttackHitRangeX * 0.5"), "Player rectangle attacks must extend forward from their origin");
+assert(playerSource.includes("AttackFacingDirectionX"), "Player skill direction must lock onto its target");
 assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
 assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
 assert(playerSource.includes("climbDirection > 0 and selfPosition.y >= targetY"), "Upward climbing must reach the platform before releasing the ladder");
@@ -66,6 +70,8 @@ assert(playerSource.includes("PendingHitReaction") && playerSource.includes("Han
 assert(playerSource.includes("FinishAttackAnimation") && playerSource.includes("FinishHitAnimation"), "Player retained action states must be released explicitly");
 
 const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
+assert(movementDriverSource.includes("AppliedLadderMountSequence"), "Client movement must apply each ladder mount correction once");
+assert(movementDriverSource.includes("controller.LookDirectionX = autoBattle.AttackFacingDirectionX"), "Client attack animation must face the locked target direction");
 assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
 assert(movementDriverSource.includes("ActionClimb"), "Player movement driver must mount Maker-authored ladders through PlayerControllerComponent");
 assert(movementDriverSource.includes('MovementIntent == "HORIZONTAL"'), "Player movement driver must consume horizontal movement intent");
@@ -75,6 +81,8 @@ assert(movementDriverSource.includes('autoBattle.ActionPhase == "ATTACK"') && mo
 assert(movementDriverSource.includes("AlwaysMovingState = true"), "Player horizontal movement must preserve MOVE animation without manual input");
 
 const monsterAttackSource = fs.readFileSync(path.join(combatDir, "CombatMonsterAttack.mlua"), "utf8");
+assert(monsterAttackSource.includes("HitOriginTypeEnumId"), "Monster attacks must honor SELF/TARGET SkillInfo origins");
+assert(monsterAttackSource.includes("HitShapeTypeEnumId"), "Monster attacks must honor CIRCLE/RECTANGLE SkillInfo shapes");
 assert(monsterAttackSource.includes("CollisionGroups.Player"), "Monster attacks must target the Player collision group");
 assert(monsterAttackSource.includes("definition.AttackHitboxHeight"), "Monster hitbox height must come from Monster.xlsx");
 assert(monsterAttackSource.includes("HandleTriggerStayEvent"), "Monster contact damage must originate from body overlap events");
@@ -135,6 +143,8 @@ assert(tableSource.includes('AttackAnimationDurationSeconds = 0.8') && tableSour
 assert(tableSource.includes('HitAnimationDurationSeconds = 0.35'), "Generated runtime must contain monster hit animation timing");
 assert(tableSource.includes('["UPPER"]') && tableSource.includes('["CENTER"]') && tableSource.includes('["LOWER"]'), "Generated runtime must contain all three combat lanes");
 assert(tableSource.includes('LadderKey = "ladder-3"') && tableSource.includes('LadderKey = "ladder-3_1"'), "Generated runtime must contain both Maker-authored ladder routes");
+assert(tableSource.includes('SkillKeyEnumId = "PLAYER_BASIC_ATTACK"'), "Generated runtime must contain the player basic SkillInfo row");
+assert(tableSource.includes('HitOriginTypeEnumId = "SELF"') && tableSource.includes('HitShapeTypeEnumId = "RECTANGLE"'), "Generated runtime must contain resolved skill hit enums");
 assert(tableSource.includes('AttackMode = "CONTACT"') && tableSource.includes('ContactMoveThroughSeconds = 0.5'), "Generated runtime must contain contact-damage behavior");
 assert(tableSource.includes('MonsterKey = "SLIME_TIER_1_ACTIVE"') && tableSource.includes('AttackMode = "ACTIVE"'), "Generated runtime must contain the upper-lane active attack test definition");
 assert(tableSource.includes('MonsterDefinitionIndex = 2') && tableSource.includes('LaneKey = "UPPER"'), "Upper spawn group must reference the active attack definition");

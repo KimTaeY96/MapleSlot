@@ -42,10 +42,41 @@ function resolveDropGroup(drop, dropGroupId, random = Math.random) {
   return grants;
 }
 
+function buildSkillHitArea(skill, caster, target, facingDirectionX) {
+  const origin = String(skill.HitOriginTypeEnumId) === "TARGET" ? target : caster;
+  if (String(skill.HitShapeTypeEnumId) === "CIRCLE") {
+    return { shape: "CIRCLE", origin: { ...origin }, radius: Number(skill.HitRadius) };
+  }
+  const direction = Number(facingDirectionX) >= 0 ? 1 : -1;
+  const width = Number(skill.HitRangeX);
+  const height = Number(skill.HitRangeY);
+  return {
+    shape: "RECTANGLE",
+    origin: { ...origin },
+    direction,
+    width,
+    height,
+    center: { x: Number(origin.x) + direction * width / 2, y: Number(origin.y) },
+  };
+}
+
+function isPointInsideSkillHitArea(area, point) {
+  if (area.shape === "CIRCLE") {
+    const dx = Number(point.x) - Number(area.origin.x);
+    const dy = Number(point.y) - Number(area.origin.y);
+    return dx * dx + dy * dy <= area.radius * area.radius;
+  }
+  const halfWidth = area.width / 2;
+  const halfHeight = area.height / 2;
+  return Math.abs(Number(point.x) - area.center.x) <= halfWidth
+    && Math.abs(Number(point.y) - area.center.y) <= halfHeight;
+}
+
 class CombatSimulator {
-  constructor({ config, playerProfile, monsterDefinition, drop, random = Math.random }) {
+  constructor({ config, playerProfile, playerSkill, monsterDefinition, drop, random = Math.random }) {
     this.config = config;
     this.playerProfile = playerProfile;
+    this.playerSkill = playerSkill;
     this.monsterDefinition = monsterDefinition;
     this.drop = drop;
     this.random = random;
@@ -62,7 +93,9 @@ class CombatSimulator {
     if (this.playerState === "DEAD_WAIT") return [];
     if (this.monsterDeathResolved) return [];
     if (String(monsterLaneKey) !== String(this.playerProfile.BasicAttackLaneKey)) return [];
-    this.monsterHp = Math.max(0, this.monsterHp - Number(this.playerProfile.AttackPower));
+    const coefficient = Number(this.playerSkill?.DamageCoefficientPermille ?? 1000);
+    const damage = Math.floor(Number(this.playerProfile.AttackPower) * coefficient / 1000);
+    this.monsterHp = Math.max(0, this.monsterHp - damage);
     if (this.monsterHp > 0) return [];
     this.monsterDeathResolved = true;
     const grants = resolveDropGroup(this.drop, this.monsterDefinition.DropGroupId, this.random);
@@ -93,7 +126,9 @@ class CombatSimulator {
 
 module.exports = {
   CombatSimulator,
+  buildSkillHitArea,
   createSeededRandom,
+  isPointInsideSkillHitArea,
   resolveDropGroup,
   rollInclusive,
 };

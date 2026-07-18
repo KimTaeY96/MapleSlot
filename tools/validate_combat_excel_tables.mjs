@@ -75,6 +75,33 @@ function unique(rows, key, label) {
   return seen;
 }
 
+function resolveEnumReferences(combat, enumRows) {
+  const enumLookup = new Map();
+  for (const row of enumRows) {
+    const typeName = String(row.EnumTypeName);
+    if (!enumLookup.has(typeName)) enumLookup.set(typeName, new Map());
+    const values = enumLookup.get(typeName);
+    values.set(String(row.EnumId), String(row.EnumId));
+    values.set(String(row.EnumKo), String(row.EnumId));
+  }
+  for (const schemas of Object.values(combatWorkbookSheets)) {
+    for (const [sheetName, schema] of Object.entries(schemas)) {
+      for (const [columnName, , , columnType] of schema.columns) {
+        const match = /^ref:Enums\.(.+)$/.exec(String(columnType));
+        if (!match) continue;
+        const values = enumLookup.get(match[1]);
+        if (!values) fail(`Enum.xlsx is missing enum group ${match[1]}`);
+        for (const row of combat[sheetName] ?? []) {
+          const resolved = values.get(String(row[columnName]));
+          if (!resolved) fail(`${sheetName}.${columnName} has unresolved ${match[1]} value ${JSON.stringify(row[columnName])}`);
+          row[columnName] = resolved;
+        }
+      }
+    }
+  }
+  return enumLookup;
+}
+
 export async function loadAndValidateCombatTables(options = {}) {
   const targetExcelDir = options.excelDir ? path.resolve(options.excelDir) : excelDir;
   const targetSlotMachinePath = options.slotMachinePath ? path.resolve(options.slotMachinePath) : slotMachinePath;
@@ -82,6 +109,13 @@ export async function loadAndValidateCombatTables(options = {}) {
     .map(([filename, schemas]) => readWorkbook(targetExcelDir, filename, schemas)));
   const combat = Object.assign({}, ...combatParts);
   const drop = await readWorkbook(targetExcelDir, "Drop.xlsx", dropSheets);
+  const enumRows = await readSheetRows(path.join(targetExcelDir, "Enum.xlsx"), "Enums");
+  const gameStringRows = await readSheetRows(path.join(targetExcelDir, "GameString.xlsx"), "GameString");
+  const gameStringIndexes = unique(gameStringRows, "Index", "GameString");
+  for (const row of enumRows) {
+    if (!gameStringIndexes.has(String(row.EnumString))) fail(`${row.EnumTypeName}.${row.EnumId} has dangling EnumString ${row.EnumString}`);
+  }
+  const enumLookup = resolveEnumReferences(combat, enumRows);
   const baseBetRows = await readSheetRows(targetSlotMachinePath, "BaseBetRegions");
   const baseBetIndexes = unique(baseBetRows, "BaseBetRegionsIndex", "BaseBetRegions");
 
@@ -123,6 +157,8 @@ export async function loadAndValidateCombatTables(options = {}) {
   unique(combat.CombatLadders, "CombatLaddersIndex", "CombatLadders");
   const monsterIndexes = unique(combat.MonsterDefinitions, "MonsterDefinitionsIndex", "MonsterDefinitions");
   unique(combat.MonsterDefinitions, "MonsterKey", "MonsterDefinitions");
+  const skillIndexes = unique(combat.SkillInfo, "SkillInfoIndex", "SkillInfo");
+  unique(combat.SkillInfo, "SkillKeyEnumId", "SkillInfo");
   const spawnIndexes = unique(combat.MonsterSpawnGroups, "MonsterSpawnGroupsIndex", "MonsterSpawnGroups");
   unique(combat.MonsterSpawnGroups, "SpawnGroupKey", "MonsterSpawnGroups");
   const dropGroupIds = unique(drop.DropGroups, "DropGroupId", "DropGroups");
@@ -132,6 +168,24 @@ export async function loadAndValidateCombatTables(options = {}) {
   if (!tierIndexes.has(String(config.InitialHuntingGroundTierIndex))) fail("InitialHuntingGroundTierIndex is dangling");
 
   const supportedLaneKeys = new Set(["UPPER", "CENTER", "LOWER"]);
+  const supportedSkillOrigins = new Set(enumLookup.get("SkillHitOriginType")?.values() ?? []);
+  const supportedSkillShapes = new Set(enumLookup.get("SkillHitShapeType")?.values() ?? []);
+  for (const row of combat.SkillInfo.filter((entry) => enabled(entry.Enabled))) {
+    if (number(row.CooldownSeconds, `${row.SkillKeyEnumId}.CooldownSeconds`) < 0) fail(`${row.SkillKeyEnumId}.CooldownSeconds must be >= 0`);
+    if (number(row.DamageCoefficientPermille, `${row.SkillKeyEnumId}.DamageCoefficientPermille`) <= 0) fail(`${row.SkillKeyEnumId}.DamageCoefficientPermille must be > 0`);
+    if (number(row.CastRangeX, `${row.SkillKeyEnumId}.CastRangeX`) < 0 || number(row.CastRangeY, `${row.SkillKeyEnumId}.CastRangeY`) < 0) {
+      fail(`${row.SkillKeyEnumId} cast ranges must be >= 0`);
+    }
+    if (!supportedSkillOrigins.has(String(row.HitOriginTypeEnumId))) fail(`${row.SkillKeyEnumId}.HitOriginTypeEnumId is invalid`);
+    if (!supportedSkillShapes.has(String(row.HitShapeTypeEnumId))) fail(`${row.SkillKeyEnumId}.HitShapeTypeEnumId is invalid`);
+    if (String(row.HitShapeTypeEnumId) === "CIRCLE") {
+      if (number(row.HitRadius, `${row.SkillKeyEnumId}.HitRadius`) <= 0) fail(`${row.SkillKeyEnumId}.HitRadius must be > 0 for CIRCLE`);
+    } else if (String(row.HitShapeTypeEnumId) === "RECTANGLE") {
+      if (number(row.HitRangeX, `${row.SkillKeyEnumId}.HitRangeX`) <= 0 || number(row.HitRangeY, `${row.SkillKeyEnumId}.HitRangeY`) <= 0) {
+        fail(`${row.SkillKeyEnumId} rectangle ranges must be > 0`);
+      }
+    }
+  }
   const laneIdentity = new Set();
   for (const row of combat.CombatLanes.filter((entry) => enabled(entry.Enabled))) {
     const tierIndex = String(row.HuntingGroundTierIndex);
@@ -235,6 +289,7 @@ export async function loadAndValidateCombatTables(options = {}) {
     if (attackHitDelay < 0 || attackHitDelay >= attackDuration) fail(`${row.ProfileKey}.AttackHitDelaySeconds must be >= 0 and < AttackAnimationDurationSeconds`);
     if (hitDuration <= 0) fail(`${row.ProfileKey}.HitAnimationDurationSeconds must be > 0`);
     if (Number(row.AttackIntervalSeconds) < attackDuration) fail(`${row.ProfileKey}.AttackIntervalSeconds must be >= AttackAnimationDurationSeconds`);
+    if (!skillIndexes.has(String(row.BasicAttackSkillInfoIndex))) fail(`${row.ProfileKey}.BasicAttackSkillInfoIndex is dangling`);
   }
 
   for (const row of combat.MonsterDefinitions.filter((entry) => enabled(entry.Enabled))) {
@@ -258,6 +313,13 @@ export async function loadAndValidateCombatTables(options = {}) {
     if (attackHitDelay < 0 || attackHitDelay >= attackDuration) fail(`${row.MonsterKey}.AttackHitDelaySeconds must be >= 0 and < AttackAnimationDurationSeconds`);
     if (hitDuration <= 0) fail(`${row.MonsterKey}.HitAnimationDurationSeconds must be > 0`);
     if (Number(row.AttackIntervalSeconds) < attackDuration) fail(`${row.MonsterKey}.AttackIntervalSeconds must be >= AttackAnimationDurationSeconds`);
+    if (!skillIndexes.has(String(row.ContactSkillInfoIndex))) fail(`${row.MonsterKey}.ContactSkillInfoIndex is dangling`);
+    if (String(row.AttackMode) === "ACTIVE" && !skillIndexes.has(String(row.ActiveSkillInfoIndex))) {
+      fail(`${row.MonsterKey}.ActiveSkillInfoIndex is dangling`);
+    }
+    if (String(row.AttackMode) === "CONTACT" && !isBlank(row.ActiveSkillInfoIndex)) {
+      fail(`${row.MonsterKey} CONTACT mode must not define ActiveSkillInfoIndex`);
+    }
   }
 
   for (const row of combat.MonsterSpawnGroups.filter((entry) => enabled(entry.Enabled))) {

@@ -9,6 +9,7 @@ script CombatMonsterAI extends Component
     property string AttackMode = "CONTACT"
     property boolean Aggressive = false
     property number AttackRange = 0.65
+    property number AttackCastRangeY = 1.2
     property number ChaseRange = 6
     property number AttackCooldown = 1.5
     property number AttackAnimationDurationSeconds = 0.8
@@ -34,6 +35,7 @@ script CombatMonsterAI extends Component
     @HideFromInspector property boolean PendingHitReaction = false
     @HideFromInspector property number MoveDirection = 1
     @HideFromInspector property number ContactDirection = 1
+    @HideFromInspector property number AttackFacingDirection = 1
     @HideFromInspector property number BoundsLeftX = -1000
     @HideFromInspector property number BoundsRightX = 1000
     @HideFromInspector property boolean DeathPlayed = false
@@ -62,8 +64,14 @@ script CombatMonsterAI extends Component
         self.AttackMode = definition.AttackMode
         self.Aggressive = definition.Aggressive
         self.AttackRange = definition.AttackRange
+        local activeSkill = _CombatTableRuntime:GetSkillInfo(definition.ActiveSkillInfoIndex or 0)
+        if activeSkill ~= nil then
+            self.AttackRange = activeSkill.CastRangeX
+            self.AttackCastRangeY = activeSkill.CastRangeY
+            self.AttackCooldown = activeSkill.CooldownSeconds
+        end
         self.ChaseRange = definition.ChaseRange
-        self.AttackCooldown = definition.AttackIntervalSeconds
+        if activeSkill == nil then self.AttackCooldown = definition.AttackIntervalSeconds end
         self.AttackAnimationDurationSeconds = definition.AttackAnimationDurationSeconds
         self.AttackHitDelaySeconds = definition.AttackHitDelaySeconds
         self.HitAnimationDurationSeconds = definition.HitAnimationDurationSeconds
@@ -118,7 +126,7 @@ script CombatMonsterAI extends Component
             if distance > self.ChaseRange then
                 self.TargetEntity = nil
                 self:StartIdle()
-            elseif self.ActiveAttackEnabled and distance <= self.AttackRange then
+            elseif self.ActiveAttackEnabled and self:IsWithinActiveSkillCast(self.TargetEntity) then
                 self.AIState = "ATTACK_READY"
                 self:StopMovement()
                 if self.AttackTimer <= 0 then self:AttackPlayer(self.TargetEntity) end
@@ -160,6 +168,10 @@ script CombatMonsterAI extends Component
         self.ActionPhase = "ATTACK"
         self.ActionElapsedSeconds = 0
         self.AttackActionTargetEntity = target
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        self.AttackFacingDirection = (b.x >= a.x) and 1 or -1
+        self:FaceDirection(self.AttackFacingDirection)
         self.AttackHitResolved = false
         self.PendingHitReaction = false
         self.AIState = "ATTACK"
@@ -197,9 +209,9 @@ script CombatMonsterAI extends Component
         if self.ActionPhase ~= "ATTACK" or self.AttackHitResolved then return end
         self.AttackHitResolved = true
         local target = self.AttackActionTargetEntity
-        if not self:IsValidPlayer(target) or self:DistanceTo(target) > self.AttackRange then return end
+        if not self:IsValidPlayer(target) or self:IsWithinActiveSkillCast(target) == false then return end
         local attack = self.Entity:GetComponent("script.CombatMonsterAttack")
-        if isvalid(attack) then attack:TryActiveAttack(target) end
+        if isvalid(attack) then attack:TryActiveAttack(target, self.AttackFacingDirection) end
     end
 
     @ExecSpace("ServerOnly")
@@ -353,6 +365,15 @@ script CombatMonsterAI extends Component
     end
 
     @ExecSpace("ServerOnly")
+    method boolean IsWithinActiveSkillCast(Entity target)
+        -- Checks the SkillInfo cast extents without changing the locked attack direction.
+        if not self:IsValidPlayer(target) then return false end
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        return math.abs(b.x - a.x) <= self.AttackRange and math.abs(b.y - a.y) <= self.AttackCastRangeY
+    end
+
+    @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
         -- Converts a target position into bounded horizontal chase movement.
         local a = self.Entity.TransformComponent.WorldPosition
@@ -372,6 +393,14 @@ script CombatMonsterAI extends Component
         transform.Scale = Vector3(math.abs(scale.x) * -direction, scale.y, scale.z)
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement:MoveToDirection(Vector2(direction, 0), delta) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void FaceDirection(number direction)
+        -- Mirrors the sprite toward a skill target without applying movement.
+        local transform = self.Entity.TransformComponent
+        local scale = transform.Scale
+        transform.Scale = Vector3(math.abs(scale.x) * -((direction >= 0) and 1 or -1), scale.y, scale.z)
     end
 
     @ExecSpace("ServerOnly")

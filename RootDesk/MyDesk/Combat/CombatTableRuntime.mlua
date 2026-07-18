@@ -6,6 +6,7 @@ script CombatTableRuntime extends Logic
     property any combatLanesByTier = nil
     property any combatLaddersByTier = nil
     property any monsterDefinitions = nil
+    property any skillInfo = nil
     property any monsterSpawnGroups = nil
     property any monsterSpawnGroupsByTier = nil
     property any dropGroups = nil
@@ -26,7 +27,7 @@ script CombatTableRuntime extends Logic
             [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerStatsProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
         }
         self.playerStatsProfiles = {
-            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Map-wide ladder auto-battle profile", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5 },
+            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Map-wide ladder auto-battle profile", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5, BasicAttackSkillInfoIndex = 1 },
         }
         self.combatLanesByTier = {
             [1] = {
@@ -42,8 +43,13 @@ script CombatTableRuntime extends Logic
             },
         }
         self.monsterDefinitions = {
-            [1] = { MonsterDefinitionsIndex = 1, MonsterKey = "SLIME_TIER_1", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 6, AttackRange = 0.65, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 5, Enabled = true, Notes = "Passive contact-damage Tier 1 Slime", AttackHitboxHeight = 1.2, AttackAnimationRuid = nil, AttackMode = "CONTACT", Aggressive = false, IdleMinSeconds = 1, IdleMaxSeconds = 2.5, WanderMinSeconds = 0.8, WanderMaxSeconds = 1.8, ContactMoveThroughSeconds = 0.5, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.35 },
-            [2] = { MonsterDefinitionsIndex = 2, MonsterKey = "SLIME_TIER_1_ACTIVE", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 9999, AttackRange = 0.9, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 5, Enabled = true, Notes = "Aggressive upper-lane Slime with contact and active attack", AttackHitboxHeight = 1.2, AttackAnimationRuid = "8b89d86b1a9c4c4288650614c6f30e67", AttackMode = "ACTIVE", Aggressive = true, IdleMinSeconds = 1, IdleMaxSeconds = 2.5, WanderMinSeconds = 0.8, WanderMaxSeconds = 1.8, ContactMoveThroughSeconds = 0.5, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.35 },
+            [1] = { MonsterDefinitionsIndex = 1, MonsterKey = "SLIME_TIER_1", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 6, AttackRange = 0.65, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 5, Enabled = true, Notes = "Passive contact-damage Tier 1 Slime", AttackHitboxHeight = 1.2, AttackAnimationRuid = nil, AttackMode = "CONTACT", Aggressive = false, IdleMinSeconds = 1, IdleMaxSeconds = 2.5, WanderMinSeconds = 0.8, WanderMaxSeconds = 1.8, ContactMoveThroughSeconds = 0.5, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.35, ContactSkillInfoIndex = 2, ActiveSkillInfoIndex = nil },
+            [2] = { MonsterDefinitionsIndex = 2, MonsterKey = "SLIME_TIER_1_ACTIVE", ResourcePackId = "mob/0210100.img", ResourceAssetGuid = "7fff84d9ffda46c0a0b4f5f223a26e18", ModelPath = "RootDesk/MyDesk/Models/Monsters/SlimeTier1.model", StandAnimationRuid = "50faf654ee5d479cb2958edce9feaef0", MoveAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", HitAnimationRuid = "61c27025a8f14c478f30ede1b49758bc", DieAnimationRuid = "31ecb6c7cbc24599881f00cb01599f09", MaxHp = 30, AttackPower = 3, AttackIntervalSeconds = 1.5, MoveSpeed = 1.2, ChaseRange = 9999, AttackRange = 0.9, DropGroupId = "DROP_SLIME_TIER1", RespawnSeconds = 5, Enabled = true, Notes = "Aggressive upper-lane Slime with contact and active attack", AttackHitboxHeight = 1.2, AttackAnimationRuid = "8b89d86b1a9c4c4288650614c6f30e67", AttackMode = "ACTIVE", Aggressive = true, IdleMinSeconds = 1, IdleMaxSeconds = 2.5, WanderMinSeconds = 0.8, WanderMaxSeconds = 1.8, ContactMoveThroughSeconds = 0.5, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.35, ContactSkillInfoIndex = 2, ActiveSkillInfoIndex = 3 },
+        }
+        self.skillInfo = {
+            [1] = { SkillInfoIndex = 1, SkillKeyEnumId = "PLAYER_BASIC_ATTACK", CooldownSeconds = 0, DamageCoefficientPermille = 1000, CastRangeX = 1, CastRangeY = 1.2, HitOriginTypeEnumId = "SELF", HitShapeTypeEnumId = "RECTANGLE", HitRangeX = 1, HitRangeY = 1.2, HitRadius = 0, Enabled = true, Notes = "Forward rectangle basic attack" },
+            [2] = { SkillInfoIndex = 2, SkillKeyEnumId = "SLIME_CONTACT_DAMAGE", CooldownSeconds = 1.5, DamageCoefficientPermille = 1000, CastRangeX = 0.65, CastRangeY = 1.2, HitOriginTypeEnumId = "SELF", HitShapeTypeEnumId = "CIRCLE", HitRangeX = 0, HitRangeY = 0, HitRadius = 0.65, Enabled = true, Notes = "Self-centered contact circle" },
+            [3] = { SkillInfoIndex = 3, SkillKeyEnumId = "SLIME_ACTIVE_ATTACK", CooldownSeconds = 1.5, DamageCoefficientPermille = 1000, CastRangeX = 0.9, CastRangeY = 1.2, HitOriginTypeEnumId = "SELF", HitShapeTypeEnumId = "RECTANGLE", HitRangeX = 0.9, HitRangeY = 1.2, HitRadius = 0, Enabled = true, Notes = "Forward rectangle active attack" },
         }
         self.monsterSpawnGroups = {
             [1] = { MonsterSpawnGroupsIndex = 1, SpawnGroupKey = "SPAWN_SLIME_TIER_1_CENTER", MonsterDefinitionIndex = 1, SpawnCount = 1, SpawnAnchorKey = "CombatHarness/Lanes/CENTER/Spawn", BoundsLeftAnchorKey = "CombatHarness/Lanes/CENTER/BoundsLeft", BoundsRightAnchorKey = "CombatHarness/Lanes/CENTER/BoundsRight", SpawnYOffset = 0.4, Enabled = true, Notes = "Center-lane Slime group", LaneKey = "CENTER", HuntingGroundTierIndex = 1 },
@@ -135,6 +141,15 @@ script CombatTableRuntime extends Logic
         -- Resolves a monster definition by its numeric index.
         self:EnsureLoaded()
         return self.monsterDefinitions[index]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetSkillInfo(integer index)
+        -- Resolves one enabled attack or skill definition by its numeric index.
+        self:EnsureLoaded()
+        local skill = self.skillInfo[index]
+        if skill == nil or skill.Enabled == false then return nil end
+        return skill
     end
 
     @ExecSpace("ServerOnly")

@@ -3,7 +3,13 @@
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
-const { CombatSimulator, createSeededRandom, resolveDropGroup } = require("./combat_simulator_core.cjs");
+const {
+  CombatSimulator,
+  buildSkillHitArea,
+  createSeededRandom,
+  isPointInsideSkillHitArea,
+  resolveDropGroup,
+} = require("./combat_simulator_core.cjs");
 
 async function main() {
   const excelArg = process.argv.indexOf("--excel-dir");
@@ -18,7 +24,15 @@ async function main() {
   const player = combat.PlayerStatsProfiles.find((row) => Number(row.PlayerStatsProfilesIndex) === 1);
   const monster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 1);
   const activeMonster = combat.MonsterDefinitions.find((row) => Number(row.MonsterDefinitionsIndex) === 2);
+  const playerSkill = combat.SkillInfo.find((row) => Number(row.SkillInfoIndex) === Number(player?.BasicAttackSkillInfoIndex));
+  const contactSkill = combat.SkillInfo.find((row) => Number(row.SkillInfoIndex) === Number(monster?.ContactSkillInfoIndex));
+  const activeSkill = combat.SkillInfo.find((row) => Number(row.SkillInfoIndex) === Number(activeMonster?.ActiveSkillInfoIndex));
   assert(player && monster && activeMonster, "Initial contact and upper active monster data must exist");
+  assert(playerSkill && contactSkill && activeSkill, "Player, contact, and active SkillInfo rows must resolve");
+  assert.equal(Number(playerSkill.CooldownSeconds), 0, "Basic attack repeats when its animation completes");
+  assert.equal(playerSkill.HitOriginTypeEnumId, "SELF");
+  assert.equal(playerSkill.HitShapeTypeEnumId, "RECTANGLE");
+  assert.equal(contactSkill.HitShapeTypeEnumId, "CIRCLE");
   assert.equal(Number(player.AggroRange), 9999, "Player acquisition must cover the whole test map");
   assert.equal(Number(player.AttackAnimationDurationSeconds), 0.8);
   assert.equal(Number(player.AttackHitDelaySeconds), 0.35);
@@ -46,13 +60,24 @@ async function main() {
   const tierLadders = combat.CombatLadders.filter((row) => Number(row.HuntingGroundTierIndex) === 1 && row.Enabled);
   assert.deepEqual(tierLadders.map((row) => `${row.LowerLaneKey}>${row.UpperLaneKey}`).sort(), ["CENTER>UPPER", "LOWER>CENTER"]);
 
-  const laneGuard = new CombatSimulator({ config, playerProfile: player, monsterDefinition: monster, drop, random: createSeededRandom(1) });
+  const forwardArea = buildSkillHitArea(playerSkill, { x: 0, y: 0 }, { x: 0.8, y: 0 }, 1);
+  assert.deepEqual(forwardArea.center, { x: 0.5, y: 0 });
+  assert.equal(isPointInsideSkillHitArea(forwardArea, { x: 0.8, y: 0 }), true);
+  assert.equal(isPointInsideSkillHitArea(forwardArea, { x: -0.1, y: 0 }), false, "Forward rectangle must not extend behind SELF");
+  const leftArea = buildSkillHitArea(playerSkill, { x: 0, y: 0 }, { x: -0.8, y: 0 }, -1);
+  assert.equal(isPointInsideSkillHitArea(leftArea, { x: -0.8, y: 0 }), true);
+  assert.equal(isPointInsideSkillHitArea(leftArea, { x: 0.1, y: 0 }), false);
+  const targetCircle = buildSkillHitArea({ ...contactSkill, HitOriginTypeEnumId: "TARGET" }, { x: 0, y: 0 }, { x: 3, y: 2 }, 1);
+  assert.deepEqual(targetCircle.origin, { x: 3, y: 2 }, "TARGET origin must be centered on the target");
+  assert.equal(isPointInsideSkillHitArea(targetCircle, { x: 3.5, y: 2 }), true);
+
+  const laneGuard = new CombatSimulator({ config, playerProfile: player, playerSkill, monsterDefinition: monster, drop, random: createSeededRandom(1) });
   const untouchedHp = laneGuard.monsterHp;
   assert.deepEqual(laneGuard.playerAttack("UPPER"), [], "Initial basic attack must not hit the upper lane");
   assert.deepEqual(laneGuard.playerAttack("LOWER"), [], "Initial basic attack must not hit the lower lane");
   assert.equal(laneGuard.monsterHp, untouchedHp, "Off-lane attacks must not change monster HP");
 
-  const simulator = new CombatSimulator({ config, playerProfile: player, monsterDefinition: monster, drop, random: createSeededRandom(777) });
+  const simulator = new CombatSimulator({ config, playerProfile: player, playerSkill, monsterDefinition: monster, drop, random: createSeededRandom(777) });
   assert.deepEqual(simulator.playerAttack(), []);
   assert.deepEqual(simulator.playerAttack(), []);
   const grants = simulator.playerAttack();

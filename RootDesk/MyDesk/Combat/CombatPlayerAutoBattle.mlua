@@ -12,7 +12,6 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property string CombatCameraAnchorKey = "CombatHarness/CameraAnchor"
     @HideFromInspector property Entity TargetEntity = nil
     @HideFromInspector property Entity RetaliationTargetEntity = nil
-    @HideFromInspector property any AttackShape = nil
     @HideFromInspector property number AttackTimer = 0
     @HideFromInspector property number AttackPower = 1
     @HideFromInspector property number AttackIntervalSeconds = 1
@@ -21,6 +20,15 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number HitAnimationDurationSeconds = 0.5
     @HideFromInspector property number AttackRange = 1
     @HideFromInspector property number AttackHitboxHeight = 1.2
+    @HideFromInspector property integer BasicAttackSkillInfoIndex = 1
+    @HideFromInspector property integer AttackDamageCoefficientPermille = 1000
+    @HideFromInspector property number AttackCastRangeX = 1
+    @HideFromInspector property number AttackCastRangeY = 1.2
+    @HideFromInspector property string AttackHitOriginType = "SELF"
+    @HideFromInspector property string AttackHitShapeType = "RECTANGLE"
+    @HideFromInspector property number AttackHitRangeX = 1
+    @HideFromInspector property number AttackHitRangeY = 1.2
+    @HideFromInspector property number AttackHitRadius = 0
     @HideFromInspector property number MoveSpeed = 1
     @HideFromInspector property number AggroRange = 5
     @HideFromInspector property number LadderApproachTolerance = 0.12
@@ -36,9 +44,14 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property any PreviousCameraComponent = nil
     @HideFromInspector property boolean CameraSwitched = false
     @HideFromInspector property boolean LadderErrorLogged = false
+    @HideFromInspector property string ActiveLadderKey = ""
     @Sync @HideFromInspector property string MovementIntent = "STOP"
     @Sync @HideFromInspector property number MoveDirectionX = 0
     @Sync @HideFromInspector property number ClimbDirectionY = 0
+    @Sync @HideFromInspector property number AttackFacingDirectionX = 1
+    @Sync @HideFromInspector property number LadderMountWorldX = 0
+    @Sync @HideFromInspector property number LadderMountWorldY = 0
+    @Sync @HideFromInspector property integer LadderMountSequence = 0
 
     method void OnBeginPlay()
         -- Loads the active profile and locks basic combat to its configured lane.
@@ -61,6 +74,21 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.HitAnimationDurationSeconds = profile.HitAnimationDurationSeconds
         self.AttackRange = profile.AttackRange
         self.AttackHitboxHeight = profile.AttackHitboxHeight
+        self.BasicAttackSkillInfoIndex = profile.BasicAttackSkillInfoIndex
+        local basicAttack = _CombatTableRuntime:GetSkillInfo(self.BasicAttackSkillInfoIndex)
+        if basicAttack == nil then
+            log_error("[Combat] Missing enabled basic attack SkillInfo: " .. tostring(self.BasicAttackSkillInfoIndex))
+            return
+        end
+        self.AttackIntervalSeconds = basicAttack.CooldownSeconds
+        self.AttackDamageCoefficientPermille = basicAttack.DamageCoefficientPermille
+        self.AttackCastRangeX = basicAttack.CastRangeX
+        self.AttackCastRangeY = basicAttack.CastRangeY
+        self.AttackHitOriginType = basicAttack.HitOriginTypeEnumId
+        self.AttackHitShapeType = basicAttack.HitShapeTypeEnumId
+        self.AttackHitRangeX = basicAttack.HitRangeX
+        self.AttackHitRangeY = basicAttack.HitRangeY
+        self.AttackHitRadius = basicAttack.HitRadius
         self.MoveSpeed = profile.MoveSpeed
         self.AggroRange = profile.AggroRange
         self.CombatLaneKey = profile.BasicAttackLaneKey
@@ -68,7 +96,6 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.LadderExitTolerance = profile.LadderExitTolerance
         self.CriticalChancePermille = profile.CriticalChancePermille
         self.CriticalDamagePermille = profile.CriticalDamagePermille
-        self.AttackShape = BoxShape(Vector2.zero, Vector2(self.AttackRange * 2, self.AttackHitboxHeight), 0)
 
         local player = self.Entity.PlayerComponent
         if isvalid(player) then
@@ -160,6 +187,7 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.CombatState = "DEAD_WAIT"
             self.TargetEntity = nil
             self.RetaliationTargetEntity = nil
+            self.ActiveLadderKey = ""
             self:StopMovement()
             return
         elseif self.CombatState == "DEAD_WAIT" then
@@ -182,6 +210,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         if not self:IsValidTarget(self.TargetEntity) then
             self.CombatState = "ACQUIRE"
+            self.ActiveLadderKey = ""
             self:StopMovement()
             return
         end
@@ -193,8 +222,7 @@ script CombatPlayerAutoBattle extends AttackComponent
             return
         end
 
-        local distance = self:DistanceTo(self.TargetEntity)
-        if distance > self.AttackRange then
+        if self:IsTargetWithinSkillCast(self.TargetEntity) == false then
             self.CombatState = "CHASE"
             self:MoveToward(self.TargetEntity, delta)
             return
@@ -257,6 +285,15 @@ script CombatPlayerAutoBattle extends AttackComponent
     end
 
     @ExecSpace("ServerOnly")
+    method boolean IsTargetWithinSkillCast(Entity target)
+        -- Uses independent X/Y cast extents so hit geometry and skill-start distance share one contract.
+        if not self:IsValidTarget(target) then return false end
+        local a = self.Entity.TransformComponent.WorldPosition
+        local b = target.TransformComponent.WorldPosition
+        return math.abs(b.x - a.x) <= self.AttackCastRangeX and math.abs(b.y - a.y) <= self.AttackCastRangeY
+    end
+
+    @ExecSpace("ServerOnly")
     method void MoveToward(Entity target, number delta)
         -- Moves horizontally toward a target on the current combat lane.
         local selfPosition = self.Entity.TransformComponent.WorldPosition
@@ -297,7 +334,8 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
         local selfPosition = self.Entity.TransformComponent.WorldPosition
         local ladderPosition = ladderEntity.TransformComponent.WorldPosition
-        local dx = ladderPosition.x - selfPosition.x
+        local ladderWorldX = ladderPosition.x + ladderEntity.ClimbableComponent.BoxOffset.x
+        local dx = ladderWorldX - selfPosition.x
         if math.abs(dx) > self.LadderApproachTolerance then
             self.CombatState = "APPROACH_LADDER"
             self:MoveHorizontal((dx >= 0) and 1 or -1, delta)
@@ -321,10 +359,19 @@ script CombatPlayerAutoBattle extends AttackComponent
             self.CombatLaneKey = nextLaneKey
             self.CombatState = "LADDER_EXIT"
             self.LadderErrorLogged = false
+            self.ActiveLadderKey = ""
             log("[Combat] Player climbed from " .. tostring(previousLaneKey) .. " to " .. tostring(nextLaneKey))
             local targetPosition = self.TargetEntity.TransformComponent.WorldPosition
             self:MoveHorizontal((targetPosition.x >= selfPosition.x) and 1 or -1, delta)
             return
+        end
+
+
+        if self.ActiveLadderKey ~= ladder.LadderKey then
+            self.ActiveLadderKey = ladder.LadderKey
+            self.LadderMountWorldX = ladderWorldX
+            self.LadderMountWorldY = selfPosition.y
+            self.LadderMountSequence = self.LadderMountSequence + 1
         end
 
         self.CombatState = "CLIMB_LADDER"
@@ -391,6 +438,9 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.ActionPhase = "ATTACK"
         self.ActionElapsedSeconds = 0
         self.AttackActionTargetEntity = self.TargetEntity
+        local selfPosition = self.Entity.TransformComponent.WorldPosition
+        local targetPosition = self.AttackActionTargetEntity.TransformComponent.WorldPosition
+        self.AttackFacingDirectionX = (targetPosition.x >= selfPosition.x) and 1 or -1
         self.AttackHitResolved = false
         self.PendingHitReaction = false
         self.AttackTimer = self.AttackIntervalSeconds
@@ -428,14 +478,24 @@ script CombatPlayerAutoBattle extends AttackComponent
         if self.ActionPhase ~= "ATTACK" or self.AttackHitResolved then return end
         self.AttackHitResolved = true
         local target = self.AttackActionTargetEntity
-        if not self:IsValidTarget(target) or self:DistanceTo(target) > self.AttackRange then return end
+        if not self:IsValidTarget(target) or self:IsTargetWithinSkillCast(target) == false then return end
         local health = target:GetComponent("script.CombatMonsterHealth")
         if not isvalid(health) or health.LaneKey ~= self.CombatLaneKey then return end
-        local a = self.Entity.TransformComponent.WorldPosition
-        local b = target.TransformComponent.WorldPosition
-        self.AttackShape.Position = Vector2((a.x + b.x) * 0.5, (a.y + b.y) * 0.5)
-        self.AttackShape.Size = Vector2(self.AttackRange * 2, self.AttackHitboxHeight)
-        self:AttackFast(self.AttackShape, "COMBAT_AUTO", CollisionGroups.Monster)
+        local attackShape = self:CreateAttackShape(target, self.AttackFacingDirectionX)
+        if attackShape ~= nil then self:AttackFast(attackShape, "COMBAT_AUTO", CollisionGroups.Monster) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method any CreateAttackShape(Entity target, number facingDirectionX)
+        -- CIRCLE is centered on the configured origin; RECTANGLE begins there and extends only forward.
+        local origin = self.Entity.TransformComponent.WorldPosition
+        if self.AttackHitOriginType == "TARGET" then origin = target.TransformComponent.WorldPosition end
+        if self.AttackHitShapeType == "CIRCLE" then
+            return CircleShape(Vector2(origin.x, origin.y), self.AttackHitRadius)
+        end
+        local direction = (facingDirectionX >= 0) and 1 or -1
+        local centerX = origin.x + direction * self.AttackHitRangeX * 0.5
+        return BoxShape(Vector2(centerX, origin.y), Vector2(self.AttackHitRangeX, self.AttackHitRangeY), 0)
     end
 
     @ExecSpace("ServerOnly")
@@ -488,6 +548,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackActionTargetEntity = nil
         self.AttackHitResolved = false
         self.PendingHitReaction = false
+        self.ActiveLadderKey = ""
     end
 
     @ExecSpace("ServerOnly")
@@ -544,7 +605,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
         -- Returns the table-backed basic attack damage.
-        return math.floor(self.AttackPower)
+        return math.floor(self.AttackPower * self.AttackDamageCoefficientPermille / 1000)
     end
 
     method boolean CalcCritical(Entity attacker, Entity defender, string attackInfo)

@@ -22,7 +22,7 @@ All target selection, lane filtering, movement intent, attack cadence, damage ac
 |---|---|---|---|
 | `ACQUIRE` | No valid target | Retaliate against the last valid damage source, otherwise select the nearest live monster across the whole map; restore all lane populations if none exist. | Same lane -> `CHASE`; other lane -> `APPROACH_LADDER`. |
 | `APPROACH_LADDER` | Target is on another floor | Move horizontally to the table-backed adjacent ladder. | Within approach tolerance -> `CLIMB_LADDER`. |
-| `CLIMB_LADDER` | Player is aligned with the ladder | Enter the native climb state and move vertically toward the adjacent lane. | Destination height reached -> `LADDER_EXIT`. |
+| `CLIMB_LADDER` | Player is aligned with the ladder | Enter the native climb state, preserve the approach Y on the first attachment frame, and move vertically toward the adjacent lane. | Destination height reached -> `LADDER_EXIT`. |
 | `LADDER_EXIT` | Adjacent lane reached | Update `CombatLaneKey` and move horizontally off the ladder. | Immediately -> `CHASE` or the next ladder route. |
 | `CHASE` | Target outside attack range | Move toward target while respecting combat bounds and foothold edges. | In range -> `ATTACK_READY`; invalid target -> `ACQUIRE`. |
 | `ATTACK_READY` | Target inside range while attack cooldown remains | Stop movement without entering the attack animation state. | Cooldown ready -> `ATTACK`; target leaves range -> `CHASE`. |
@@ -35,7 +35,8 @@ Monster controllers use `IDLE`, `WANDER`, `CHASE`, `ATTACK`, `HIT`, and `CONTACT
 
 ## Damage Contract
 
-- Attack cadence and attack power currently come from `Character.xlsx/PlayerStatsProfiles` and `Monster.xlsx/MonsterDefinitions` until the approved `Skill.xlsx` migration replaces attack timing.
+- Attack power comes from the owning player or monster profile. Cooldown, cast extents, damage coefficient, hit origin, and hit shape come from the referenced `Skill.xlsx/SkillInfo` row.
+- A skill locks its facing direction toward the selected target when the action begins. `RECTANGLE` hit areas start at `SELF` or `TARGET` and extend only along that locked facing direction; `CIRCLE` hit areas remain centered on the selected origin.
 - Attack start, impact, and completion are separate server phases. Damage is applied at `AttackHitDelaySeconds`, never on the same tick that the attack animation starts.
 - `AttackAnimationDurationSeconds` and `HitAnimationDurationSeconds` are action locks. A hit received during `ATTACK` queues `HIT` after attack completion instead of interrupting or freezing the current motion.
 - Hit delivery uses native `AttackComponent` and `HitComponent` collision groups.

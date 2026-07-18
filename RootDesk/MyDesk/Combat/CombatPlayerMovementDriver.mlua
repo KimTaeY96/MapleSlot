@@ -1,5 +1,7 @@
 @Component
 script CombatPlayerMovementDriver extends Component
+    @HideFromInspector property integer AppliedLadderMountSequence = 0
+
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
         -- Executes server-selected auto-battle movement on the client that owns the avatar.
@@ -12,7 +14,10 @@ script CombatPlayerMovementDriver extends Component
 
         if autoBattle.ActionPhase == "ATTACK" then
             movement:Stop()
-            if isvalid(controller) then controller.AlwaysMovingState = false end
+            if isvalid(controller) then
+                controller.LookDirectionX = autoBattle.AttackFacingDirectionX
+                controller.AlwaysMovingState = false
+            end
             if isvalid(state) and state.CurrentStateName ~= "ATTACK" and state.CurrentStateName ~= "ATTACK_WAIT" and state.CurrentStateName ~= "DEAD" then
                 state:ChangeState("ATTACK")
             end
@@ -36,6 +41,11 @@ script CombatPlayerMovementDriver extends Component
                 movement:GetClimbableHeight(),
                 0
             )
+            if self.AppliedLadderMountSequence ~= autoBattle.LadderMountSequence then
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, autoBattle.LadderMountWorldY))
+                movement:UpdateClimbableOffset()
+                self.AppliedLadderMountSequence = autoBattle.LadderMountSequence
+            end
             movement:MoveToDirection(Vector2(0, autoBattle.ClimbDirectionY), delta)
             return
         end

@@ -270,7 +270,7 @@ Combat Foundation data is isolated from slot presentation data and split by runt
 - `HuntingGround.xlsx/MonsterSpawnGroups`: monster definition, maintained count, spawn anchor, and combat bounds.
 - `HuntingGround.xlsx/CombatLanes`: per-tier platform rows and map anchors.
 - `HuntingGround.xlsx/CombatLadders`: adjacent lane connections and Maker-authored ladder paths.
-- `Skill.xlsx`: reserved for the approved skill and animation-notify migration; do not place these tables back into a domain workbook.
+- `Skill.xlsx/SkillInfo`: attack cooldown, cast extents, damage coefficient, hit origin, and hit shape. `HitOriginTypeEnumId` and `HitShapeTypeEnumId` reference `Enum.xlsx`.
 
 `MonsterDefinitions.DropGroupId` is a cross-workbook key into `Drop.xlsx/DropGroups`. Runtime code must not replace a missing group with a fixed reward.
 
@@ -283,7 +283,7 @@ The initial reward type is `CURRENCY`, but the schema and resolver also accept t
 
 ## Combat Data Workflow
 
-1. Edit the owning workbook (`Combat.xlsx`, `Character.xlsx`, `Monster.xlsx`, `HuntingGround.xlsx`, or `Drop.xlsx`) directly.
+1. Edit the owning workbook (`Combat.xlsx`, `Character.xlsx`, `Monster.xlsx`, `HuntingGround.xlsx`, `Skill.xlsx`, or `Drop.xlsx`) directly.
 2. Run `node tools/validate_combat_excel_tables.mjs` before runtime generation.
 3. Run `node tools/apply_combat_excel_to_runtime.mjs` to generate the runtime data module.
 4. Run `node tools/check_combat_simulator.cjs` for deterministic combat/drop regression checks.

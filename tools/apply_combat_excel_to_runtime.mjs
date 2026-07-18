@@ -90,6 +90,7 @@ script CombatTableRuntime extends Logic
     property any combatLanesByTier = nil
     property any combatLaddersByTier = nil
     property any monsterDefinitions = nil
+    property any skillInfo = nil
     property any monsterSpawnGroups = nil
     property any monsterSpawnGroupsByTier = nil
     property any dropGroups = nil
@@ -120,6 +121,9 @@ ${groupedListRows(combat.CombatLadders, "HuntingGroundTierIndex")}
         }
         self.monsterDefinitions = {
 ${indexedRows(combat.MonsterDefinitions, "MonsterDefinitionsIndex")}
+        }
+        self.skillInfo = {
+${indexedRows(combat.SkillInfo, "SkillInfoIndex")}
         }
         self.monsterSpawnGroups = {
 ${indexedRows(combat.MonsterSpawnGroups, "MonsterSpawnGroupsIndex")}
@@ -206,6 +210,15 @@ ${groupedEntries(drop.DropEntries)}
     end
 
     @ExecSpace("ServerOnly")
+    method table GetSkillInfo(integer index)
+        -- Resolves one enabled attack or skill definition by its numeric index.
+        self:EnsureLoaded()
+        local skill = self.skillInfo[index]
+        if skill == nil or skill.Enabled == false then return nil end
+        return skill
+    end
+
+    @ExecSpace("ServerOnly")
     method table GetMonsterSpawnGroup(integer index)
         -- Resolves a monster spawn group by its numeric index.
         self:EnsureLoaded()
@@ -258,4 +271,4 @@ end
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, source, "utf8");
-console.log(`Applied Combat.xlsx, Character.xlsx, Monster.xlsx, HuntingGround.xlsx, and Drop.xlsx to ${outputPath}`);
+console.log(`Applied Combat.xlsx, Character.xlsx, Monster.xlsx, HuntingGround.xlsx, Skill.xlsx, and Drop.xlsx to ${outputPath}`);
