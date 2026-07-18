@@ -50,7 +50,6 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync @HideFromInspector property number ClimbDirectionY = 0
     @Sync @HideFromInspector property number AttackFacingDirectionX = 1
     @Sync @HideFromInspector property number LadderMountWorldX = 0
-    @Sync @HideFromInspector property number LadderMountWorldY = 0
     @Sync @HideFromInspector property integer LadderMountSequence = 0
 
     method void OnBeginPlay()
@@ -370,7 +369,6 @@ script CombatPlayerAutoBattle extends AttackComponent
         if self.ActiveLadderKey ~= ladder.LadderKey then
             self.ActiveLadderKey = ladder.LadderKey
             self.LadderMountWorldX = ladderWorldX
-            self.LadderMountWorldY = selfPosition.y
             self.LadderMountSequence = self.LadderMountSequence + 1
         end
 

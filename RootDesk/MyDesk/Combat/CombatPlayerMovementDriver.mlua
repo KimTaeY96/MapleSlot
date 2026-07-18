@@ -35,6 +35,7 @@ script CombatPlayerMovementDriver extends Component
 
         if autoBattle.MovementIntent == "CLIMB" and autoBattle.ClimbDirectionY ~= 0 then
             if not isvalid(controller) then return end
+            local currentPosition = self.Entity.TransformComponent.WorldPosition
             controller.AlwaysMovingState = false
             controller:ActionClimb(
                 Vector2(0, autoBattle.ClimbDirectionY),
@@ -42,7 +43,7 @@ script CombatPlayerMovementDriver extends Component
                 0
             )
             if self.AppliedLadderMountSequence ~= autoBattle.LadderMountSequence then
-                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, autoBattle.LadderMountWorldY))
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
                 movement:UpdateClimbableOffset()
                 self.AppliedLadderMountSequence = autoBattle.LadderMountSequence
             end
