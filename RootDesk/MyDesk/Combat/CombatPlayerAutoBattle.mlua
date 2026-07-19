@@ -42,6 +42,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property Entity AttackActionTargetEntity = nil
     @HideFromInspector property boolean AttackHitResolved = false
     @HideFromInspector property boolean PendingHitReaction = false
+    @HideFromInspector property boolean PendingClimbHitReaction = false
     @HideFromInspector property boolean InputBindingsRemoved = false
     @HideFromInspector property any PreviousCameraComponent = nil
     @HideFromInspector property boolean CameraSwitched = false
@@ -206,11 +207,11 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
 
         self.AttackTimer = math.max(0, self.AttackTimer - delta)
-        if self:UpdateActionPhase(delta) then return end
         if self.ActiveLadderKey ~= "" and self.ActiveLadderDestinationLaneKey ~= "" then
             self:NavigateToLane(self.ActiveLadderDestinationLaneKey, delta)
             return
         end
+        if self:UpdateActionPhase(delta) then return end
         if not self:IsValidTarget(self.RetaliationTargetEntity) then self.RetaliationTargetEntity = nil end
         if isvalid(self.RetaliationTargetEntity) then
             self.TargetEntity = self.RetaliationTargetEntity
@@ -285,7 +286,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         if not self:IsValidTarget(monster) then return end
         self.RetaliationTargetEntity = monster
         self.TargetEntity = monster
-        if self.ActionPhase == "NONE" then self.CombatState = "RETALIATE" end
+        if self.ActionPhase == "NONE" and self.ActiveLadderKey == "" then self.CombatState = "RETALIATE" end
     end
 
     @ExecSpace("ServerOnly")
@@ -379,24 +380,38 @@ script CombatPlayerAutoBattle extends AttackComponent
             return
         end
 
-        local arrived = (climbDirection > 0 and selfPosition.y >= targetY)
-            or (climbDirection < 0 and selfPosition.y <= targetY)
-        if arrived then
-            local previousLaneKey = self.CombatLaneKey
-            self.CombatLaneKey = nextLaneKey
-            self.CombatState = "LADDER_EXIT"
-            self.LadderErrorLogged = false
-            self.ActiveLadderKey = ""
-            self.ActiveLadderDestinationLaneKey = ""
-            self:StopMovement()
-            log("[Combat] Player climbed from " .. tostring(previousLaneKey) .. " to " .. tostring(nextLaneKey))
-            return
-        end
-
         self.CombatState = "CLIMB_LADDER"
         self.MovementIntent = "CLIMB"
         self.MoveDirectionX = 0
         self.ClimbDirectionY = climbDirection
+    end
+
+    @ExecSpace("Server")
+    method void ConfirmLadderArrival(integer mountSequence)
+        -- Accepts completion only from the owning client after it clamps to the exact target Y.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        if mountSequence ~= self.LadderMountSequence then return end
+        if self.ActiveLadderKey == "" or self.ActiveLadderDestinationLaneKey == "" then return end
+        self:CompleteLadderTraversal()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CompleteLadderTraversal()
+        -- Releases the highest-priority climb lock before any queued hit or skill decision runs.
+        local previousLaneKey = self.CombatLaneKey
+        local destinationLaneKey = self.ActiveLadderDestinationLaneKey
+        self.CombatLaneKey = destinationLaneKey
+        self.CombatState = "LADDER_EXIT"
+        self.LadderErrorLogged = false
+        self.ActiveLadderKey = ""
+        self.ActiveLadderDestinationLaneKey = ""
+        self:StopMovement()
+        if self.PendingClimbHitReaction then
+            self.PendingClimbHitReaction = false
+            self:BeginHitReaction()
+        end
+        log("[Combat] Player climbed from " .. tostring(previousLaneKey) .. " to " .. tostring(destinationLaneKey))
     end
 
     @ExecSpace("ServerOnly")
@@ -453,6 +468,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @ExecSpace("ServerOnly")
     method boolean BeginAttackAction()
         -- Locks the current target and starts the attack animation timeline.
+        if self.ActiveLadderKey ~= "" then return false end
         if self.ActionPhase ~= "NONE" or not self:IsValidTarget(self.TargetEntity) then return false end
         self.ActionPhase = "ATTACK"
         self.ActionElapsedSeconds = 0
@@ -583,6 +599,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackActionTargetEntity = nil
         self.AttackHitResolved = false
         self.PendingHitReaction = false
+        self.PendingClimbHitReaction = false
         self.ActiveLadderKey = ""
         self.ActiveLadderDestinationLaneKey = ""
     end
@@ -590,9 +607,13 @@ script CombatPlayerAutoBattle extends AttackComponent
     @ExecSpace("ServerOnly")
     @EventSender("Self")
     handler HandlePlayerHitEvent(HitEvent event)
-        -- Damage may select retaliation immediately, but its HIT state waits for the current action to finish.
+        -- CLIMB outranks all combat actions, so ladder hits are queued until physical arrival.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) or player:IsDead() then return end
+        if self.ActiveLadderKey ~= "" then
+            self.PendingClimbHitReaction = true
+            return
+        end
         if self.ActionPhase == "ATTACK" then
             self.PendingHitReaction = true
             return
