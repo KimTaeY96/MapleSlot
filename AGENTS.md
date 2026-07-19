@@ -259,3 +259,20 @@ If none of the above resolves the issue, tell the user:
 >
 > **https://discord.com/invite/maplestoryworlds**
 <!-- <<< managed by mswai <<< -->
+
+# PROJECT-LOCAL GIT COMPLETION (MANDATORY)
+
+For every task that changes repository files, the task is **not complete** until the verified changes are committed and pushed to the remote repository.
+
+1. Finish the implementation and all required verification first.
+2. Review `git status` and the diff. Stage **only files and hunks belonging to the current task**; preserve unrelated user changes in the working tree.
+3. Create a descriptive commit for the current task.
+4. Push the current branch to its configured upstream. If it has no upstream, push with upstream tracking to `origin`.
+5. Verify that the local branch is synchronized with its upstream before reporting completion.
+6. Never claim that work is complete or pushed unless the commit and push commands actually succeeded. If authentication, conflicts, branch protection, or network access blocks the push, report the task as blocked with the exact reason.
+
+Exceptions:
+
+- Read-only analysis/review tasks with no repository changes do not require a commit or push.
+- Skip commit/push only when the user explicitly requests local-only work or explicitly says not to push.
+- Never force-push or rewrite remote history unless the user explicitly authorizes it.

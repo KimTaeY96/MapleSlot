@@ -2,6 +2,12 @@
 script CombatPlayerMovementDriver extends Component
     @HideFromInspector property integer AppliedLadderMountSequence = 0
     @HideFromInspector property boolean LadderLocallyArrived = false
+    @HideFromInspector property number LadderAnimationElapsed = 0
+    @HideFromInspector property boolean LadderAnimationEvidenceLogged = false
+    @HideFromInspector property boolean LadderAvatarAnimationDisabled = false
+    @HideFromInspector property boolean AvatarAnimationEnableBeforeLadder = true
+    @HideFromInspector property boolean LadderBodyActionStarted = false
+    @HideFromInspector property number LadderBodyActionDelay = 0
 
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
@@ -19,28 +25,60 @@ script CombatPlayerMovementDriver extends Component
             controller.AlwaysMovingState = false
             if self.AppliedLadderMountSequence ~= autoBattle.LadderMountSequence then
                 local currentPosition = self.Entity.TransformComponent.WorldPosition
+                local direction = (autoBattle.ClimbDirectionY >= 0) and 1 or -1
                 movement:Stop()
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
-                controller:ActionClimb(
-                    Vector2(0, 0),
+                local mounted = controller:ActionClimb(
+                    Vector2(0, direction),
                     movement:GetClimbableHeight(),
                     0
                 )
+                if mounted == false then
+                    log_error("[Combat][LadderAnim] Failed to mount ladder sequence=" .. tostring(autoBattle.LadderMountSequence))
+                    return
+                end
+                local avatarAnimation = self.Entity.AvatarStateAnimationComponent
+                if isvalid(avatarAnimation) then
+                    self.AvatarAnimationEnableBeforeLadder = avatarAnimation.Enable
+                    avatarAnimation.Enable = false
+                    self.LadderAvatarAnimationDisabled = true
+                end
                 -- ActionClimb may snap internally; restore the exact entry Y before traversal starts.
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
                 movement:UpdateClimbableOffset()
-                if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("LADDER") end
-                self:PlayLadderAnimationLoop()
+                if isvalid(state) and state.CurrentStateName ~= "LADDER" and state.CurrentStateName ~= "DEAD" then
+                    state:ChangeState("LADDER")
+                end
                 self.AppliedLadderMountSequence = autoBattle.LadderMountSequence
                 self.LadderLocallyArrived = false
+                self.LadderAnimationElapsed = 0
+                self.LadderAnimationEvidenceLogged = false
+                self.LadderBodyActionStarted = false
+                self.LadderBodyActionDelay = 0
+                log("[Combat][LadderAnim] Started sequence=" .. tostring(self.AppliedLadderMountSequence)
+                    .. " state=" .. tostring(isvalid(state) and state.CurrentStateName or "NONE")
+                    .. " action=ladder play=Loop")
             end
 
             if self.LadderLocallyArrived then
                 movement:Stop()
+                if self.LadderAvatarAnimationDisabled then
+                    local avatarAnimation = self.Entity.AvatarStateAnimationComponent
+                    if isvalid(avatarAnimation) then avatarAnimation.Enable = self.AvatarAnimationEnableBeforeLadder end
+                    self.LadderAvatarAnimationDisabled = false
+                end
                 if isvalid(state) and state.CurrentStateName ~= "IDLE" and state.CurrentStateName ~= "DEAD" then
                     state:ChangeState("IDLE")
                 end
                 return
+            end
+
+            if self.LadderBodyActionStarted == false then
+                self.LadderBodyActionDelay = self.LadderBodyActionDelay + delta
+                if self.LadderBodyActionDelay >= 0.05 then
+                    self:PlayLadderAnimationLoop()
+                    self.LadderBodyActionStarted = true
+                end
             end
 
             local currentPosition = self.Entity.TransformComponent.WorldPosition
@@ -50,20 +88,54 @@ script CombatPlayerMovementDriver extends Component
             local reachedTarget = (direction > 0 and nextY >= autoBattle.LadderTargetWorldY)
                 or (direction < 0 and nextY <= autoBattle.LadderTargetWorldY)
             if reachedTarget then nextY = autoBattle.LadderTargetWorldY end
-            movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, nextY))
-            movement:UpdateClimbableOffset()
 
             if reachedTarget then
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, nextY))
+                movement:UpdateClimbableOffset()
                 movement:Stop()
                 controller.AlwaysMovingState = false
+                if self.LadderAvatarAnimationDisabled then
+                    local avatarAnimation = self.Entity.AvatarStateAnimationComponent
+                    if isvalid(avatarAnimation) then avatarAnimation.Enable = self.AvatarAnimationEnableBeforeLadder end
+                    self.LadderAvatarAnimationDisabled = false
+                end
                 self.LadderLocallyArrived = true
                 if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("IDLE") end
                 autoBattle:ConfirmLadderArrival(autoBattle.LadderMountSequence)
+            else
+                -- Position remains deterministic while the renderer independently loops the ladder body action.
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, nextY))
+                movement:UpdateClimbableOffset()
+                self.LadderAnimationElapsed = self.LadderAnimationElapsed + delta
+                if self.LadderAnimationEvidenceLogged == false and self.LadderAnimationElapsed >= 0.25 then
+                    self.LadderAnimationEvidenceLogged = true
+                    local bodyAction = "NONE"
+                    local avatarRenderer = self.Entity.AvatarRendererComponent
+                    if isvalid(avatarRenderer) then
+                        local body = avatarRenderer:GetBodyEntity()
+                        if isvalid(body) and isvalid(body.AvatarBodyActionSelectorComponent) then
+                            bodyAction = tostring(body.AvatarBodyActionSelectorComponent.ActionState)
+                        end
+                    end
+                    log("[Combat][LadderAnim] Advancing frames sequence=" .. tostring(self.AppliedLadderMountSequence)
+                        .. " state=" .. tostring(isvalid(state) and state.CurrentStateName or "NONE")
+                        .. " elapsed=" .. tostring(self.LadderAnimationElapsed)
+                        .. " bodyAction=" .. bodyAction)
+                end
             end
             return
         end
 
         self.LadderLocallyArrived = false
+        self.LadderAnimationElapsed = 0
+        self.LadderAnimationEvidenceLogged = false
+        self.LadderBodyActionStarted = false
+        self.LadderBodyActionDelay = 0
+        if self.LadderAvatarAnimationDisabled then
+            local avatarAnimation = self.Entity.AvatarStateAnimationComponent
+            if isvalid(avatarAnimation) then avatarAnimation.Enable = self.AvatarAnimationEnableBeforeLadder end
+            self.LadderAvatarAnimationDisabled = false
+        end
 
         if autoBattle.ActionPhase == "ATTACK" then
             movement:Stop()
@@ -105,16 +177,12 @@ script CombatPlayerMovementDriver extends Component
 
     @ExecSpace("ClientOnly")
     method void PlayLadderAnimationLoop()
-        -- Drives the ladder sprite as an explicit loop while position remains under deterministic control.
-        local avatarRenderer = self.Entity.AvatarRendererComponent
-        if not isvalid(avatarRenderer) then return end
-        local body = avatarRenderer:GetBodyEntity()
-        if not isvalid(body) then return end
-        local event = ActionStateChangedEvent()
-        event.CoreActionName = "ladder"
-        event.PartsActionName = "ladder"
-        event.PlayRate = 1
-        event.PlayType = SpriteAnimClipPlayType.Loop
-        body:SendEvent(event)
+        -- Starts the built-in Ladder body action, which resolves to the multi-frame SpriteAnimClipPlayType.Loop clip.
+        local event = BodyActionStateChangeEvent()
+        event.ActionState = MapleAvatarBodyActionState.Ladder
+        event.needResetAction = true
+        event.playRate = 1
+        self.Entity:SendEvent(event)
     end
+
 end
