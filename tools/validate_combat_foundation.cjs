@@ -48,13 +48,16 @@ assert(playerSource.includes("profile.AttackAnimationDurationSeconds") && player
 assert(playerSource.includes("GetCombatLadder"), "Player AI must resolve ladder routes from HuntingGround.xlsx");
 assert(!playerSource.includes("LadderMountWorldY"), "Server ladder data must not overwrite the client-authoritative mount Y");
 assert(playerSource.includes("profile.LadderClimbSpeed"), "Player ladder speed must come from Character.xlsx");
+assert(playerSource.includes("profile.LadderExitStandOffset"), "Player ladder landing clearance must come from Character.xlsx");
 assert(playerSource.includes("LadderTargetWorldY"), "Player AI must replicate the destination platform height to the movement client");
 assert(playerSource.includes("ActiveLadderDestinationLaneKey"), "A started ladder route must remain locked until its destination lane is reached");
 assert(playerSource.includes("CreateAttackShape"), "Player attacks must build their hit shape from SkillInfo");
 assert(playerSource.includes("origin.x + direction * self.AttackHitRangeX * 0.5"), "Player rectangle attacks must extend forward from their origin");
 assert(playerSource.includes("AttackFacingDirectionX"), "Player skill direction must lock onto its target");
 assert(playerSource.includes("nextLane.BoundsLeftAnchorKey"), "Ladder exit must use the destination platform height");
+assert(playerSource.includes("nextFloorAnchor.TransformComponent.WorldPosition.y + self.LadderExitStandOffset"), "Ladder exit must cross above the one-way platform before releasing the climb state");
 assert(!playerSource.includes("nextLane.SpawnAnchorKey"), "Ladder exit must not use the elevated monster spawn anchor");
+assert(playerSource.includes('avatarAnimation:SetActionSheet("LADDER", "ladder")'), "Player ladder state must explicitly map to the built-in ladder body action");
 assert(playerSource.includes("climbDirection > 0 and selfPosition.y >= targetY"), "Upward climbing must reach the platform before releasing the ladder");
 assert(!playerSource.includes("selfPosition.y >= targetY - self.LadderExitTolerance"), "Upward climbing must not release below the destination platform");
 assert(playerSource.includes("FindNearestMonsterAcrossLanes"), "Player AI must acquire targets on other floors when its lane is empty");
@@ -70,6 +73,7 @@ assert(playerSource.indexOf("method boolean BeginAttackAction") < playerSource.i
 assert(playerSource.includes("self.ActionElapsedSeconds >= self.AttackHitDelaySeconds"), "Player damage must wait for the configured hit frame");
 assert(playerSource.includes("self.ActionElapsedSeconds >= self.AttackAnimationDurationSeconds"), "Player ATTACK must remain locked for the configured animation duration");
 assert(playerSource.includes("PendingHitReaction") && playerSource.includes("HandlePlayerHitEvent"), "Player hits during attack must queue a post-attack reaction");
+assert(playerSource.includes("TryInterruptHitWithBasicSkill") && playerSource.includes('self.ActionPhase == "HIT"'), "A ready player skill must preempt the lower-priority HIT reaction");
 assert(playerSource.includes("FinishAttackAnimation") && playerSource.includes("FinishHitAnimation"), "Player retained action states must be released explicitly");
 
 const movementDriverSource = fs.readFileSync(path.join(combatDir, "CombatPlayerMovementDriver.mlua"), "utf8");
@@ -78,8 +82,10 @@ assert(movementDriverSource.includes("Vector2(autoBattle.LadderMountWorldX, curr
 assert.equal((movementDriverSource.match(/ActionClimb/g) || []).length, 1, "Native ladder attachment must be entered once per mount sequence");
 assert(movementDriverSource.indexOf("ActionClimb") > movementDriverSource.indexOf("AppliedLadderMountSequence ~= autoBattle.LadderMountSequence"), "ActionClimb must only run when a new ladder mount sequence begins");
 assert(movementDriverSource.includes('state:ChangeState("LADDER")'), "A new ladder mount must enter the avatar ladder animation state");
+assert(movementDriverSource.includes("movement:MoveToDirection(Vector2(0, direction), delta)"), "Ladder traversal must use native vertical movement so the looping climb animation advances");
+assert.equal((movementDriverSource.match(/state:ChangeState\("LADDER"\)/g) || []).length, 1, "LADDER must not restart every frame and freeze on its first animation frame");
 assert(movementDriverSource.includes("autoBattle.LadderClimbSpeed) * delta"), "Client ladder travel must use the table-backed climb speed");
-assert(movementDriverSource.includes("nextY = autoBattle.LadderTargetWorldY"), "Client ladder travel must clamp exactly to the destination platform height");
+assert(movementDriverSource.includes("Vector2(autoBattle.LadderMountWorldX, autoBattle.LadderTargetWorldY)"), "Client ladder travel must clamp exactly to the destination platform height");
 assert(movementDriverSource.includes("LadderLocallyArrived"), "Client ladder arrival must remain idle while server position replication catches up");
 assert(movementDriverSource.includes("controller.LookDirectionX = autoBattle.AttackFacingDirectionX"), "Client attack animation must face the locked target direction");
 assert(/@ExecSpace\("ClientOnly"\)\s*method void OnUpdate\(/.test(movementDriverSource), "Player movement execution must run on the avatar-owning client");
@@ -134,6 +140,7 @@ assert(monsterAiSource.includes("ActiveAttackEnabled"), "Only monsters with an a
 assert(monsterAiSource.includes("definition.AttackAnimationDurationSeconds") && monsterAiSource.includes("definition.AttackHitDelaySeconds") && monsterAiSource.includes("definition.HitAnimationDurationSeconds"), "Monster action timing must come from Monster.xlsx");
 assert(monsterAiSource.includes("ResolveActiveAttackHitFrame") && monsterAiSource.includes("CompleteAttackAction"), "Monster active attacks must resolve on a delayed hit frame and complete their animation lock");
 assert(monsterAiSource.includes("PendingHitReaction") && monsterAiSource.includes("BeginHitReaction"), "Monster hit reactions must queue behind active attacks");
+assert(monsterAiSource.includes("TryInterruptHitWithActiveSkill"), "A ready monster skill must preempt the lower-priority HIT reaction");
 
 const healthSource = fs.readFileSync(path.join(combatDir, "CombatMonsterHealth.mlua"), "utf8");
 assert(!healthSource.includes("self.Entity:SetEnable(false)"), "Respawning monsters must not disable their own timer owner");

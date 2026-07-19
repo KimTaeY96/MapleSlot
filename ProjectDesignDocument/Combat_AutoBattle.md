@@ -11,7 +11,9 @@ All target selection, lane filtering, movement intent, attack cadence, damage ac
 - Monster chase and attack require the player's combat lane to match the monster's `LaneKey`.
 - Target acquisition covers the entire map. A valid target is retained until death unless a monster damages the player; that attacker becomes the highest-priority retaliation target.
 - If the target is on another lane, the player walks to the adjacent `CombatLadders.LadderKey`. Once mounted, that adjacent route remains locked until the player reaches its destination floor, even if target acquisition changes during travel.
-- Ladder entry invokes the native climb action once at the player's current world Y. The client then moves vertically at `PlayerStatsProfiles.LadderClimbSpeed`, clamps to the destination lane's `BoundsLeftAnchorKey` platform height, stops, and enters `IDLE` before the next chase decision.
+- Ladder entry invokes the native climb action once at the player's current world Y. `LADDER` is explicitly mapped to the built-in looping `ladder` avatar body action. The client feeds native vertical movement every frame at `PlayerStatsProfiles.LadderClimbSpeed`, allowing the climb animation to advance without restarting its first frame.
+- Animation priority is `ATTACK > HIT > IDLE`. Attack animations remain locked through their notify timeline; a ready in-range skill may interrupt a lower-priority hit reaction, and idle never overwrites either action.
+- The destination is `BoundsLeftAnchorKey` platform Y plus `LadderExitStandOffset`. Crossing above the one-way foothold before entering `IDLE` lets gravity settle the player onto the destination platform instead of releasing the ladder below it.
 - `SpawnAnchorKey` is elevated for monster spawning and must not be used as the floor height. `CombatLaneKey` changes only after replicated player Y reaches the exact destination platform height.
 - If no live monster exists, the runtime immediately restores every configured lane population and retries acquisition in the same decision tick.
 - Future area skills provide an explicit list of target lanes to `CombatRuntime:FindMonstersInLanes`.
@@ -23,7 +25,7 @@ All target selection, lane filtering, movement intent, attack cadence, damage ac
 |---|---|---|---|
 | `ACQUIRE` | No valid target | Retaliate against the last valid damage source, otherwise select the nearest live monster across the whole map; restore all lane populations if none exist. | Same lane -> `CHASE`; other lane -> `APPROACH_LADDER`. |
 | `APPROACH_LADDER` | Target is on another floor | Move horizontally to the table-backed adjacent ladder. | Within approach tolerance -> `CLIMB_LADDER`. |
-| `CLIMB_LADDER` | Player is aligned with the ladder | Enter the native climb animation once at the current Y, lock the route, and move vertically by the table-backed climb speed without remounting. | Clamp to destination platform Y, stop, and enter `IDLE` -> `LADDER_EXIT`. |
+| `CLIMB_LADDER` | Player is aligned with the ladder | Enter the built-in looping `ladder` body action at the current Y, lock the route, and send native vertical movement at the table-backed climb speed without remounting or restarting the state. | Clamp above the destination foothold by `LadderExitStandOffset`, stop, and enter `IDLE` -> `LADDER_EXIT`. |
 | `LADDER_EXIT` | Adjacent lane reached | Update `CombatLaneKey` after the client has reached a valid standing height. | Next decision -> `CHASE` or the next ladder route. |
 | `CHASE` | Target outside attack range | Move toward target while respecting combat bounds and foothold edges. | In range -> `ATTACK_READY`; invalid target -> `ACQUIRE`. |
 | `ATTACK_READY` | Target inside range while attack cooldown remains | Stop movement without entering the attack animation state. | Cooldown ready -> `ATTACK`; target leaves range -> `CHASE`. |
@@ -69,7 +71,7 @@ Base Bet does not directly mutate combat stats. Its index selects one `HuntingGr
 - `PlayerControllerComponent.UseCustomScript` is read-only at runtime and must never be assigned.
 - The sandbox disables manual movement and attack by removing documented action bindings, then restores the default bindings when the combat component ends.
 - Server AI publishes movement intent; the owning client executes avatar movement and changes `StateComponent` to `MOVE`, so automatic walking uses the normal avatar walk animation.
-- A new ladder mount sequence calls `ActionClimb` exactly once, preserves the entry Y, and owns vertical movement until the client clamps to the destination platform and changes to `IDLE`.
+- A new ladder mount sequence calls `ActionClimb` exactly once, preserves the entry Y, and then uses `MovementComponent:MoveToDirection` with frame delta so the looping ladder action advances until the client clamps to the destination platform and changes to `IDLE`.
 - Replicated `ActionPhase=ATTACK|HIT` stops movement first and preserves that animation state even if native hit handling attempts an intermediate transition.
 - Completion RPCs release retained `ATTACK`, `ATTACK_WAIT`, and `HIT` states only after the corresponding table-backed duration expires.
 - The combat camera is attached to `CombatCameraAnchorKey`, positioned at the common center of the three foothold rows. It does not follow player movement.

@@ -34,6 +34,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync @HideFromInspector property number LadderClimbSpeed = 1
     @HideFromInspector property number LadderApproachTolerance = 0.12
     @HideFromInspector property number LadderExitTolerance = 0.18
+    @HideFromInspector property number LadderExitStandOffset = 0.08
     @HideFromInspector property integer CriticalChancePermille = 0
     @HideFromInspector property integer CriticalDamagePermille = 1500
     @Sync @HideFromInspector property string ActionPhase = "NONE"
@@ -97,8 +98,12 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.CombatLaneKey = profile.BasicAttackLaneKey
         self.LadderApproachTolerance = profile.LadderApproachTolerance
         self.LadderExitTolerance = profile.LadderExitTolerance
+        self.LadderExitStandOffset = profile.LadderExitStandOffset
         self.CriticalChancePermille = profile.CriticalChancePermille
         self.CriticalDamagePermille = profile.CriticalDamagePermille
+
+        local avatarAnimation = self.Entity.AvatarStateAnimationComponent
+        if isvalid(avatarAnimation) then avatarAnimation:SetActionSheet("LADDER", "ladder") end
 
         local player = self.Entity.PlayerComponent
         if isvalid(player) then
@@ -360,7 +365,7 @@ script CombatPlayerAutoBattle extends AttackComponent
             return
         end
         local climbDirection = (nextLane.LaneOrder < currentLane.LaneOrder) and 1 or -1
-        local targetY = nextFloorAnchor.TransformComponent.WorldPosition.y
+        local targetY = nextFloorAnchor.TransformComponent.WorldPosition.y + self.LadderExitStandOffset
         if self.ActiveLadderKey ~= ladder.LadderKey then
             self.ActiveLadderKey = ladder.LadderKey
             self.ActiveLadderDestinationLaneKey = nextLaneKey
@@ -467,7 +472,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method boolean UpdateActionPhase(number delta)
-        -- Resolves hit frames and unlocks state transitions only when the configured animation time ends.
+        -- ATTACK outranks HIT; lower-priority hit reactions may be interrupted by a ready skill.
         if self.ActionPhase == "ATTACK" then
             self:StopMovement()
             self.ActionElapsedSeconds = self.ActionElapsedSeconds + delta
@@ -478,12 +483,28 @@ script CombatPlayerAutoBattle extends AttackComponent
             return true
         end
         if self.ActionPhase == "HIT" then
+            if self:TryInterruptHitWithBasicSkill() then return true end
             self:StopMovement()
             self.ActionElapsedSeconds = self.ActionElapsedSeconds + delta
             if self.ActionElapsedSeconds >= self.HitAnimationDurationSeconds then self:CompleteHitReaction() end
             return true
         end
         return false
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean TryInterruptHitWithBasicSkill()
+        -- A ready in-range skill preempts HIT, while ATTACK itself remains uninterruptible.
+        if self.ActionPhase ~= "HIT" or self.AttackTimer > 0 then return false end
+        if not self:IsValidTarget(self.TargetEntity) or self:IsTargetWithinSkillCast(self.TargetEntity) == false then return false end
+        local health = self.TargetEntity:GetComponent("script.CombatMonsterHealth")
+        if not isvalid(health) or health.LaneKey ~= self.CombatLaneKey then return false end
+
+        self.ActionPhase = "NONE"
+        self.ActionElapsedSeconds = 0
+        local player = self.Entity.PlayerComponent
+        if isvalid(player) then self:FinishHitAnimation(player.UserId) end
+        return self:BeginAttackAction()
     end
 
     @ExecSpace("ServerOnly")
@@ -533,7 +554,7 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("ServerOnly")
     method void BeginHitReaction()
-        -- Starts an uninterruptible hit reaction after any current action has finished.
+        -- Starts a hit reaction that yields when a higher-priority skill becomes ready.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) or player:IsDead() then return end
         self.ActionPhase = "HIT"

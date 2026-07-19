@@ -270,7 +270,7 @@ export async function loadAndValidateCombatTables(options = {}) {
   }
 
   for (const row of combat.PlayerStatsProfiles.filter((entry) => enabled(entry.Enabled))) {
-    for (const key of ["MaxHp", "AttackPower", "AttackIntervalSeconds", "AttackRange", "MoveSpeed", "AggroRange", "LadderClimbSpeed"]) {
+    for (const key of ["MaxHp", "AttackPower", "AttackIntervalSeconds", "AttackRange", "MoveSpeed", "AggroRange", "LadderClimbSpeed", "LadderExitStandOffset"]) {
       if (number(row[key], `${row.ProfileKey}.${key}`) <= 0) fail(`${row.ProfileKey}.${key} must be > 0`);
     }
     const chance = number(row.CriticalChancePermille, `${row.ProfileKey}.CriticalChancePermille`);

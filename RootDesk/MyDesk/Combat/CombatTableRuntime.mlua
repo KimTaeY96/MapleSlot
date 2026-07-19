@@ -27,7 +27,7 @@ script CombatTableRuntime extends Logic
             [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerStatsProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
         }
         self.playerStatsProfiles = {
-            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Map-wide ladder auto-battle profile", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5, BasicAttackSkillInfoIndex = 1, LadderClimbSpeed = 1 },
+            [1] = { PlayerStatsProfilesIndex = 1, ProfileKey = "PLAYER_TIER_1", MaxHp = 100, AttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Map-wide ladder auto-battle profile", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5, BasicAttackSkillInfoIndex = 1, LadderClimbSpeed = 1, LadderExitStandOffset = 0.08 },
         }
         self.combatLanesByTier = {
             [1] = {

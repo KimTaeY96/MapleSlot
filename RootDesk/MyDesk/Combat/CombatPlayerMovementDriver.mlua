@@ -2,6 +2,8 @@
 script CombatPlayerMovementDriver extends Component
     @HideFromInspector property integer AppliedLadderMountSequence = 0
     @HideFromInspector property boolean LadderLocallyArrived = false
+    @HideFromInspector property boolean LadderSpeedApplied = false
+    @HideFromInspector property number MovementSpeedBeforeLadder = 1
 
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
@@ -41,20 +43,31 @@ script CombatPlayerMovementDriver extends Component
                 local currentPosition = self.Entity.TransformComponent.WorldPosition
                 movement:Stop()
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
-                controller:ActionClimb(
+                local mounted = controller:ActionClimb(
                     Vector2(0, autoBattle.ClimbDirectionY),
                     movement:GetClimbableHeight(),
                     0
                 )
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
                 movement:UpdateClimbableOffset()
-                if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("LADDER") end
+                if mounted and isvalid(state) and state.CurrentStateName ~= "LADDER" and state.CurrentStateName ~= "DEAD" then
+                    state:ChangeState("LADDER")
+                end
+                if self.LadderSpeedApplied == false then
+                    self.MovementSpeedBeforeLadder = movement.InputSpeed
+                    self.LadderSpeedApplied = true
+                end
+                movement.InputSpeed = math.max(0, autoBattle.LadderClimbSpeed)
                 self.AppliedLadderMountSequence = autoBattle.LadderMountSequence
                 self.LadderLocallyArrived = false
             end
 
             if self.LadderLocallyArrived then
                 movement:Stop()
+                if self.LadderSpeedApplied then
+                    movement.InputSpeed = self.MovementSpeedBeforeLadder
+                    self.LadderSpeedApplied = false
+                end
                 if isvalid(state) and state.CurrentStateName ~= "IDLE" and state.CurrentStateName ~= "DEAD" then
                     state:ChangeState("IDLE")
                 end
@@ -67,20 +80,31 @@ script CombatPlayerMovementDriver extends Component
             local nextY = currentPosition.y + direction * climbDistance
             local reachedTarget = (direction > 0 and nextY >= autoBattle.LadderTargetWorldY)
                 or (direction < 0 and nextY <= autoBattle.LadderTargetWorldY)
-            if reachedTarget then nextY = autoBattle.LadderTargetWorldY end
-            movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, nextY))
-            movement:UpdateClimbableOffset()
 
             if reachedTarget then
+                movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, autoBattle.LadderTargetWorldY))
+                movement:UpdateClimbableOffset()
                 movement:Stop()
                 controller.AlwaysMovingState = false
+                if self.LadderSpeedApplied then
+                    movement.InputSpeed = self.MovementSpeedBeforeLadder
+                    self.LadderSpeedApplied = false
+                end
                 if isvalid(state) and state.CurrentStateName ~= "DEAD" then state:ChangeState("IDLE") end
                 self.LadderLocallyArrived = true
+            else
+                -- Real ladder movement advances the built-in looping ladder body animation.
+                movement:MoveToDirection(Vector2(0, direction), delta)
+                movement:UpdateClimbableOffset()
             end
             return
         end
 
         self.LadderLocallyArrived = false
+        if self.LadderSpeedApplied then
+            movement.InputSpeed = self.MovementSpeedBeforeLadder
+            self.LadderSpeedApplied = false
+        end
 
         if autoBattle.MovementIntent == "HORIZONTAL" and autoBattle.MoveDirectionX ~= 0 then
             if isvalid(controller) then

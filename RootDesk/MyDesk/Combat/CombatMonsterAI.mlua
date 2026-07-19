@@ -182,7 +182,7 @@ script CombatMonsterAI extends Component
 
     @ExecSpace("ServerOnly")
     method boolean UpdateActionPhase(number delta)
-        -- Keeps attack and hit sprites locked until their table-backed durations complete.
+        -- ATTACK outranks HIT; a ready active skill may replace the lower-priority hit reaction.
         if self.ActionPhase == "ATTACK" then
             self.AIState = "ATTACK"
             self:StopMovement()
@@ -194,6 +194,7 @@ script CombatMonsterAI extends Component
             return true
         end
         if self.ActionPhase == "HIT" then
+            if self:TryInterruptHitWithActiveSkill() then return true end
             self.AIState = "HIT"
             self:StopMovement()
             self.ActionElapsedSeconds = self.ActionElapsedSeconds + delta
@@ -201,6 +202,17 @@ script CombatMonsterAI extends Component
             return true
         end
         return false
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean TryInterruptHitWithActiveSkill()
+        -- Active skills preempt HIT only when their cooldown and cast checks both succeed.
+        if self.ActionPhase ~= "HIT" or self.ActiveAttackEnabled == false or self.AttackTimer > 0 then return false end
+        if not self:IsValidPlayer(self.TargetEntity) or self:IsWithinActiveSkillCast(self.TargetEntity) == false then return false end
+
+        self.ActionPhase = "NONE"
+        self.ActionElapsedSeconds = 0
+        return self:AttackPlayer(self.TargetEntity)
     end
 
     @ExecSpace("ServerOnly")

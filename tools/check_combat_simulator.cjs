@@ -38,6 +38,7 @@ async function main() {
   assert.equal(Number(player.AttackHitDelaySeconds), 0.35);
   assert.equal(Number(player.HitAnimationDurationSeconds), 0.5);
   assert.equal(Number(player.LadderClimbSpeed), 1, "Player ladder travel must use the table-backed world-units-per-second speed");
+  assert.equal(Number(player.LadderExitStandOffset), 0.08, "Player ladder exit must finish above the one-way platform before IDLE");
   assert(Number(player.AttackHitDelaySeconds) < Number(player.AttackAnimationDurationSeconds), "Player hit frame must occur before attack animation completion");
   assert(Number(player.AttackAnimationDurationSeconds) <= Number(player.AttackIntervalSeconds), "Player attack animation must complete before the next attack interval");
   assert.equal(Number(monster.RespawnSeconds), 5, "Tier 1 Slime respawn must use the longer table-backed delay");

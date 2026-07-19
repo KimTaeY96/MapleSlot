@@ -41,7 +41,7 @@ Maps one `BaseBetRegionIndex` to one player profile and a primary spawn group. E
 
 ## Character.xlsx / PlayerStatsProfiles
 
-Defines player HP, attack power, legacy cadence/range compatibility values, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, ladder movement balance, and action timing. `LadderClimbSpeed` is the vertical world-unit speed used after one native ladder mount until the destination platform is reached. `BasicAttackSkillInfoIndex` selects the actual basic attack contract from `Skill.xlsx`. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
+Defines player HP, attack power, legacy cadence/range compatibility values, move speed, critical values, map-wide aggro range, starting `BasicAttackLaneKey`, ladder movement balance, and action timing. `LadderClimbSpeed` is the vertical world-unit speed used after one native ladder mount. `LadderExitStandOffset` moves the player above the destination one-way foothold before the client releases the ladder state and settles to `IDLE`. `BasicAttackSkillInfoIndex` selects the actual basic attack contract from `Skill.xlsx`. `AttackAnimationDurationSeconds` locks the attack, `AttackHitDelaySeconds` selects its damage frame, and `HitAnimationDurationSeconds` locks the hit reaction. It contains balance only, not player appearance.
 
 ## HuntingGround.xlsx / CombatLanes
 
