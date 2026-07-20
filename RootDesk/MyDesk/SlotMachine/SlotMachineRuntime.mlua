@@ -204,6 +204,7 @@ script SlotMachineRuntime extends Logic
     property Entity devCheatPanel = "221c8789-421d-4473-bb6c-394db532fea0"
     property TextInputComponent devCheatInput = "3a7ce550-2a1b-4037-8c71-16e460d112bf"
     property Entity devCheatApplyButton = "16a2c962-06d5-4d3b-b5b0-73bfd7fe64d3"
+    property Entity devCheatCloseButton = "be8fc112-1dee-4af5-a21a-b5dae3830add"
     property TextComponent devCheatStatusText = "8f0150c3-e2dd-4783-906b-778effae5269"
     property Entity devCheatListItem1 = "26d9e622-cee7-43d8-911c-fbb6aee8ee35"
     property Entity devCheatListItem2 = "23953e37-49ba-4664-b713-e844761a04bf"
@@ -525,6 +526,7 @@ script SlotMachineRuntime extends Logic
     property any devCheatButtonDownHandler = nil
     property any devCheatButtonUpHandler = nil
     property any devCheatApplyHandler = nil
+    property any devCheatCloseHandler = nil
     property any devCheatSubmitHandler = nil
     property any devCheatLongPressTimerId = nil
     property boolean isDevCheatPanelOpen = false
@@ -3376,11 +3378,19 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void OnDevCheatApplyClicked(ButtonClickEvent event)
+        -- Applies the command currently entered in the development cheat input.
         local text = ""
         if self.devCheatInput ~= nil then
             text = self.devCheatInput.Text
         end
         self:ApplyDevCheatInput(text)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnDevCheatCloseClicked(ButtonClickEvent event)
+        -- Closes the development cheat panel without changing its command state.
+        self:SetDevCheatPanelOpen(false)
+        log("[SlotMachineRuntime] Dev cheat panel closed")
     end
 
     @ExecSpace("ClientOnly")
@@ -3425,6 +3435,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void ConnectDevCheatUi()
+        -- Connects the development cheat panel controls for the current client session.
         self.devCheatItemRows = {
             self.devCheatListItem1,
             self.devCheatListItem2,
@@ -3458,6 +3469,9 @@ script SlotMachineRuntime extends Logic
         if self.devCheatApplyButton ~= nil then
             self.devCheatApplyHandler = self.devCheatApplyButton:ConnectEvent(ButtonClickEvent, self.OnDevCheatApplyClicked)
         end
+        if self.devCheatCloseButton ~= nil then
+            self.devCheatCloseHandler = self.devCheatCloseButton:ConnectEvent(ButtonClickEvent, self.OnDevCheatCloseClicked)
+        end
         if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil then
             self.devCheatSubmitHandler = self.devCheatInput.Entity:ConnectEvent(TextInputSubmitEvent, self.OnDevCheatInputSubmit)
         end
@@ -3471,6 +3485,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void DisconnectDevCheatUi()
+        -- Disconnects every development cheat UI event registered for this session.
         if self.devCheatLongPressTimerId ~= nil then
             _TimerService:ClearTimer(self.devCheatLongPressTimerId)
             self.devCheatLongPressTimerId = nil
@@ -3488,6 +3503,10 @@ script SlotMachineRuntime extends Logic
         if self.devCheatApplyButton ~= nil and self.devCheatApplyHandler ~= nil then
             self.devCheatApplyButton:DisconnectEvent(ButtonClickEvent, self.devCheatApplyHandler)
             self.devCheatApplyHandler = nil
+        end
+        if self.devCheatCloseButton ~= nil and self.devCheatCloseHandler ~= nil then
+            self.devCheatCloseButton:DisconnectEvent(ButtonClickEvent, self.devCheatCloseHandler)
+            self.devCheatCloseHandler = nil
         end
         if self.devCheatInput ~= nil and self.devCheatInput.Entity ~= nil and self.devCheatSubmitHandler ~= nil then
             self.devCheatInput.Entity:DisconnectEvent(TextInputSubmitEvent, self.devCheatSubmitHandler)
