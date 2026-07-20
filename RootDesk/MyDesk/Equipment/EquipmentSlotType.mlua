@@ -1,0 +1,15 @@
+---@description "Closed equipment-slot catalog supported by the first equipment-system slice."
+@Logic
+script EquipmentSlotType extends Logic
+    property string None = "NONE"
+    property string Weapon = "WEAPON"
+    property string Helmet = "HELMET"
+    property string Armor = "ARMOR"
+    property string Gloves = "GLOVES"
+    property string Shoes = "SHOES"
+
+    method boolean IsValid(string value)
+        return value == self.Weapon or value == self.Helmet or value == self.Armor
+            or value == self.Gloves or value == self.Shoes
+    end
+end

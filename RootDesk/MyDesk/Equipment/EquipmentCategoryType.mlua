@@ -1,0 +1,11 @@
+---@description "Closed top-level equipment category catalog used by inventory filtering."
+@Logic
+script EquipmentCategoryType extends Logic
+    property string None = "NONE"
+    property string Weapon = "WEAPON"
+    property string Armor = "ARMOR"
+
+    method boolean IsValid(string value)
+        return value == self.Weapon or value == self.Armor
+    end
+end

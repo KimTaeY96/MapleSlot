@@ -51,6 +51,14 @@ script CombatSandboxRuntime extends Component
         if users == nil then return end
         for _, user in pairs(users) do
             if isvalid(user) then
+                local equipment = user:GetComponent("script.EquipmentInventoryComponent")
+                if not isvalid(equipment) then
+                    equipment = user:AddComponent("EquipmentInventoryComponent")
+                end
+                if isvalid(equipment) then
+                    equipment.PlayerInitProfileIndex = tier.PlayerInitProfileIndex
+                    equipment:InitializeFromProfile(tier.PlayerInitProfileIndex)
+                end
                 local autoBattle = user:GetComponent("script.CombatPlayerAutoBattle")
                 local newlyAttached = false
                 if not isvalid(autoBattle) then
@@ -58,7 +66,7 @@ script CombatSandboxRuntime extends Component
                     newlyAttached = true
                 end
                 if isvalid(autoBattle) then
-                    autoBattle.ProfileIndex = tier.PlayerStatsProfileIndex
+                    autoBattle.ProfileIndex = tier.PlayerInitProfileIndex
                     autoBattle.HuntingGroundTierIndex = self.HuntingGroundTierIndex
                     autoBattle.SandboxMapId = map.Id
                     if newlyAttached then

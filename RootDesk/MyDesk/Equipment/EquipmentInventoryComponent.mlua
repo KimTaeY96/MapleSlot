@@ -1,0 +1,303 @@
+@Component
+script EquipmentInventoryComponent extends Component
+    property integer PlayerInitProfileIndex = 1
+    @Sync property boolean Initialized = false
+    @Sync property string OwnedEquipmentIndices = ""
+    @Sync property integer EquippedWeaponIndex = 0
+    @Sync property integer EquippedHelmetIndex = 0
+    @Sync property integer EquippedArmorIndex = 0
+    @Sync property integer EquippedGlovesIndex = 0
+    @Sync property integer EquippedShoesIndex = 0
+    @Sync property integer TotalAttackPower = 0
+    @Sync property integer TotalMaxHp = 0
+    @Sync property integer TotalDefense = 0
+    @Sync property integer BasicAttackSkillInfoIndex = 1
+    @Sync property integer WeaponMotionCoefficientPermille = 1000
+    @Sync property string WeaponTypeEnumId = "NONE"
+    @Sync property string AttackMotionTypeEnumId = "PUNCH"
+    @Sync property string AttackCoreActionName = "swingO1"
+    @Sync property string AttackPartsActionName = "swingO1"
+    @Sync property string EquippedWeaponAvatarCategoryEnumId = ""
+    @Sync property string EquippedWeaponAvatarRUID = ""
+    @Sync property string EquippedHelmetAvatarRUID = ""
+    @Sync property string EquippedArmorAvatarRUID = ""
+    @Sync property string EquippedGlovesAvatarRUID = ""
+    @Sync property string EquippedShoesAvatarRUID = ""
+    @Sync property string EquipmentSummary = "장비 정보를 불러오는 중..."
+    @Sync property string InventorySummary = "인벤토리를 불러오는 중..."
+    @Sync property string DerivedStatsSummary = "파생 능력치를 계산하는 중..."
+
+    method void OnBeginPlay()
+        if self:IsClient() then
+            self:ApplyAvatarEquipmentLocal()
+            return
+        end
+        self:InitializeFromProfile(self.PlayerInitProfileIndex)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnSyncProperty(string name, any value)
+        if string.find(name, "AvatarRUID") ~= nil or name == "EquippedWeaponAvatarCategoryEnumId" then
+            self:ApplyAvatarEquipmentLocal()
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void InitializeFromProfile(integer profileIndex)
+        if self.Initialized then return end
+        local profile = _CombatTableRuntime:GetPlayerInitProfile(profileIndex)
+        if profile == nil or profile.Enabled == false then
+            log_error("[Equipment] Missing PlayerInitProfile " .. tostring(profileIndex))
+            return
+        end
+        self.PlayerInitProfileIndex = profileIndex
+        self:AddOwnedEquipment(profile.InitialWeaponEquipmentIndex)
+        self:AddOwnedEquipment(profile.InitialHelmetEquipmentIndex)
+        self:AddOwnedEquipment(profile.InitialArmorEquipmentIndex)
+        self:AddOwnedEquipment(profile.InitialGlovesEquipmentIndex)
+        self:AddOwnedEquipment(profile.InitialShoesEquipmentIndex)
+        self.EquippedWeaponIndex = profile.InitialWeaponEquipmentIndex
+        self.EquippedHelmetIndex = profile.InitialHelmetEquipmentIndex
+        self.EquippedArmorIndex = profile.InitialArmorEquipmentIndex
+        self.EquippedGlovesIndex = profile.InitialGlovesEquipmentIndex
+        self.EquippedShoesIndex = profile.InitialShoesEquipmentIndex
+        self.Initialized = true
+        self:RecalculateEquipment()
+        log("[Equipment] Explorer starter equipment granted and equipped")
+    end
+
+    @ExecSpace("ServerOnly")
+    method void AddOwnedEquipment(integer equipmentIndex)
+        if equipmentIndex == nil or equipmentIndex <= 0 or self:HasOwnedEquipment(equipmentIndex) then return end
+        if _CombatTableRuntime:GetEquipmentItem(equipmentIndex) == nil then
+            log_error("[Equipment] Cannot grant missing equipment " .. tostring(equipmentIndex))
+            return
+        end
+        if self.OwnedEquipmentIndices == "" then
+            self.OwnedEquipmentIndices = tostring(equipmentIndex)
+        else
+            self.OwnedEquipmentIndices = self.OwnedEquipmentIndices .. "," .. tostring(equipmentIndex)
+        end
+    end
+
+    method boolean HasOwnedEquipment(integer equipmentIndex)
+        for token in string.gmatch(self.OwnedEquipmentIndices, "[^,]+") do
+            if tonumber(token) == equipmentIndex then return true end
+        end
+        return false
+    end
+
+    @ExecSpace("Server")
+    method void RequestToggleEquip(integer equipmentIndex)
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        if self:HasOwnedEquipment(equipmentIndex) == false then
+            log_error("[Equipment] Rejected unowned equipment request " .. tostring(equipmentIndex))
+            return
+        end
+        local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
+        if item == nil then return end
+        local currentIndex = self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId)
+        if currentIndex == equipmentIndex then
+            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, 0)
+            log("[Equipment] Unequipped " .. item.ItemKey)
+        else
+            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, equipmentIndex)
+            log("[Equipment] Equipped " .. item.ItemKey)
+        end
+        self:RecalculateEquipment()
+    end
+
+    @ExecSpace("ServerOnly")
+    method integer GetEquippedIndexForSlot(string slotTypeEnumId)
+        if slotTypeEnumId == "WEAPON" then return self.EquippedWeaponIndex end
+        if slotTypeEnumId == "HELMET" then return self.EquippedHelmetIndex end
+        if slotTypeEnumId == "ARMOR" then return self.EquippedArmorIndex end
+        if slotTypeEnumId == "GLOVES" then return self.EquippedGlovesIndex end
+        if slotTypeEnumId == "SHOES" then return self.EquippedShoesIndex end
+        return 0
+    end
+
+    @ExecSpace("ServerOnly")
+    method void SetEquippedIndexForSlot(string slotTypeEnumId, integer equipmentIndex)
+        if slotTypeEnumId == "WEAPON" then
+            self.EquippedWeaponIndex = equipmentIndex
+            return
+        end
+        if slotTypeEnumId == "HELMET" then
+            self.EquippedHelmetIndex = equipmentIndex
+            return
+        end
+        if slotTypeEnumId == "ARMOR" then
+            self.EquippedArmorIndex = equipmentIndex
+            return
+        end
+        if slotTypeEnumId == "GLOVES" then
+            self.EquippedGlovesIndex = equipmentIndex
+            return
+        end
+        if slotTypeEnumId == "SHOES" then
+            self.EquippedShoesIndex = equipmentIndex
+            return
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RecalculateEquipment()
+        local profile = _CombatTableRuntime:GetPlayerInitProfile(self.PlayerInitProfileIndex)
+        if profile == nil then return end
+        self.TotalAttackPower = profile.BaseAttackPower
+        self.TotalMaxHp = profile.BaseMaxHp
+        self.TotalDefense = profile.BaseDefense
+        self.BasicAttackSkillInfoIndex = profile.UnarmedBasicAttackSkillInfoIndex
+        self.WeaponMotionCoefficientPermille = 1000
+        self.WeaponTypeEnumId = "NONE"
+        self.AttackMotionTypeEnumId = "PUNCH"
+        self.AttackCoreActionName = "swingO1"
+        self.AttackPartsActionName = "swingO1"
+        self.EquippedWeaponAvatarCategoryEnumId = ""
+        self.EquippedWeaponAvatarRUID = ""
+        self.EquippedHelmetAvatarRUID = ""
+        self.EquippedArmorAvatarRUID = ""
+        self.EquippedGlovesAvatarRUID = ""
+        self.EquippedShoesAvatarRUID = ""
+
+        self:ApplyItemBonuses(self.EquippedWeaponIndex)
+        self:ApplyItemBonuses(self.EquippedHelmetIndex)
+        self:ApplyItemBonuses(self.EquippedArmorIndex)
+        self:ApplyItemBonuses(self.EquippedGlovesIndex)
+        self:ApplyItemBonuses(self.EquippedShoesIndex)
+
+        local weapon = _CombatTableRuntime:GetEquipmentItem(self.EquippedWeaponIndex)
+        if weapon ~= nil then
+            local weaponProfile = _CombatTableRuntime:GetWeaponTypeProfile(weapon.WeaponTypeEnumId)
+            if weaponProfile ~= nil then
+                self.WeaponTypeEnumId = weapon.WeaponTypeEnumId
+                self.BasicAttackSkillInfoIndex = weaponProfile.BasicAttackSkillInfoIndex
+                local skill = _CombatTableRuntime:GetSkillInfo(self.BasicAttackSkillInfoIndex)
+                if skill ~= nil then
+                    self.AttackMotionTypeEnumId = skill.MotionTypeEnumId
+                    self.AttackCoreActionName = skill.CoreActionName
+                    self.AttackPartsActionName = skill.PartsActionName
+                    self.WeaponMotionCoefficientPermille = _CombatTableRuntime:GetWeaponMotionCoefficientPermille(
+                        self.WeaponTypeEnumId,
+                        self.AttackMotionTypeEnumId
+                    )
+                end
+            end
+            self.EquippedWeaponAvatarCategoryEnumId = weapon.AvatarCategoryEnumId
+            self.EquippedWeaponAvatarRUID = weapon.AvatarRUID
+        end
+        self:ResolveArmorAvatarRUIDs()
+        self:ApplyDerivedPlayerStats()
+        self:RefreshCombatConsumer()
+        self:RefreshSummaries()
+        log("[Equipment] Recalculated attack=" .. tostring(self.TotalAttackPower)
+            .. " hp=" .. tostring(self.TotalMaxHp)
+            .. " defense=" .. tostring(self.TotalDefense)
+            .. " motion=" .. self.AttackMotionTypeEnumId
+            .. " coefficient=" .. tostring(self.WeaponMotionCoefficientPermille))
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ApplyItemBonuses(integer equipmentIndex)
+        if equipmentIndex <= 0 then return end
+        local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
+        if item == nil then return end
+        self.TotalAttackPower = self.TotalAttackPower + item.AttackPowerBonus
+        self.TotalMaxHp = self.TotalMaxHp + item.MaxHpBonus
+        self.TotalDefense = self.TotalDefense + item.DefenseBonus
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ResolveArmorAvatarRUIDs()
+        local helmet = _CombatTableRuntime:GetEquipmentItem(self.EquippedHelmetIndex)
+        local armor = _CombatTableRuntime:GetEquipmentItem(self.EquippedArmorIndex)
+        local gloves = _CombatTableRuntime:GetEquipmentItem(self.EquippedGlovesIndex)
+        local shoes = _CombatTableRuntime:GetEquipmentItem(self.EquippedShoesIndex)
+        if helmet ~= nil then self.EquippedHelmetAvatarRUID = helmet.AvatarRUID end
+        if armor ~= nil then self.EquippedArmorAvatarRUID = armor.AvatarRUID end
+        if gloves ~= nil then self.EquippedGlovesAvatarRUID = gloves.AvatarRUID end
+        if shoes ~= nil then self.EquippedShoesAvatarRUID = shoes.AvatarRUID end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ApplyDerivedPlayerStats()
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) then return end
+        local previousMaxHp = math.max(1, player.MaxHp)
+        local previousHp = player.Hp
+        player.MaxHp = self.TotalMaxHp
+        if previousHp <= 0 then
+            player.Hp = self.TotalMaxHp
+        else
+            player.Hp = math.min(self.TotalMaxHp, previousHp + math.max(0, self.TotalMaxHp - previousMaxHp))
+        end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RefreshCombatConsumer()
+        local autoBattle = self.Entity:GetComponent("script.CombatPlayerAutoBattle")
+        if not isvalid(autoBattle) then return end
+        autoBattle:RefreshEquipmentCombat(
+            self.TotalAttackPower,
+            self.BasicAttackSkillInfoIndex,
+            self.WeaponMotionCoefficientPermille,
+            self.AttackMotionTypeEnumId,
+            self.AttackCoreActionName,
+            self.AttackPartsActionName
+        )
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RefreshSummaries()
+        self.EquipmentSummary = self:FormatSlot("무기", self.EquippedWeaponIndex)
+            .. "\n" .. self:FormatSlot("투구", self.EquippedHelmetIndex)
+            .. "\n" .. self:FormatSlot("갑옷", self.EquippedArmorIndex)
+            .. "\n" .. self:FormatSlot("장갑", self.EquippedGlovesIndex)
+            .. "\n" .. self:FormatSlot("신발", self.EquippedShoesIndex)
+        self.DerivedStatsSummary = "공격력 " .. tostring(self.TotalAttackPower)
+            .. "  |  최대 HP " .. tostring(self.TotalMaxHp)
+            .. "  |  방어력 " .. tostring(self.TotalDefense)
+            .. "\n기본 공격 " .. tostring(self.BasicAttackSkillInfoIndex)
+            .. "  |  모션 " .. self.AttackMotionTypeEnumId
+            .. "  |  무기 계수 " .. tostring(self.WeaponMotionCoefficientPermille) .. "‰"
+        local lines = {}
+        for token in string.gmatch(self.OwnedEquipmentIndices, "[^,]+") do
+            local index = tonumber(token)
+            local item = _CombatTableRuntime:GetEquipmentItem(index)
+            if item ~= nil then
+                local marker = (self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId) == index) and "[장착] " or "[보유] "
+                table.insert(lines, marker .. item.DisplayName .. "  (#" .. tostring(index) .. ")")
+            end
+        end
+        self.InventorySummary = table.concat(lines, "\n")
+    end
+
+    @ExecSpace("ServerOnly")
+    method string FormatSlot(string label, integer equipmentIndex)
+        local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
+        if item == nil then return label .. ": 비어 있음" end
+        return label .. ": " .. item.DisplayName
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ApplyAvatarEquipmentLocal()
+        local costume = self.Entity.CostumeManagerComponent
+        if not isvalid(costume) then return end
+        costume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, "")
+        costume:SetEquip(MapleAvatarItemCategory.TwoHandedWeapon, "")
+        costume:SetEquip(MapleAvatarItemCategory.SubWeapon, "")
+        if self.EquippedWeaponAvatarCategoryEnumId == "ONE_HANDED_WEAPON" then
+            costume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, self.EquippedWeaponAvatarRUID)
+        elseif self.EquippedWeaponAvatarCategoryEnumId == "TWO_HANDED_WEAPON" then
+            costume:SetEquip(MapleAvatarItemCategory.TwoHandedWeapon, self.EquippedWeaponAvatarRUID)
+        elseif self.EquippedWeaponAvatarCategoryEnumId == "SUB_WEAPON" then
+            costume:SetEquip(MapleAvatarItemCategory.SubWeapon, self.EquippedWeaponAvatarRUID)
+        end
+        costume:SetEquip(MapleAvatarItemCategory.Cap, self.EquippedHelmetAvatarRUID)
+        costume:SetEquip(MapleAvatarItemCategory.Coat, self.EquippedArmorAvatarRUID)
+        costume:SetEquip(MapleAvatarItemCategory.Glove, self.EquippedGlovesAvatarRUID)
+        costume:SetEquip(MapleAvatarItemCategory.Shoes, self.EquippedShoesAvatarRUID)
+    end
+end

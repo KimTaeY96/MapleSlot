@@ -1,0 +1,89 @@
+@Component
+script EquipmentInventoryUI extends Component
+    property Entity Panel = "77bb16a6-dfae-45f4-8e31-b347978e0c71"
+    property ButtonComponent OpenButton = "08bebeb3-baf6-4842-a610-1f1191a72daf"
+    property ButtonComponent CloseButton = "550b99b7-948f-48c0-a0d2-f0bc2b3aa8ea"
+    property TextGUIRendererComponent EquipmentText = "f62ec881-cadd-4b91-b641-952410580f80"
+    property TextGUIRendererComponent StatsText = "e6c803b0-1925-43fd-b8eb-d23f8b7cedad"
+    property TextGUIRendererComponent InventoryText = "30f4fcbb-b7d4-4520-aeb0-3f7a17952ee8"
+    property ButtonComponent SwordButton = "d30e1d3f-ca33-4977-b86a-68fa42d1acdc"
+    property ButtonComponent HelmetButton = "15431452-9c3d-40f5-82e2-f630e0a835db"
+    property ButtonComponent ArmorButton = "6837c6f5-9cb8-428e-a97b-c1185ed139a9"
+    property ButtonComponent GlovesButton = "ab24d0f9-2a2d-42d6-9584-1d4ca427a735"
+    property ButtonComponent ShoesButton = "06e9c017-195c-45aa-9504-09ce2851f036"
+    @HideFromInspector property any OpenHandler = nil
+    @HideFromInspector property any CloseHandler = nil
+    @HideFromInspector property any SwordHandler = nil
+    @HideFromInspector property any HelmetHandler = nil
+    @HideFromInspector property any ArmorHandler = nil
+    @HideFromInspector property any GlovesHandler = nil
+    @HideFromInspector property any ShoesHandler = nil
+    @HideFromInspector property number RefreshElapsed = 0
+
+    @ExecSpace("ClientOnly")
+    method void OnBeginPlay()
+        self.Panel.Enable = false
+        self.OpenHandler = self.OpenButton.Entity:ConnectEvent(ButtonClickEvent, function()
+            self.Panel.Enable = not self.Panel.Enable
+            self:RefreshView()
+        end)
+        self.CloseHandler = self.CloseButton.Entity:ConnectEvent(ButtonClickEvent, function()
+            self.Panel.Enable = false
+        end)
+        self.SwordHandler = self.SwordButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(1001) end)
+        self.HelmetHandler = self.HelmetButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2001) end)
+        self.ArmorHandler = self.ArmorButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2002) end)
+        self.GlovesHandler = self.GlovesButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2003) end)
+        self.ShoesHandler = self.ShoesButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2004) end)
+        self:RefreshView()
+        log("[EquipmentUI] Combined equipment and inventory mock ready")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnUpdate(number delta)
+        if self.Panel.Enable == false then return end
+        self.RefreshElapsed = self.RefreshElapsed + delta
+        if self.RefreshElapsed < 0.2 then return end
+        self.RefreshElapsed = 0
+        self:RefreshView()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ToggleEquipment(integer equipmentIndex)
+        local user = _UserService.LocalPlayer
+        if not isvalid(user) then return end
+        local equipment = user:GetComponent("script.EquipmentInventoryComponent")
+        if not isvalid(equipment) then
+            log_error("[EquipmentUI] EquipmentInventoryComponent is not attached")
+            return
+        end
+        equipment:RequestToggleEquip(equipmentIndex)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshView()
+        local user = _UserService.LocalPlayer
+        if not isvalid(user) then return end
+        local equipment = user:GetComponent("script.EquipmentInventoryComponent")
+        if not isvalid(equipment) then
+            self.EquipmentText.Text = "장비 시스템 연결 대기 중..."
+            self.StatsText.Text = ""
+            self.InventoryText.Text = ""
+            return
+        end
+        self.EquipmentText.Text = equipment.EquipmentSummary
+        self.StatsText.Text = equipment.DerivedStatsSummary
+        self.InventoryText.Text = equipment.InventorySummary
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnEndPlay()
+        if self.OpenHandler ~= nil then self.OpenButton.Entity:DisconnectEvent(ButtonClickEvent, self.OpenHandler) end
+        if self.CloseHandler ~= nil then self.CloseButton.Entity:DisconnectEvent(ButtonClickEvent, self.CloseHandler) end
+        if self.SwordHandler ~= nil then self.SwordButton.Entity:DisconnectEvent(ButtonClickEvent, self.SwordHandler) end
+        if self.HelmetHandler ~= nil then self.HelmetButton.Entity:DisconnectEvent(ButtonClickEvent, self.HelmetHandler) end
+        if self.ArmorHandler ~= nil then self.ArmorButton.Entity:DisconnectEvent(ButtonClickEvent, self.ArmorHandler) end
+        if self.GlovesHandler ~= nil then self.GlovesButton.Entity:DisconnectEvent(ButtonClickEvent, self.GlovesHandler) end
+        if self.ShoesHandler ~= nil then self.ShoesButton.Entity:DisconnectEvent(ButtonClickEvent, self.ShoesHandler) end
+    end
+end

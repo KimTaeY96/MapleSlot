@@ -22,6 +22,10 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property number AttackHitboxHeight = 1.2
     @HideFromInspector property integer BasicAttackSkillInfoIndex = 1
     @HideFromInspector property integer AttackDamageCoefficientPermille = 1000
+    @HideFromInspector property integer WeaponMotionCoefficientPermille = 1000
+    @Sync @HideFromInspector property string AttackMotionTypeEnumId = "PUNCH"
+    @Sync @HideFromInspector property string AttackCoreActionName = "swingO1"
+    @Sync @HideFromInspector property string AttackPartsActionName = "swingO1"
     @HideFromInspector property number AttackCastRangeX = 1
     @HideFromInspector property number AttackCastRangeY = 1.2
     @HideFromInspector property string AttackHitOriginType = "SELF"
@@ -65,20 +69,20 @@ script CombatPlayerAutoBattle extends AttackComponent
         end
 
         self.SandboxMapId = self.Entity.CurrentMap.Id
-        local profile = _CombatTableRuntime:GetPlayerStatsProfile(self.ProfileIndex)
+        local profile = _CombatTableRuntime:GetPlayerInitProfile(self.ProfileIndex)
         local config = _CombatTableRuntime:GetConfig()
         if profile == nil or profile.Enabled == false then
             log_error("[Combat] Missing enabled player profile: " .. tostring(self.ProfileIndex))
             return
         end
-        self.AttackPower = profile.AttackPower
+        self.AttackPower = profile.BaseAttackPower
         self.AttackIntervalSeconds = profile.AttackIntervalSeconds
         self.AttackAnimationDurationSeconds = profile.AttackAnimationDurationSeconds
         self.AttackHitDelaySeconds = profile.AttackHitDelaySeconds
         self.HitAnimationDurationSeconds = profile.HitAnimationDurationSeconds
         self.AttackRange = profile.AttackRange
         self.AttackHitboxHeight = profile.AttackHitboxHeight
-        self.BasicAttackSkillInfoIndex = profile.BasicAttackSkillInfoIndex
+        self.BasicAttackSkillInfoIndex = profile.UnarmedBasicAttackSkillInfoIndex
         local basicAttack = _CombatTableRuntime:GetSkillInfo(self.BasicAttackSkillInfoIndex)
         if basicAttack == nil then
             log_error("[Combat] Missing enabled basic attack SkillInfo: " .. tostring(self.BasicAttackSkillInfoIndex))
@@ -93,6 +97,9 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.AttackHitRangeX = basicAttack.HitRangeX
         self.AttackHitRangeY = basicAttack.HitRangeY
         self.AttackHitRadius = basicAttack.HitRadius
+        self.AttackMotionTypeEnumId = basicAttack.MotionTypeEnumId
+        self.AttackCoreActionName = basicAttack.CoreActionName
+        self.AttackPartsActionName = basicAttack.PartsActionName
         self.MoveSpeed = profile.MoveSpeed
         self.AggroRange = profile.AggroRange
         self.LadderClimbSpeed = profile.LadderClimbSpeed
@@ -104,17 +111,53 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.CriticalDamagePermille = profile.CriticalDamagePermille
 
         local avatarAnimation = self.Entity.AvatarStateAnimationComponent
-        if isvalid(avatarAnimation) then avatarAnimation:SetActionSheet("LADDER", "ladder") end
+        if isvalid(avatarAnimation) then
+            avatarAnimation:SetActionSheet("LADDER", "ladder")
+            avatarAnimation:RemoveActionSheet("ATTACK")
+        end
 
         local player = self.Entity.PlayerComponent
         if isvalid(player) then
-            player.MaxHp = profile.MaxHp
-            player.Hp = profile.MaxHp
+            player.MaxHp = profile.BaseMaxHp
+            player.Hp = profile.BaseMaxHp
             player.RespawnDuration = config.PlayerDeathPenaltySeconds
         end
         local movement = self.Entity.MovementComponent
         if isvalid(movement) then movement.InputSpeed = self.MoveSpeed end
+        local equipment = self.Entity:GetComponent("script.EquipmentInventoryComponent")
+        if isvalid(equipment) and equipment.Initialized then
+            equipment:RecalculateEquipment()
+        end
         log("[Combat] Three-lane auto battle ready on lane " .. self.CombatLaneKey)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RefreshEquipmentCombat(integer totalAttackPower, integer skillInfoIndex, integer motionCoefficientPermille, string motionTypeEnumId, string coreActionName, string partsActionName)
+        -- Makes equipped weapon data the source of truth for the active basic attack.
+        local skill = _CombatTableRuntime:GetSkillInfo(skillInfoIndex)
+        if skill == nil then
+            log_error("[Combat] Missing equipment basic attack SkillInfo: " .. tostring(skillInfoIndex))
+            return
+        end
+        self.AttackPower = totalAttackPower
+        self.BasicAttackSkillInfoIndex = skillInfoIndex
+        self.WeaponMotionCoefficientPermille = motionCoefficientPermille
+        self.AttackMotionTypeEnumId = motionTypeEnumId
+        self.AttackCoreActionName = coreActionName
+        self.AttackPartsActionName = partsActionName
+        self.AttackIntervalSeconds = skill.CooldownSeconds
+        self.AttackDamageCoefficientPermille = skill.DamageCoefficientPermille
+        self.AttackCastRangeX = skill.CastRangeX
+        self.AttackCastRangeY = skill.CastRangeY
+        self.AttackHitOriginType = skill.HitOriginTypeEnumId
+        self.AttackHitShapeType = skill.HitShapeTypeEnumId
+        self.AttackHitRangeX = skill.HitRangeX
+        self.AttackHitRangeY = skill.HitRangeY
+        self.AttackHitRadius = skill.HitRadius
+        self.AttackRange = skill.CastRangeX
+        log("[Combat] Equipment attack refreshed skill=" .. tostring(skillInfoIndex)
+            .. " motion=" .. motionTypeEnumId
+            .. " coefficient=" .. tostring(motionCoefficientPermille))
     end
 
     method void OnEndPlay()
@@ -628,10 +671,22 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     @ExecSpace("Client")
     method void PlayAttackAnimation()
-        -- Enters ATTACK once; the movement driver preserves it until the server releases ActionPhase.
+        -- Plays the equipped weapon's concrete multi-frame action instead of a generic retained ATTACK pose.
         local state = self.Entity.StateComponent
         if not isvalid(state) or state.CurrentStateName == "DEAD" then return end
         if state.CurrentStateName ~= "ATTACK" then state:ChangeState("ATTACK") end
+        local avatarRenderer = self.Entity.AvatarRendererComponent
+        if not isvalid(avatarRenderer) then return end
+        local body = avatarRenderer:GetBodyEntity()
+        if not isvalid(body) then return end
+        local event = ActionStateChangedEvent()
+        event.CoreActionName = self.AttackCoreActionName
+        event.PartsActionName = self.AttackPartsActionName
+        event.PlayRate = 1
+        event.PlayType = SpriteAnimClipPlayType.Onetime
+        event.StartFrameIndex = 0
+        event.EndFrameIndex = 2147483647
+        body:SendEvent(event)
     end
 
     @ExecSpace("Client")
@@ -661,8 +716,13 @@ script CombatPlayerAutoBattle extends AttackComponent
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
-        -- Returns the table-backed basic attack damage.
-        return math.floor(self.AttackPower * self.AttackDamageCoefficientPermille / 1000)
+        -- Combines base+equipment attack, skill coefficient, and weapon/motion compatibility.
+        return math.max(1, math.floor(
+            self.AttackPower
+            * self.AttackDamageCoefficientPermille
+            * self.WeaponMotionCoefficientPermille
+            / 1000000
+        ))
     end
 
     method boolean CalcCritical(Entity attacker, Entity defender, string attackInfo)

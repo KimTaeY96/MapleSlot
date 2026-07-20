@@ -147,8 +147,12 @@ script CombatMonsterAttack extends AttackComponent
     end
 
     method integer CalcDamage(Entity attacker, Entity defender, string attackInfo)
-        -- Returns the table-backed monster damage for contact and active attacks.
-        return math.floor(self.AttackDamage * self.CurrentDamageCoefficientPermille / 1000)
+        -- Applies the first equipment-slice defense rule as flat mitigation with a one-damage floor.
+        local rawDamage = math.floor(self.AttackDamage * self.CurrentDamageCoefficientPermille / 1000)
+        local equipment = defender:GetComponent("script.EquipmentInventoryComponent")
+        local defense = 0
+        if isvalid(equipment) then defense = equipment.TotalDefense end
+        return math.max(1, rawDamage - defense)
     end
 
     method boolean IsAttackTarget(Entity defender, string attackInfo)

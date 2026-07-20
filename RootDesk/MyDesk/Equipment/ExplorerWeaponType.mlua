@@ -1,0 +1,37 @@
+---@description "Closed weapon-family catalog for MapleStory Explorer jobs."
+@Logic
+script ExplorerWeaponType extends Logic
+    property string None = "NONE"
+    property string OneHandedSword = "ONE_HANDED_SWORD"
+    property string TwoHandedSword = "TWO_HANDED_SWORD"
+    property string OneHandedAxe = "ONE_HANDED_AXE"
+    property string TwoHandedAxe = "TWO_HANDED_AXE"
+    property string OneHandedBlunt = "ONE_HANDED_BLUNT"
+    property string TwoHandedBlunt = "TWO_HANDED_BLUNT"
+    property string Spear = "SPEAR"
+    property string Polearm = "POLEARM"
+    property string Wand = "WAND"
+    property string Staff = "STAFF"
+    property string Bow = "BOW"
+    property string Crossbow = "CROSSBOW"
+    property string Dagger = "DAGGER"
+    property string Claw = "CLAW"
+    property string Knuckle = "KNUCKLE"
+    property string Gun = "GUN"
+    property string HandCannon = "HAND_CANNON"
+    property string AncientBow = "ANCIENT_BOW"
+    property string Katara = "KATARA"
+
+    method boolean IsValid(string value)
+        return value == self.OneHandedSword or value == self.TwoHandedSword
+            or value == self.OneHandedAxe or value == self.TwoHandedAxe
+            or value == self.OneHandedBlunt or value == self.TwoHandedBlunt
+            or value == self.Spear or value == self.Polearm
+            or value == self.Wand or value == self.Staff
+            or value == self.Bow or value == self.Crossbow
+            or value == self.Dagger or value == self.Claw
+            or value == self.Knuckle or value == self.Gun
+            or value == self.HandCannon or value == self.AncientBow
+            or value == self.Katara
+    end
+end

@@ -1,0 +1,19 @@
+---@description "Closed attack-motion catalog used for weapon compatibility damage."
+@Logic
+script AttackMotionType extends Logic
+    property string None = "NONE"
+    property string Slash = "SLASH"
+    property string Stab = "STAB"
+    property string Blunt = "BLUNT"
+    property string Shoot = "SHOOT"
+    property string Throw = "THROW"
+    property string Magic = "MAGIC"
+    property string Punch = "PUNCH"
+    property string Cannon = "CANNON"
+
+    method boolean IsValid(string value)
+        return value == self.Slash or value == self.Stab or value == self.Blunt
+            or value == self.Shoot or value == self.Throw or value == self.Magic
+            or value == self.Punch or value == self.Cannon
+    end
+end
