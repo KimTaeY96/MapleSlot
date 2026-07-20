@@ -507,6 +507,7 @@ script SlotMachineRuntime extends Logic
     property string winSymbolAnimationClipRuid = "464a7603c344480aaa3b085b81152cb8"
     property any winVfxFrameRuids = nil
     property any winVfxTimerId = nil
+    property any winBaseSymbolSwapTimerId = nil
     property integer winVfxFrameIndex = 1
     property any paytableTenths = nil
     property any bonusSlotRules = nil
@@ -609,6 +610,7 @@ script SlotMachineRuntime extends Logic
         self.winVfxFrameRuids = self:BuildWinVfxFrameRuids()
         self.winVfxFrameIndex = 1
         self.winVfxTimerId = nil
+        self.winBaseSymbolSwapTimerId = nil
         self.premiumUnits = self.initialPremiumCoins * self.coinUnitPerCoin
         self.commonUnits = self.initialCommonCoins * self.coinUnitPerCoin
         self.textTemplates = self:BuildTextTemplates()
@@ -683,11 +685,11 @@ script SlotMachineRuntime extends Logic
 
         local topBand = 18.0 + (88.0 * hudScale) + 36.0
         local leftMargin = 42.0
-        local bottomMargin = 24.0
+        local bottomOverscan = 12.0
         local slotWidth = 893.0
         local slotHeight = 1020.0
         local slotScaleByWidth = (screenWidth - (leftMargin * 2.0)) / slotWidth
-        local slotScaleByHeight = (screenHeight - topBand - bottomMargin) / slotHeight
+        local slotScaleByHeight = (screenHeight - topBand + bottomOverscan) / slotHeight
         local slotScale = math.min(1.0, math.min(slotScaleByWidth, slotScaleByHeight))
         slotScale = math.max(0.48, slotScale)
 
@@ -4396,6 +4398,10 @@ script SlotMachineRuntime extends Logic
             _TimerService:ClearTimer(self.winVfxTimerId)
             self.winVfxTimerId = nil
         end
+        if self.winBaseSymbolSwapTimerId ~= nil then
+            _TimerService:ClearTimer(self.winBaseSymbolSwapTimerId)
+            self.winBaseSymbolSwapTimerId = nil
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -4544,8 +4550,6 @@ script SlotMachineRuntime extends Logic
             vfx.Enable = true
         end
 
-        self:SetVisibleWinBaseSymbolAlpha(rowIndex, col, 0.0)
-
         local symbolEntity = nil
         if self.winSymbolOverlays ~= nil and self.winSymbolOverlays[rowIndex] ~= nil then
             symbolEntity = self.winSymbolOverlays[rowIndex][col]
@@ -4623,6 +4627,19 @@ script SlotMachineRuntime extends Logic
             end
         end
         self:StartWinVfxFrameLoop()
+        self.winBaseSymbolSwapTimerId = _TimerService:SetTimerOnce(function()
+            self.winBaseSymbolSwapTimerId = nil
+            local swappedCellCount = 0
+            if self.activeWinCells ~= nil then
+                for _, cell in ipairs(self.activeWinCells) do
+                    if cell.symbolEntity ~= nil and cell.symbolEntity.Enable == true then
+                        self:SetVisibleWinBaseSymbolAlpha(cell.rowIndex, cell.col, 0.0)
+                        swappedCellCount = swappedCellCount + 1
+                    end
+                end
+            end
+            log("[SlotMachineRuntime] Win symbol overlays ready before base hide: cells=" .. tostring(swappedCellCount))
+        end, 1.0 / 60.0)
     end
 
     @ExecSpace("ClientOnly")
