@@ -468,10 +468,10 @@ script SlotMachineRuntime extends Logic
     property Entity winSymbolR3C4 = "b885ec53-4a67-4df0-a8c8-e85f2b94648a"
     property Entity winSymbolR3C5 = "3c1ac88c-c316-4909-ab02-3b26e6d7224c"
 
-    property integer premiumUnits = 99990
+    property integer premiumUnits = 0
     property integer commonUnits = 0
     property integer coinUnitPerCoin = 10
-    property integer initialPremiumCoins = 9999
+    property integer initialPremiumCoins = 0
     property integer initialCommonCoins = 0
     property integer baseBet = 1
     property integer multiplier = 1
@@ -660,7 +660,7 @@ script SlotMachineRuntime extends Logic
         self:RefreshReelStripResources()
         self:RefreshAllReelPositions()
         self:RefreshAll()
-        log("[SlotMachineRuntime] Initialized: true 30-cell reel strips, 3 horizontal paylines, premium=9999")
+        log("[SlotMachineRuntime] Initialized: true 30-cell reel strips, 3 horizontal paylines, premium=" .. tostring(self.initialPremiumCoins) .. ", common=" .. tostring(self.initialCommonCoins))
     end
 
     @ExecSpace("ClientOnly")
@@ -2617,6 +2617,7 @@ script SlotMachineRuntime extends Logic
     method table BuildCheatCommands()
         return {
             [1] = { code = "777", description = "Force Wild x5 bonus entry and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+            [2] = { code = "coin 0 1000", description = "Grant coins: coin {0|1} {amount}. 0=Premium, 1=Common.", cheatType = "GRANT_COIN", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
         }
     end
 
@@ -3250,6 +3251,43 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method boolean TryApplyCoinCheat(string code)
+        local normalizedCode = self:NormalizeCheatCode(code)
+        if normalizedCode ~= "COIN" and string.sub(normalizedCode, 1, 5) ~= "COIN " then
+            return false
+        end
+        if self:IsDevCheatRuntime() ~= true then
+            self:SetDevCheatStatus("Cheat blocked")
+            return true
+        end
+
+        local commandName, coinTypeText, quantityText = string.match(normalizedCode, "^(%S+)%s+(%S+)%s+(%S+)$")
+        local coinType = tonumber(coinTypeText)
+        local quantity = tonumber(quantityText)
+        if commandName ~= "COIN" or coinType == nil or (coinType ~= 0 and coinType ~= 1) then
+            self:SetDevCheatStatus("Usage: coin {0|1} {amount}")
+            return true
+        end
+        if quantity == nil or quantity <= 0 or quantity ~= math.floor(quantity) then
+            self:SetDevCheatStatus("Amount must be a positive integer")
+            return true
+        end
+
+        local grantedUnits = quantity * self.coinUnitPerCoin
+        local coinName = "PREMIUM"
+        if coinType == 0 then
+            self.premiumUnits = self.premiumUnits + grantedUnits
+        else
+            coinName = "COMMON"
+            self.commonUnits = self.commonUnits + grantedUnits
+        end
+        self:RefreshCurrency()
+        self:SetDevCheatStatus("Granted " .. coinName .. " x" .. tostring(quantity))
+        log("[SlotMachineRuntime] Cheat granted " .. coinName .. "_COIN x" .. tostring(quantity))
+        return true
+    end
+
+    @ExecSpace("ClientOnly")
     method boolean ApplyCheatCommand(table command)
         if command == nil or command.enabled ~= true then
             self:SetDevCheatStatus("Cheat not found")
@@ -3289,6 +3327,12 @@ script SlotMachineRuntime extends Logic
         local code = self:NormalizeCheatCode(rawText)
         if code == "" then
             self:SetDevCheatStatus("Enter cheat code")
+            return
+        end
+        if self:TryApplyCoinCheat(code) == true then
+            if self.devCheatInput ~= nil then
+                self.devCheatInput.Text = ""
+            end
             return
         end
         local command = self:FindCheatCommand(code)
