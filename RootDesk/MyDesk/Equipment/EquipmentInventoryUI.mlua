@@ -140,7 +140,9 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void OpenInventory()
-        -- Opens the inventory popup without forcing the separate equipment popup to close.
+        -- Opens the inventory popup as the active window and clears overlapping detail UI.
+        self.EquipmentPanel.Enable = false
+        self.TooltipPanel.Enable = false
         self.InventoryPanel.Enable = true
         self:RefreshAll()
     end
@@ -149,12 +151,14 @@ script EquipmentInventoryUI extends Component
     method void CloseInventory()
         -- Closes the inventory and any item tooltip opened from it.
         self.InventoryPanel.Enable = false
-        self.TooltipPanel.Enable = false
+        self:CloseTooltip()
     end
 
     @ExecSpace("ClientOnly")
     method void OpenEquipment()
         -- Opens the character-centered equipment popup and refreshes its five actual project slots.
+        self.InventoryPanel.Enable = false
+        self.TooltipPanel.Enable = false
         self.EquipmentPanel.Enable = true
         self:RefreshAll()
     end
@@ -163,13 +167,16 @@ script EquipmentInventoryUI extends Component
     method void CloseEquipment()
         -- Closes the equipment popup and any item tooltip opened from it.
         self.EquipmentPanel.Enable = false
-        self.TooltipPanel.Enable = false
+        self:CloseTooltip()
     end
 
     @ExecSpace("ClientOnly")
     method void CloseTooltip()
-        -- Hides the selected-item detail and comparison overlay.
+        -- Hides item details and clears all slot-selection decorations.
         self.TooltipPanel.Enable = false
+        self.SelectedItemIndex = 0
+        self:RefreshGrid()
+        if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
     end
 
     @ExecSpace("ClientOnly")
@@ -180,6 +187,7 @@ script EquipmentInventoryUI extends Component
         self.TooltipPanel.Enable = false
         self:RebuildFilteredItems()
         self:RefreshGrid()
+        if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
         self:UpdateTabVisuals()
     end
 
@@ -281,7 +289,7 @@ script EquipmentInventoryUI extends Component
     @ExecSpace("ClientOnly")
     method void RefreshGrid()
         -- Keeps blank slots aligned by rendering the configured capacity through GridView virtualization.
-        if not isvalid(self.ItemGrid) then return end
+        if not isvalid(self.ItemGrid) or not isvalid(self.InventoryComponent) then return end
         self.ItemGrid.TotalCount = self.InventoryComponent.InventoryCapacity
         self.ItemGrid:Refresh(false, true)
         self.CapacityText.Text = tostring(#self.FilteredItems) .. " / " .. tostring(self.InventoryComponent.InventoryCapacity) .. " 슬롯"
@@ -351,15 +359,21 @@ script EquipmentInventoryUI extends Component
         self.SelectedItemIndex = itemIndex
         local item = self:FindItem(itemIndex)
         if item == nil then return end
-        self:ShowTooltip(item)
+        self:ShowTooltip(item, false)
         self.InventoryComponent:RequestMarkItemSeen(itemIndex)
         self:RefreshGrid()
+        self:RefreshEquipmentSlots()
         if isDoubleClick then self:ActivateSelectedItem() end
     end
 
     @ExecSpace("ClientOnly")
-    method void ShowTooltip(table item)
-        -- Displays complete item details, use state, and equipment comparison using text plus symbols.
+    method void ShowTooltip(table item, boolean fromEquipmentPanel)
+        -- Displays item details beside the source window so the tooltip never covers its slots.
+        if fromEquipmentPanel then
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-240, 0)
+        else
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(370, -80)
+        end
         self.TooltipPanel.Enable = true
         self.TooltipTitleText.Text = item.DisplayName
         self.TooltipIcon.ImageRUID = DataRef(item.IconRUID)
@@ -427,36 +441,54 @@ script EquipmentInventoryUI extends Component
             return
         end
         self.SelectedItemIndex = item.Index
-        self:ShowTooltip(item)
+        self:ShowTooltip(item, true)
+        self:RefreshGrid()
+        self:RefreshEquipmentSlots()
     end
 
     @ExecSpace("ClientOnly")
     method void RefreshEquipmentSlots()
-        -- Updates icons for the five slots present in the project's EquipmentSlotType catalog.
-        self:SetEquipmentSlotIcon(self.WeaponSlotButton, self:FindEquippedItem("WEAPON"))
-        self:SetEquipmentSlotIcon(self.HelmetSlotButton, self:FindEquippedItem("HELMET"))
-        self:SetEquipmentSlotIcon(self.ArmorSlotButton, self:FindEquippedItem("ARMOR"))
-        self:SetEquipmentSlotIcon(self.GlovesSlotButton, self:FindEquippedItem("GLOVES"))
-        self:SetEquipmentSlotIcon(self.ShoesSlotButton, self:FindEquippedItem("SHOES"))
+        -- Updates icons, grade, enhancement, selection, and candidate-slot highlights.
+        self:SetEquipmentSlotIcon(self.WeaponSlotButton, self:FindEquippedItem("WEAPON"), "WEAPON")
+        self:SetEquipmentSlotIcon(self.HelmetSlotButton, self:FindEquippedItem("HELMET"), "HELMET")
+        self:SetEquipmentSlotIcon(self.ArmorSlotButton, self:FindEquippedItem("ARMOR"), "ARMOR")
+        self:SetEquipmentSlotIcon(self.GlovesSlotButton, self:FindEquippedItem("GLOVES"), "GLOVES")
+        self:SetEquipmentSlotIcon(self.ShoesSlotButton, self:FindEquippedItem("SHOES"), "SHOES")
         self.EquipmentStatsText.Text = "공격력  " .. tostring(self.InventoryComponent.TotalAttackPower)
             .. "\n최대 HP  " .. tostring(self.InventoryComponent.TotalMaxHp)
             .. "\n방어력  " .. tostring(self.InventoryComponent.TotalDefense)
     end
 
     @ExecSpace("ClientOnly")
-    method void SetEquipmentSlotIcon(ButtonComponent button, table item)
-        -- Sets an equipment slot's avatar thumbnail while preserving its label and selection frame.
+    method void SetEquipmentSlotIcon(ButtonComponent button, table item, string slot)
+        -- Sets one equipment slot's icon and redundant state decorations from cached data.
         local icon = button.Entity:GetChildByName("Icon")
         local empty = button.Entity:GetChildByName("Empty")
+        local grade = button.Entity:GetChildByName("Grade")
+        local enhancement = button.Entity:GetChildByName("Enhancement")
+        local selection = button.Entity:GetChildByName("Selection")
+        local canEquip = button.Entity:GetChildByName("CanEquip")
+        local candidate = self:FindItem(self.SelectedItemIndex)
+        canEquip.Enable = candidate ~= nil
+            and candidate.Category == "EQUIPMENT"
+            and candidate.Slot == slot
+            and candidate.Equipped == false
         if item == nil then
             icon.SpriteGUIRendererComponent.ImageRUID = DataRef("")
             icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 0)
             empty.Enable = true
+            grade.Enable = false
+            enhancement.TextGUIRendererComponent.Text = ""
+            selection.Enable = false
             return
         end
         icon.SpriteGUIRendererComponent.ImageRUID = DataRef(item.IconRUID)
         icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
         empty.Enable = false
+        grade.Enable = true
+        grade.SpriteGUIRendererComponent.Color = self:GetGradeColor(item.Grade)
+        enhancement.TextGUIRendererComponent.Text = item.Enhancement > 0 and ("+" .. tostring(item.Enhancement)) or ""
+        selection.Enable = item.Index == self.SelectedItemIndex
     end
 
     @ExecSpace("ClientOnly")
