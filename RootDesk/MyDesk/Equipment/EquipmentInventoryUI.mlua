@@ -1,89 +1,586 @@
 @Component
 script EquipmentInventoryUI extends Component
-    property Entity Panel = "77bb16a6-dfae-45f4-8e31-b347978e0c71"
-    property ButtonComponent OpenButton = "08bebeb3-baf6-4842-a610-1f1191a72daf"
-    property ButtonComponent CloseButton = "550b99b7-948f-48c0-a0d2-f0bc2b3aa8ea"
-    property TextGUIRendererComponent EquipmentText = "f62ec881-cadd-4b91-b641-952410580f80"
-    property TextGUIRendererComponent StatsText = "e6c803b0-1925-43fd-b8eb-d23f8b7cedad"
-    property TextGUIRendererComponent InventoryText = "30f4fcbb-b7d4-4520-aeb0-3f7a17952ee8"
-    property ButtonComponent SwordButton = "d30e1d3f-ca33-4977-b86a-68fa42d1acdc"
-    property ButtonComponent HelmetButton = "15431452-9c3d-40f5-82e2-f630e0a835db"
-    property ButtonComponent ArmorButton = "6837c6f5-9cb8-428e-a97b-c1185ed139a9"
-    property ButtonComponent GlovesButton = "ab24d0f9-2a2d-42d6-9584-1d4ca427a735"
-    property ButtonComponent ShoesButton = "06e9c017-195c-45aa-9504-09ce2851f036"
-    @HideFromInspector property any OpenHandler = nil
-    @HideFromInspector property any CloseHandler = nil
-    @HideFromInspector property any SwordHandler = nil
-    @HideFromInspector property any HelmetHandler = nil
-    @HideFromInspector property any ArmorHandler = nil
-    @HideFromInspector property any GlovesHandler = nil
-    @HideFromInspector property any ShoesHandler = nil
-    @HideFromInspector property number RefreshElapsed = 0
+    property Entity InventoryPanel = "2db00a08-fa38-4fdf-b65a-bd14681ecc41"
+    property Entity EquipmentPanel = "f7a1a27b-c13a-4334-a48b-6c1e4146c171"
+    property Entity TooltipPanel = "39e1ce5c-d236-406d-9b43-3b64235a2952"
+    property ButtonComponent InventoryOpenButton = "d93b3bae-b3f9-4f70-8afb-5ec88963a3ec"
+    property ButtonComponent EquipmentOpenButton = "0bb4da25-c57f-41e0-9bde-81a828dcdb47"
+    property ButtonComponent InventoryCloseButton = "9a83b37b-c419-45be-979f-5ffb294e8a60"
+    property ButtonComponent EquipmentCloseButton = "3785fd9e-5d1c-4aaf-ad7c-204eb0c581bd"
+    property ButtonComponent TooltipCloseButton = "34f5ed0b-6053-4878-8759-e06b11652495"
+    property ButtonComponent EquipmentTabButton = "ec58b908-cad4-4559-a8d4-ff6611e95493"
+    property ButtonComponent ConsumableTabButton = "f4a6e540-a70d-4d17-b022-75c23ba2a2b6"
+    property ButtonComponent MaterialTabButton = "49471035-1054-40e4-bb75-25c96db96ba9"
+    property ButtonComponent OtherTabButton = "346b0255-7459-4c01-a40f-d9ca8a1a8ef2"
+    property ButtonComponent SortButton = "d8829a44-2e59-4e12-bc52-ecbe81184035"
+    property GridViewComponent ItemGrid = "da55dff4-ee47-4908-bb1f-13c56689c6a2"
+    property Entity ItemTemplate = "58c1080b-a781-494d-9474-e476b12b9831"
+    property TextGUIRendererComponent CurrencyText = "746c0a97-0231-4ff0-90f7-2c6195cfa156"
+    property TextGUIRendererComponent CapacityText = "c67aa355-b4d9-4f88-94af-d10d7725bd70"
+    property TextGUIRendererComponent InventoryStatusText = "4f98d950-bd76-4fd6-a4ee-b032c99b9a2c"
+    property TextGUIRendererComponent EquipmentStatsText = "5b1f262c-771e-465e-b168-f371825b1c80"
+    property ButtonComponent WeaponSlotButton = "05933429-91eb-48a5-a2a0-1237c6402e64"
+    property ButtonComponent HelmetSlotButton = "17136847-25e2-4282-99cc-92dea8306dca"
+    property ButtonComponent ArmorSlotButton = "b8a7a21f-ec18-4b90-b12a-ac1b0c6ff2f9"
+    property ButtonComponent GlovesSlotButton = "a933a057-1022-44c0-a510-91e8f3f88dd6"
+    property ButtonComponent ShoesSlotButton = "aa9fff97-7c0c-4100-84a1-7e62e4aae426"
+    property TextGUIRendererComponent TooltipTitleText = "afe18d92-1d5f-4621-8ea3-f57615c8116e"
+    property SpriteGUIRendererComponent TooltipIcon = "95fcdc60-9f99-48ab-9ebc-a0809d4d022e"
+    property TextGUIRendererComponent TooltipGradeText = "24b07715-1ca1-4fcf-b4bb-92c05228ce1f"
+    property TextGUIRendererComponent TooltipDetailsText = "97828a8e-75bf-41fa-8a5c-38810632f15c"
+    property TextGUIRendererComponent TooltipCompareText = "80ae24ce-fb60-4cc6-92a8-5f0d30c98168"
+    property ButtonComponent TooltipActionButton = "a59246d4-9ea3-4b36-a0ad-cb86f5a85013"
+    property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
+    @HideFromInspector property any InventoryComponent = nil
+    @HideFromInspector property any Items = nil
+    @HideFromInspector property any FilteredItems = nil
+    @HideFromInspector property any SlotIndexByEntityId = nil
+    @HideFromInspector property any GridClickBindings = nil
+    @HideFromInspector property any StaticBindings = nil
+    @HideFromInspector property any InventoryChangedHandler = nil
+    @HideFromInspector property string SelectedCategory = "EQUIPMENT"
+    @HideFromInspector property integer SortMode = 1
+    @HideFromInspector property integer SelectedItemIndex = 0
+    @HideFromInspector property integer LastClickedItemIndex = 0
+    @HideFromInspector property number LastClickTime = -10
+    @HideFromInspector property integer LastRevision = -1
+    @HideFromInspector property number CurrencyRefreshElapsed = 0
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
-        self.Panel.Enable = false
-        self.OpenHandler = self.OpenButton.Entity:ConnectEvent(ButtonClickEvent, function()
-            self.Panel.Enable = not self.Panel.Enable
-            self:RefreshView()
-        end)
-        self.CloseHandler = self.CloseButton.Entity:ConnectEvent(ButtonClickEvent, function()
-            self.Panel.Enable = false
-        end)
-        self.SwordHandler = self.SwordButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(1001) end)
-        self.HelmetHandler = self.HelmetButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2001) end)
-        self.ArmorHandler = self.ArmorButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2002) end)
-        self.GlovesHandler = self.GlovesButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2003) end)
-        self.ShoesHandler = self.ShoesButton.Entity:ConnectEvent(ButtonClickEvent, function() self:ToggleEquipment(2004) end)
-        self:RefreshView()
-        log("[EquipmentUI] Combined equipment and inventory mock ready")
+        -- Binds popup controls, initializes the virtualized slot grid, and waits for the local inventory owner.
+        self.Items = {}
+        self.FilteredItems = {}
+        self.SlotIndexByEntityId = {}
+        self.GridClickBindings = {}
+        self.StaticBindings = {}
+        self.InventoryPanel.Enable = false
+        self.EquipmentPanel.Enable = false
+        self.TooltipPanel.Enable = false
+        self.ItemTemplate.Enable = false
+        self.ItemGrid.ItemEntity = self.ItemTemplate
+        self.ItemGrid.OnRefresh = function(index, entity) self:OnRefreshGridItem(index, entity) end
+        self.ItemGrid.OnClear = function(index, entity) self:OnClearGridItem(index, entity) end
+        self:BindStaticButtons()
+        self:BindPlayerInventory()
+        self:RefreshAll()
+        log("[EquipmentUI] Inventory, equipment, tooltip, and comparison UI ready")
     end
 
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
-        if self.Panel.Enable == false then return end
-        self.RefreshElapsed = self.RefreshElapsed + delta
-        if self.RefreshElapsed < 0.2 then return end
-        self.RefreshElapsed = 0
-        self:RefreshView()
+        -- Performs only lightweight revision and currency checks; full item rendering remains event-driven.
+        if not isvalid(self.InventoryComponent) then
+            self:BindPlayerInventory()
+            return
+        end
+        if self.InventoryComponent.InventoryRevision ~= self.LastRevision then
+            self:RefreshAll()
+        end
+        self.CurrencyRefreshElapsed = self.CurrencyRefreshElapsed + delta
+        if self.CurrencyRefreshElapsed >= 0.5 then
+            self.CurrencyRefreshElapsed = 0
+            self:RefreshCurrency()
+        end
     end
 
     @ExecSpace("ClientOnly")
-    method void ToggleEquipment(integer equipmentIndex)
-        local user = _UserService.LocalPlayer
-        if not isvalid(user) then return end
-        local equipment = user:GetComponent("script.EquipmentInventoryComponent")
-        if not isvalid(equipment) then
-            log_error("[EquipmentUI] EquipmentInventoryComponent is not attached")
-            return
-        end
-        equipment:RequestToggleEquip(equipmentIndex)
+    method void BindStaticButtons()
+        -- Connects every fixed button to a single lifecycle-owned handler list.
+        self:AddStaticBinding(self.InventoryOpenButton.Entity, function() self:OpenInventory() end)
+        self:AddStaticBinding(self.EquipmentOpenButton.Entity, function() self:OpenEquipment() end)
+        self:AddStaticBinding(self.InventoryCloseButton.Entity, function() self:CloseInventory() end)
+        self:AddStaticBinding(self.EquipmentCloseButton.Entity, function() self:CloseEquipment() end)
+        self:AddStaticBinding(self.TooltipCloseButton.Entity, function() self:CloseTooltip() end)
+        self:AddStaticBinding(self.EquipmentTabButton.Entity, function() self:SelectCategory("EQUIPMENT") end)
+        self:AddStaticBinding(self.ConsumableTabButton.Entity, function() self:SelectCategory("CONSUMABLE") end)
+        self:AddStaticBinding(self.MaterialTabButton.Entity, function() self:SelectCategory("MATERIAL") end)
+        self:AddStaticBinding(self.OtherTabButton.Entity, function() self:SelectCategory("OTHER") end)
+        self:AddStaticBinding(self.SortButton.Entity, function() self:CycleSortMode() end)
+        self:AddStaticBinding(self.WeaponSlotButton.Entity, function() self:SelectEquippedSlot("WEAPON") end)
+        self:AddStaticBinding(self.HelmetSlotButton.Entity, function() self:SelectEquippedSlot("HELMET") end)
+        self:AddStaticBinding(self.ArmorSlotButton.Entity, function() self:SelectEquippedSlot("ARMOR") end)
+        self:AddStaticBinding(self.GlovesSlotButton.Entity, function() self:SelectEquippedSlot("GLOVES") end)
+        self:AddStaticBinding(self.ShoesSlotButton.Entity, function() self:SelectEquippedSlot("SHOES") end)
+        self:AddStaticBinding(self.TooltipActionButton.Entity, function() self:ActivateSelectedItem() end)
     end
 
     @ExecSpace("ClientOnly")
-    method void RefreshView()
+    method void AddStaticBinding(Entity entity, any callback)
+        -- Stores a button click subscription so it can be disconnected during UI teardown.
+        if not isvalid(entity) then return end
+        local eventHandler = entity:ConnectEvent(ButtonClickEvent, function()
+            self:PlayClickSound()
+            callback()
+        end)
+        table.insert(self.StaticBindings, { Entity = entity, EventHandler = eventHandler })
+    end
+
+    @ExecSpace("ClientOnly")
+    method void BindPlayerInventory()
+        -- Locates the existing player inventory component and subscribes to its synchronized change event.
         local user = _UserService.LocalPlayer
         if not isvalid(user) then return end
-        local equipment = user:GetComponent("script.EquipmentInventoryComponent")
-        if not isvalid(equipment) then
-            self.EquipmentText.Text = "장비 시스템 연결 대기 중..."
-            self.StatsText.Text = ""
-            self.InventoryText.Text = ""
+        local inventory = user:GetComponent("script.EquipmentInventoryComponent")
+        if not isvalid(inventory) then return end
+        self.InventoryComponent = inventory
+        if self.InventoryChangedHandler == nil then
+            self.InventoryChangedHandler = user:ConnectEvent(EquipmentInventoryChangedEvent, self.OnInventoryChanged)
+        end
+        log("[EquipmentUI] Bound player inventory revision=" .. tostring(inventory.InventoryRevision))
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnInventoryChanged(EquipmentInventoryChangedEvent event)
+        -- Refreshes the visible data immediately after the owning player's synchronized inventory changes.
+        self.LastRevision = event.Revision
+        self:RefreshAll()
+        log("[EquipmentUI] Applied inventory event revision=" .. tostring(event.Revision))
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenInventory()
+        -- Opens the inventory popup without forcing the separate equipment popup to close.
+        self.InventoryPanel.Enable = true
+        self:RefreshAll()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CloseInventory()
+        -- Closes the inventory and any item tooltip opened from it.
+        self.InventoryPanel.Enable = false
+        self.TooltipPanel.Enable = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenEquipment()
+        -- Opens the character-centered equipment popup and refreshes its five actual project slots.
+        self.EquipmentPanel.Enable = true
+        self:RefreshAll()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CloseEquipment()
+        -- Closes the equipment popup and any item tooltip opened from it.
+        self.EquipmentPanel.Enable = false
+        self.TooltipPanel.Enable = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CloseTooltip()
+        -- Hides the selected-item detail and comparison overlay.
+        self.TooltipPanel.Enable = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SelectCategory(string category)
+        -- Changes the inventory tab and reuses the same virtualized grid template.
+        self.SelectedCategory = category
+        self.SelectedItemIndex = 0
+        self.TooltipPanel.Enable = false
+        self:RebuildFilteredItems()
+        self:RefreshGrid()
+        self:UpdateTabVisuals()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CycleSortMode()
+        -- Cycles acquisition, grade, and name ordering without mutating authoritative server data.
+        self.SortMode = self.SortMode + 1
+        if self.SortMode > 3 then self.SortMode = 1 end
+        self:RebuildFilteredItems()
+        self:RefreshGrid()
+        local labels = { "정렬: 획득순", "정렬: 등급", "정렬: 이름" }
+        self.SortButton.Entity.TextGUIRendererComponent.Text = labels[self.SortMode]
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshAll()
+        -- Parses the latest authoritative snapshot and refreshes grid, equipment, status, and currency views.
+        if not isvalid(self.InventoryComponent) then
+            self.InventoryStatusText.Text = "플레이어 인벤토리 연결 대기 중..."
             return
         end
-        self.EquipmentText.Text = equipment.EquipmentSummary
-        self.StatsText.Text = equipment.DerivedStatsSummary
-        self.InventoryText.Text = equipment.InventorySummary
+        self.Items = self:ParseInventorySnapshot(self.InventoryComponent.InventorySnapshot)
+        self.LastRevision = self.InventoryComponent.InventoryRevision
+        self:RebuildFilteredItems()
+        self:RefreshGrid()
+        self:RefreshEquipmentSlots()
+        self:RefreshStatus()
+        self:RefreshCurrency()
+        self:UpdateTabVisuals()
+    end
+
+    @ExecSpace("ClientOnly")
+    method table ParseInventorySnapshot(string snapshot)
+        -- Converts delimiter-safe server records into cached client display tables.
+        local items = {}
+        if snapshot == nil or snapshot == "" then return items end
+        for record in string.gmatch(snapshot, "[^|]+") do
+            local fields = self:Split(record, "^")
+            if #fields >= 17 then
+                table.insert(items, {
+                    Index = tonumber(fields[1]) or 0,
+                    ItemKey = fields[2],
+                    DisplayName = fields[3],
+                    Category = fields[4],
+                    Slot = fields[5],
+                    Count = tonumber(fields[6]) or 0,
+                    Grade = fields[7],
+                    IconRUID = fields[8],
+                    Equipped = fields[9] == "1",
+                    IsNew = fields[10] == "1",
+                    RequiredLevel = tonumber(fields[11]) or 1,
+                    Attack = tonumber(fields[12]) or 0,
+                    MaxHp = tonumber(fields[13]) or 0,
+                    Defense = tonumber(fields[14]) or 0,
+                    Enhancement = tonumber(fields[15]) or 0,
+                    Description = fields[16],
+                    SellPrice = tonumber(fields[17]) or 0,
+                })
+            end
+        end
+        return items
+    end
+
+    @ExecSpace("ClientOnly")
+    method table Split(string value, string delimiter)
+        -- Splits a compact snapshot field list using a literal single-character delimiter.
+        local result = {}
+        local startIndex = 1
+        while true do
+            local delimiterIndex = (string.find(value, delimiter, startIndex, true))
+            if delimiterIndex == nil then
+                table.insert(result, string.sub(value, startIndex))
+                break
+            end
+            table.insert(result, string.sub(value, startIndex, delimiterIndex - 1))
+            startIndex = delimiterIndex + string.len(delimiter)
+        end
+        return result
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RebuildFilteredItems()
+        -- Filters by the active tab and applies the selected stable presentation sort.
+        self.FilteredItems = {}
+        for _, item in ipairs(self.Items) do
+            if item.Category == self.SelectedCategory then table.insert(self.FilteredItems, item) end
+        end
+        if self.SortMode == 2 then
+            table.sort(self.FilteredItems, function(a, b)
+                local gradeDelta = self:GetGradeWeight(a.Grade) - self:GetGradeWeight(b.Grade)
+                if gradeDelta == 0 then return a.Index < b.Index end
+                return gradeDelta > 0
+            end)
+        elseif self.SortMode == 3 then
+            table.sort(self.FilteredItems, function(a, b) return a.DisplayName < b.DisplayName end)
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshGrid()
+        -- Keeps blank slots aligned by rendering the configured capacity through GridView virtualization.
+        if not isvalid(self.ItemGrid) then return end
+        self.ItemGrid.TotalCount = self.InventoryComponent.InventoryCapacity
+        self.ItemGrid:Refresh(false, true)
+        self.CapacityText.Text = tostring(#self.FilteredItems) .. " / " .. tostring(self.InventoryComponent.InventoryCapacity) .. " 슬롯"
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnRefreshGridItem(integer index, Entity entity)
+        -- Populates or clears one recycled grid entity without performing data or storage calls.
+        if not isvalid(entity) then return end
+        local item = self.FilteredItems[index + 1]
+        self:EnsureGridClickBinding(entity)
+        local icon = entity:GetChildByName("Icon")
+        local quantity = entity:GetChildByName("Quantity")
+        local grade = entity:GetChildByName("Grade")
+        local equipped = entity:GetChildByName("Equipped")
+        local fresh = entity:GetChildByName("New")
+        local selection = entity:GetChildByName("Selection")
+        local disabled = entity:GetChildByName("Disabled")
+        if item == nil then
+            self.SlotIndexByEntityId[entity.Id] = 0
+            icon.SpriteGUIRendererComponent.ImageRUID = DataRef("")
+            icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 0)
+            quantity.TextGUIRendererComponent.Text = ""
+            grade.Enable = false
+            equipped.Enable = false
+            fresh.Enable = false
+            selection.Enable = false
+            disabled.Enable = false
+            return
+        end
+        self.SlotIndexByEntityId[entity.Id] = item.Index
+        icon.SpriteGUIRendererComponent.ImageRUID = DataRef(item.IconRUID)
+        icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+        quantity.TextGUIRendererComponent.Text = item.Count > 1 and tostring(item.Count) or ""
+        grade.Enable = true
+        grade.SpriteGUIRendererComponent.Color = self:GetGradeColor(item.Grade)
+        equipped.Enable = item.Equipped
+        fresh.Enable = item.IsNew
+        selection.Enable = item.Index == self.SelectedItemIndex
+        disabled.Enable = item.Category == "MATERIAL" or item.Category == "OTHER"
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnClearGridItem(integer index, Entity entity)
+        -- Clears the recycled slot-to-item mapping when GridView releases an entity.
+        if isvalid(entity) then self.SlotIndexByEntityId[entity.Id] = 0 end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void EnsureGridClickBinding(Entity entity)
+        -- Connects a recycled grid slot exactly once and resolves its current item through a mapping table.
+        if self.GridClickBindings[entity.Id] ~= nil then return end
+        local eventHandler = entity:ConnectEvent(ButtonClickEvent, function() self:OnGridSlotClicked(entity) end)
+        self.GridClickBindings[entity.Id] = { Entity = entity, EventHandler = eventHandler }
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnGridSlotClicked(Entity entity)
+        -- Selects on the first click and activates the same item on a second click within 0.35 seconds.
+        self:PlayClickSound()
+        local itemIndex = self.SlotIndexByEntityId[entity.Id] or 0
+        if itemIndex <= 0 then return end
+        local now = _UtilLogic.ElapsedSeconds
+        local isDoubleClick = itemIndex == self.LastClickedItemIndex and now - self.LastClickTime <= 0.35
+        self.LastClickedItemIndex = itemIndex
+        self.LastClickTime = now
+        self.SelectedItemIndex = itemIndex
+        local item = self:FindItem(itemIndex)
+        if item == nil then return end
+        self:ShowTooltip(item)
+        self.InventoryComponent:RequestMarkItemSeen(itemIndex)
+        self:RefreshGrid()
+        if isDoubleClick then self:ActivateSelectedItem() end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ShowTooltip(table item)
+        -- Displays complete item details, use state, and equipment comparison using text plus symbols.
+        self.TooltipPanel.Enable = true
+        self.TooltipTitleText.Text = item.DisplayName
+        self.TooltipIcon.ImageRUID = DataRef(item.IconRUID)
+        self.TooltipGradeText.Text = self:GetGradeLabel(item.Grade) .. "  |  " .. self:GetCategoryLabel(item.Category)
+        local slotLine = item.Slot ~= "NONE" and ("장착 부위: " .. self:GetSlotLabel(item.Slot) .. "\n") or ""
+        local enhancementLine = item.Enhancement > 0 and ("강화: +" .. tostring(item.Enhancement) .. "\n") or ""
+        self.TooltipDetailsText.Text = slotLine
+            .. "요구 레벨: " .. tostring(item.RequiredLevel) .. "\n"
+            .. enhancementLine
+            .. "공격력 +" .. tostring(item.Attack) .. "  최대 HP +" .. tostring(item.MaxHp) .. "\n"
+            .. "방어력 +" .. tostring(item.Defense) .. "\n\n"
+            .. item.Description .. "\n\n판매 가격: " .. tostring(item.SellPrice)
+        self.TooltipCompareText.Text = self:BuildComparisonText(item)
+        if item.Category == "EQUIPMENT" then
+            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = item.Equipped and "장착 해제" or "장착하기"
+            self.TooltipActionButton.Enable = true
+        elseif item.Category == "CONSUMABLE" then
+            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = "사용하기"
+            self.TooltipActionButton.Enable = true
+        else
+            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = "사용 불가"
+            self.TooltipActionButton.Enable = false
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method string BuildComparisonText(table item)
+        -- Compares an equipment candidate against the currently equipped item in the same slot.
+        if item.Category ~= "EQUIPMENT" then return "비교 대상 장비 없음" end
+        local current = self:FindEquippedItem(item.Slot)
+        if current == nil then
+            return "비교 기준: 빈 슬롯\n"
+                .. self:FormatDelta("공격력", item.Attack)
+                .. "  " .. self:FormatDelta("최대 HP", item.MaxHp)
+                .. "\n" .. self:FormatDelta("방어력", item.Defense)
+        end
+        if current.Index == item.Index then return "현재 장착 중인 장비입니다." end
+        return "비교 기준: " .. current.DisplayName .. "\n"
+            .. self:FormatDelta("공격력", item.Attack - current.Attack)
+            .. "  " .. self:FormatDelta("최대 HP", item.MaxHp - current.MaxHp)
+            .. "\n" .. self:FormatDelta("방어력", item.Defense - current.Defense)
+    end
+
+    @ExecSpace("ClientOnly")
+    method string FormatDelta(string label, integer delta)
+        -- Formats comparison changes with arrows and signed text so color is never the only signal.
+        if delta > 0 then return "▲ " .. label .. " +" .. tostring(delta) end
+        if delta < 0 then return "▼ " .. label .. " " .. tostring(delta) end
+        return "• " .. label .. " 0"
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ActivateSelectedItem()
+        -- Sends the selected equip, unequip, or consumable-use request to the authoritative server component.
+        if self.SelectedItemIndex <= 0 or not isvalid(self.InventoryComponent) then return end
+        self.InventoryComponent:RequestActivateItem(self.SelectedItemIndex)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SelectEquippedSlot(string slot)
+        -- Selects the equipped item in one actual project slot so it can be inspected or removed.
+        local item = self:FindEquippedItem(slot)
+        if item == nil then
+            self.InventoryStatusText.Text = self:GetSlotLabel(slot) .. " 슬롯이 비어 있습니다."
+            return
+        end
+        self.SelectedItemIndex = item.Index
+        self:ShowTooltip(item)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshEquipmentSlots()
+        -- Updates icons for the five slots present in the project's EquipmentSlotType catalog.
+        self:SetEquipmentSlotIcon(self.WeaponSlotButton, self:FindEquippedItem("WEAPON"))
+        self:SetEquipmentSlotIcon(self.HelmetSlotButton, self:FindEquippedItem("HELMET"))
+        self:SetEquipmentSlotIcon(self.ArmorSlotButton, self:FindEquippedItem("ARMOR"))
+        self:SetEquipmentSlotIcon(self.GlovesSlotButton, self:FindEquippedItem("GLOVES"))
+        self:SetEquipmentSlotIcon(self.ShoesSlotButton, self:FindEquippedItem("SHOES"))
+        self.EquipmentStatsText.Text = "공격력  " .. tostring(self.InventoryComponent.TotalAttackPower)
+            .. "\n최대 HP  " .. tostring(self.InventoryComponent.TotalMaxHp)
+            .. "\n방어력  " .. tostring(self.InventoryComponent.TotalDefense)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetEquipmentSlotIcon(ButtonComponent button, table item)
+        -- Sets an equipment slot's avatar thumbnail while preserving its label and selection frame.
+        local icon = button.Entity:GetChildByName("Icon")
+        local empty = button.Entity:GetChildByName("Empty")
+        if item == nil then
+            icon.SpriteGUIRendererComponent.ImageRUID = DataRef("")
+            icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 0)
+            empty.Enable = true
+            return
+        end
+        icon.SpriteGUIRendererComponent.ImageRUID = DataRef(item.IconRUID)
+        icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+        empty.Enable = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshStatus()
+        -- Displays the last authoritative action result and the selected category count.
+        self.InventoryStatusText.Text = self.InventoryComponent.LastActionMessage
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshCurrency()
+        -- Reads the existing shared session wallet without introducing duplicate currency state.
+        local unitPerCoin = math.max(1, _SlotMachineRuntime.coinUnitPerCoin)
+        local commonCoins = math.floor(_SlotMachineRuntime.commonUnits / unitPerCoin)
+        self.CurrencyText.Text = "보유 코인  " .. tostring(commonCoins)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void UpdateTabVisuals()
+        -- Applies a blue selected tint and neutral unselected tint to all category tabs.
+        self:SetTabSelected(self.EquipmentTabButton, self.SelectedCategory == "EQUIPMENT")
+        self:SetTabSelected(self.ConsumableTabButton, self.SelectedCategory == "CONSUMABLE")
+        self:SetTabSelected(self.MaterialTabButton, self.SelectedCategory == "MATERIAL")
+        self:SetTabSelected(self.OtherTabButton, self.SelectedCategory == "OTHER")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetTabSelected(ButtonComponent button, boolean selected)
+        -- Tints one tab while keeping text and touch target unchanged.
+        if selected then
+            button.Entity.SpriteGUIRendererComponent.Color = Color(0.26, 0.58, 0.9, 1)
+        else
+            button.Entity.SpriteGUIRendererComponent.Color = Color(0.82, 0.88, 0.94, 1)
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method table FindItem(integer itemIndex)
+        -- Finds one cached item record by authoritative index.
+        for _, item in ipairs(self.Items) do
+            if item.Index == itemIndex then return item end
+        end
+        return nil
+    end
+
+    @ExecSpace("ClientOnly")
+    method table FindEquippedItem(string slot)
+        -- Finds the currently equipped cached item in one slot.
+        for _, item in ipairs(self.Items) do
+            if item.Equipped and item.Slot == slot then return item end
+        end
+        return nil
+    end
+
+    @ExecSpace("ClientOnly")
+    method integer GetGradeWeight(string grade)
+        -- Maps project grade IDs to a stable visual sorting priority.
+        if grade == "LEGENDARY" then return 5 end
+        if grade == "UNIQUE" then return 4 end
+        if grade == "EPIC" then return 3 end
+        if grade == "RARE" then return 2 end
+        return 1
+    end
+
+    @ExecSpace("ClientOnly")
+    method Color GetGradeColor(string grade)
+        -- Returns the grade stripe color while leaving names and symbols as redundant cues.
+        if grade == "LEGENDARY" then return Color(0.24, 0.76, 0.42, 1) end
+        if grade == "UNIQUE" then return Color(0.95, 0.78, 0.18, 1) end
+        if grade == "EPIC" then return Color(0.72, 0.38, 0.9, 1) end
+        if grade == "RARE" then return Color(0.28, 0.58, 0.94, 1) end
+        return Color(0.62, 0.66, 0.7, 1)
+    end
+
+    @ExecSpace("ClientOnly")
+    method string GetGradeLabel(string grade)
+        -- Converts grade IDs into readable Korean labels.
+        if grade == "LEGENDARY" then return "레전더리" end
+        if grade == "UNIQUE" then return "유니크" end
+        if grade == "EPIC" then return "에픽" end
+        if grade == "RARE" then return "레어" end
+        return "일반"
+    end
+
+    @ExecSpace("ClientOnly")
+    method string GetCategoryLabel(string category)
+        -- Converts inventory category IDs into readable Korean labels.
+        if category == "EQUIPMENT" then return "장비" end
+        if category == "CONSUMABLE" then return "소비" end
+        if category == "MATERIAL" then return "재료" end
+        return "기타"
+    end
+
+    @ExecSpace("ClientOnly")
+    method string GetSlotLabel(string slot)
+        -- Converts the project's five actual equipment slot IDs into readable labels.
+        if slot == "WEAPON" then return "무기" end
+        if slot == "HELMET" then return "모자" end
+        if slot == "ARMOR" then return "상의" end
+        if slot == "GLOVES" then return "장갑" end
+        if slot == "SHOES" then return "신발" end
+        return "없음"
+    end
+
+    @ExecSpace("ClientOnly")
+    method void PlayClickSound()
+        -- Plays the project-standard UI click sound for every interactive control.
+        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
     end
 
     @ExecSpace("ClientOnly")
     method void OnEndPlay()
-        if self.OpenHandler ~= nil then self.OpenButton.Entity:DisconnectEvent(ButtonClickEvent, self.OpenHandler) end
-        if self.CloseHandler ~= nil then self.CloseButton.Entity:DisconnectEvent(ButtonClickEvent, self.CloseHandler) end
-        if self.SwordHandler ~= nil then self.SwordButton.Entity:DisconnectEvent(ButtonClickEvent, self.SwordHandler) end
-        if self.HelmetHandler ~= nil then self.HelmetButton.Entity:DisconnectEvent(ButtonClickEvent, self.HelmetHandler) end
-        if self.ArmorHandler ~= nil then self.ArmorButton.Entity:DisconnectEvent(ButtonClickEvent, self.ArmorHandler) end
-        if self.GlovesHandler ~= nil then self.GlovesButton.Entity:DisconnectEvent(ButtonClickEvent, self.GlovesHandler) end
-        if self.ShoesHandler ~= nil then self.ShoesButton.Entity:DisconnectEvent(ButtonClickEvent, self.ShoesHandler) end
+        -- Disconnects player, fixed-button, and recycled-grid handlers to prevent UI reload leaks.
+        local user = _UserService.LocalPlayer
+        if self.InventoryChangedHandler ~= nil and isvalid(user) then
+            user:DisconnectEvent(EquipmentInventoryChangedEvent, self.InventoryChangedHandler)
+        end
+        for _, binding in ipairs(self.StaticBindings or {}) do
+            if isvalid(binding.Entity) then binding.Entity:DisconnectEvent(ButtonClickEvent, binding.EventHandler) end
+        end
+        for _, binding in pairs(self.GridClickBindings or {}) do
+            if isvalid(binding.Entity) then binding.Entity:DisconnectEvent(ButtonClickEvent, binding.EventHandler) end
+        end
+        self.InventoryChangedHandler = nil
+        self.StaticBindings = {}
+        self.GridClickBindings = {}
     end
 end

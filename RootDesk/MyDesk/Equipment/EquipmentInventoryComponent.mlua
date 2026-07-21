@@ -3,6 +3,12 @@ script EquipmentInventoryComponent extends Component
     property integer PlayerInitProfileIndex = 1
     @Sync property boolean Initialized = false
     @Sync property string OwnedEquipmentIndices = ""
+    @Sync property string OwnedItemStacks = ""
+    @Sync property string NewItemIndices = ""
+    @Sync property integer InventoryCapacity = 30
+    @Sync property integer InventoryRevision = 0
+    @Sync property string InventorySnapshot = ""
+    @Sync property string LastActionMessage = "인벤토리를 준비하는 중..."
     @Sync property integer EquippedWeaponIndex = 0
     @Sync property integer EquippedHelmetIndex = 0
     @Sync property integer EquippedArmorIndex = 0
@@ -28,8 +34,10 @@ script EquipmentInventoryComponent extends Component
     @Sync property string DerivedStatsSummary = "파생 능력치를 계산하는 중..."
 
     method void OnBeginPlay()
+        -- Initializes server-owned inventory state or applies replicated avatar equipment locally.
         if self:IsClient() then
             self:ApplyAvatarEquipmentLocal()
+            log("[Equipment] Client inventory component ready")
             return
         end
         self:InitializeFromProfile(self.PlayerInitProfileIndex)
@@ -37,13 +45,20 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ClientOnly")
     method void OnSyncProperty(string name, any value)
+        -- Applies avatar changes and emits an event-driven UI refresh when replicated state changes.
         if string.find(name, "AvatarRUID") ~= nil or name == "EquippedWeaponAvatarCategoryEnumId" then
             self:ApplyAvatarEquipmentLocal()
+        end
+        if name == "InventoryRevision" then
+            local event = EquipmentInventoryChangedEvent()
+            event.Revision = self.InventoryRevision
+            self.Entity:SendEvent(event)
         end
     end
 
     @ExecSpace("ServerOnly")
     method void InitializeFromProfile(integer profileIndex)
+        -- Grants the table-backed starter loadout once and publishes a synchronized inventory snapshot.
         if self.Initialized then return end
         local profile = _CombatTableRuntime:GetPlayerInitProfile(profileIndex)
         if profile == nil or profile.Enabled == false then
@@ -56,60 +71,227 @@ script EquipmentInventoryComponent extends Component
         self:AddOwnedEquipment(profile.InitialArmorEquipmentIndex)
         self:AddOwnedEquipment(profile.InitialGlovesEquipmentIndex)
         self:AddOwnedEquipment(profile.InitialShoesEquipmentIndex)
+        for token in string.gmatch(profile.InitialInventoryStacks or "", "[^,]+") do
+            local separator = (string.find(token, ":"))
+            if separator ~= nil then
+                local itemIndex = tonumber(string.sub(token, 1, separator - 1))
+                local count = tonumber(string.sub(token, separator + 1))
+                self:AddOwnedItemStack(itemIndex, count)
+            end
+        end
         self.EquippedWeaponIndex = profile.InitialWeaponEquipmentIndex
         self.EquippedHelmetIndex = profile.InitialHelmetEquipmentIndex
         self.EquippedArmorIndex = profile.InitialArmorEquipmentIndex
         self.EquippedGlovesIndex = profile.InitialGlovesEquipmentIndex
         self.EquippedShoesIndex = profile.InitialShoesEquipmentIndex
         self.Initialized = true
+        self.LastActionMessage = "초기 장비와 아이템을 지급했습니다."
         self:RecalculateEquipment()
-        log("[Equipment] Explorer starter equipment granted and equipped")
+        log("[Equipment] Starter inventory initialized with equipment and item stacks")
     end
 
     @ExecSpace("ServerOnly")
     method void AddOwnedEquipment(integer equipmentIndex)
+        -- Adds a valid equipment definition to the owned set without duplicating indices.
         if equipmentIndex == nil or equipmentIndex <= 0 or self:HasOwnedEquipment(equipmentIndex) then return end
         if _CombatTableRuntime:GetEquipmentItem(equipmentIndex) == nil then
             log_error("[Equipment] Cannot grant missing equipment " .. tostring(equipmentIndex))
             return
         end
-        if self.OwnedEquipmentIndices == "" then
-            self.OwnedEquipmentIndices = tostring(equipmentIndex)
-        else
-            self.OwnedEquipmentIndices = self.OwnedEquipmentIndices .. "," .. tostring(equipmentIndex)
-        end
+        self.OwnedEquipmentIndices = self:AddUniqueIndex(self.OwnedEquipmentIndices, equipmentIndex)
+        self.NewItemIndices = self:AddUniqueIndex(self.NewItemIndices, equipmentIndex)
     end
 
+    @ExecSpace("ServerOnly")
+    method void AddOwnedItemStack(integer itemIndex, integer quantity)
+        -- Adds a positive quantity to a table-backed non-equipment stack.
+        if itemIndex == nil or itemIndex <= 0 or quantity == nil or quantity <= 0 then return end
+        if _CombatTableRuntime:GetInventoryItem(itemIndex) == nil then
+            log_error("[Equipment] Cannot grant missing inventory item " .. tostring(itemIndex))
+            return
+        end
+        local nextCount = self:GetOwnedItemCount(itemIndex) + quantity
+        self:SetOwnedItemCount(itemIndex, nextCount)
+        self.NewItemIndices = self:AddUniqueIndex(self.NewItemIndices, itemIndex)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void GrantItemByKey(string itemKey, integer quantity)
+        -- Resolves a combat reward key into the existing item catalog and publishes the changed stack.
+        local item = _CombatTableRuntime:GetInventoryItemByKey(itemKey)
+        if item == nil then
+            log_error("[Equipment] Unknown item reward key " .. tostring(itemKey))
+            return
+        end
+        self:AddOwnedItemStack(item.InventoryItemsIndex, quantity)
+        self.LastActionMessage = item.DisplayName .. " x" .. tostring(quantity) .. " 획득"
+        self:PublishInventoryState("grant:" .. item.ItemKey)
+    end
+
+    @ExecSpace("ServerOnly")
+    method integer GetOwnedItemCount(integer itemIndex)
+        -- Reads one stack count from the compact synchronized stack string.
+        for token in string.gmatch(self.OwnedItemStacks, "[^,]+") do
+            local separator = (string.find(token, ":"))
+            if separator ~= nil and tonumber(string.sub(token, 1, separator - 1)) == itemIndex then
+                return tonumber(string.sub(token, separator + 1)) or 0
+            end
+        end
+        return 0
+    end
+
+    @ExecSpace("ServerOnly")
+    method void SetOwnedItemCount(integer itemIndex, integer quantity)
+        -- Rebuilds the compact stack string while updating or removing one entry.
+        local entries = {}
+        local replaced = false
+        for token in string.gmatch(self.OwnedItemStacks, "[^,]+") do
+            local separator = (string.find(token, ":"))
+            local currentIndex = 0
+            if separator ~= nil then currentIndex = tonumber(string.sub(token, 1, separator - 1)) or 0 end
+            if currentIndex == itemIndex then
+                replaced = true
+                if quantity > 0 then table.insert(entries, tostring(itemIndex) .. ":" .. tostring(quantity)) end
+            else
+                table.insert(entries, token)
+            end
+        end
+        if replaced == false and quantity > 0 then
+            table.insert(entries, tostring(itemIndex) .. ":" .. tostring(quantity))
+        end
+        self.OwnedItemStacks = table.concat(entries, ",")
+    end
+
+    @ExecSpace("ServerOnly")
     method boolean HasOwnedEquipment(integer equipmentIndex)
-        for token in string.gmatch(self.OwnedEquipmentIndices, "[^,]+") do
-            if tonumber(token) == equipmentIndex then return true end
+        -- Checks membership in the compact owned-equipment index set.
+        return self:ContainsIndex(self.OwnedEquipmentIndices, equipmentIndex)
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean ContainsIndex(string encodedIndices, integer itemIndex)
+        -- Checks a comma-separated integer set without substring collisions.
+        for token in string.gmatch(encodedIndices or "", "[^,]+") do
+            if tonumber(token) == itemIndex then return true end
         end
         return false
     end
 
+    @ExecSpace("ServerOnly")
+    method string AddUniqueIndex(string encodedIndices, integer itemIndex)
+        -- Appends an integer to a comma-separated set only when absent.
+        if self:ContainsIndex(encodedIndices, itemIndex) then return encodedIndices end
+        if encodedIndices == nil or encodedIndices == "" then return tostring(itemIndex) end
+        return encodedIndices .. "," .. tostring(itemIndex)
+    end
+
+    @ExecSpace("ServerOnly")
+    method string RemoveIndex(string encodedIndices, integer itemIndex)
+        -- Removes an integer from a comma-separated set.
+        local entries = {}
+        for token in string.gmatch(encodedIndices or "", "[^,]+") do
+            if tonumber(token) ~= itemIndex then table.insert(entries, token) end
+        end
+        return table.concat(entries, ",")
+    end
+
+    @ExecSpace("Server")
+    method void RequestActivateItem(integer itemIndex)
+        -- Validates the owning client and equips, unequips, or uses the requested item.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        local equipment = _CombatTableRuntime:GetEquipmentItem(itemIndex)
+        if equipment ~= nil then
+            if self:HasOwnedEquipment(itemIndex) == false then
+                self.LastActionMessage = "보유하지 않은 장비입니다."
+                self:PublishInventoryState("reject-unowned")
+                return
+            end
+            self:ToggleEquipmentInternal(equipment)
+            return
+        end
+        local item = _CombatTableRuntime:GetInventoryItem(itemIndex)
+        if item == nil or self:GetOwnedItemCount(itemIndex) <= 0 then
+            self.LastActionMessage = "보유하지 않은 아이템입니다."
+            self:PublishInventoryState("reject-missing")
+            return
+        end
+        if item.ItemCategoryEnumId == "CONSUMABLE" then
+            self:UseConsumableInternal(item)
+        else
+            self.LastActionMessage = "이 아이템은 사용할 수 없습니다."
+            self:PublishInventoryState("reject-not-usable")
+        end
+    end
+
     @ExecSpace("Server")
     method void RequestToggleEquip(integer equipmentIndex)
+        -- Preserves the existing equip RPC while routing it through the validated table-backed path.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) or senderUserId ~= player.UserId then return end
         if self:HasOwnedEquipment(equipmentIndex) == false then
-            log_error("[Equipment] Rejected unowned equipment request " .. tostring(equipmentIndex))
+            self.LastActionMessage = "보유하지 않은 장비입니다."
+            self:PublishInventoryState("reject-unowned")
             return
         end
         local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
         if item == nil then return end
+        self:ToggleEquipmentInternal(item)
+    end
+
+    @ExecSpace("Server")
+    method void RequestMarkItemSeen(integer itemIndex)
+        -- Clears the new-acquisition badge after the owning client selects an item.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        if self:ContainsIndex(self.NewItemIndices, itemIndex) == false then return end
+        self.NewItemIndices = self:RemoveIndex(self.NewItemIndices, itemIndex)
+        self:PublishInventoryState("seen:" .. tostring(itemIndex))
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ToggleEquipmentInternal(table item)
+        -- Equips, replaces, or removes one owned item in its actual project slot.
         local currentIndex = self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId)
-        if currentIndex == equipmentIndex then
+        if currentIndex == item.EquipmentItemsIndex then
             self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, 0)
+            self.LastActionMessage = item.DisplayName .. " 장착 해제"
             log("[Equipment] Unequipped " .. item.ItemKey)
         else
-            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, equipmentIndex)
+            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, item.EquipmentItemsIndex)
+            self.LastActionMessage = item.DisplayName .. " 장착"
             log("[Equipment] Equipped " .. item.ItemKey)
         end
+        self.NewItemIndices = self:RemoveIndex(self.NewItemIndices, item.EquipmentItemsIndex)
         self:RecalculateEquipment()
     end
 
     @ExecSpace("ServerOnly")
+    method void UseConsumableInternal(table item)
+        -- Applies the supported consumable effect and consumes exactly one stack unit.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) then return end
+        if item.HealHp <= 0 then
+            self.LastActionMessage = "사용 효과가 등록되지 않은 아이템입니다."
+            self:PublishInventoryState("reject-no-effect")
+            return
+        end
+        if player.Hp >= player.MaxHp then
+            self.LastActionMessage = "HP가 이미 가득 찼습니다."
+            self:PublishInventoryState("reject-full-hp")
+            return
+        end
+        player.Hp = math.min(player.MaxHp, player.Hp + item.HealHp)
+        self:SetOwnedItemCount(item.InventoryItemsIndex, self:GetOwnedItemCount(item.InventoryItemsIndex) - 1)
+        self.NewItemIndices = self:RemoveIndex(self.NewItemIndices, item.InventoryItemsIndex)
+        self.LastActionMessage = item.DisplayName .. " 사용: HP " .. tostring(item.HealHp) .. " 회복"
+        self:PublishInventoryState("use:" .. item.ItemKey)
+        log("[Equipment] Used " .. item.ItemKey .. " remaining=" .. tostring(self:GetOwnedItemCount(item.InventoryItemsIndex)))
+    end
+
+    @ExecSpace("ServerOnly")
     method integer GetEquippedIndexForSlot(string slotTypeEnumId)
+        -- Resolves the equipped item index for one of the five project-defined slots.
         if slotTypeEnumId == "WEAPON" then return self.EquippedWeaponIndex end
         if slotTypeEnumId == "HELMET" then return self.EquippedHelmetIndex end
         if slotTypeEnumId == "ARMOR" then return self.EquippedArmorIndex end
@@ -120,30 +302,17 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ServerOnly")
     method void SetEquippedIndexForSlot(string slotTypeEnumId, integer equipmentIndex)
-        if slotTypeEnumId == "WEAPON" then
-            self.EquippedWeaponIndex = equipmentIndex
-            return
-        end
-        if slotTypeEnumId == "HELMET" then
-            self.EquippedHelmetIndex = equipmentIndex
-            return
-        end
-        if slotTypeEnumId == "ARMOR" then
-            self.EquippedArmorIndex = equipmentIndex
-            return
-        end
-        if slotTypeEnumId == "GLOVES" then
-            self.EquippedGlovesIndex = equipmentIndex
-            return
-        end
-        if slotTypeEnumId == "SHOES" then
-            self.EquippedShoesIndex = equipmentIndex
-            return
-        end
+        -- Updates one of the five project-defined equipment slot indices.
+        if slotTypeEnumId == "WEAPON" then self.EquippedWeaponIndex = equipmentIndex return end
+        if slotTypeEnumId == "HELMET" then self.EquippedHelmetIndex = equipmentIndex return end
+        if slotTypeEnumId == "ARMOR" then self.EquippedArmorIndex = equipmentIndex return end
+        if slotTypeEnumId == "GLOVES" then self.EquippedGlovesIndex = equipmentIndex return end
+        if slotTypeEnumId == "SHOES" then self.EquippedShoesIndex = equipmentIndex return end
     end
 
     @ExecSpace("ServerOnly")
     method void RecalculateEquipment()
+        -- Recomputes combat, avatar, summary, and UI snapshot state after an equipment change.
         local profile = _CombatTableRuntime:GetPlayerInitProfile(self.PlayerInitProfileIndex)
         if profile == nil then return end
         self.TotalAttackPower = profile.BaseAttackPower
@@ -161,13 +330,11 @@ script EquipmentInventoryComponent extends Component
         self.EquippedArmorAvatarRUID = ""
         self.EquippedGlovesAvatarRUID = ""
         self.EquippedShoesAvatarRUID = ""
-
         self:ApplyItemBonuses(self.EquippedWeaponIndex)
         self:ApplyItemBonuses(self.EquippedHelmetIndex)
         self:ApplyItemBonuses(self.EquippedArmorIndex)
         self:ApplyItemBonuses(self.EquippedGlovesIndex)
         self:ApplyItemBonuses(self.EquippedShoesIndex)
-
         local weapon = _CombatTableRuntime:GetEquipmentItem(self.EquippedWeaponIndex)
         if weapon ~= nil then
             local weaponProfile = _CombatTableRuntime:GetWeaponTypeProfile(weapon.WeaponTypeEnumId)
@@ -179,10 +346,7 @@ script EquipmentInventoryComponent extends Component
                     self.AttackMotionTypeEnumId = skill.MotionTypeEnumId
                     self.AttackCoreActionName = skill.CoreActionName
                     self.AttackPartsActionName = skill.PartsActionName
-                    self.WeaponMotionCoefficientPermille = _CombatTableRuntime:GetWeaponMotionCoefficientPermille(
-                        self.WeaponTypeEnumId,
-                        self.AttackMotionTypeEnumId
-                    )
+                    self.WeaponMotionCoefficientPermille = _CombatTableRuntime:GetWeaponMotionCoefficientPermille(self.WeaponTypeEnumId, self.AttackMotionTypeEnumId)
                 end
             end
             self.EquippedWeaponAvatarCategoryEnumId = weapon.AvatarCategoryEnumId
@@ -191,16 +355,16 @@ script EquipmentInventoryComponent extends Component
         self:ResolveArmorAvatarRUIDs()
         self:ApplyDerivedPlayerStats()
         self:RefreshCombatConsumer()
-        self:RefreshSummaries()
+        self:PublishInventoryState("equipment-recalculated")
         log("[Equipment] Recalculated attack=" .. tostring(self.TotalAttackPower)
             .. " hp=" .. tostring(self.TotalMaxHp)
             .. " defense=" .. tostring(self.TotalDefense)
-            .. " motion=" .. self.AttackMotionTypeEnumId
-            .. " coefficient=" .. tostring(self.WeaponMotionCoefficientPermille))
+            .. " motion=" .. self.AttackMotionTypeEnumId)
     end
 
     @ExecSpace("ServerOnly")
     method void ApplyItemBonuses(integer equipmentIndex)
+        -- Accumulates stat bonuses from one equipped definition.
         if equipmentIndex <= 0 then return end
         local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
         if item == nil then return end
@@ -211,6 +375,7 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ServerOnly")
     method void ResolveArmorAvatarRUIDs()
+        -- Resolves equipped armor avatar RUIDs from the authoritative item definitions.
         local helmet = _CombatTableRuntime:GetEquipmentItem(self.EquippedHelmetIndex)
         local armor = _CombatTableRuntime:GetEquipmentItem(self.EquippedArmorIndex)
         local gloves = _CombatTableRuntime:GetEquipmentItem(self.EquippedGlovesIndex)
@@ -223,6 +388,7 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ServerOnly")
     method void ApplyDerivedPlayerStats()
+        -- Applies recalculated maximum HP while preserving current HP proportion safely.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) then return end
         local previousMaxHp = math.max(1, player.MaxHp)
@@ -237,6 +403,7 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ServerOnly")
     method void RefreshCombatConsumer()
+        -- Pushes the recalculated attack contract into the existing auto-battle component.
         local autoBattle = self.Entity:GetComponent("script.CombatPlayerAutoBattle")
         if not isvalid(autoBattle) then return end
         autoBattle:RefreshEquipmentCombat(
@@ -250,7 +417,65 @@ script EquipmentInventoryComponent extends Component
     end
 
     @ExecSpace("ServerOnly")
+    method void PublishInventoryState(string reason)
+        -- Rebuilds all synchronized presentation data and increments the event revision once.
+        self:RefreshSummaries()
+        self.InventorySnapshot = self:BuildInventorySnapshot()
+        self.InventoryRevision = self.InventoryRevision + 1
+        log("[Equipment] Inventory revision=" .. tostring(self.InventoryRevision) .. " reason=" .. reason)
+    end
+
+    @ExecSpace("ServerOnly")
+    method string BuildInventorySnapshot()
+        -- Serializes authoritative item data into delimiter-safe records consumed by the client UI.
+        local records = {}
+        for token in string.gmatch(self.OwnedEquipmentIndices, "[^,]+") do
+            local itemIndex = tonumber(token)
+            local item = _CombatTableRuntime:GetEquipmentItem(itemIndex)
+            if item ~= nil then table.insert(records, self:FormatSnapshotRecord(item, 1, itemIndex)) end
+        end
+        for token in string.gmatch(self.OwnedItemStacks, "[^,]+") do
+            local separator = (string.find(token, ":"))
+            if separator ~= nil then
+                local itemIndex = tonumber(string.sub(token, 1, separator - 1))
+                local count = tonumber(string.sub(token, separator + 1)) or 0
+                local item = _CombatTableRuntime:GetInventoryItem(itemIndex)
+                if item ~= nil and count > 0 then table.insert(records, self:FormatSnapshotRecord(item, count, itemIndex)) end
+            end
+        end
+        return table.concat(records, "|")
+    end
+
+    @ExecSpace("ServerOnly")
+    method string FormatSnapshotRecord(table item, integer count, integer itemIndex)
+        -- Formats one equipment or item definition into the UI snapshot schema.
+        local equipped = "0"
+        if item.ItemCategoryEnumId == "EQUIPMENT" and self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId) == itemIndex then equipped = "1" end
+        local isNew = self:ContainsIndex(self.NewItemIndices, itemIndex) and "1" or "0"
+        return table.concat({
+            tostring(itemIndex),
+            item.ItemKey or "",
+            item.DisplayName or "",
+            item.ItemCategoryEnumId or "OTHER",
+            item.EquipmentSlotEnumId or "NONE",
+            tostring(count),
+            item.GradeEnumId or "COMMON",
+            item.IconRUID or "",
+            equipped,
+            isNew,
+            tostring(item.RequiredLevel or 1),
+            tostring(item.AttackPowerBonus or 0),
+            tostring(item.MaxHpBonus or 0),
+            tostring(item.DefenseBonus or 0),
+            tostring(item.EnhancementLevel or 0),
+            item.Description or "",
+            tostring(item.SellPrice or 0)
+        }, "^")
+    end
+
+    @ExecSpace("ServerOnly")
     method void RefreshSummaries()
+        -- Preserves compact text summaries for existing consumers while the slot UI uses InventorySnapshot.
         self.EquipmentSummary = self:FormatSlot("무기", self.EquippedWeaponIndex)
             .. "\n" .. self:FormatSlot("투구", self.EquippedHelmetIndex)
             .. "\n" .. self:FormatSlot("갑옷", self.EquippedArmorIndex)
@@ -259,16 +484,13 @@ script EquipmentInventoryComponent extends Component
         self.DerivedStatsSummary = "공격력 " .. tostring(self.TotalAttackPower)
             .. "  |  최대 HP " .. tostring(self.TotalMaxHp)
             .. "  |  방어력 " .. tostring(self.TotalDefense)
-            .. "\n기본 공격 " .. tostring(self.BasicAttackSkillInfoIndex)
-            .. "  |  모션 " .. self.AttackMotionTypeEnumId
-            .. "  |  무기 계수 " .. tostring(self.WeaponMotionCoefficientPermille) .. "‰"
         local lines = {}
         for token in string.gmatch(self.OwnedEquipmentIndices, "[^,]+") do
-            local index = tonumber(token)
-            local item = _CombatTableRuntime:GetEquipmentItem(index)
+            local itemIndex = tonumber(token)
+            local item = _CombatTableRuntime:GetEquipmentItem(itemIndex)
             if item ~= nil then
-                local marker = (self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId) == index) and "[장착] " or "[보유] "
-                table.insert(lines, marker .. item.DisplayName .. "  (#" .. tostring(index) .. ")")
+                local marker = (self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId) == itemIndex) and "[장착] " or "[보유] "
+                table.insert(lines, marker .. item.DisplayName .. "  (#" .. tostring(itemIndex) .. ")")
             end
         end
         self.InventorySummary = table.concat(lines, "\n")
@@ -276,6 +498,7 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ServerOnly")
     method string FormatSlot(string label, integer equipmentIndex)
+        -- Formats one equipped slot for legacy summary consumers.
         local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
         if item == nil then return label .. ": 비어 있음" end
         return label .. ": " .. item.DisplayName
@@ -283,6 +506,7 @@ script EquipmentInventoryComponent extends Component
 
     @ExecSpace("ClientOnly")
     method void ApplyAvatarEquipmentLocal()
+        -- Applies synchronized avatar RUIDs to the local player's five actual costume slots.
         local costume = self.Entity.CostumeManagerComponent
         if not isvalid(costume) then return end
         costume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, "")

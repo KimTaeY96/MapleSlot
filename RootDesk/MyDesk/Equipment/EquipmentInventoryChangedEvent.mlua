@@ -1,0 +1,4 @@
+@Event
+script EquipmentInventoryChangedEvent extends EventType
+    property integer Revision = 0
+end

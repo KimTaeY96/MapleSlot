@@ -14,13 +14,16 @@ script CombatWalletBridge extends Component
 
     @ExecSpace("ServerOnly")
     method void DrainServerRewards()
-        -- Converts validated typed grants into the session wallet counter exactly once.
+        -- Routes validated currency and item grants into the existing wallet and inventory owners exactly once.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) then return end
-        local rewards = _CombatRuntime:DrainPendingCurrencyRewards(player.UserId)
+        local rewards = _CombatRuntime:DrainPendingRewards(player.UserId)
+        local inventory = self.Entity:GetComponent("script.EquipmentInventoryComponent")
         for _, reward in ipairs(rewards) do
             if reward.rewardType == "CURRENCY" and reward.rewardKey == "COMMON_COIN" then
                 self.EarnedCommonCoins = self.EarnedCommonCoins + reward.quantity
+            elseif reward.rewardType == "ITEM" and isvalid(inventory) then
+                inventory:GrantItemByKey(reward.rewardKey, reward.quantity)
             else
                 log_error("[Combat] Wallet rejected reward " .. tostring(reward.rewardType) .. ":" .. tostring(reward.rewardKey))
             end

@@ -5,6 +5,7 @@ script CombatTableRuntime extends Logic
     property any playerInitProfiles = nil
     property any weaponTypeProfiles = nil
     property any equipmentItems = nil
+    property any inventoryItems = nil
     property any combatLanesByTier = nil
     property any combatLaddersByTier = nil
     property any monsterDefinitions = nil
@@ -29,7 +30,7 @@ script CombatTableRuntime extends Logic
             [1] = { HuntingGroundTiersIndex = 1, BaseBetRegionIndex = 1, TierKey = "TIER_1_HENESYS", PlayerInitProfileIndex = 1, SpawnGroupIndex = 1, Enabled = true, Notes = "Initial Tier 1 slime hunting ground" },
         }
         self.playerInitProfiles = {
-            [1] = { PlayerInitProfileIndex = 1, ProfileKey = "PLAYER_INIT_EXPLORER", BaseMaxHp = 100, BaseDefense = 0, BaseAttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Explorer starter profile with initial equipment", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5, UnarmedBasicAttackSkillInfoIndex = 1, LadderClimbSpeed = 1, LadderExitStandOffset = 0.08, InitialWeaponEquipmentIndex = 1001, InitialHelmetEquipmentIndex = 2001, InitialArmorEquipmentIndex = 2002, InitialGlovesEquipmentIndex = 2003, InitialShoesEquipmentIndex = 2004 },
+            [1] = { PlayerInitProfileIndex = 1, ProfileKey = "PLAYER_INIT_EXPLORER", BaseMaxHp = 100, BaseDefense = 0, BaseAttackPower = 10, AttackIntervalSeconds = 1, AttackRange = 1, MoveSpeed = 1, CriticalChancePermille = 100, CriticalDamagePermille = 1500, AggroRange = 9999, Enabled = true, Notes = "Explorer starter profile with initial equipment and item stacks", BasicAttackLaneKey = "CENTER", AttackHitboxHeight = 1.2, LadderApproachTolerance = 0.35, LadderExitTolerance = 0.25, AttackAnimationDurationSeconds = 0.8, AttackHitDelaySeconds = 0.35, HitAnimationDurationSeconds = 0.5, UnarmedBasicAttackSkillInfoIndex = 1, LadderClimbSpeed = 1, LadderExitStandOffset = 0.08, InitialWeaponEquipmentIndex = 1001, InitialHelmetEquipmentIndex = 2001, InitialArmorEquipmentIndex = 2002, InitialGlovesEquipmentIndex = 2003, InitialShoesEquipmentIndex = 2004, InitialInventoryStacks = "3001:8,4001:12,5001:1" },
         }
         self.weaponTypeProfiles = {
             ["ONE_HANDED_SWORD"] = { WeaponType = _ExplorerWeaponType.OneHandedSword, WeaponTypeEnumId = "ONE_HANDED_SWORD", BasicAttackSkillInfoIndex = 10, DefaultMotionType = _AttackMotionType.Slash, DefaultMotionTypeEnumId = "SLASH", SlashCoefficientPermille = 1100, StabCoefficientPermille = 950, BluntCoefficientPermille = 850, ShootCoefficientPermille = 0, ThrowCoefficientPermille = 0, MagicCoefficientPermille = 0, PunchCoefficientPermille = 0, CannonCoefficientPermille = 0 },
@@ -53,11 +54,16 @@ script CombatTableRuntime extends Logic
             ["KATARA"] = { WeaponType = _ExplorerWeaponType.Katara, WeaponTypeEnumId = "KATARA", BasicAttackSkillInfoIndex = 28, DefaultMotionType = _AttackMotionType.Stab, DefaultMotionTypeEnumId = "STAB", SlashCoefficientPermille = 1050, StabCoefficientPermille = 1200, BluntCoefficientPermille = 0, ShootCoefficientPermille = 0, ThrowCoefficientPermille = 0, MagicCoefficientPermille = 0, PunchCoefficientPermille = 0, CannonCoefficientPermille = 0 },
         }
         self.equipmentItems = {
-            [1001] = { EquipmentItemsIndex = 1001, ItemKey = "EXPLORER_STARTER_SWORD", DisplayName = "초보 모험가의 검", EquipmentCategory = _EquipmentCategoryType.Weapon, EquipmentCategoryEnumId = "WEAPON", EquipmentSlot = _EquipmentSlotType.Weapon, EquipmentSlotEnumId = "WEAPON", WeaponTypeEnumId = "ONE_HANDED_SWORD", AvatarCategoryEnumId = "ONE_HANDED_WEAPON", AvatarRUID = "9edfb2ac8d4948ae9d6d789c99e0b966", AttackPowerBonus = 5, MaxHpBonus = 0, DefenseBonus = 0, Enabled = true, Notes = "Explorer starter sword" },
-            [2001] = { EquipmentItemsIndex = 2001, ItemKey = "EXPLORER_STARTER_HELMET", DisplayName = "초보 전사의 모자", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Helmet, EquipmentSlotEnumId = "HELMET", AvatarCategoryEnumId = "CAP", AvatarRUID = "1b54d5615c574ab28f6b680b2f73b73b", AttackPowerBonus = 0, MaxHpBonus = 10, DefenseBonus = 1, Enabled = true, Notes = "Explorer starter helmet" },
-            [2002] = { EquipmentItemsIndex = 2002, ItemKey = "EXPLORER_STARTER_ARMOR", DisplayName = "갈색 로리카 갑옷", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Armor, EquipmentSlotEnumId = "ARMOR", AvatarCategoryEnumId = "COAT", AvatarRUID = "adaf82ca5e144526ad2d5491451b1a7d", AttackPowerBonus = 0, MaxHpBonus = 20, DefenseBonus = 2, Enabled = true, Notes = "Explorer starter armor" },
-            [2003] = { EquipmentItemsIndex = 2003, ItemKey = "EXPLORER_STARTER_GLOVES", DisplayName = "노가다 목장갑", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Gloves, EquipmentSlotEnumId = "GLOVES", AvatarCategoryEnumId = "GLOVE", AvatarRUID = "2e58683f2f094f099a0813c36e278dd5", AttackPowerBonus = 0, MaxHpBonus = 0, DefenseBonus = 1, Enabled = true, Notes = "Explorer starter gloves" },
-            [2004] = { EquipmentItemsIndex = 2004, ItemKey = "EXPLORER_STARTER_SHOES", DisplayName = "설레는 시작 신발", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Shoes, EquipmentSlotEnumId = "SHOES", AvatarCategoryEnumId = "SHOES", AvatarRUID = "4bdf73c5d50a425d88b7673929eadadc", AttackPowerBonus = 0, MaxHpBonus = 5, DefenseBonus = 1, Enabled = true, Notes = "Explorer starter shoes" },
+            [1001] = { EquipmentItemsIndex = 1001, ItemKey = "EXPLORER_STARTER_SWORD", DisplayName = "초보 모험가의 검", ItemCategoryEnumId = "EQUIPMENT", EquipmentCategory = _EquipmentCategoryType.Weapon, EquipmentCategoryEnumId = "WEAPON", EquipmentSlot = _EquipmentSlotType.Weapon, EquipmentSlotEnumId = "WEAPON", WeaponTypeEnumId = "ONE_HANDED_SWORD", AvatarCategoryEnumId = "ONE_HANDED_WEAPON", AvatarRUID = "9edfb2ac8d4948ae9d6d789c99e0b966", IconRUID = "thumbnail://9edfb2ac8d4948ae9d6d789c99e0b966", GradeEnumId = "RARE", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 5, MaxHpBonus = 0, DefenseBonus = 0, SellPrice = 120, Description = "모험을 시작하는 전사를 위한 가벼운 한손검.", Enabled = true, Notes = "Explorer starter sword" },
+            [2001] = { EquipmentItemsIndex = 2001, ItemKey = "EXPLORER_STARTER_HELMET", DisplayName = "초보 전사의 모자", ItemCategoryEnumId = "EQUIPMENT", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Helmet, EquipmentSlotEnumId = "HELMET", AvatarCategoryEnumId = "CAP", AvatarRUID = "1b54d5615c574ab28f6b680b2f73b73b", IconRUID = "thumbnail://1b54d5615c574ab28f6b680b2f73b73b", GradeEnumId = "COMMON", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 10, DefenseBonus = 1, SellPrice = 80, Description = "머리를 보호하는 초보 전사용 모자.", Enabled = true, Notes = "Explorer starter helmet" },
+            [2002] = { EquipmentItemsIndex = 2002, ItemKey = "EXPLORER_STARTER_ARMOR", DisplayName = "갈색 로리카 갑옷", ItemCategoryEnumId = "EQUIPMENT", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Armor, EquipmentSlotEnumId = "ARMOR", AvatarCategoryEnumId = "COAT", AvatarRUID = "adaf82ca5e144526ad2d5491451b1a7d", IconRUID = "thumbnail://adaf82ca5e144526ad2d5491451b1a7d", GradeEnumId = "RARE", RequiredLevel = 1, EnhancementLevel = 1, AttackPowerBonus = 0, MaxHpBonus = 20, DefenseBonus = 2, SellPrice = 150, Description = "가죽을 덧대어 방어력을 높인 로리카 갑옷.", Enabled = true, Notes = "Explorer starter armor" },
+            [2003] = { EquipmentItemsIndex = 2003, ItemKey = "EXPLORER_STARTER_GLOVES", DisplayName = "노가다 목장갑", ItemCategoryEnumId = "EQUIPMENT", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Gloves, EquipmentSlotEnumId = "GLOVES", AvatarCategoryEnumId = "GLOVE", AvatarRUID = "2e58683f2f094f099a0813c36e278dd5", IconRUID = "thumbnail://2e58683f2f094f099a0813c36e278dd5", GradeEnumId = "COMMON", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 0, DefenseBonus = 1, SellPrice = 40, Description = "손을 보호해 주는 튼튼한 작업용 장갑.", Enabled = true, Notes = "Explorer starter gloves" },
+            [2004] = { EquipmentItemsIndex = 2004, ItemKey = "EXPLORER_STARTER_SHOES", DisplayName = "설레는 시작 신발", ItemCategoryEnumId = "EQUIPMENT", EquipmentCategory = _EquipmentCategoryType.Armor, EquipmentCategoryEnumId = "ARMOR", EquipmentSlot = _EquipmentSlotType.Shoes, EquipmentSlotEnumId = "SHOES", AvatarCategoryEnumId = "SHOES", AvatarRUID = "4bdf73c5d50a425d88b7673929eadadc", IconRUID = "thumbnail://4bdf73c5d50a425d88b7673929eadadc", GradeEnumId = "COMMON", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 5, DefenseBonus = 1, SellPrice = 45, Description = "첫 모험길을 편안하게 걸을 수 있는 신발.", Enabled = true, Notes = "Explorer starter shoes" },
+        }
+        self.inventoryItems = {
+            [3001] = { InventoryItemsIndex = 3001, ItemKey = "RED_POTION", DisplayName = "빨간 포션", ItemCategoryEnumId = "CONSUMABLE", EquipmentSlotEnumId = "NONE", IconRUID = "234aca1a4ce946119b68e3717991e775", GradeEnumId = "COMMON", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 0, DefenseBonus = 0, SellPrice = 25, HealHp = 30, Description = "사용하면 HP를 30 회복한다.", Enabled = true, Notes = "Starter healing consumable" },
+            [4001] = { InventoryItemsIndex = 4001, ItemKey = "SLIME_GEL", DisplayName = "물컹물컹한 액체", ItemCategoryEnumId = "MATERIAL", EquipmentSlotEnumId = "NONE", IconRUID = "89ff14273d9940eebe8d44b003563915", GradeEnumId = "COMMON", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 0, DefenseBonus = 0, SellPrice = 8, HealHp = 0, Description = "슬라임에게서 얻은 말랑한 제작 재료.", Enabled = true, Notes = "Tier 1 slime material" },
+            [5001] = { InventoryItemsIndex = 5001, ItemKey = "MYSTERY_SCROLL", DisplayName = "수수께끼 주문서", ItemCategoryEnumId = "OTHER", EquipmentSlotEnumId = "NONE", IconRUID = "cf15cd1c198444188ecef2ecfc792271", GradeEnumId = "EPIC", RequiredLevel = 1, EnhancementLevel = 0, AttackPowerBonus = 0, MaxHpBonus = 0, DefenseBonus = 0, SellPrice = 300, HealHp = 0, Description = "아직 용도가 밝혀지지 않은 오래된 주문서.", Enabled = true, Notes = "Non-usable sample item" },
         }
         self.combatLanesByTier = {
             [1] = {
@@ -150,6 +156,25 @@ script CombatTableRuntime extends Logic
         local item = self.equipmentItems[index]
         if item == nil or item.Enabled == false then return nil end
         return item
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetInventoryItem(integer index)
+        -- Resolves one enabled non-equipment inventory definition.
+        self:EnsureLoaded()
+        local item = self.inventoryItems[index]
+        if item == nil or item.Enabled == false then return nil end
+        return item
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetInventoryItemByKey(string itemKey)
+        -- Resolves one enabled non-equipment inventory definition by its reward key.
+        self:EnsureLoaded()
+        for _, item in pairs(self.inventoryItems) do
+            if item.Enabled and item.ItemKey == itemKey then return item end
+        end
+        return nil
     end
 
     @ExecSpace("ServerOnly")
