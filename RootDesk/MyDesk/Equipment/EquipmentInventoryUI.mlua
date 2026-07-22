@@ -1,29 +1,29 @@
 @Component
 script EquipmentInventoryUI extends Component
-    property Entity InventoryPanel = "2db00a08-fa38-4fdf-b65a-bd14681ecc41"
-    property Entity EquipmentPanel = "f7a1a27b-c13a-4334-a48b-6c1e4146c171"
+    property Entity InventoryPanel = "6a565741-8adc-41d8-b13b-39444666ad1e"
+    property Entity EquipmentPanel = "230bd8d2-d796-4970-a51c-1910f9832a3e"
     property Entity TooltipPanel = "39e1ce5c-d236-406d-9b43-3b64235a2952"
     property ButtonComponent InventoryOpenButton = "d93b3bae-b3f9-4f70-8afb-5ec88963a3ec"
     property ButtonComponent EquipmentOpenButton = "0bb4da25-c57f-41e0-9bde-81a828dcdb47"
-    property ButtonComponent InventoryCloseButton = "9a83b37b-c419-45be-979f-5ffb294e8a60"
-    property ButtonComponent EquipmentCloseButton = "3785fd9e-5d1c-4aaf-ad7c-204eb0c581bd"
+    property ButtonComponent InventoryCloseButton = "c8c4033f-64b9-40d2-839e-8c91cf69b13f"
+    property ButtonComponent EquipmentCloseButton = "95081cce-3d39-40c5-bb57-8b96ac3b0e88"
     property ButtonComponent TooltipCloseButton = "34f5ed0b-6053-4878-8759-e06b11652495"
-    property ButtonComponent EquipmentTabButton = "ec58b908-cad4-4559-a8d4-ff6611e95493"
-    property ButtonComponent ConsumableTabButton = "f4a6e540-a70d-4d17-b022-75c23ba2a2b6"
-    property ButtonComponent MaterialTabButton = "49471035-1054-40e4-bb75-25c96db96ba9"
-    property ButtonComponent OtherTabButton = "346b0255-7459-4c01-a40f-d9ca8a1a8ef2"
-    property ButtonComponent SortButton = "d8829a44-2e59-4e12-bc52-ecbe81184035"
-    property GridViewComponent ItemGrid = "da55dff4-ee47-4908-bb1f-13c56689c6a2"
-    property Entity ItemTemplate = "58c1080b-a781-494d-9474-e476b12b9831"
-    property TextGUIRendererComponent CurrencyText = "746c0a97-0231-4ff0-90f7-2c6195cfa156"
-    property TextGUIRendererComponent CapacityText = "c67aa355-b4d9-4f88-94af-d10d7725bd70"
-    property TextGUIRendererComponent InventoryStatusText = "4f98d950-bd76-4fd6-a4ee-b032c99b9a2c"
-    property TextGUIRendererComponent EquipmentStatsText = "5b1f262c-771e-465e-b168-f371825b1c80"
-    property ButtonComponent WeaponSlotButton = "05933429-91eb-48a5-a2a0-1237c6402e64"
-    property ButtonComponent HelmetSlotButton = "17136847-25e2-4282-99cc-92dea8306dca"
-    property ButtonComponent ArmorSlotButton = "b8a7a21f-ec18-4b90-b12a-ac1b0c6ff2f9"
-    property ButtonComponent GlovesSlotButton = "a933a057-1022-44c0-a510-91e8f3f88dd6"
-    property ButtonComponent ShoesSlotButton = "aa9fff97-7c0c-4100-84a1-7e62e4aae426"
+    property ButtonComponent EquipmentTabButton = "dbbad5ab-874f-4d43-b190-704c72066c35"
+    property ButtonComponent ConsumableTabButton = "2f92b9b0-ee5c-406d-8de1-f161748ddbe9"
+    property ButtonComponent MaterialTabButton = "62ad5458-8a8c-4563-8716-b1ecf70feebe"
+    property ButtonComponent OtherTabButton = "fc3531ab-2a0b-4ed6-aeb9-da8ccf62a690"
+    property ButtonComponent SortButton = "dcc728ac-faa4-4930-8ce3-91df0b28575b"
+    property GridViewComponent ItemGrid = "19284dbd-b6df-4e43-9455-387438ad2bc1"
+    property Entity ItemTemplate = "83f5d1b1-c158-48fe-ac5b-183959f85adb"
+    property TextGUIRendererComponent CurrencyText = "156fb578-3968-41ff-bde0-9d41f1674bd2"
+    property TextGUIRendererComponent CapacityText = "923f3f21-4870-468b-8dc8-270d31df6068"
+    property TextGUIRendererComponent InventoryStatusText = "a6cecdbd-7624-4b30-aec4-80fb993d69fc"
+    property TextGUIRendererComponent EquipmentStatsText = "6fb78366-7ad2-4fd1-b871-23e1c82b543f"
+    property ButtonComponent WeaponSlotButton = "8c2178b7-bff1-4754-9c5c-6429dcb4d0df"
+    property ButtonComponent HelmetSlotButton = "18966e2c-a386-4bb8-8bec-81771ae8248c"
+    property ButtonComponent ArmorSlotButton = "717537da-d90f-4a7d-a73b-9d56e6d89127"
+    property ButtonComponent GlovesSlotButton = "61e1efa1-959f-40bc-9860-3287a24a0ace"
+    property ButtonComponent ShoesSlotButton = "17fda02a-5468-4e23-823d-a573c784418d"
     property TextGUIRendererComponent TooltipTitleText = "afe18d92-1d5f-4621-8ea3-f57615c8116e"
     property SpriteGUIRendererComponent TooltipIcon = "95fcdc60-9f99-48ab-9ebc-a0809d4d022e"
     property TextGUIRendererComponent TooltipGradeText = "24b07715-1ca1-4fcf-b4bb-92c05228ce1f"
@@ -198,8 +198,11 @@ script EquipmentInventoryUI extends Component
         if self.SortMode > 3 then self.SortMode = 1 end
         self:RebuildFilteredItems()
         self:RefreshGrid()
-        local labels = { "정렬: 획득순", "정렬: 등급", "정렬: 이름" }
-        self.SortButton.Entity.TextGUIRendererComponent.Text = labels[self.SortMode]
+        local labels = { "획득순", "등급순", "이름순" }
+        local modeText = self.SortButton.Entity:GetChildByName("ModeText")
+        if isvalid(modeText) then
+            modeText.TextGUIRendererComponent.Text = labels[self.SortMode]
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -217,6 +220,11 @@ script EquipmentInventoryUI extends Component
         self:RefreshStatus()
         self:RefreshCurrency()
         self:UpdateTabVisuals()
+        local sortLabels = { "획득순", "등급순", "이름순" }
+        local modeText = self.SortButton.Entity:GetChildByName("ModeText")
+        if isvalid(modeText) then
+            modeText.TextGUIRendererComponent.Text = sortLabels[self.SortMode]
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -464,6 +472,21 @@ script EquipmentInventoryUI extends Component
         self.EquipmentStatsText.Text = "공격력:  " .. tostring(self.InventoryComponent.TotalAttackPower)
             .. "\n최대 HP:  " .. tostring(self.InventoryComponent.TotalMaxHp)
             .. "\n방어력:  " .. tostring(self.InventoryComponent.TotalDefense)
+        local statsSection = self.EquipmentPanel:GetChildByName("StatsSection")
+        if isvalid(statsSection) then
+            local attackRow = statsSection:GetChildByName("AttackRow")
+            local maxHpRow = statsSection:GetChildByName("MaxHpRow")
+            local defenseRow = statsSection:GetChildByName("DefenseRow")
+            if isvalid(attackRow) then
+                attackRow:GetChildByName("Value").TextGUIRendererComponent.Text = tostring(self.InventoryComponent.TotalAttackPower)
+            end
+            if isvalid(maxHpRow) then
+                maxHpRow:GetChildByName("Value").TextGUIRendererComponent.Text = tostring(self.InventoryComponent.TotalMaxHp)
+            end
+            if isvalid(defenseRow) then
+                defenseRow:GetChildByName("Value").TextGUIRendererComponent.Text = tostring(self.InventoryComponent.TotalDefense)
+            end
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -523,11 +546,16 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void SetTabSelected(ButtonComponent button, boolean selected)
-        -- Uses brightness rather than blue tint while keeping the tab label and touch target unchanged.
+        -- Applies the inspected Simple Black normal/selected tint and matching label contrast.
+        local selectedState = button.Entity:GetChildByName("Selected")
+        local label = button.Entity:GetChildByName("Label")
+        button.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+        if isvalid(selectedState) then selectedState.Enable = selected end
+        if not isvalid(label) then return end
         if selected then
-            button.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
+            label.TextGUIRendererComponent.FontColor = Color(0.9569, 0.9569, 0.9647, 1)
         else
-            button.Entity.SpriteGUIRendererComponent.Color = Color(0.5, 0.52, 0.56, 1)
+            label.TextGUIRendererComponent.FontColor = Color(0.7176, 0.7333, 0.7647, 1)
         end
     end
 
