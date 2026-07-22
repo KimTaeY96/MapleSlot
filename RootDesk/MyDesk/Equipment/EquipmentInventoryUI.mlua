@@ -140,11 +140,11 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void OpenInventory()
-        -- Opens the inventory popup as the active window and clears overlapping detail UI.
-        self.EquipmentPanel.Enable = false
+        -- Opens the inventory without closing the equipment window, preserving the three-panel layout.
         self.TooltipPanel.Enable = false
         self.InventoryPanel.Enable = true
         self:RefreshAll()
+        log("[EquipmentUI] Opened inventory panel")
     end
 
     @ExecSpace("ClientOnly")
@@ -156,11 +156,11 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void OpenEquipment()
-        -- Opens the character-centered equipment popup and refreshes its five actual project slots.
-        self.InventoryPanel.Enable = false
+        -- Opens the equipment window beside the inventory and refreshes its five actual project slots.
         self.TooltipPanel.Enable = false
         self.EquipmentPanel.Enable = true
         self:RefreshAll()
+        log("[EquipmentUI] Opened equipment panel")
     end
 
     @ExecSpace("ClientOnly")
@@ -368,33 +368,40 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void ShowTooltip(table item, boolean fromEquipmentPanel)
-        -- Displays item details beside the source window so the tooltip never covers its slots.
-        if fromEquipmentPanel then
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-240, 0)
+        -- Positions item details within the screen for single-window and dual-window layouts.
+        if self.InventoryPanel.Enable and self.EquipmentPanel.Enable then
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(680, 0)
+        elseif fromEquipmentPanel then
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-500, 0)
         else
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(370, -80)
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(120, 0)
         end
         self.TooltipPanel.Enable = true
         self.TooltipTitleText.Text = item.DisplayName
+        self.TooltipTitleText.FontColor = self:GetGradeColor(item.Grade)
         self.TooltipIcon.ImageRUID = DataRef(item.IconRUID)
         self.TooltipGradeText.Text = self:GetGradeLabel(item.Grade) .. "  |  " .. self:GetCategoryLabel(item.Category)
         local slotLine = item.Slot ~= "NONE" and ("장착 부위: " .. self:GetSlotLabel(item.Slot) .. "\n") or ""
-        local enhancementLine = item.Enhancement > 0 and ("강화: +" .. tostring(item.Enhancement) .. "\n") or ""
+        local enhancementLine = item.Enhancement > 0 and ("강화 수치: +" .. tostring(item.Enhancement) .. "\n") or ""
         self.TooltipDetailsText.Text = slotLine
             .. "요구 레벨: " .. tostring(item.RequiredLevel) .. "\n"
             .. enhancementLine
-            .. "공격력 +" .. tostring(item.Attack) .. "  최대 HP +" .. tostring(item.MaxHp) .. "\n"
-            .. "방어력 +" .. tostring(item.Defense) .. "\n\n"
+            .. "공격력: +" .. tostring(item.Attack) .. "\n"
+            .. "최대 HP: +" .. tostring(item.MaxHp) .. "\n"
+            .. "방어력: +" .. tostring(item.Defense) .. "\n\n"
             .. item.Description .. "\n\n판매 가격: " .. tostring(item.SellPrice)
         self.TooltipCompareText.Text = self:BuildComparisonText(item)
         if item.Category == "EQUIPMENT" then
-            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = item.Equipped and "장착 해제" or "장착하기"
+            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = item.Equipped and "장착 해제" or "장착"
+            self.TooltipActionButton.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
             self.TooltipActionButton.Enable = true
         elseif item.Category == "CONSUMABLE" then
-            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = "사용하기"
+            self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = "사용"
+            self.TooltipActionButton.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
             self.TooltipActionButton.Enable = true
         else
             self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = "사용 불가"
+            self.TooltipActionButton.Entity.SpriteGUIRendererComponent.Color = Color(0.42, 0.44, 0.48, 1)
             self.TooltipActionButton.Enable = false
         end
     end
@@ -454,9 +461,9 @@ script EquipmentInventoryUI extends Component
         self:SetEquipmentSlotIcon(self.ArmorSlotButton, self:FindEquippedItem("ARMOR"), "ARMOR")
         self:SetEquipmentSlotIcon(self.GlovesSlotButton, self:FindEquippedItem("GLOVES"), "GLOVES")
         self:SetEquipmentSlotIcon(self.ShoesSlotButton, self:FindEquippedItem("SHOES"), "SHOES")
-        self.EquipmentStatsText.Text = "공격력  " .. tostring(self.InventoryComponent.TotalAttackPower)
-            .. "\n최대 HP  " .. tostring(self.InventoryComponent.TotalMaxHp)
-            .. "\n방어력  " .. tostring(self.InventoryComponent.TotalDefense)
+        self.EquipmentStatsText.Text = "공격력:  " .. tostring(self.InventoryComponent.TotalAttackPower)
+            .. "\n최대 HP:  " .. tostring(self.InventoryComponent.TotalMaxHp)
+            .. "\n방어력:  " .. tostring(self.InventoryComponent.TotalDefense)
     end
 
     @ExecSpace("ClientOnly")
@@ -502,12 +509,12 @@ script EquipmentInventoryUI extends Component
         -- Reads the existing shared session wallet without introducing duplicate currency state.
         local unitPerCoin = math.max(1, _SlotMachineRuntime.coinUnitPerCoin)
         local commonCoins = math.floor(_SlotMachineRuntime.commonUnits / unitPerCoin)
-        self.CurrencyText.Text = "보유 코인  " .. tostring(commonCoins)
+        self.CurrencyText.Text = "보유 코인: " .. tostring(commonCoins)
     end
 
     @ExecSpace("ClientOnly")
     method void UpdateTabVisuals()
-        -- Applies a blue selected tint and neutral unselected tint to all category tabs.
+        -- Applies the Simple Black selected and muted states to all category tabs.
         self:SetTabSelected(self.EquipmentTabButton, self.SelectedCategory == "EQUIPMENT")
         self:SetTabSelected(self.ConsumableTabButton, self.SelectedCategory == "CONSUMABLE")
         self:SetTabSelected(self.MaterialTabButton, self.SelectedCategory == "MATERIAL")
@@ -516,11 +523,11 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void SetTabSelected(ButtonComponent button, boolean selected)
-        -- Tints one tab while keeping text and touch target unchanged.
+        -- Uses brightness rather than blue tint while keeping the tab label and touch target unchanged.
         if selected then
-            button.Entity.SpriteGUIRendererComponent.Color = Color(0.26, 0.58, 0.9, 1)
+            button.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
         else
-            button.Entity.SpriteGUIRendererComponent.Color = Color(0.82, 0.88, 0.94, 1)
+            button.Entity.SpriteGUIRendererComponent.Color = Color(0.5, 0.52, 0.56, 1)
         end
     end
 
