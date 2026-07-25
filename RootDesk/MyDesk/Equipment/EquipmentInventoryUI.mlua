@@ -378,11 +378,11 @@ script EquipmentInventoryUI extends Component
     method void ShowTooltip(table item, boolean fromEquipmentPanel)
         -- Positions item details within the screen for single-window and dual-window layouts.
         if self.InventoryPanel.Enable and self.EquipmentPanel.Enable then
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(680, 0)
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(476, 20)
         elseif fromEquipmentPanel then
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-500, 0)
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-420, 20)
         else
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(120, 0)
+            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(50, 20)
         end
         self.TooltipPanel.Enable = true
         self.TooltipTitleText.Text = item.DisplayName
@@ -532,12 +532,12 @@ script EquipmentInventoryUI extends Component
         -- Reads the existing shared session wallet without introducing duplicate currency state.
         local unitPerCoin = math.max(1, _SlotMachineRuntime.coinUnitPerCoin)
         local commonCoins = math.floor(_SlotMachineRuntime.commonUnits / unitPerCoin)
-        self.CurrencyText.Text = "보유 코인: " .. tostring(commonCoins)
+        self.CurrencyText.Text = tostring(commonCoins) .. " 메소"
     end
 
     @ExecSpace("ClientOnly")
     method void UpdateTabVisuals()
-        -- Applies the Simple Black selected and muted states to all category tabs.
+        -- Applies the generated MaplePung active and inactive states to all category tabs.
         self:SetTabSelected(self.EquipmentTabButton, self.SelectedCategory == "EQUIPMENT")
         self:SetTabSelected(self.ConsumableTabButton, self.SelectedCategory == "CONSUMABLE")
         self:SetTabSelected(self.MaterialTabButton, self.SelectedCategory == "MATERIAL")
@@ -546,7 +546,7 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void SetTabSelected(ButtonComponent button, boolean selected)
-        -- Applies the inspected Simple Black normal/selected tint and matching label contrast.
+        -- Applies the generated MaplePung tab state and matching label contrast.
         local selectedState = button.Entity:GetChildByName("Selected")
         local label = button.Entity:GetChildByName("Label")
         button.Entity.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
@@ -555,7 +555,7 @@ script EquipmentInventoryUI extends Component
         if selected then
             label.TextGUIRendererComponent.FontColor = Color(0.9569, 0.9569, 0.9647, 1)
         else
-            label.TextGUIRendererComponent.FontColor = Color(0.7176, 0.7333, 0.7647, 1)
+            label.TextGUIRendererComponent.FontColor = Color(0.08, 0.14, 0.28, 1)
         end
     end
 
