@@ -3329,11 +3329,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 224,
+                "x": 216,
                 "y": -74
               },
               "OffsetMin": {
-                "x": -224,
+                "x": -216,
                 "y": -136
               },
               "Pivot": {
@@ -3341,7 +3341,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 448,
+                "x": 432,
                 "y": 62
               },
               "UIMode": 1,
@@ -3468,7 +3468,7 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 112,
+                "x": 105,
                 "y": 0
               },
               "OffsetMin": {
@@ -3480,7 +3480,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -3726,7 +3726,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -3871,7 +3871,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -4047,11 +4047,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 224,
+                "x": 214,
                 "y": 0
               },
               "OffsetMin": {
-                "x": 112,
+                "x": 109,
                 "y": -62
               },
               "Pivot": {
@@ -4059,7 +4059,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -4070,7 +4070,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 112,
+                "x": 109,
                 "y": 0
               },
               "Position": {
@@ -4305,7 +4305,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -4450,7 +4450,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -4626,11 +4626,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 336,
+                "x": 323,
                 "y": 0
               },
               "OffsetMin": {
-                "x": 224,
+                "x": 218,
                 "y": -62
               },
               "Pivot": {
@@ -4638,7 +4638,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -4649,7 +4649,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 224,
+                "x": 218,
                 "y": 0
               },
               "Position": {
@@ -4884,7 +4884,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -5029,7 +5029,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -5205,11 +5205,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 448,
+                "x": 432,
                 "y": 0
               },
               "OffsetMin": {
-                "x": 336,
+                "x": 327,
                 "y": -62
               },
               "Pivot": {
@@ -5217,7 +5217,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -5228,7 +5228,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 336,
+                "x": 327,
                 "y": 0
               },
               "Position": {
@@ -5463,7 +5463,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -5608,7 +5608,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 112,
+                "x": 105,
                 "y": 62
               },
               "UIMode": 1,
@@ -5750,7 +5750,7 @@
       {
         "id": "513aadc8-3b20-4c11-9ac9-fd03a8f44426",
         "path": "/ui/EquipmentInventory/InventoryPanel/GridSection",
-        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent",
+        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.MaskComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
           "name": "GridSection",
           "path": "/ui/EquipmentInventory/InventoryPanel/GridSection",
@@ -5898,6 +5898,13 @@
               },
               "Shape": 0,
               "Enable": true
+            },
+            {
+              "@type": "MOD.Core.CanvasGroupComponent",
+              "Enable": true,
+              "BlocksRaycasts": true,
+              "GroupAlpha": 1,
+              "Interactable": true
             }
           ],
           "@version": 1
@@ -6521,7 +6528,7 @@
                 "b": 0,
                 "a": 1
               },
-              "OutlineWidth": 0,
+              "OutlineWidth": 2,
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
@@ -6640,19 +6647,19 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 38,
-                "y": -4
+                "x": 23,
+                "y": -5
               },
               "OffsetMin": {
-                "x": 4,
-                "y": -22
+                "x": 5,
+                "y": -23
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 34,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -6663,8 +6670,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 4,
-                "y": -4
+                "x": 5,
+                "y": -5
               },
               "Position": {
                 "x": 0,
@@ -6690,7 +6697,7 @@
               "EndFrameIndex": 2147483647,
               "IgnoreMapLayerCheck": false,
               "ImageRUID": {
-                "DataId": "6efba31a09bb434f833edaceac5fd12a"
+                "DataId": ""
               },
               "LocalPosition": {
                 "x": 0,
@@ -6711,7 +6718,7 @@
                 "r": 1,
                 "g": 1,
                 "b": 1,
-                "a": 1
+                "a": 0
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -6751,12 +6758,12 @@
               "ConstraintY": 100,
               "Font": "Maple",
               "FontColor": {
-                "r": 0.9569,
-                "g": 0.9569,
-                "b": 0.9647,
+                "r": 0.92,
+                "g": 0.1,
+                "b": 0.12,
                 "a": 1
               },
-              "FontSize": 17,
+              "FontSize": 18,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -6764,13 +6771,13 @@
               "MinSize": 10,
               "OrderInLayer": 0,
               "OutlineColor": {
-                "r": 0,
+                "r": 0.25,
                 "g": 0,
                 "b": 0,
                 "a": 1
               },
-              "OutlineWidth": 0,
-              "Overflow": 0,
+              "OutlineWidth": 1,
+              "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
                 "left": 0,
@@ -6780,7 +6787,7 @@
               },
               "SizeFit": false,
               "SortingLayer": "UI",
-              "Text": "NEW",
+              "Text": "●",
               "Underlay": false,
               "UseConstraintX": false,
               "UseConstraintY": false,
@@ -7560,339 +7567,6 @@
         }
       },
       {
-        "id": "96f3d7a1-3a01-4d7e-ac08-22d990e781ae",
-        "path": "/ui/EquipmentInventory/InventoryPanel/Footer/CurrencyIcon",
-        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
-        "jsonString": {
-          "name": "CurrencyIcon",
-          "path": "/ui/EquipmentInventory/InventoryPanel/Footer/CurrencyIcon",
-          "nameEditable": true,
-          "enable": false,
-          "visible": true,
-          "localize": true,
-          "displayOrder": 0,
-          "pathConstraints": "/////",
-          "revision": 0,
-          "origin": {
-            "type": "Model",
-            "entry_id": "UISprite",
-            "sub_entity_id": null,
-            "root_entity_id": null,
-            "replaced_model_id": null
-          },
-          "modelId": "uisprite",
-          "@components": [
-            {
-              "@type": "MOD.Core.UITransformComponent",
-              "ActivePlatform": 255,
-              "AlignmentOption": 4,
-              "AnchorsMax": {
-                "x": 0,
-                "y": 1
-              },
-              "AnchorsMin": {
-                "x": 0,
-                "y": 1
-              },
-              "MobileOnly": false,
-              "OffsetMax": {
-                "x": 51,
-                "y": -16
-              },
-              "OffsetMin": {
-                "x": 16,
-                "y": -51
-              },
-              "Pivot": {
-                "x": 0,
-                "y": 1
-              },
-              "RectSize": {
-                "x": 35,
-                "y": 35
-              },
-              "UIMode": 1,
-              "UIScale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "UIVersion": 2,
-              "anchoredPosition": {
-                "x": 16,
-                "y": -16
-              },
-              "Position": {
-                "x": -315,
-                "y": 138,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteGUIRendererComponent",
-              "AnimClipPlayType": 0,
-              "EndFrameIndex": 2147483647,
-              "IgnoreMapLayerCheck": false,
-              "ImageRUID": {
-                "DataId": "1aadfa1e39c3c4e4ea0339287bca2961"
-              },
-              "LocalPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "LocalScale": {
-                "x": 1,
-                "y": 1
-              },
-              "MaterialId": "",
-              "OrderInLayer": 0,
-              "OverrideSorting": false,
-              "PlayRate": 1,
-              "PreserveSprite": 1,
-              "SortingLayer": "UI",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
-              },
-              "DropShadow": false,
-              "DropShadowAngle": 120,
-              "DropShadowColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 0.72
-              },
-              "DropShadowDistance": 3,
-              "FillAmount": 1,
-              "FillCenter": true,
-              "FillClockWise": true,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "FrameColumn": 1,
-              "FrameRate": 0,
-              "FrameRow": 1,
-              "Outline": false,
-              "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 1
-              },
-              "OutlineWidth": 3,
-              "RaycastTarget": false,
-              "Type": 0,
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "156fb578-3968-41ff-bde0-9d41f1674bd2",
-        "path": "/ui/EquipmentInventory/InventoryPanel/Footer/CurrencyText",
-        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.SpriteGUIRendererComponent",
-        "jsonString": {
-          "name": "CurrencyText",
-          "path": "/ui/EquipmentInventory/InventoryPanel/Footer/CurrencyText",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": true,
-          "displayOrder": 1,
-          "pathConstraints": "/////",
-          "revision": 0,
-          "origin": {
-            "type": "Model",
-            "entry_id": "UITextGUIRenderer",
-            "sub_entity_id": null,
-            "root_entity_id": null,
-            "replaced_model_id": null
-          },
-          "modelId": "uitextguirenderer",
-          "@components": [
-            {
-              "@type": "MOD.Core.UITransformComponent",
-              "ActivePlatform": 255,
-              "AlignmentOption": 6,
-              "AnchorsMax": {
-                "x": 0.5,
-                "y": 0
-              },
-              "AnchorsMin": {
-                "x": 0.5,
-                "y": 0
-              },
-              "MobileOnly": false,
-              "OffsetMax": {
-                "x": 47.5,
-                "y": 46
-              },
-              "OffsetMin": {
-                "x": -157.5,
-                "y": 2
-              },
-              "Pivot": {
-                "x": 0.5,
-                "y": 0
-              },
-              "RectSize": {
-                "x": 205,
-                "y": 44
-              },
-              "UIMode": 1,
-              "UIScale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "UIVersion": 2,
-              "anchoredPosition": {
-                "x": -55,
-                "y": 2
-              },
-              "Position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.TextGUIRendererComponent",
-              "BestFit": false,
-              "ConstraintX": 100,
-              "ConstraintY": 100,
-              "Font": "Maple",
-              "FontColor": {
-                "r": 0.08,
-                "g": 0.14,
-                "b": 0.28,
-                "a": 1
-              },
-              "FontSize": 21,
-              "FontStyle": 1,
-              "HorizontalAlignment": 4,
-              "IgnoreMapLayerCheck": false,
-              "MaxSize": 40,
-              "MinSize": 10,
-              "OrderInLayer": 0,
-              "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 1
-              },
-              "OutlineWidth": 0,
-              "Overflow": 1,
-              "OverrideSorting": false,
-              "Padding": {
-                "left": 0,
-                "right": 0,
-                "top": 0,
-                "bottom": 0
-              },
-              "SizeFit": false,
-              "SortingLayer": "UI",
-              "Text": "0",
-              "Underlay": false,
-              "UseConstraintX": false,
-              "UseConstraintY": false,
-              "VerticalAlignment": 512,
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteGUIRendererComponent",
-              "AnimClipPlayType": 0,
-              "EndFrameIndex": 2147483647,
-              "IgnoreMapLayerCheck": false,
-              "ImageRUID": {
-                "DataId": ""
-              },
-              "LocalPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "LocalScale": {
-                "x": 1,
-                "y": 1
-              },
-              "MaterialId": "",
-              "OrderInLayer": 0,
-              "OverrideSorting": false,
-              "PlayRate": 1,
-              "PreserveSprite": 0,
-              "SortingLayer": "UI",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 0.101960786,
-                "g": 0.101960786,
-                "b": 0.101960786,
-                "a": 0
-              },
-              "DropShadow": false,
-              "DropShadowAngle": 120,
-              "DropShadowColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 0.72
-              },
-              "DropShadowDistance": 3,
-              "FillAmount": 1,
-              "FillCenter": true,
-              "FillClockWise": true,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "FrameColumn": 1,
-              "FrameRate": 0,
-              "FrameRow": 1,
-              "Outline": false,
-              "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 1
-              },
-              "OutlineWidth": 3,
-              "RaycastTarget": false,
-              "Type": 0,
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "923f3f21-4870-468b-8dc8-270d31df6068",
         "path": "/ui/EquipmentInventory/InventoryPanel/Footer/CapacityText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.SpriteGUIRendererComponent",
@@ -7929,19 +7603,19 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 156,
-                "y": -8
+                "x": 148,
+                "y": -12
               },
               "OffsetMin": {
                 "x": 8,
-                "y": -38
+                "y": -42
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 148,
+                "x": 140,
                 "y": 30
               },
               "UIMode": 1,
@@ -7953,7 +7627,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 8,
-                "y": -8
+                "y": -12
               },
               "Position": {
                 "x": 0,
@@ -8118,11 +7792,11 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": -8,
-                "y": 48
+                "y": 56
               },
               "OffsetMin": {
                 "x": -164,
-                "y": 0
+                "y": 8
               },
               "Pivot": {
                 "x": 1,
@@ -8141,7 +7815,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": -8,
-                "y": 0
+                "y": 8
               },
               "Position": {
                 "x": 0,
@@ -8315,7 +7989,7 @@
               },
               "SizeFit": false,
               "SortingLayer": "UI",
-              "Text": "정렬 변경",
+              "Text": "",
               "Underlay": false,
               "UseConstraintX": false,
               "UseConstraintY": false,
@@ -8552,18 +8226,18 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": 440,
-                "y": -8
+                "y": -12
               },
               "OffsetMin": {
-                "x": 160,
-                "y": -38
+                "x": 152,
+                "y": -42
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 280,
+                "x": 288,
                 "y": 30
               },
               "UIMode": 1,
@@ -8574,8 +8248,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 160,
-                "y": -8
+                "x": 152,
+                "y": -12
               },
               "Position": {
                 "x": 0,
@@ -19438,296 +19112,6 @@
         }
       },
       {
-        "id": "78afcdcc-7a9c-4c5c-aed2-cd8b7b72d25e",
-        "path": "/ui/EquipmentInventory/InventoryPanel/Footer/MesoBar",
-        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
-        "jsonString": {
-          "name": "MesoBar",
-          "path": "/ui/EquipmentInventory/InventoryPanel/Footer/MesoBar",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": true,
-          "displayOrder": 5,
-          "pathConstraints": "/////",
-          "revision": 0,
-          "origin": {
-            "type": "Model",
-            "entry_id": "UISprite",
-            "sub_entity_id": null,
-            "root_entity_id": null,
-            "replaced_model_id": null
-          },
-          "modelId": "uisprite",
-          "@components": [
-            {
-              "@type": "MOD.Core.UITransformComponent",
-              "ActivePlatform": 255,
-              "AlignmentOption": 7,
-              "AnchorsMax": {
-                "x": 0,
-                "y": 0
-              },
-              "AnchorsMin": {
-                "x": 0,
-                "y": 0
-              },
-              "MobileOnly": false,
-              "OffsetMax": {
-                "x": 286,
-                "y": 48
-              },
-              "OffsetMin": {
-                "x": 0,
-                "y": 0
-              },
-              "Pivot": {
-                "x": 0,
-                "y": 0
-              },
-              "RectSize": {
-                "x": 286,
-                "y": 48
-              },
-              "UIMode": 1,
-              "UIScale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "UIVersion": 2,
-              "anchoredPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "Position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteGUIRendererComponent",
-              "AnimClipPlayType": 0,
-              "EndFrameIndex": 2147483647,
-              "ImageRUID": {
-                "DataId": "561d9c51340647b68ec87d4c0e750331"
-              },
-              "IgnoreMapLayerCheck": false,
-              "LocalPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "LocalScale": {
-                "x": 1,
-                "y": 1
-              },
-              "MaterialId": "",
-              "OrderInLayer": 0,
-              "OverrideSorting": false,
-              "PlayRate": 1,
-              "PreserveSprite": 0,
-              "SortingLayer": "UI",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 0.10196078431372549,
-                "g": 0.10196078431372549,
-                "b": 0.10196078431372549,
-                "a": 0.23529411764705882
-              },
-              "DropShadow": false,
-              "DropShadowAngle": 120,
-              "DropShadowColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 0.72
-              },
-              "DropShadowDistance": 3,
-              "FillAmount": 1,
-              "FillCenter": true,
-              "FillClockWise": true,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "FrameColumn": 1,
-              "FrameRate": 0,
-              "FrameRow": 1,
-              "Outline": false,
-              "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 1
-              },
-              "OutlineWidth": 3,
-              "RaycastTarget": false,
-              "Type": 1,
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
-        "id": "25f2d637-1cde-48d0-8d7b-395be9f84d43",
-        "path": "/ui/EquipmentInventory/EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview/Silhouette",
-        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
-        "jsonString": {
-          "name": "Silhouette",
-          "path": "/ui/EquipmentInventory/EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview/Silhouette",
-          "nameEditable": true,
-          "enable": true,
-          "visible": true,
-          "localize": true,
-          "displayOrder": 1,
-          "pathConstraints": "///////",
-          "revision": 0,
-          "origin": {
-            "type": "Model",
-            "entry_id": "UISprite",
-            "sub_entity_id": null,
-            "root_entity_id": null,
-            "replaced_model_id": null
-          },
-          "modelId": "uisprite",
-          "@components": [
-            {
-              "@type": "MOD.Core.UITransformComponent",
-              "ActivePlatform": 255,
-              "AlignmentOption": 15,
-              "AnchorsMax": {
-                "x": 1,
-                "y": 1
-              },
-              "AnchorsMin": {
-                "x": 0,
-                "y": 0
-              },
-              "MobileOnly": false,
-              "OffsetMax": {
-                "x": 0,
-                "y": 0
-              },
-              "OffsetMin": {
-                "x": 0,
-                "y": 0
-              },
-              "Pivot": {
-                "x": 0.5,
-                "y": 0.5
-              },
-              "RectSize": {
-                "x": 164,
-                "y": 354
-              },
-              "UIMode": 1,
-              "UIScale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "UIVersion": 2,
-              "anchoredPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "Position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-              },
-              "QuaternionRotation": {
-                "x": 0,
-                "y": 0,
-                "z": 0,
-                "w": 1
-              },
-              "Scale": {
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "Enable": true
-            },
-            {
-              "@type": "MOD.Core.SpriteGUIRendererComponent",
-              "AnimClipPlayType": 0,
-              "EndFrameIndex": 2147483647,
-              "ImageRUID": {
-                "DataId": "a631e7ff7fee4d348ed7622a81c52bb9"
-              },
-              "IgnoreMapLayerCheck": false,
-              "LocalPosition": {
-                "x": 0,
-                "y": 0
-              },
-              "LocalScale": {
-                "x": 1,
-                "y": 1
-              },
-              "MaterialId": "",
-              "OrderInLayer": 0,
-              "OverrideSorting": false,
-              "PlayRate": 1,
-              "PreserveSprite": 0,
-              "SortingLayer": "UI",
-              "StartFrameIndex": 0,
-              "Color": {
-                "r": 0.6235294117647059,
-                "g": 0.7254901960784313,
-                "b": 0.803921568627451,
-                "a": 0.46
-              },
-              "DropShadow": false,
-              "DropShadowAngle": 120,
-              "DropShadowColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 0.72
-              },
-              "DropShadowDistance": 3,
-              "FillAmount": 1,
-              "FillCenter": true,
-              "FillClockWise": true,
-              "FillMethod": 0,
-              "FillOrigin": 0,
-              "FlipX": false,
-              "FlipY": false,
-              "FrameColumn": 1,
-              "FrameRate": 0,
-              "FrameRow": 1,
-              "Outline": false,
-              "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
-                "a": 1
-              },
-              "OutlineWidth": 3,
-              "RaycastTarget": false,
-              "Type": 1,
-              "Enable": true
-            }
-          ],
-          "@version": 1
-        }
-      },
-      {
         "id": "c345df6d-b18b-4ea8-9883-fc6b208dd6f9",
         "path": "/ui/EquipmentInventory/TooltipPanel/IconBox",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
@@ -20157,6 +19541,113 @@
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "01bbcd56-0708-4e5d-8840-50e02e5c2201",
+        "path": "/ui/EquipmentInventory/EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview/AvatarPreview",
+        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.AvatarGUIRendererComponent,MOD.Core.CostumeManagerComponent",
+        "jsonString": {
+          "name": "AvatarPreview",
+          "path": "/ui/EquipmentInventory/EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview/AvatarPreview",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": true,
+          "displayOrder": 2,
+          "pathConstraints": "///////",
+          "revision": 0,
+          "origin": {
+            "type": "Model",
+            "entry_id": "UIEmpty",
+            "sub_entity_id": null,
+            "root_entity_id": null,
+            "replaced_model_id": null
+          },
+          "modelId": "uiempty",
+          "@components": [
+            {
+              "@type": "MOD.Core.UITransformComponent",
+              "ActivePlatform": 255,
+              "AlignmentOption": 0,
+              "AnchorsMax": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "AnchorsMin": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "MobileOnly": false,
+              "OffsetMax": {
+                "x": 89,
+                "y": 173
+              },
+              "OffsetMin": {
+                "x": -89,
+                "y": -181
+              },
+              "Pivot": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "RectSize": {
+                "x": 178,
+                "y": 354
+              },
+              "UIMode": 1,
+              "UIScale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "UIVersion": 2,
+              "anchoredPosition": {
+                "x": 0,
+                "y": -4
+              },
+              "Position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.AvatarGUIRendererComponent",
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "FlipX": false,
+              "FlipY": false,
+              "MaterialId": "",
+              "PlayRate": 0,
+              "PreserveAvatar": 1,
+              "RaycastTarget": false,
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.CostumeManagerComponent",
+              "Enable": true,
+              "DefaultEquipUserId": "",
+              "UseCustomEquipOnly": true
             }
           ],
           "@version": 1

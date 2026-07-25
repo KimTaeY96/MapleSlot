@@ -225,6 +225,21 @@ script EquipmentInventoryComponent extends Component
     end
 
     @ExecSpace("Server")
+    method void RequestSetEquipmentState(integer equipmentIndex, boolean shouldEquip)
+        -- Applies a desired equipment state so repeated or delayed UI requests remain idempotent.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        if self:HasOwnedEquipment(equipmentIndex) == false then
+            self.LastActionMessage = "보유하지 않은 장비입니다."
+            self:PublishInventoryState("reject-unowned")
+            return
+        end
+        local item = _CombatTableRuntime:GetEquipmentItem(equipmentIndex)
+        if item == nil then return end
+        self:SetEquipmentStateInternal(item, shouldEquip)
+    end
+
+    @ExecSpace("Server")
     method void RequestToggleEquip(integer equipmentIndex)
         -- Preserves the existing equip RPC while routing it through the validated table-backed path.
         local player = self.Entity.PlayerComponent
@@ -249,18 +264,56 @@ script EquipmentInventoryComponent extends Component
         self:PublishInventoryState("seen:" .. tostring(itemIndex))
     end
 
+    @ExecSpace("Server")
+    method void RequestMarkCategorySeen(string category)
+        -- Clears all new markers only after the owning user enters that category tab.
+        local player = self.Entity.PlayerComponent
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        local remainingIndices = {}
+        local changed = false
+        for token in string.gmatch(self.NewItemIndices or "", "[^,]+") do
+            local itemIndex = tonumber(token) or 0
+            local item = _CombatTableRuntime:GetEquipmentItem(itemIndex)
+            if item == nil then item = _CombatTableRuntime:GetInventoryItem(itemIndex) end
+            if item ~= nil and item.ItemCategoryEnumId == category then
+                changed = true
+            else
+                table.insert(remainingIndices, token)
+            end
+        end
+        if changed == false then return end
+        self.NewItemIndices = table.concat(remainingIndices, ",")
+        self:PublishInventoryState("seen-category:" .. category)
+        log("[Equipment] Cleared new markers for category=" .. category)
+    end
+
     @ExecSpace("ServerOnly")
     method void ToggleEquipmentInternal(table item)
-        -- Equips, replaces, or removes one owned item in its actual project slot.
+        -- Keeps the legacy toggle API while delegating mutations to the idempotent state setter.
         local currentIndex = self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId)
-        if currentIndex == item.EquipmentItemsIndex then
-            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, 0)
-            self.LastActionMessage = item.DisplayName .. " 장착 해제"
-            log("[Equipment] Unequipped " .. item.ItemKey)
-        else
+        self:SetEquipmentStateInternal(item, currentIndex ~= item.EquipmentItemsIndex)
+    end
+
+    @ExecSpace("ServerOnly")
+    method void SetEquipmentStateInternal(table item, boolean shouldEquip)
+        -- Changes only when the authoritative state differs from the requested state.
+        local currentIndex = self:GetEquippedIndexForSlot(item.EquipmentSlotEnumId)
+        if shouldEquip then
+            if currentIndex == item.EquipmentItemsIndex then
+                log("[Equipment] Ignored duplicate equip request for " .. item.ItemKey)
+                return
+            end
             self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, item.EquipmentItemsIndex)
             self.LastActionMessage = item.DisplayName .. " 장착"
-            log("[Equipment] Equipped " .. item.ItemKey)
+            log("[Equipment] Equipped " .. item.ItemKey .. " by desired-state request")
+        else
+            if currentIndex ~= item.EquipmentItemsIndex then
+                log("[Equipment] Ignored duplicate unequip request for " .. item.ItemKey)
+                return
+            end
+            self:SetEquippedIndexForSlot(item.EquipmentSlotEnumId, 0)
+            self.LastActionMessage = item.DisplayName .. " 장착 해제"
+            log("[Equipment] Unequipped " .. item.ItemKey .. " by desired-state request")
         end
         self.NewItemIndices = self:RemoveIndex(self.NewItemIndices, item.EquipmentItemsIndex)
         self:RecalculateEquipment()

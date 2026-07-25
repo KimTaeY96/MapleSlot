@@ -245,7 +245,7 @@ b.patchComponent(
 b.patch("InventoryPanel/TabBar", {
   anchor: "top-center",
   pos: [0, -74],
-  rect_size: [448, 62],
+  rect_size: [432, 62],
   pivot: [0.5, 1],
 });
 const tabs = [
@@ -256,10 +256,11 @@ const tabs = [
 ];
 tabs.forEach(([tabName, label], index) => {
   const tab = `InventoryPanel/TabBar/${tabName}`;
-  const width = 112;
+  const width = 105;
+  const gap = 4;
   b.patch(tab, {
     anchor: "top-left",
-    pos: [index * width, 0],
+    pos: [index * (width + gap), 0],
     rect_size: [width, 62],
     pivot: [0, 1],
   });
@@ -280,6 +281,17 @@ b.patch("InventoryPanel/GridSection", {
   rect_size: [448, 512],
   pivot: [0.5, 1],
 });
+b.upsertComponent(
+  "InventoryPanel/GridSection",
+  "MOD.Core.CanvasGroupComponent",
+  {
+    "@type": "MOD.Core.CanvasGroupComponent",
+    Enable: true,
+    BlocksRaycasts: true,
+    GroupAlpha: 1,
+    Interactable: true,
+  },
+);
 sprite("InventoryPanel/GridSection", "slot-inventory", 1, false, {
   r: 1,
   g: 1,
@@ -343,10 +355,34 @@ b.patch(`${template}/Quantity`, {
   rect_size: [40, 22],
 });
 textStyle(`${template}/Quantity`, 18, C.white, 4, 1024, true);
+b.patchComponent(`${template}/Quantity`, "MOD.Core.TextGUIRendererComponent", {
+  OutlineColor: { r: 0, g: 0, b: 0, a: 1 },
+  OutlineWidth: 2,
+});
 b.patch(`${template}/New`, {
   anchor: "top-left",
-  pos: [4, -4],
-  rect_size: [34, 18],
+  pos: [5, -5],
+  rect_size: [18, 18],
+});
+b.patchComponent(`${template}/New`, "MOD.Core.SpriteGUIRendererComponent", {
+  ImageRUID: { DataId: "" },
+  Color: C.transparent,
+  RaycastTarget: false,
+});
+b.patchComponent(`${template}/New`, "MOD.Core.TextGUIRendererComponent", {
+  Text: "●",
+});
+textStyle(
+  `${template}/New`,
+  18,
+  { r: 0.92, g: 0.10, b: 0.12, a: 1 },
+  2,
+  512,
+  true,
+);
+b.patchComponent(`${template}/New`, "MOD.Core.TextGUIRendererComponent", {
+  OutlineColor: { r: 0.25, g: 0, b: 0, a: 1 },
+  OutlineWidth: 1,
 });
 b.patch(`${template}/Equipped`, {
   anchor: "bottom-left",
@@ -355,7 +391,7 @@ b.patch(`${template}/Equipped`, {
 });
 b.patch(`${template}/Disabled`, { anchor: "stretch", rect_size: [76, 76] });
 
-// Inventory footer: status/capacity row plus generated meso bar and sort states.
+// Inventory footer: status/capacity row plus one unambiguous sort state button.
 b.patch("InventoryPanel/Footer", {
   anchor: "bottom-center",
   pos: [0, 16],
@@ -366,33 +402,17 @@ b.patchComponent("InventoryPanel/Footer", "MOD.Core.SpriteGUIRendererComponent",
   Color: C.transparent,
   RaycastTarget: false,
 });
-b.sprite("InventoryPanel/Footer/MesoBar", {
-  anchor: "bottom-left",
-  pos: [0, 0],
-  rect_size: [286, 48],
-  pivot: [0, 0],
-  image_ruid: RUIDS["meso-bar"],
-  image_type: 1,
-});
-b.patch("InventoryPanel/Footer/CurrencyIcon", { enable: false });
-b.patch("InventoryPanel/Footer/CurrencyText", {
-  anchor: "bottom-center",
-  pos: [-55, 2],
-  rect_size: [205, 44],
-  pivot: [0.5, 0],
-});
-textStyle(
+for (const obsolete of [
+  "InventoryPanel/Footer/MesoBar",
+  "InventoryPanel/Footer/CurrencyIcon",
   "InventoryPanel/Footer/CurrencyText",
-  21,
-  C.navy,
-  4,
-  512,
-  true,
-);
+]) {
+  if (b.find(obsolete)) b.remove(obsolete);
+}
 b.patch("InventoryPanel/Footer/CapacityText", {
   anchor: "top-left",
-  pos: [8, -8],
-  rect_size: [148, 30],
+  pos: [8, -12],
+  rect_size: [140, 30],
   pivot: [0, 1],
 });
 textStyle(
@@ -405,8 +425,8 @@ textStyle(
 );
 b.patch("InventoryPanel/Footer/InventoryStatusText", {
   anchor: "top-left",
-  pos: [160, -8],
-  rect_size: [280, 30],
+  pos: [152, -12],
+  rect_size: [288, 30],
   pivot: [0, 1],
 });
 textStyle(
@@ -419,7 +439,7 @@ textStyle(
 );
 b.patch("InventoryPanel/Footer/SortButton", {
   anchor: "bottom-right",
-  pos: [-8, 0],
+  pos: [-8, 8],
   rect_size: [156, 48],
   pivot: [1, 0],
 });
@@ -428,6 +448,11 @@ spriteSwap(
   "action-normal",
   "action-hover",
   "action-pressed",
+);
+b.patchComponent(
+  "InventoryPanel/Footer/SortButton",
+  "MOD.Core.TextGUIRendererComponent",
+  { Text: "" },
 );
 b.patch("InventoryPanel/Footer/SortButton/ModeText", {
   anchor: "middle-center",
@@ -444,7 +469,7 @@ textStyle(
   true,
 );
 
-// Equipment hierarchy: shared frame, centered silhouette, symmetric five slots.
+// Equipment hierarchy: shared frame, static live avatar preview, symmetric five slots.
 b.patch("EquipmentPanel/EquipmentSection", {
   anchor: "top-center",
   pos: [0, -74],
@@ -503,21 +528,52 @@ for (const obsolete of [
   if (b.find(obsolete)) b.remove(obsolete);
 }
 const preview = "EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview";
-if (b.find(`${preview}/AvatarPreview`)) b.remove(`${preview}/AvatarPreview`);
+const avatarPreview = `${preview}/AvatarPreview`;
+if (b.find(`${preview}/Silhouette`)) b.remove(`${preview}/Silhouette`);
 b.patch(preview, {
   anchor: "top-center",
   pos: [0, -68],
   rect_size: [178, 370],
   pivot: [0.5, 1],
 });
-b.sprite(`${preview}/Silhouette`, {
-  anchor: "stretch",
-  rect_size: [164, 354],
-  image_ruid: RUIDS["equipment-silhouette"],
-  image_type: 0,
-  color: "#9FB9CD",
-  alpha: 0.46,
-});
+if (!b.find(avatarPreview)) {
+  b.avatar(avatarPreview, {
+    anchor: "middle-center",
+    pos: [0, -4],
+    rect_size: [178, 354],
+    pivot: [0.5, 0.5],
+    play_rate: 0,
+    preserve_avatar: 1,
+    raycast: false,
+  });
+} else {
+  b.patch(avatarPreview, {
+    anchor: "middle-center",
+    pos: [0, -4],
+    rect_size: [178, 354],
+    pivot: [0.5, 0.5],
+  });
+}
+b.upsertComponent(
+  `${preview}/AvatarPreview`,
+  "MOD.Core.CostumeManagerComponent",
+  {
+    "@type": "MOD.Core.CostumeManagerComponent",
+    Enable: true,
+    DefaultEquipUserId: "",
+    UseCustomEquipOnly: true,
+  },
+);
+b.patchComponent(
+  `${preview}/AvatarPreview`,
+  "MOD.Core.AvatarGUIRendererComponent",
+  {
+    PlayRate: 0,
+    PreserveAvatar: 1,
+    RaycastTarget: false,
+    Color: C.white,
+  },
+);
 patchEquipmentCell("Cell_Helmet", "HelmetSlotButton", 0, -18, "모자");
 patchEquipmentCell("Cell_Weapon", "WeaponSlotButton", -142, -168, "무기");
 patchEquipmentCell("Cell_Armor", "ArmorSlotButton", 142, -168, "상의");
@@ -744,6 +800,20 @@ b.write(UI_PATH, {
   lint: true,
   strict: true,
   lint_verbose: true,
+  bind: {
+    mlua: path.join(
+      ROOT,
+      "RootDesk",
+      "MyDesk",
+      "Equipment",
+      "EquipmentInventoryUI.mlua",
+    ),
+    props: {
+      GridSection: "InventoryPanel/GridSection",
+      AvatarPreview:
+        "EquipmentPanel/EquipmentSection/SlotGrid/Cell_Preview/AvatarPreview",
+    },
+  },
 });
 
 console.log(

@@ -72,8 +72,8 @@ script CombatSandboxRuntime extends Component
                     if newlyAttached then
                         autoBattle.CombatLaneKey = _CombatTableRuntime:GetBasicAttackLaneKey(self.HuntingGroundTierIndex)
                     end
-                    -- Manual control remains authoritative; auto-battle may still acquire and attack nearby targets.
-                    autoBattle.DisableManualControl = false
+                    -- Auto battle is authoritative; manual movement and attack remain disabled on this map.
+                    autoBattle.DisableManualControl = config.DisableManualControlInSandbox
                     autoBattle.CombatCameraScreenOffsetX = config.CombatCameraScreenOffsetX
                     autoBattle.CombatCameraScreenOffsetY = config.CombatCameraScreenOffsetY
                     autoBattle.CombatCameraConfineArea = config.CombatCameraConfineArea

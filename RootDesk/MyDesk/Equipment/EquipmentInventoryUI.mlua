@@ -14,7 +14,8 @@ script EquipmentInventoryUI extends Component
     property ButtonComponent SortButton = "dcc728ac-faa4-4930-8ce3-91df0b28575b"
     property GridViewComponent ItemGrid = "19284dbd-b6df-4e43-9455-387438ad2bc1"
     property Entity ItemTemplate = "83f5d1b1-c158-48fe-ac5b-183959f85adb"
-    property TextGUIRendererComponent CurrencyText = "156fb578-3968-41ff-bde0-9d41f1674bd2"
+    property Entity GridSection = "513aadc8-3b20-4c11-9ac9-fd03a8f44426"
+    property Entity AvatarPreview = "01bbcd56-0708-4e5d-8840-50e02e5c2201"
     property TextGUIRendererComponent CapacityText = "923f3f21-4870-468b-8dc8-270d31df6068"
     property TextGUIRendererComponent InventoryStatusText = "a6cecdbd-7624-4b30-aec4-80fb993d69fc"
     property TextGUIRendererComponent EquipmentStatsText = "6fb78366-7ad2-4fd1-b871-23e1c82b543f"
@@ -44,7 +45,10 @@ script EquipmentInventoryUI extends Component
     @HideFromInspector property integer LastClickedItemIndex = 0
     @HideFromInspector property number LastClickTime = -10
     @HideFromInspector property integer LastRevision = -1
-    @HideFromInspector property number CurrencyRefreshElapsed = 0
+    @HideFromInspector property any SelectedSourceSlot = nil
+    @HideFromInspector property integer GridRevealTimerId = 0
+    @HideFromInspector property integer GridRefreshSequence = 0
+    @HideFromInspector property integer AvatarRefreshTimerId = 0
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
@@ -77,11 +81,7 @@ script EquipmentInventoryUI extends Component
         if self.InventoryComponent.InventoryRevision ~= self.LastRevision then
             self:RefreshAll()
         end
-        self.CurrencyRefreshElapsed = self.CurrencyRefreshElapsed + delta
-        if self.CurrencyRefreshElapsed >= 0.5 then
-            self.CurrencyRefreshElapsed = 0
-            self:RefreshCurrency()
-        end
+
     end
 
     @ExecSpace("ClientOnly")
@@ -154,6 +154,9 @@ script EquipmentInventoryUI extends Component
         self.EquipmentPanel.Enable = true
         self.InventoryPanel.Enable = true
         self:RefreshAll()
+        self:MarkSelectedCategorySeen()
+        self:RefreshGrid()
+        self:ScheduleAvatarPreviewRefresh()
         log("[EquipmentUI] Opened unified information window")
     end
 
@@ -191,20 +194,38 @@ script EquipmentInventoryUI extends Component
         -- Hides item details and clears all slot-selection decorations.
         self.TooltipPanel.Enable = false
         self.SelectedItemIndex = 0
+        self.SelectedSourceSlot = nil
         self:RefreshGrid()
         if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
     end
 
     @ExecSpace("ClientOnly")
     method void SelectCategory(string category)
-        -- Changes the inventory tab and reuses the same virtualized grid template.
+        -- Changes the inventory tab atomically and acknowledges every new item in that category.
+        if self.SelectedCategory == category then
+            self:MarkSelectedCategorySeen()
+            self:RefreshGrid()
+            return
+        end
         self.SelectedCategory = category
         self.SelectedItemIndex = 0
+        self.SelectedSourceSlot = nil
         self.TooltipPanel.Enable = false
         self:RebuildFilteredItems()
-        self:RefreshGrid()
+        self:MarkSelectedCategorySeen()
+        self:RefreshGridAtomic()
         if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
         self:UpdateTabVisuals()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void MarkSelectedCategorySeen()
+        -- Replaces per-item NEW banners with category-entry acknowledgement and an immediate local clear.
+        if not isvalid(self.InventoryComponent) then return end
+        for _, item in ipairs(self.Items or {}) do
+            if item.Category == self.SelectedCategory then item.IsNew = false end
+        end
+        self.InventoryComponent:RequestMarkCategorySeen(self.SelectedCategory)
     end
 
     @ExecSpace("ClientOnly")
@@ -213,7 +234,7 @@ script EquipmentInventoryUI extends Component
         self.SortMode = self.SortMode + 1
         if self.SortMode > 3 then self.SortMode = 1 end
         self:RebuildFilteredItems()
-        self:RefreshGrid()
+        self:RefreshGridAtomic()
         local labels = { "획득순", "등급순", "이름순" }
         local modeText = self.SortButton.Entity:GetChildByName("ModeText")
         if isvalid(modeText) then
@@ -233,13 +254,18 @@ script EquipmentInventoryUI extends Component
         self:RebuildFilteredItems()
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
+        self:RefreshAvatarPreview()
+        self:ScheduleAvatarPreviewRefresh()
         self:RefreshStatus()
-        self:RefreshCurrency()
         self:UpdateTabVisuals()
         local sortLabels = { "획득순", "등급순", "이름순" }
         local modeText = self.SortButton.Entity:GetChildByName("ModeText")
         if isvalid(modeText) then
             modeText.TextGUIRendererComponent.Text = sortLabels[self.SortMode]
+        end
+        if self.TooltipPanel.Enable and self.SelectedItemIndex > 0 and isvalid(self.SelectedSourceSlot) then
+            local selectedItem = self:FindItem(self.SelectedItemIndex)
+            if selectedItem ~= nil then self:ShowTooltip(selectedItem, self.SelectedSourceSlot) end
         end
     end
 
@@ -320,6 +346,33 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
+    method void RefreshGridAtomic()
+        -- Hides recycled cells until the layout pass finishes so tab/sort changes never expose transient positions.
+        if not isvalid(self.GridSection) or not isvalid(self.GridSection.CanvasGroupComponent) then
+            self:RefreshGrid()
+            return
+        end
+        self.GridRefreshSequence = self.GridRefreshSequence + 1
+        local refreshSequence = self.GridRefreshSequence
+        local canvasGroup = self.GridSection.CanvasGroupComponent
+        canvasGroup.GroupAlpha = 0
+        canvasGroup.Interactable = false
+        canvasGroup.BlocksRaycasts = false
+        self:RefreshGrid()
+        if self.GridRevealTimerId ~= 0 then _TimerService:ClearTimer(self.GridRevealTimerId) end
+        self.GridRevealTimerId = _TimerService:SetTimerOnce(function()
+            if refreshSequence ~= self.GridRefreshSequence or not isvalid(self.GridSection) then return end
+            local latestCanvasGroup = self.GridSection.CanvasGroupComponent
+            if isvalid(latestCanvasGroup) then
+                latestCanvasGroup.GroupAlpha = 1
+                latestCanvasGroup.Interactable = true
+                latestCanvasGroup.BlocksRaycasts = true
+            end
+            self.GridRevealTimerId = 0
+        end, 0.03)
+    end
+
+    @ExecSpace("ClientOnly")
     method void OnRefreshGridItem(integer index, Entity entity)
         -- Populates or clears one recycled grid entity without performing data or storage calls.
         if not isvalid(entity) then return end
@@ -384,7 +437,6 @@ script EquipmentInventoryUI extends Component
         local item = self:FindItem(itemIndex)
         if item == nil then return end
         self:ShowTooltip(item, entity)
-        self.InventoryComponent:RequestMarkItemSeen(itemIndex)
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
         if isDoubleClick then self:ActivateSelectedItem() end
@@ -393,6 +445,7 @@ script EquipmentInventoryUI extends Component
     @ExecSpace("ClientOnly")
     method void ShowTooltip(table item, Entity sourceSlot)
         -- Attaches the detail window to the selected slot and keeps it above the unified information group.
+        self.SelectedSourceSlot = sourceSlot
         self.TooltipPanel.Enable = true
         self:PositionTooltip(sourceSlot)
         _UILogic:SetSiblingIndex(self.TooltipPanel.UITransformComponent, 1000000)
@@ -428,33 +481,46 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void PositionTooltip(Entity sourceSlot)
-        -- Uses the selected slot's runtime corners and the 3/5 screen rule requested for left/right placement.
+        -- Converts slot world corners into the tooltip parent's local space before applying the 3/5 rule.
         if not isvalid(sourceSlot) or not isvalid(sourceSlot.UITransformComponent) then return end
-        local corners = sourceSlot.UITransformComponent:GetWorldCorners()
-        if corners == nil or #corners < 4 then return end
+        local tooltipTransform = self.TooltipPanel.UITransformComponent
+        local parentEntity = self.TooltipPanel.Parent
+        if not isvalid(tooltipTransform) or not isvalid(parentEntity) or not isvalid(parentEntity.UITransformComponent) then return end
+        local parentTransform = parentEntity.UITransformComponent
+        local worldCorners = sourceSlot.UITransformComponent:GetWorldCorners()
+        local screenWorldCorners = parentTransform:GetWorldCorners()
+        if worldCorners == nil or #worldCorners < 4 or screenWorldCorners == nil or #screenWorldCorners < 4 then return end
 
+        local corners = {}
+        local screenCorners = {}
+        for index = 1, 4 do
+            corners[index] = parentTransform:ToLocalPoint(worldCorners[index])
+            screenCorners[index] = parentTransform:ToLocalPoint(screenWorldCorners[index])
+        end
         local slotLeft = (corners[1].x + corners[2].x) * 0.5
         local slotRight = (corners[3].x + corners[4].x) * 0.5
         local slotTop = (corners[2].y + corners[3].y) * 0.5
-        local screenA = _UILogic:ScreenToUIPosition(Vector2(0, 0))
-        local screenB = _UILogic:ScreenToUIPosition(Vector2(_UILogic.ScreenWidth, _UILogic.ScreenHeight))
-        local screenLeft = math.min(screenA.x, screenB.x)
-        local screenRight = math.max(screenA.x, screenB.x)
-        local screenBottom = math.min(screenA.y, screenB.y)
-        local screenTop = math.max(screenA.y, screenB.y)
+        local screenLeft = math.min(screenCorners[1].x, screenCorners[2].x)
+        local screenRight = math.max(screenCorners[3].x, screenCorners[4].x)
+        local screenBottom = math.min(screenCorners[1].y, screenCorners[4].y)
+        local screenTop = math.max(screenCorners[2].y, screenCorners[3].y)
         local switchX = screenLeft + (screenRight - screenLeft) * 0.6
-        local tooltipSize = self.TooltipPanel.UITransformComponent.RectSize
+        local tooltipSize = tooltipTransform.RectSize
         local halfWidth = tooltipSize.x * 0.5
         local halfHeight = tooltipSize.y * 0.5
-        local gap = 16
+        local gap = 12
         local margin = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
+        local fitsRight = slotRight + gap + tooltipSize.x <= screenRight - margin
+        local placeLeft = slotCenterX >= switchX or fitsRight == false
         local targetX = slotRight + gap + halfWidth
-        if slotCenterX >= switchX then targetX = slotLeft - gap - halfWidth end
+        if placeLeft then targetX = slotLeft - gap - halfWidth end
         local targetY = slotTop - halfHeight
         targetX = math.max(screenLeft + margin + halfWidth, math.min(screenRight - margin - halfWidth, targetX))
         targetY = math.max(screenBottom + margin + halfHeight, math.min(screenTop - margin - halfHeight, targetY))
-        self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(targetX, targetY)
+        tooltipTransform.anchoredPosition = Vector2(targetX, targetY)
+        log("[EquipmentUI] Tooltip attached side=" .. (placeLeft and "LEFT" or "RIGHT")
+            .. " slotX=" .. tostring(slotCenterX) .. " targetX=" .. tostring(targetX))
     end
 
     @ExecSpace("ClientOnly")
@@ -493,9 +559,15 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void ActivateSelectedItem()
-        -- Sends the selected equip, unequip, or consumable-use request to the authoritative server component.
+        -- Uses an idempotent desired equipment state so duplicate clicks cannot re-equip an item being removed.
         if self.SelectedItemIndex <= 0 or not isvalid(self.InventoryComponent) then return end
-        self.InventoryComponent:RequestActivateItem(self.SelectedItemIndex)
+        local item = self:FindItem(self.SelectedItemIndex)
+        if item == nil then return end
+        if item.Category == "EQUIPMENT" then
+            self.InventoryComponent:RequestSetEquipmentState(item.Index, item.Equipped == false)
+            return
+        end
+        self.InventoryComponent:RequestActivateItem(item.Index)
     end
 
     @ExecSpace("ClientOnly")
@@ -591,11 +663,63 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
-    method void RefreshCurrency()
-        -- Reads the existing shared session wallet without introducing duplicate currency state.
-        local unitPerCoin = math.max(1, _SlotMachineRuntime.coinUnitPerCoin)
-        local commonCoins = math.floor(_SlotMachineRuntime.commonUnits / unitPerCoin)
-        self.CurrencyText.Text = tostring(commonCoins) .. " 메소"
+    method void RefreshAvatarPreview()
+        -- Copies the live player costume into a non-animated UI avatar and applies the synchronized game equipment.
+        local player = _UserService.LocalPlayer
+        if not isvalid(player) or not isvalid(self.AvatarPreview) then return end
+        local sourceCostume = player.CostumeManagerComponent
+        local previewCostume = self.AvatarPreview.CostumeManagerComponent
+        local previewRenderer = self.AvatarPreview.AvatarGUIRendererComponent
+        if not isvalid(sourceCostume) or not isvalid(previewCostume) or not isvalid(previewRenderer) then return end
+        previewRenderer.PlayRate = 0
+        previewCostume.UseCustomEquipOnly = true
+        local categories = {
+            MapleAvatarItemCategory.Body,
+            MapleAvatarItemCategory.Hair,
+            MapleAvatarItemCategory.Face,
+            MapleAvatarItemCategory.Cap,
+            MapleAvatarItemCategory.Cape,
+            MapleAvatarItemCategory.Coat,
+            MapleAvatarItemCategory.Glove,
+            MapleAvatarItemCategory.Longcoat,
+            MapleAvatarItemCategory.Pants,
+            MapleAvatarItemCategory.Shield,
+            MapleAvatarItemCategory.Shoes,
+            MapleAvatarItemCategory.OneHandedWeapon,
+            MapleAvatarItemCategory.TwoHandedWeapon,
+            MapleAvatarItemCategory.SubWeapon,
+            MapleAvatarItemCategory.FaceAccessory,
+            MapleAvatarItemCategory.EyeAccessory,
+            MapleAvatarItemCategory.EarAccessory,
+            MapleAvatarItemCategory.Ear,
+        }
+        for _, category in ipairs(categories) do
+            previewCostume:SetEquip(category, sourceCostume:GetEquip(category))
+        end
+        previewCostume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, "")
+        previewCostume:SetEquip(MapleAvatarItemCategory.TwoHandedWeapon, "")
+        previewCostume:SetEquip(MapleAvatarItemCategory.SubWeapon, "")
+        if self.InventoryComponent.EquippedWeaponAvatarCategoryEnumId == "ONE_HANDED_WEAPON" then
+            previewCostume:SetEquip(MapleAvatarItemCategory.OneHandedWeapon, self.InventoryComponent.EquippedWeaponAvatarRUID)
+        elseif self.InventoryComponent.EquippedWeaponAvatarCategoryEnumId == "TWO_HANDED_WEAPON" then
+            previewCostume:SetEquip(MapleAvatarItemCategory.TwoHandedWeapon, self.InventoryComponent.EquippedWeaponAvatarRUID)
+        elseif self.InventoryComponent.EquippedWeaponAvatarCategoryEnumId == "SUB_WEAPON" then
+            previewCostume:SetEquip(MapleAvatarItemCategory.SubWeapon, self.InventoryComponent.EquippedWeaponAvatarRUID)
+        end
+        previewCostume:SetEquip(MapleAvatarItemCategory.Cap, self.InventoryComponent.EquippedHelmetAvatarRUID)
+        previewCostume:SetEquip(MapleAvatarItemCategory.Coat, self.InventoryComponent.EquippedArmorAvatarRUID)
+        previewCostume:SetEquip(MapleAvatarItemCategory.Glove, self.InventoryComponent.EquippedGlovesAvatarRUID)
+        previewCostume:SetEquip(MapleAvatarItemCategory.Shoes, self.InventoryComponent.EquippedShoesAvatarRUID)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ScheduleAvatarPreviewRefresh()
+        -- Repeats once after synchronization so the preview never lags the player's final costume state.
+        if self.AvatarRefreshTimerId ~= 0 then _TimerService:ClearTimer(self.AvatarRefreshTimerId) end
+        self.AvatarRefreshTimerId = _TimerService:SetTimerOnce(function()
+            self.AvatarRefreshTimerId = 0
+            self:RefreshAvatarPreview()
+        end, 0.05)
     end
 
     @ExecSpace("ClientOnly")
@@ -709,6 +833,10 @@ script EquipmentInventoryUI extends Component
         for _, binding in pairs(self.GridClickBindings or {}) do
             if isvalid(binding.Entity) then binding.Entity:DisconnectEvent(ButtonClickEvent, binding.EventHandler) end
         end
+        if self.GridRevealTimerId ~= 0 then _TimerService:ClearTimer(self.GridRevealTimerId) end
+        if self.AvatarRefreshTimerId ~= 0 then _TimerService:ClearTimer(self.AvatarRefreshTimerId) end
+        self.GridRevealTimerId = 0
+        self.AvatarRefreshTimerId = 0
         self.InventoryChangedHandler = nil
         self.StaticBindings = {}
         self.GridClickBindings = {}
