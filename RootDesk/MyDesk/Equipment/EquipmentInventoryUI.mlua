@@ -448,7 +448,7 @@ script EquipmentInventoryUI extends Component
         self.SelectedSourceSlot = sourceSlot
         self.TooltipPanel.Enable = true
         self:PositionTooltip(sourceSlot)
-        _UILogic:SetSiblingIndex(self.TooltipPanel.UITransformComponent, 1000000)
+        _UILogic:SetSiblingIndex(self.TooltipPanel.UITransformComponent, 0)
         self.TooltipTitleText.Text = item.DisplayName
         self.TooltipTitleText.FontColor = self:GetGradeColor(item.Grade)
         self.TooltipIcon.ImageRUID = DataRef(self:GetDisplayIconRUID(item.IconRUID))

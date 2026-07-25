@@ -167,7 +167,7 @@ script CombatPlayerMovementDriver extends Component
             if isvalid(state) and state.CurrentStateName ~= "MOVE" and state.CurrentStateName ~= "DEAD" then
                 state:ChangeState("MOVE")
             end
-            movement:MoveToDirection(Vector2(autoBattle.MoveDirectionX, 0), 0)
+            movement:MoveToDirection(Vector2(autoBattle.MoveDirectionX, 0), delta)
             return
         end
 
