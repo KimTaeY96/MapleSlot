@@ -72,6 +72,18 @@ function spriteSwap(pathName, normal, hover, pressed = hover) {
   });
 }
 
+function moveSubtreeToVisualFront(pathName) {
+  const root = b.find(pathName);
+  if (!root) throw new Error(`Missing UI subtree: ${pathName}`);
+  const rootPath = root.jsonString.path;
+  const subtree = b.entities.filter((entity) => {
+    const entityPath = entity?.jsonString?.path || "";
+    return entityPath === rootPath || entityPath.startsWith(`${rootPath}/`);
+  });
+  const remainder = b.entities.filter((entity) => !subtree.includes(entity));
+  b.entities.splice(0, b.entities.length, ...remainder, ...subtree);
+}
+
 function patchEquipmentCell(cellName, buttonName, x, y, label) {
   const cell = `EquipmentPanel/EquipmentSection/SlotGrid/${cellName}`;
   const button = `${cell}/${buttonName}`;
@@ -587,12 +599,7 @@ b.patch("EquipmentPanel/StatsSection", {
   rect_size: [448, 166],
   pivot: [0.5, 0],
 });
-sprite("EquipmentPanel/StatsSection", "tooltip-stats-panel", 1, false, {
-  r: 1,
-  g: 1,
-  b: 1,
-  a: 0.78,
-});
+sprite("EquipmentPanel/StatsSection", "tooltip-description-panel", 1, false);
 b.patch("EquipmentPanel/StatsSection/Title", {
   anchor: "top-left",
   pos: [16, -10],
@@ -602,7 +609,7 @@ b.patch("EquipmentPanel/StatsSection/Title", {
 textStyle(
   "EquipmentPanel/StatsSection/Title",
   20,
-  C.navy,
+  C.paleBlue,
   1,
   512,
   true,
@@ -641,8 +648,8 @@ textStyle(
 // Item detail: generated dark frame with real visual sub-sections.
 b.patch("TooltipPanel", {
   anchor: "middle-center",
-  pos: [0, 20],
-  rect_size: [420, 760],
+  pos: [0, 30],
+  rect_size: [420, 820],
   pivot: [0.5, 0.5],
   display_order: 100,
 });
@@ -759,7 +766,7 @@ b.patch("TooltipPanel/ComparePanel", {
   rect_size: [380, 122],
   pivot: [0.5, 0],
 });
-sprite("TooltipPanel/ComparePanel", "tooltip-table-panel", 1, false);
+sprite("TooltipPanel/ComparePanel", "tooltip-description-panel", 1, false);
 b.patch("TooltipPanel/ComparePanel/TooltipCompareText", {
   anchor: "middle-center",
   pos: [0, 0],
@@ -795,6 +802,9 @@ textStyle(
   true,
 );
 
+// Make the whole tooltip subtree the final top-level sibling so it renders above every unified-info panel.
+moveSubtreeToVisualFront("TooltipPanel");
+
 // Preserve every existing controller UUID; only write the rebuilt UI tree.
 b.write(UI_PATH, {
   lint: true,
@@ -824,7 +834,7 @@ console.log(
       inventory: { size: [480, 820], pos: [248, 30] },
       equipment: { size: [480, 820], pos: [-248, 30] },
       grid: { columns: 5, cell: [76, 76], spacing: [8, 8] },
-      tooltip: { size: [420, 760], position: "selected-slot-adjacent" },
+      tooltip: { size: [420, 820], position: "selected-slot-adjacent, window-height-aligned" },
     },
     null,
     2,

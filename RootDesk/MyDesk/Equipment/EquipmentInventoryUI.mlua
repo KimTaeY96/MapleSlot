@@ -451,7 +451,7 @@ script EquipmentInventoryUI extends Component
         if isvalid(tooltipParent) then
             _UILogic:SetSiblingIndex(
                 self.TooltipPanel.UITransformComponent,
-                math.max(0, tooltipParent.Children.Count - 1)
+                math.max(0, tooltipParent.Children.Count)
             )
         end
         self:PositionTooltip(sourceSlot)
@@ -507,15 +507,11 @@ script EquipmentInventoryUI extends Component
         end
         local slotLeft = (corners[1].x + corners[2].x) * 0.5
         local slotRight = (corners[3].x + corners[4].x) * 0.5
-        local slotTop = (corners[2].y + corners[3].y) * 0.5
         local screenLeft = math.min(screenCorners[1].x, screenCorners[2].x)
         local screenRight = math.max(screenCorners[3].x, screenCorners[4].x)
-        local screenBottom = math.min(screenCorners[1].y, screenCorners[4].y)
-        local screenTop = math.max(screenCorners[2].y, screenCorners[3].y)
         local switchX = screenLeft + (screenRight - screenLeft) * 0.6
         local tooltipSize = tooltipTransform.RectSize
         local halfWidth = tooltipSize.x * 0.5
-        local halfHeight = tooltipSize.y * 0.5
         local gap = 12
         local margin = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
@@ -523,9 +519,8 @@ script EquipmentInventoryUI extends Component
         local placeLeft = slotCenterX >= switchX or fitsRight == false
         local targetX = slotRight + gap + halfWidth
         if placeLeft then targetX = slotLeft - gap - halfWidth end
-        local targetY = slotTop - halfHeight
+        local targetY = self.InventoryPanel.UITransformComponent.anchoredPosition.y
         targetX = math.max(screenLeft + margin + halfWidth, math.min(screenRight - margin - halfWidth, targetX))
-        targetY = math.max(screenBottom + margin + halfHeight, math.min(screenTop - margin - halfHeight, targetY))
         tooltipTransform.anchoredPosition = Vector2(targetX, targetY)
         log("[EquipmentUI] Tooltip attached side=" .. (placeLeft and "LEFT" or "RIGHT")
             .. " slotX=" .. tostring(slotCenterX) .. " targetX=" .. tostring(targetX))
