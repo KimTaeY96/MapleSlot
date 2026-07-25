@@ -1,9 +1,10 @@
 "use strict";
 
 const fs = require("fs");
+const path = require("path");
 const { execFileSync } = require("child_process");
 
-const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
+const projectRoot = path.resolve(__dirname, "..");
 const uiPath = `${projectRoot}/ui/UIRoot_TestSandbox_MainPlay.ui`;
 const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_manifest.json`;
 const coinAnimationManifestPath = `${projectRoot}/GeneratedAssets/CoinAnimation/msw_resource_manifest.json`;
@@ -28,7 +29,7 @@ function fail(message) {
 }
 
 function validateBonus777VisualSafeArea() {
-  const pythonPath = process.env.MSW_PYTHON_EXE || "C:/Users/ghddj/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe";
+  const pythonPath = process.env.MSW_PYTHON_EXE || "python";
   const validatorPath = `${projectRoot}/tools/validate_bonus777_visual_safe_area.py`;
   execFileSync(pythonPath, [validatorPath], { stdio: "inherit" });
 }
@@ -727,8 +728,11 @@ if (!runtime.includes("local slotWidth = 893.0")) {
 if (!runtime.includes("local slotHeight = 1020.0")) {
   fail("Runtime responsive slot height is not 1020");
 }
-if (!/method float GetCellHeight\(\)[\s\S]*?return 80\.0/.test(runtime)) {
-  fail("Runtime reel cell height is not 80");
+if (!runtime.includes("local measuredHeight = transform.RectSize.y / #strips[1]")) {
+  fail("Runtime reel cell height is not derived from the current UI strip height");
+}
+if (!runtime.includes("return 80.0")) {
+  fail("Runtime reel cell height fallback is missing");
 }
 if (!runtime.includes("property any slotSymbols = nil")) {
   fail("Runtime slotSymbols data table is missing");

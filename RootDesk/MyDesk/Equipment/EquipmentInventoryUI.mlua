@@ -5,7 +5,6 @@ script EquipmentInventoryUI extends Component
     property Entity TooltipPanel = "39e1ce5c-d236-406d-9b43-3b64235a2952"
     property ButtonComponent UnifiedInfoOpenButton = "d93b3bae-b3f9-4f70-8afb-5ec88963a3ec"
     property ButtonComponent InventoryCloseButton = "c8c4033f-64b9-40d2-839e-8c91cf69b13f"
-    property ButtonComponent EquipmentCloseButton = "95081cce-3d39-40c5-bb57-8b96ac3b0e88"
     property ButtonComponent TooltipCloseButton = "34f5ed0b-6053-4878-8759-e06b11652495"
     property ButtonComponent EquipmentTabButton = "dbbad5ab-874f-4d43-b190-704c72066c35"
     property ButtonComponent ConsumableTabButton = "2f92b9b0-ee5c-406d-8de1-f161748ddbe9"
@@ -89,7 +88,6 @@ script EquipmentInventoryUI extends Component
         -- Connects every fixed button to a single lifecycle-owned handler list.
         self:AddStaticBinding(self.UnifiedInfoOpenButton.Entity, function() self:ToggleUnifiedInfo() end)
         self:AddStaticBinding(self.InventoryCloseButton.Entity, function() self:CloseUnifiedInfo() end)
-        self:AddStaticBinding(self.EquipmentCloseButton.Entity, function() self:CloseUnifiedInfo() end)
         self:AddStaticBinding(self.TooltipCloseButton.Entity, function() self:CloseTooltip() end)
         self:AddStaticBinding(self.EquipmentTabButton.Entity, function() self:SelectCategory("EQUIPMENT") end)
         self:AddStaticBinding(self.ConsumableTabButton.Entity, function() self:SelectCategory("CONSUMABLE") end)

@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 
 
-PROJECT_ROOT = Path(r"C:\Users\ghddj\Desktop\AI\MSW")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STRUCTURE_PATH = PROJECT_ROOT / "GeneratedAssets" / "SlotMachineUI" / "bonus777" / "bonus777_slot_ui_structure.json"
 FRAME_ALPHA_THRESHOLD = 32
 LEVER_SAFE_MARGIN = 8

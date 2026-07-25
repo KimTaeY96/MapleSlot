@@ -23,6 +23,10 @@ const C = {
   paleBlue: { r: 0.70, g: 0.82, b: 0.90, a: 1 },
   darkTooltip: { r: 0.12, g: 0.14, b: 0.29, a: 0.98 },
 };
+// Project UI rule: every direct child of a bordered panel must stay inside this
+// content-safe inset. Text and interactive controls must never overlap 9-slice borders.
+const BORDER_CONTENT_SAFE_INSET = 16;
+
 
 function dataRef(key) {
   return { DataId: RUIDS[key] };
@@ -83,6 +87,34 @@ function moveSubtreeToVisualFront(pathName) {
   const remainder = b.entities.filter((entity) => !subtree.includes(entity));
   b.entities.splice(0, b.entities.length, ...remainder, ...subtree);
 }
+function assertInsideBorder(parentPath, childPath, inset = BORDER_CONTENT_SAFE_INSET) {
+  const parent = b.getComponent(parentPath, "MOD.Core.UITransformComponent");
+  const child = b.getComponent(childPath, "MOD.Core.UITransformComponent");
+  if (!parent || !child) {
+    throw new Error(`Missing bordered UI transform: ${parentPath} -> ${childPath}`);
+  }
+
+  const parentWidth = parent.RectSize.x;
+  const parentHeight = parent.RectSize.y;
+  const left = child.AnchorsMin.x * parentWidth + child.OffsetMin.x;
+  const right = child.AnchorsMax.x * parentWidth + child.OffsetMax.x;
+  const bottom = child.AnchorsMin.y * parentHeight + child.OffsetMin.y;
+  const top = child.AnchorsMax.y * parentHeight + child.OffsetMax.y;
+  const epsilon = 0.01;
+
+  if (
+    left < inset - epsilon ||
+    right > parentWidth - inset + epsilon ||
+    bottom < inset - epsilon ||
+    top > parentHeight - inset + epsilon
+  ) {
+    throw new Error(
+      `Border-safe inset violation: ${childPath} in ${parentPath} ` +
+        `(rect=${left},${bottom},${right},${top}, inset=${inset})`,
+    );
+  }
+}
+
 
 function patchEquipmentCell(cellName, buttonName, x, y, label) {
   const cell = `EquipmentPanel/EquipmentSection/SlotGrid/${cellName}`;
@@ -242,6 +274,12 @@ for (const [panelName, x, order] of [
   );
 }
 
+// The unified information window is closed from the inventory header only.
+// Equipment is a fixed companion panel and must not expose a second close action.
+if (b.find("EquipmentPanel/Header/CloseButton")) {
+  b.remove("EquipmentPanel/Header/CloseButton");
+}
+
 b.patchComponent(
   "InventoryPanel/Header/Title",
   "MOD.Core.TextGUIRendererComponent",
@@ -257,7 +295,7 @@ b.patchComponent(
 b.patch("InventoryPanel/TabBar", {
   anchor: "top-center",
   pos: [0, -74],
-  rect_size: [432, 62],
+  rect_size: [416, 62],
   pivot: [0.5, 1],
 });
 const tabs = [
@@ -268,7 +306,7 @@ const tabs = [
 ];
 tabs.forEach(([tabName, label], index) => {
   const tab = `InventoryPanel/TabBar/${tabName}`;
-  const width = 105;
+  const width = 101;
   const gap = 4;
   b.patch(tab, {
     anchor: "top-left",
@@ -369,7 +407,7 @@ b.patch(`${template}/Quantity`, {
 textStyle(`${template}/Quantity`, 18, C.white, 4, 1024, true);
 b.patchComponent(`${template}/Quantity`, "MOD.Core.TextGUIRendererComponent", {
   OutlineColor: { r: 0, g: 0, b: 0, a: 1 },
-  OutlineWidth: 2,
+  OutlineWidth: 3,
 });
 b.patch(`${template}/New`, {
   anchor: "top-left",
@@ -602,8 +640,8 @@ b.patch("EquipmentPanel/StatsSection", {
 sprite("EquipmentPanel/StatsSection", "tooltip-description-panel", 1, false);
 b.patch("EquipmentPanel/StatsSection/Title", {
   anchor: "top-left",
-  pos: [16, -10],
-  rect_size: [200, 28],
+  pos: [16, -18],
+  rect_size: [200, 24],
   pivot: [0, 1],
 });
 textStyle(
@@ -622,8 +660,8 @@ textStyle(
   const row = `EquipmentPanel/StatsSection/${rowName}`;
   b.patch(row, {
     anchor: "top-center",
-    pos: [0, y],
-    rect_size: [408, 34],
+    pos: [0, rowName === "AttackRow" ? -50 : rowName === "DefenseRow" ? -118 : y],
+    rect_size: [408, 32],
     pivot: [0.5, 1],
   });
   b.patch(`${row}/Label`, {
@@ -804,6 +842,15 @@ textStyle(
 
 // Make the whole tooltip subtree the final top-level sibling so it renders above every unified-info panel.
 moveSubtreeToVisualFront("TooltipPanel");
+
+// Enforce the bordered-container rule during every rebuild.
+assertInsideBorder("InventoryPanel", "InventoryPanel/TabBar");
+for (const childName of ["Title", "AttackRow", "MaxHpRow", "DefenseRow"]) {
+  assertInsideBorder(
+    "EquipmentPanel/StatsSection",
+    `EquipmentPanel/StatsSection/${childName}`,
+  );
+}
 
 // Preserve every existing controller UUID; only write the rebuilt UI tree.
 b.write(UI_PATH, {

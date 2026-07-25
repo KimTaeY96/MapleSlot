@@ -635,6 +635,7 @@ script SlotMachineRuntime extends Logic
         self:HideScreenSprayVfx()
         self:HideBonus777Panel()
         self:ApplyResponsiveLayout()
+        log("[SlotMachineRuntime] Reel cell pitch=" .. tostring(self:GetCellHeight()))
         self:ConnectDevCheatUi()
 
         self.multiplierHandlers = {}
@@ -4195,6 +4196,14 @@ script SlotMachineRuntime extends Logic
     end
     @ExecSpace("ClientOnly")
     method float GetCellHeight()
+        local strips = self:GetCurrentReelStrips()
+        local transform = self.reelStripTransforms[1]
+        if transform ~= nil and strips ~= nil and strips[1] ~= nil and #strips[1] > 0 then
+            local measuredHeight = transform.RectSize.y / #strips[1]
+            if measuredHeight > 0 then
+                return measuredHeight
+            end
+        end
         return 80.0
     end
 
