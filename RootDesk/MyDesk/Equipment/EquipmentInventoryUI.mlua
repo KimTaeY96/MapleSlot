@@ -447,8 +447,14 @@ script EquipmentInventoryUI extends Component
         -- Attaches the detail window to the selected slot and keeps it above the unified information group.
         self.SelectedSourceSlot = sourceSlot
         self.TooltipPanel.Enable = true
+        local tooltipParent = self.TooltipPanel.Parent
+        if isvalid(tooltipParent) then
+            _UILogic:SetSiblingIndex(
+                self.TooltipPanel.UITransformComponent,
+                math.max(0, tooltipParent.Children.Count - 1)
+            )
+        end
         self:PositionTooltip(sourceSlot)
-        _UILogic:SetSiblingIndex(self.TooltipPanel.UITransformComponent, 0)
         self.TooltipTitleText.Text = item.DisplayName
         self.TooltipTitleText.FontColor = self:GetGradeColor(item.Grade)
         self.TooltipIcon.ImageRUID = DataRef(self:GetDisplayIconRUID(item.IconRUID))
@@ -494,8 +500,10 @@ script EquipmentInventoryUI extends Component
         local corners = {}
         local screenCorners = {}
         for index = 1, 4 do
-            corners[index] = parentTransform:ToLocalPoint(worldCorners[index])
-            screenCorners[index] = parentTransform:ToLocalPoint(screenWorldCorners[index])
+            local worldCorner = worldCorners[index]
+            local screenWorldCorner = screenWorldCorners[index]
+            corners[index] = parentTransform:ToLocalPoint(Vector3(worldCorner.x, worldCorner.y, 0))
+            screenCorners[index] = parentTransform:ToLocalPoint(Vector3(screenWorldCorner.x, screenWorldCorner.y, 0))
         end
         local slotLeft = (corners[1].x + corners[2].x) * 0.5
         local slotRight = (corners[3].x + corners[4].x) * 0.5

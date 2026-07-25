@@ -610,7 +610,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 0,
+          "displayOrder": 100,
           "pathConstraints": "///",
           "revision": 0,
           "origin": {

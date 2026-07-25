@@ -644,7 +644,7 @@ b.patch("TooltipPanel", {
   pos: [0, 20],
   rect_size: [420, 760],
   pivot: [0.5, 0.5],
-  display_order: 0,
+  display_order: 100,
 });
 sprite("TooltipPanel", "tooltip-frame", 1, true, C.darkTooltip);
 b.patch("TooltipPanel/Header", {
