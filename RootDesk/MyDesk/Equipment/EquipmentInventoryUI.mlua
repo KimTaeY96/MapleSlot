@@ -3,8 +3,7 @@ script EquipmentInventoryUI extends Component
     property Entity InventoryPanel = "6a565741-8adc-41d8-b13b-39444666ad1e"
     property Entity EquipmentPanel = "230bd8d2-d796-4970-a51c-1910f9832a3e"
     property Entity TooltipPanel = "39e1ce5c-d236-406d-9b43-3b64235a2952"
-    property ButtonComponent InventoryOpenButton = "d93b3bae-b3f9-4f70-8afb-5ec88963a3ec"
-    property ButtonComponent EquipmentOpenButton = "0bb4da25-c57f-41e0-9bde-81a828dcdb47"
+    property ButtonComponent UnifiedInfoOpenButton = "d93b3bae-b3f9-4f70-8afb-5ec88963a3ec"
     property ButtonComponent InventoryCloseButton = "c8c4033f-64b9-40d2-839e-8c91cf69b13f"
     property ButtonComponent EquipmentCloseButton = "95081cce-3d39-40c5-bb57-8b96ac3b0e88"
     property ButtonComponent TooltipCloseButton = "34f5ed0b-6053-4878-8759-e06b11652495"
@@ -29,6 +28,7 @@ script EquipmentInventoryUI extends Component
     property TextGUIRendererComponent TooltipGradeText = "24b07715-1ca1-4fcf-b4bb-92c05228ce1f"
     property TextGUIRendererComponent TooltipDetailsText = "97828a8e-75bf-41fa-8a5c-38810632f15c"
     property TextGUIRendererComponent TooltipCompareText = "80ae24ce-fb60-4cc6-92a8-5f0d30c98168"
+    property Entity TooltipComparePanel = "8673712f-0d00-42ee-8c28-0c5da142ee2a"
     property ButtonComponent TooltipActionButton = "a59246d4-9ea3-4b36-a0ad-cb86f5a85013"
     property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
     @HideFromInspector property any InventoryComponent = nil
@@ -64,7 +64,7 @@ script EquipmentInventoryUI extends Component
         self:BindStaticButtons()
         self:BindPlayerInventory()
         self:RefreshAll()
-        log("[EquipmentUI] Inventory, equipment, tooltip, and comparison UI ready")
+        log("[EquipmentUI] Unified information window, slot-adjacent tooltip, and normalized item icons ready")
     end
 
     @ExecSpace("ClientOnly")
@@ -87,10 +87,9 @@ script EquipmentInventoryUI extends Component
     @ExecSpace("ClientOnly")
     method void BindStaticButtons()
         -- Connects every fixed button to a single lifecycle-owned handler list.
-        self:AddStaticBinding(self.InventoryOpenButton.Entity, function() self:OpenInventory() end)
-        self:AddStaticBinding(self.EquipmentOpenButton.Entity, function() self:OpenEquipment() end)
-        self:AddStaticBinding(self.InventoryCloseButton.Entity, function() self:CloseInventory() end)
-        self:AddStaticBinding(self.EquipmentCloseButton.Entity, function() self:CloseEquipment() end)
+        self:AddStaticBinding(self.UnifiedInfoOpenButton.Entity, function() self:ToggleUnifiedInfo() end)
+        self:AddStaticBinding(self.InventoryCloseButton.Entity, function() self:CloseUnifiedInfo() end)
+        self:AddStaticBinding(self.EquipmentCloseButton.Entity, function() self:CloseUnifiedInfo() end)
         self:AddStaticBinding(self.TooltipCloseButton.Entity, function() self:CloseTooltip() end)
         self:AddStaticBinding(self.EquipmentTabButton.Entity, function() self:SelectCategory("EQUIPMENT") end)
         self:AddStaticBinding(self.ConsumableTabButton.Entity, function() self:SelectCategory("CONSUMABLE") end)
@@ -139,35 +138,52 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
-    method void OpenInventory()
-        -- Opens the inventory without closing the equipment window, preserving the three-panel layout.
+    method void ToggleUnifiedInfo()
+        -- Uses one button for the equipment+inventory pair; a future stat panel can join the same toggle.
+        if self.InventoryPanel.Enable and self.EquipmentPanel.Enable then
+            self:CloseUnifiedInfo()
+        else
+            self:OpenUnifiedInfo()
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenUnifiedInfo()
+        -- Opens the ordered unified information pair: Equipment -> Inventory.
         self.TooltipPanel.Enable = false
+        self.EquipmentPanel.Enable = true
         self.InventoryPanel.Enable = true
         self:RefreshAll()
-        log("[EquipmentUI] Opened inventory panel")
+        log("[EquipmentUI] Opened unified information window")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CloseUnifiedInfo()
+        -- Either title-bar close button closes the complete information group.
+        self.InventoryPanel.Enable = false
+        self.EquipmentPanel.Enable = false
+        self:CloseTooltip()
+        log("[EquipmentUI] Closed unified information window")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenInventory()
+        self:OpenUnifiedInfo()
     end
 
     @ExecSpace("ClientOnly")
     method void CloseInventory()
-        -- Closes the inventory and any item tooltip opened from it.
-        self.InventoryPanel.Enable = false
-        self:CloseTooltip()
+        self:CloseUnifiedInfo()
     end
 
     @ExecSpace("ClientOnly")
     method void OpenEquipment()
-        -- Opens the equipment window beside the inventory and refreshes its five actual project slots.
-        self.TooltipPanel.Enable = false
-        self.EquipmentPanel.Enable = true
-        self:RefreshAll()
-        log("[EquipmentUI] Opened equipment panel")
+        self:OpenUnifiedInfo()
     end
 
     @ExecSpace("ClientOnly")
     method void CloseEquipment()
-        -- Closes the equipment popup and any item tooltip opened from it.
-        self.EquipmentPanel.Enable = false
-        self:CloseTooltip()
+        self:CloseUnifiedInfo()
     end
 
     @ExecSpace("ClientOnly")
@@ -329,7 +345,7 @@ script EquipmentInventoryUI extends Component
             return
         end
         self.SlotIndexByEntityId[entity.Id] = item.Index
-        icon.SpriteGUIRendererComponent.ImageRUID = DataRef(item.IconRUID)
+        icon.SpriteGUIRendererComponent.ImageRUID = DataRef(self:GetDisplayIconRUID(item.IconRUID))
         icon.SpriteGUIRendererComponent.Color = Color(1, 1, 1, 1)
         quantity.TextGUIRendererComponent.Text = item.Count > 1 and tostring(item.Count) or ""
         grade.Enable = true
@@ -337,7 +353,7 @@ script EquipmentInventoryUI extends Component
         equipped.Enable = item.Equipped
         fresh.Enable = item.IsNew
         selection.Enable = item.Index == self.SelectedItemIndex
-        disabled.Enable = item.Category == "MATERIAL" or item.Category == "OTHER"
+        disabled.Enable = false
     end
 
     @ExecSpace("ClientOnly")
@@ -367,7 +383,7 @@ script EquipmentInventoryUI extends Component
         self.SelectedItemIndex = itemIndex
         local item = self:FindItem(itemIndex)
         if item == nil then return end
-        self:ShowTooltip(item, false)
+        self:ShowTooltip(item, entity)
         self.InventoryComponent:RequestMarkItemSeen(itemIndex)
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
@@ -375,19 +391,14 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
-    method void ShowTooltip(table item, boolean fromEquipmentPanel)
-        -- Positions item details within the screen for single-window and dual-window layouts.
-        if self.InventoryPanel.Enable and self.EquipmentPanel.Enable then
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(476, 20)
-        elseif fromEquipmentPanel then
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(-420, 20)
-        else
-            self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(50, 20)
-        end
+    method void ShowTooltip(table item, Entity sourceSlot)
+        -- Attaches the detail window to the selected slot and keeps it above the unified information group.
         self.TooltipPanel.Enable = true
+        self:PositionTooltip(sourceSlot)
+        _UILogic:SetSiblingIndex(self.TooltipPanel.UITransformComponent, 1000000)
         self.TooltipTitleText.Text = item.DisplayName
         self.TooltipTitleText.FontColor = self:GetGradeColor(item.Grade)
-        self.TooltipIcon.ImageRUID = DataRef(item.IconRUID)
+        self.TooltipIcon.ImageRUID = DataRef(self:GetDisplayIconRUID(item.IconRUID))
         self.TooltipGradeText.Text = self:GetGradeLabel(item.Grade) .. "  |  " .. self:GetCategoryLabel(item.Category)
         local slotLine = item.Slot ~= "NONE" and ("장착 부위: " .. self:GetSlotLabel(item.Slot) .. "\n") or ""
         local enhancementLine = item.Enhancement > 0 and ("강화 수치: +" .. tostring(item.Enhancement) .. "\n") or ""
@@ -398,6 +409,7 @@ script EquipmentInventoryUI extends Component
             .. "최대 HP: +" .. tostring(item.MaxHp) .. "\n"
             .. "방어력: +" .. tostring(item.Defense) .. "\n\n"
             .. item.Description .. "\n\n판매 가격: " .. tostring(item.SellPrice)
+        self.TooltipComparePanel.Enable = item.Category == "EQUIPMENT"
         self.TooltipCompareText.Text = self:BuildComparisonText(item)
         if item.Category == "EQUIPMENT" then
             self.TooltipActionButton.Entity.TextGUIRendererComponent.Text = item.Equipped and "장착 해제" or "장착"
@@ -412,6 +424,45 @@ script EquipmentInventoryUI extends Component
             self.TooltipActionButton.Entity.SpriteGUIRendererComponent.Color = Color(0.42, 0.44, 0.48, 1)
             self.TooltipActionButton.Enable = false
         end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void PositionTooltip(Entity sourceSlot)
+        -- Uses the selected slot's runtime corners and the 3/5 screen rule requested for left/right placement.
+        if not isvalid(sourceSlot) or not isvalid(sourceSlot.UITransformComponent) then return end
+        local corners = sourceSlot.UITransformComponent:GetWorldCorners()
+        if corners == nil or #corners < 4 then return end
+
+        local slotLeft = (corners[1].x + corners[2].x) * 0.5
+        local slotRight = (corners[3].x + corners[4].x) * 0.5
+        local slotTop = (corners[2].y + corners[3].y) * 0.5
+        local screenA = _UILogic:ScreenToUIPosition(Vector2(0, 0))
+        local screenB = _UILogic:ScreenToUIPosition(Vector2(_UILogic.ScreenWidth, _UILogic.ScreenHeight))
+        local screenLeft = math.min(screenA.x, screenB.x)
+        local screenRight = math.max(screenA.x, screenB.x)
+        local screenBottom = math.min(screenA.y, screenB.y)
+        local screenTop = math.max(screenA.y, screenB.y)
+        local switchX = screenLeft + (screenRight - screenLeft) * 0.6
+        local tooltipSize = self.TooltipPanel.UITransformComponent.RectSize
+        local halfWidth = tooltipSize.x * 0.5
+        local halfHeight = tooltipSize.y * 0.5
+        local gap = 16
+        local margin = 12
+        local slotCenterX = (slotLeft + slotRight) * 0.5
+        local targetX = slotRight + gap + halfWidth
+        if slotCenterX >= switchX then targetX = slotLeft - gap - halfWidth end
+        local targetY = slotTop - halfHeight
+        targetX = math.max(screenLeft + margin + halfWidth, math.min(screenRight - margin - halfWidth, targetX))
+        targetY = math.max(screenBottom + margin + halfHeight, math.min(screenTop - margin - halfHeight, targetY))
+        self.TooltipPanel.UITransformComponent.anchoredPosition = Vector2(targetX, targetY)
+    end
+
+    @ExecSpace("ClientOnly")
+    method string GetDisplayIconRUID(string iconRUID)
+        -- Raw Maple icon sprites retain source pivots; thumbnail rendering normalizes them into a centered square.
+        if iconRUID == nil or iconRUID == "" then return "" end
+        if string.sub(iconRUID, 1, 12) == "thumbnail://" then return iconRUID end
+        return "thumbnail://" .. iconRUID
     end
 
     @ExecSpace("ClientOnly")
@@ -456,9 +507,21 @@ script EquipmentInventoryUI extends Component
             return
         end
         self.SelectedItemIndex = item.Index
-        self:ShowTooltip(item, true)
+        local sourceButton = self:GetEquipmentSlotButton(slot)
+        local sourceEntity = isvalid(sourceButton) and sourceButton.Entity or nil
+        self:ShowTooltip(item, sourceEntity)
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
+    end
+
+    @ExecSpace("ClientOnly")
+    method ButtonComponent GetEquipmentSlotButton(string slot)
+        if slot == "WEAPON" then return self.WeaponSlotButton end
+        if slot == "HELMET" then return self.HelmetSlotButton end
+        if slot == "ARMOR" then return self.ArmorSlotButton end
+        if slot == "GLOVES" then return self.GlovesSlotButton end
+        if slot == "SHOES" then return self.ShoesSlotButton end
+        return nil
     end
 
     @ExecSpace("ClientOnly")

@@ -5,7 +5,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property string SandboxMapId = ""
     @Sync property string CombatState = "ACQUIRE"
     @Sync property string CombatLaneKey = "CENTER"
-    @Sync property boolean DisableManualControl = true
+    @Sync property boolean DisableManualControl = false
     @Sync property number CombatCameraScreenOffsetX = 0.75
     @Sync property number CombatCameraScreenOffsetY = 0.655
     @Sync property boolean CombatCameraConfineArea = false

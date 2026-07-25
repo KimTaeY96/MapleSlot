@@ -155,12 +155,13 @@ b.patchComponent("EquipmentInventory", "MOD.Core.UIGroupComponent", {
   GroupOrder: 7,
 });
 
-// Bottom-right rounded-square icon buttons.
+// One bottom-right rounded-square button toggles the unified information window.
 b.patch("InventoryOpenButton", {
   anchor: "bottom-right",
   pos: [-24, 24],
   rect_size: [88, 88],
   pivot: [1, 0],
+  display_order: 200,
 });
 spriteSwap(
   "InventoryOpenButton",
@@ -170,30 +171,20 @@ spriteSwap(
 );
 b.patch("InventoryOpenButton/Icon", { enable: false });
 
-b.patch("EquipmentOpenButton", {
-  anchor: "bottom-right",
-  pos: [-124, 24],
-  rect_size: [88, 88],
-  pivot: [1, 0],
-});
-spriteSwap(
-  "EquipmentOpenButton",
-  "equipment-menu-normal",
-  "equipment-menu-hover",
-  "equipment-menu-hover",
-);
-b.patch("EquipmentOpenButton/Icon", { enable: false });
+if (b.find("EquipmentOpenButton")) b.remove("EquipmentOpenButton");
 
-// Shared window metrics: identical height, title bar, close-button placement.
-for (const [panelName, x] of [
-  ["InventoryPanel", -420],
-  ["EquipmentPanel", 76],
+// Unified information window order: future Stats -> Equipment -> Inventory.
+// With Stats not authored yet, the existing two panels are centered as one 976px group.
+for (const [panelName, x, order] of [
+  ["EquipmentPanel", -248, 20],
+  ["InventoryPanel", 248, 30],
 ]) {
   b.patch(panelName, {
     anchor: "middle-center",
     pos: [x, 30],
     rect_size: [480, 820],
     pivot: [0.5, 0.5],
+    display_order: order,
   });
   sprite(panelName, "window-frame", 1, true);
   b.patch(`${panelName}/Header`, {
@@ -286,7 +277,7 @@ tabs.forEach(([tabName, label], index) => {
 b.patch("InventoryPanel/GridSection", {
   anchor: "top-center",
   pos: [0, -148],
-  rect_size: [448, 496],
+  rect_size: [448, 512],
   pivot: [0.5, 1],
 });
 sprite("InventoryPanel/GridSection", "slot-inventory", 1, false, {
@@ -401,7 +392,7 @@ textStyle(
 b.patch("InventoryPanel/Footer/CapacityText", {
   anchor: "top-left",
   pos: [8, -8],
-  rect_size: [170, 30],
+  rect_size: [148, 30],
   pivot: [0, 1],
 });
 textStyle(
@@ -414,8 +405,8 @@ textStyle(
 );
 b.patch("InventoryPanel/Footer/InventoryStatusText", {
   anchor: "top-left",
-  pos: [180, -8],
-  rect_size: [258, 30],
+  pos: [160, -8],
+  rect_size: [280, 30],
   pivot: [0, 1],
 });
 textStyle(
@@ -428,8 +419,8 @@ textStyle(
 );
 b.patch("InventoryPanel/Footer/SortButton", {
   anchor: "bottom-right",
-  pos: [0, 0],
-  rect_size: [148, 48],
+  pos: [-8, 0],
+  rect_size: [156, 48],
   pivot: [1, 0],
 });
 spriteSwap(
@@ -594,9 +585,10 @@ textStyle(
 // Item detail: generated dark frame with real visual sub-sections.
 b.patch("TooltipPanel", {
   anchor: "middle-center",
-  pos: [476, 20],
+  pos: [0, 20],
   rect_size: [420, 760],
   pivot: [0.5, 0.5],
+  display_order: 100,
 });
 sprite("TooltipPanel", "tooltip-frame", 1, true, C.darkTooltip);
 b.patch("TooltipPanel/Header", {
@@ -759,10 +751,10 @@ console.log(
     {
       ui: UI_PATH,
       entities: b.listEntities().length,
-      inventory: { size: [480, 820], pos: [-420, 30] },
-      equipment: { size: [480, 820], pos: [76, 30] },
+      inventory: { size: [480, 820], pos: [248, 30] },
+      equipment: { size: [480, 820], pos: [-248, 30] },
       grid: { columns: 5, cell: [76, 76], spacing: [8, 8] },
-      tooltip: { size: [420, 760], pos: [476, 20] },
+      tooltip: { size: [420, 760], position: "selected-slot-adjacent" },
     },
     null,
     2,

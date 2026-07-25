@@ -8,15 +8,26 @@ script CombatPlayerMovementDriver extends Component
     @HideFromInspector property boolean AvatarAnimationEnableBeforeLadder = true
     @HideFromInspector property boolean LadderBodyActionStarted = false
     @HideFromInspector property number LadderBodyActionDelay = 0
+    @HideFromInspector property boolean ManualControlPassThroughLogged = false
 
     @ExecSpace("ClientOnly")
     method void OnUpdate(number delta)
         -- Executes server-selected auto-battle movement on the client that owns the avatar.
         local autoBattle = self.Entity:GetComponent("script.CombatPlayerAutoBattle")
         if not isvalid(autoBattle) then return end
+        local controller = self.Entity.PlayerControllerComponent
+        if autoBattle.DisableManualControl == false then
+            -- Do not cancel native input. The old fall-through called Stop() every frame after the controller entered MOVE.
+            if isvalid(controller) then controller.AlwaysMovingState = false end
+            if self.ManualControlPassThroughLogged == false then
+                self.ManualControlPassThroughLogged = true
+                log("[Combat][Movement] Manual player movement pass-through enabled")
+            end
+            return
+        end
+        self.ManualControlPassThroughLogged = false
         local movement = self.Entity.MovementComponent
         if not isvalid(movement) then return end
-        local controller = self.Entity.PlayerControllerComponent
         local state = self.Entity.StateComponent
 
         -- CLIMB is the highest-priority action and cannot be interrupted by attack, hit, or movement.
