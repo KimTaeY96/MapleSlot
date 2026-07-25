@@ -48,6 +48,8 @@ script CombatPlayerAutoBattle extends AttackComponent
     @HideFromInspector property boolean PendingHitReaction = false
     @HideFromInspector property boolean PendingClimbHitReaction = false
     @HideFromInspector property boolean InputBindingsRemoved = false
+    @HideFromInspector property boolean PlayerControllerEnableCaptured = false
+    @HideFromInspector property boolean PlayerControllerEnableBeforeAutoBattle = true
     @HideFromInspector property any PreviousCameraComponent = nil
     @HideFromInspector property boolean CameraSwitched = false
     @HideFromInspector property boolean LadderErrorLogged = false
@@ -71,7 +73,13 @@ script CombatPlayerAutoBattle extends AttackComponent
         self.SandboxMapId = self.Entity.CurrentMap.Id
         local profile = _CombatTableRuntime:GetPlayerInitProfile(self.ProfileIndex)
         local config = _CombatTableRuntime:GetConfig()
-        self.DisableManualControl = config.DisableManualControlInSandbox
+        self.DisableManualControl = true
+        local controller = self.Entity.PlayerControllerComponent
+        if self.DisableManualControl and isvalid(controller) then
+            self.PlayerControllerEnableBeforeAutoBattle = controller.Enable
+            self.PlayerControllerEnableCaptured = true
+            controller.Enable = false
+        end
         if profile == nil or profile.Enabled == false then
             log_error("[Combat] Missing enabled player profile: " .. tostring(self.ProfileIndex))
             return
@@ -171,19 +179,34 @@ script CombatPlayerAutoBattle extends AttackComponent
 
     method void OnEndPlay()
         -- Restores client control settings changed for auto battle.
-        if self:IsClient() then self:RestoreClientCombatLayout() end
+        if self:IsClient() then
+            self:RestoreClientCombatLayout()
+            return
+        end
+        local controller = self.Entity.PlayerControllerComponent
+        if isvalid(controller) and self.PlayerControllerEnableCaptured then
+            controller.Enable = self.PlayerControllerEnableBeforeAutoBattle
+            self.PlayerControllerEnableCaptured = false
+        end
     end
 
     @ExecSpace("ClientOnly")
     method void ApplyClientCombatLayout()
         -- Blocks default controls through action bindings and frames combat in the screen-right region.
         local controller = self.Entity.PlayerControllerComponent
-        if isvalid(controller) and self.InputBindingsRemoved == false then
-            for _, actionName in ipairs({ "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Jump2", "Attack", "Sit" }) do
-                controller:RemoveAllActionKeyByActionName(actionName)
+        if isvalid(controller) then
+            if self.PlayerControllerEnableCaptured == false then
+                self.PlayerControllerEnableBeforeAutoBattle = controller.Enable
+                self.PlayerControllerEnableCaptured = true
             end
-            self.InputBindingsRemoved = true
-            log("[Combat] Manual movement and attack bindings removed; auto-battle is authoritative")
+            if self.InputBindingsRemoved == false then
+                for _, actionName in ipairs({ "MoveUp", "MoveDown", "MoveLeft", "MoveRight", "Jump", "Jump2", "Attack", "Sit" }) do
+                    controller:RemoveAllActionKeyByActionName(actionName)
+                end
+                self.InputBindingsRemoved = true
+                log("[Combat] Manual bindings removed and native PlayerController disabled; auto-battle is authoritative")
+            end
+            controller.Enable = false
         end
 
         local map = self.Entity.CurrentMap
@@ -206,20 +229,26 @@ script CombatPlayerAutoBattle extends AttackComponent
     method void RestoreClientCombatLayout()
         -- Restores the default player bindings and the camera layout used before combat.
         local controller = self.Entity.PlayerControllerComponent
-        if isvalid(controller) and self.InputBindingsRemoved then
-            controller:SetActionKey(KeyboardKey.W, "MoveUp")
-            controller:SetActionKey(KeyboardKey.UpArrow, "MoveUp")
-            controller:SetActionKey(KeyboardKey.S, "MoveDown")
-            controller:SetActionKey(KeyboardKey.DownArrow, "MoveDown")
-            controller:SetActionKey(KeyboardKey.A, "MoveLeft")
-            controller:SetActionKey(KeyboardKey.LeftArrow, "MoveLeft")
-            controller:SetActionKey(KeyboardKey.D, "MoveRight")
-            controller:SetActionKey(KeyboardKey.RightArrow, "MoveRight")
-            controller:SetActionKey(KeyboardKey.Space, "Jump")
-            controller:SetActionKey(KeyboardKey.LeftAlt, "Jump2")
-            controller:SetActionKey(KeyboardKey.LeftControl, "Attack")
-            controller:SetActionKey(KeyboardKey.C, "Sit")
-            self.InputBindingsRemoved = false
+        if isvalid(controller) then
+            if self.InputBindingsRemoved then
+                controller:SetActionKey(KeyboardKey.W, "MoveUp")
+                controller:SetActionKey(KeyboardKey.UpArrow, "MoveUp")
+                controller:SetActionKey(KeyboardKey.S, "MoveDown")
+                controller:SetActionKey(KeyboardKey.DownArrow, "MoveDown")
+                controller:SetActionKey(KeyboardKey.A, "MoveLeft")
+                controller:SetActionKey(KeyboardKey.LeftArrow, "MoveLeft")
+                controller:SetActionKey(KeyboardKey.D, "MoveRight")
+                controller:SetActionKey(KeyboardKey.RightArrow, "MoveRight")
+                controller:SetActionKey(KeyboardKey.Space, "Jump")
+                controller:SetActionKey(KeyboardKey.LeftAlt, "Jump2")
+                controller:SetActionKey(KeyboardKey.LeftControl, "Attack")
+                controller:SetActionKey(KeyboardKey.C, "Sit")
+                self.InputBindingsRemoved = false
+            end
+            if self.PlayerControllerEnableCaptured then
+                controller.Enable = self.PlayerControllerEnableBeforeAutoBattle
+                self.PlayerControllerEnableCaptured = false
+            end
         end
 
         if self.CameraSwitched and isvalid(self.PreviousCameraComponent) and self.PreviousCameraComponent.EnableInHierarchy then

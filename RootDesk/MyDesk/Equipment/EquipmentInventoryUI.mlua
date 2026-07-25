@@ -510,17 +510,13 @@ script EquipmentInventoryUI extends Component
         local screenLeft = math.min(screenCorners[1].x, screenCorners[2].x)
         local screenRight = math.max(screenCorners[3].x, screenCorners[4].x)
         local switchX = screenLeft + (screenRight - screenLeft) * 0.6
-        local tooltipSize = tooltipTransform.RectSize
-        local halfWidth = tooltipSize.x * 0.5
+        local halfWidth = tooltipTransform.RectSize.x * 0.5
         local gap = 12
-        local margin = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
-        local fitsRight = slotRight + gap + tooltipSize.x <= screenRight - margin
-        local placeLeft = slotCenterX >= switchX or fitsRight == false
+        local placeLeft = slotCenterX >= switchX
         local targetX = slotRight + gap + halfWidth
         if placeLeft then targetX = slotLeft - gap - halfWidth end
         local targetY = self.InventoryPanel.UITransformComponent.anchoredPosition.y
-        targetX = math.max(screenLeft + margin + halfWidth, math.min(screenRight - margin - halfWidth, targetX))
         tooltipTransform.anchoredPosition = Vector2(targetX, targetY)
         log("[EquipmentUI] Tooltip attached side=" .. (placeLeft and "LEFT" or "RIGHT")
             .. " slotX=" .. tostring(slotCenterX) .. " targetX=" .. tostring(targetX))

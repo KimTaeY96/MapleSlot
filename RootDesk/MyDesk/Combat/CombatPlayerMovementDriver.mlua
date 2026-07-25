@@ -19,6 +19,10 @@ script CombatPlayerMovementDriver extends Component
         local movement = self.Entity.MovementComponent
         if not isvalid(movement) then return end
         local state = self.Entity.StateComponent
+        if isvalid(controller) and autoBattle.DisableManualControl and controller.Enable then
+            controller.Enable = false
+            log("[Combat] Re-disabled native PlayerController after an external enable")
+        end
 
         -- CLIMB is the highest-priority action and cannot be interrupted by attack, hit, or movement.
         if autoBattle.MovementIntent == "CLIMB" and autoBattle.ClimbDirectionY ~= 0 then
@@ -29,11 +33,14 @@ script CombatPlayerMovementDriver extends Component
                 local direction = (autoBattle.ClimbDirectionY >= 0) and 1 or -1
                 movement:Stop()
                 movement:SetWorldPosition(Vector2(autoBattle.LadderMountWorldX, currentPosition.y))
+                local controllerEnableBeforeClimb = controller.Enable
+                if controllerEnableBeforeClimb == false then controller.Enable = true end
                 local mounted = controller:ActionClimb(
                     Vector2(0, direction),
                     movement:GetClimbableHeight(),
                     0
                 )
+                controller.Enable = controllerEnableBeforeClimb
                 if mounted == false then
                     log_error("[Combat][LadderAnim] Failed to mount ladder sequence=" .. tostring(autoBattle.LadderMountSequence))
                     return
