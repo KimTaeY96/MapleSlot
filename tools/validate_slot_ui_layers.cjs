@@ -728,8 +728,11 @@ if (!runtime.includes("local slotWidth = 893.0")) {
 if (!runtime.includes("local slotHeight = 1020.0")) {
   fail("Runtime responsive slot height is not 1020");
 }
-if (!runtime.includes("local measuredHeight = transform.RectSize.y / #strips[1]")) {
-  fail("Runtime reel cell height is not derived from the current UI strip height");
+if (!runtime.includes("local measuredPitch = math.abs(firstY - lastY) / (#renderers - 1)")) {
+  fail("Runtime reel pitch is not averaged across the authored render cells");
+}
+if (!runtime.includes("local fallbackPitch = transform.RectSize.y / #renderers")) {
+  fail("Runtime reel pitch fallback does not use the 34-cell visual strip");
 }
 if (!runtime.includes("return 80.0")) {
   fail("Runtime reel cell height fallback is missing");

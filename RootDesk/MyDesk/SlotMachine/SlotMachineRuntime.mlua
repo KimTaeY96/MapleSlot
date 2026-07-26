@@ -4196,13 +4196,28 @@ script SlotMachineRuntime extends Logic
     end
     @ExecSpace("ClientOnly")
     method float GetCellHeight()
-        local strips = self:GetCurrentReelStrips()
-        local transform = self.reelStripTransforms[1]
-        if transform ~= nil and strips ~= nil and strips[1] ~= nil and #strips[1] > 0 then
-            local measuredHeight = transform.RectSize.y / #strips[1]
-            if measuredHeight > 0 then
-                return measuredHeight
+        -- The UI strip has 34 render cells (30 logical cells + two guard cells per edge).
+        -- Measure the authored distance between render cells instead of dividing the
+        -- visual strip height by the 30-cell gameplay strip.
+        local renderers = self.reelCellSymbolRenderers ~= nil and self.reelCellSymbolRenderers[1] or nil
+        if renderers ~= nil and #renderers >= 2 then
+            local firstRenderer = renderers[1]
+            local lastRenderer = renderers[#renderers]
+            local firstCell = isvalid(firstRenderer) and firstRenderer.Entity.Parent or nil
+            local lastCell = isvalid(lastRenderer) and lastRenderer.Entity.Parent or nil
+            if isvalid(firstCell) and isvalid(lastCell)
+                and isvalid(firstCell.UITransformComponent) and isvalid(lastCell.UITransformComponent) then
+                local firstY = firstCell.UITransformComponent.anchoredPosition.y
+                local lastY = lastCell.UITransformComponent.anchoredPosition.y
+                local measuredPitch = math.abs(firstY - lastY) / (#renderers - 1)
+                if measuredPitch > 0 then return measuredPitch end
             end
+        end
+
+        local transform = self.reelStripTransforms[1]
+        if transform ~= nil and renderers ~= nil and #renderers > 0 then
+            local fallbackPitch = transform.RectSize.y / #renderers
+            if fallbackPitch > 0 then return fallbackPitch end
         end
         return 80.0
     end

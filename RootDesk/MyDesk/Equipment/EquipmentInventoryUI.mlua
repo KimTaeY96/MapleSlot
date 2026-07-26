@@ -434,9 +434,11 @@ script EquipmentInventoryUI extends Component
         self.SelectedItemIndex = itemIndex
         local item = self:FindItem(itemIndex)
         if item == nil then return end
-        self:ShowTooltip(item, entity)
+        -- GridView finalizes recycled slot transforms during Refresh; position the
+        -- tooltip only after that pass so the clicked slot is the coordinate source.
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
+        self:ShowTooltip(item, entity)
         if isDoubleClick then self:ActivateSelectedItem() end
     end
 
@@ -485,7 +487,8 @@ script EquipmentInventoryUI extends Component
 
     @ExecSpace("ClientOnly")
     method void PositionTooltip(Entity sourceSlot)
-        -- Converts slot world corners into the tooltip parent's local space before applying the 3/5 rule.
+        -- Uses the actual clicked slot bounds. Attach to its right edge normally,
+        -- or to its left edge once that slot crosses 3/5 of the screen width.
         if not isvalid(sourceSlot) or not isvalid(sourceSlot.UITransformComponent) then return end
         local tooltipTransform = self.TooltipPanel.UITransformComponent
         local parentEntity = self.TooltipPanel.Parent
@@ -503,21 +506,34 @@ script EquipmentInventoryUI extends Component
             corners[index] = parentTransform:ToLocalPoint(Vector3(worldCorner.x, worldCorner.y, 0))
             screenCorners[index] = parentTransform:ToLocalPoint(Vector3(screenWorldCorner.x, screenWorldCorner.y, 0))
         end
-        local slotLeft = (corners[1].x + corners[2].x) * 0.5
-        local slotRight = (corners[3].x + corners[4].x) * 0.5
-        local screenLeft = math.min(screenCorners[1].x, screenCorners[2].x)
-        local screenRight = math.max(screenCorners[3].x, screenCorners[4].x)
+
+        -- GetWorldCorners ordering is not a stable left-pair/right-pair contract.
+        -- Resolve all four corners so GridView recycling and flipped anchors cannot
+        -- turn a right-side slot into a false left-side result.
+        local slotLeft = corners[1].x
+        local slotRight = corners[1].x
+        local screenLeft = screenCorners[1].x
+        local screenRight = screenCorners[1].x
+        for index = 2, 4 do
+            slotLeft = math.min(slotLeft, corners[index].x)
+            slotRight = math.max(slotRight, corners[index].x)
+            screenLeft = math.min(screenLeft, screenCorners[index].x)
+            screenRight = math.max(screenRight, screenCorners[index].x)
+        end
         local switchX = screenLeft + (screenRight - screenLeft) * 0.6
-        local halfWidth = tooltipTransform.RectSize.x * 0.5
         local gap = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
         local placeLeft = slotCenterX >= switchX
-        local targetX = slotRight + gap + halfWidth
-        if placeLeft then targetX = slotLeft - gap - halfWidth end
+        local tooltipWidth = tooltipTransform.RectSize.x
+        local pivotX = tooltipTransform.Pivot.x
+        local targetX = slotRight + gap + tooltipWidth * pivotX
+        if placeLeft then targetX = slotLeft - gap - tooltipWidth * (1 - pivotX) end
         local targetY = self.InventoryPanel.UITransformComponent.anchoredPosition.y
         tooltipTransform.anchoredPosition = Vector2(targetX, targetY)
         log("[EquipmentUI] Tooltip attached side=" .. (placeLeft and "LEFT" or "RIGHT")
-            .. " slotX=" .. tostring(slotCenterX) .. " targetX=" .. tostring(targetX))
+            .. " source=" .. tostring(sourceSlot.Name)
+            .. " slotLeft=" .. tostring(slotLeft) .. " slotRight=" .. tostring(slotRight)
+            .. " switchX=" .. tostring(switchX) .. " targetX=" .. tostring(targetX))
     end
 
     @ExecSpace("ClientOnly")
