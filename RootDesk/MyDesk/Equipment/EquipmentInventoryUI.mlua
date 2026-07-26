@@ -198,7 +198,7 @@ script EquipmentInventoryUI extends Component
         self.TooltipPanel.Enable = false
         self.SelectedItemIndex = 0
         self.SelectedSourceBounds = nil
-        self:RefreshGrid()
+        self:RefreshVisibleGridSelection()
         if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
     end
 
@@ -376,6 +376,23 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
+    method void RefreshVisibleGridSelection()
+        -- Selection-only changes must not rebuild the virtualized GridView. A full
+        -- refresh can expose a recycled item renderer at its template position for
+        -- one frame, which looks like the icon flashes at the inventory corner.
+        for _, binding in pairs(self.GridClickBindings or {}) do
+            local entity = binding.Entity
+            if isvalid(entity) then
+                local selection = entity:GetChildByName("Selection")
+                if isvalid(selection) then
+                    local itemIndex = (self.SlotIndexByEntityId or {})[entity.Id] or 0
+                    selection.Enable = itemIndex > 0 and itemIndex == self.SelectedItemIndex
+                end
+            end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
     method void RefreshGridAtomic()
         -- Hides recycled cells until the layout pass finishes so tab/sort changes never expose transient positions.
         if not isvalid(self.GridSection) or not isvalid(self.GridSection.CanvasGroupComponent) then
@@ -461,7 +478,7 @@ script EquipmentInventoryUI extends Component
     method void OnGridSlotClicked(Entity entity)
         -- Selects on the first click and activates the same item on a second click within 0.35 seconds.
         self:PlayClickSound()
-        local itemIndex = self.SlotIndexByEntityId[entity.Id] or 0
+        local itemIndex = (self.SlotIndexByEntityId or {})[entity.Id] or 0
         if itemIndex <= 0 then return end
         local now = _UtilLogic.ElapsedSeconds
         local isDoubleClick = itemIndex == self.LastClickedItemIndex and now - self.LastClickTime <= 0.35
@@ -477,9 +494,10 @@ script EquipmentInventoryUI extends Component
             log_warning("[EquipmentUI] Tooltip aborted because clicked inventory slot bounds were unavailable")
             return
         end
-        self:RefreshGrid()
+        self:RefreshVisibleGridSelection()
         self:RefreshEquipmentSlots()
         self:ShowTooltip(item, sourceBounds)
+        log("[EquipmentUI] Updated slot selection without GridView refresh index=" .. tostring(itemIndex))
         if isDoubleClick then self:ActivateSelectedItem() end
     end
 
@@ -611,7 +629,7 @@ script EquipmentInventoryUI extends Component
         local gap = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
         local placeLeft = slotCenterX >= switchX
-        local tooltipWidth = tooltipTransform.RectSize.x
+        local tooltipWidth = tooltipTransform.RectSize.x * tooltipTransform.UIScale.x
         local pivotX = tooltipTransform.Pivot.x
         local targetX = slotRight + gap + tooltipWidth * pivotX
         if placeLeft then targetX = slotLeft - gap - tooltipWidth * (1 - pivotX) end
@@ -684,7 +702,7 @@ script EquipmentInventoryUI extends Component
         local sourceBounds = self:CaptureSlotBounds(sourceEntity)
         if sourceBounds == nil then return end
         self:ShowTooltip(item, sourceBounds)
-        self:RefreshGrid()
+        self:RefreshVisibleGridSelection()
         self:RefreshEquipmentSlots()
     end
 
