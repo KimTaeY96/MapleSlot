@@ -44,7 +44,7 @@ script EquipmentInventoryUI extends Component
     @HideFromInspector property integer LastClickedItemIndex = 0
     @HideFromInspector property number LastClickTime = -10
     @HideFromInspector property integer LastRevision = -1
-    @HideFromInspector property any SelectedSourceSlot = nil
+    @HideFromInspector property any SelectedSourceBounds = nil
     @HideFromInspector property integer GridRevealTimerId = 0
     @HideFromInspector property integer GridRefreshSequence = 0
     @HideFromInspector property integer AvatarRefreshTimerId = 0
@@ -192,7 +192,7 @@ script EquipmentInventoryUI extends Component
         -- Hides item details and clears all slot-selection decorations.
         self.TooltipPanel.Enable = false
         self.SelectedItemIndex = 0
-        self.SelectedSourceSlot = nil
+        self.SelectedSourceBounds = nil
         self:RefreshGrid()
         if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
     end
@@ -207,7 +207,7 @@ script EquipmentInventoryUI extends Component
         end
         self.SelectedCategory = category
         self.SelectedItemIndex = 0
-        self.SelectedSourceSlot = nil
+        self.SelectedSourceBounds = nil
         self.TooltipPanel.Enable = false
         self:RebuildFilteredItems()
         self:MarkSelectedCategorySeen()
@@ -261,9 +261,9 @@ script EquipmentInventoryUI extends Component
         if isvalid(modeText) then
             modeText.TextGUIRendererComponent.Text = sortLabels[self.SortMode]
         end
-        if self.TooltipPanel.Enable and self.SelectedItemIndex > 0 and isvalid(self.SelectedSourceSlot) then
+        if self.TooltipPanel.Enable and self.SelectedItemIndex > 0 and self.SelectedSourceBounds ~= nil then
             local selectedItem = self:FindItem(self.SelectedItemIndex)
-            if selectedItem ~= nil then self:ShowTooltip(selectedItem, self.SelectedSourceSlot) end
+            if selectedItem ~= nil then self:ShowTooltip(selectedItem, self.SelectedSourceBounds) end
         end
     end
 
@@ -434,18 +434,24 @@ script EquipmentInventoryUI extends Component
         self.SelectedItemIndex = itemIndex
         local item = self:FindItem(itemIndex)
         if item == nil then return end
-        -- GridView finalizes recycled slot transforms during Refresh; position the
-        -- tooltip only after that pass so the clicked slot is the coordinate source.
+        -- GridView recycles visible entities during Refresh. Copy the clicked cell's
+        -- bounds before that happens so the tooltip never falls back to a reused cell.
+        local sourceBounds = self:CaptureSlotBounds(entity)
+        if sourceBounds == nil then
+            log_warning("[EquipmentUI] Tooltip aborted because clicked inventory slot bounds were unavailable")
+            return
+        end
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
-        self:ShowTooltip(item, entity)
+        self:ShowTooltip(item, sourceBounds)
         if isDoubleClick then self:ActivateSelectedItem() end
     end
 
     @ExecSpace("ClientOnly")
-    method void ShowTooltip(table item, Entity sourceSlot)
+    method void ShowTooltip(table item, table sourceBounds)
         -- Attaches the detail window to the selected slot and keeps it above the unified information group.
-        self.SelectedSourceSlot = sourceSlot
+        if sourceBounds == nil then return end
+        self.SelectedSourceBounds = sourceBounds
         self.TooltipPanel.Enable = true
         local tooltipParent = self.TooltipPanel.Parent
         if isvalid(tooltipParent) then
@@ -454,7 +460,7 @@ script EquipmentInventoryUI extends Component
                 math.max(0, tooltipParent.Children.Count)
             )
         end
-        self:PositionTooltip(sourceSlot)
+        self:PositionTooltip(sourceBounds)
         self.TooltipTitleText.Text = item.DisplayName
         self.TooltipTitleText.FontColor = self:GetGradeColor(item.Grade)
         self.TooltipIcon.ImageRUID = DataRef(self:GetDisplayIconRUID(item.IconRUID))
@@ -486,40 +492,56 @@ script EquipmentInventoryUI extends Component
     end
 
     @ExecSpace("ClientOnly")
-    method void PositionTooltip(Entity sourceSlot)
-        -- Uses the actual clicked slot bounds. Attach to its right edge normally,
-        -- or to its left edge once that slot crosses 3/5 of the screen width.
-        if not isvalid(sourceSlot) or not isvalid(sourceSlot.UITransformComponent) then return end
+    method table CaptureSlotBounds(Entity sourceSlot)
+        -- Snapshots the clicked slot before GridView can recycle or reposition it.
+        if not isvalid(sourceSlot) or not isvalid(sourceSlot.UITransformComponent) then return nil end
+        local parentEntity = self.TooltipPanel.Parent
+        if not isvalid(parentEntity) or not isvalid(parentEntity.UITransformComponent) then return nil end
+        local parentTransform = parentEntity.UITransformComponent
+        local worldCorners = sourceSlot.UITransformComponent:GetWorldCorners()
+        if worldCorners == nil or #worldCorners < 4 then return nil end
+        local slotLeft = nil
+        local slotRight = nil
+        for index = 1, 4 do
+            local worldCorner = worldCorners[index]
+            local corner = parentTransform:ToLocalPoint(Vector3(worldCorner.x, worldCorner.y, 0))
+            if slotLeft == nil then
+                slotLeft = corner.x
+                slotRight = corner.x
+            else
+                slotLeft = math.min(slotLeft, corner.x)
+                slotRight = math.max(slotRight, corner.x)
+            end
+        end
+        return { Left = slotLeft, Right = slotRight, SourceName = sourceSlot.Name }
+    end
+
+    @ExecSpace("ClientOnly")
+    method void PositionTooltip(table sourceBounds)
+        -- Attaches to the captured right edge, or to the left when the slot center
+        -- is at or beyond 3/5 of the screen width.
+        if sourceBounds == nil then return end
         local tooltipTransform = self.TooltipPanel.UITransformComponent
         local parentEntity = self.TooltipPanel.Parent
         if not isvalid(tooltipTransform) or not isvalid(parentEntity) or not isvalid(parentEntity.UITransformComponent) then return end
         local parentTransform = parentEntity.UITransformComponent
-        local worldCorners = sourceSlot.UITransformComponent:GetWorldCorners()
         local screenWorldCorners = parentTransform:GetWorldCorners()
-        if worldCorners == nil or #worldCorners < 4 or screenWorldCorners == nil or #screenWorldCorners < 4 then return end
-
-        local corners = {}
-        local screenCorners = {}
+        if screenWorldCorners == nil or #screenWorldCorners < 4 then return end
+        local screenLeft = nil
+        local screenRight = nil
         for index = 1, 4 do
-            local worldCorner = worldCorners[index]
             local screenWorldCorner = screenWorldCorners[index]
-            corners[index] = parentTransform:ToLocalPoint(Vector3(worldCorner.x, worldCorner.y, 0))
-            screenCorners[index] = parentTransform:ToLocalPoint(Vector3(screenWorldCorner.x, screenWorldCorner.y, 0))
+            local corner = parentTransform:ToLocalPoint(Vector3(screenWorldCorner.x, screenWorldCorner.y, 0))
+            if screenLeft == nil then
+                screenLeft = corner.x
+                screenRight = corner.x
+            else
+                screenLeft = math.min(screenLeft, corner.x)
+                screenRight = math.max(screenRight, corner.x)
+            end
         end
-
-        -- GetWorldCorners ordering is not a stable left-pair/right-pair contract.
-        -- Resolve all four corners so GridView recycling and flipped anchors cannot
-        -- turn a right-side slot into a false left-side result.
-        local slotLeft = corners[1].x
-        local slotRight = corners[1].x
-        local screenLeft = screenCorners[1].x
-        local screenRight = screenCorners[1].x
-        for index = 2, 4 do
-            slotLeft = math.min(slotLeft, corners[index].x)
-            slotRight = math.max(slotRight, corners[index].x)
-            screenLeft = math.min(screenLeft, screenCorners[index].x)
-            screenRight = math.max(screenRight, screenCorners[index].x)
-        end
+        local slotLeft = sourceBounds.Left
+        local slotRight = sourceBounds.Right
         local switchX = screenLeft + (screenRight - screenLeft) * 0.6
         local gap = 12
         local slotCenterX = (slotLeft + slotRight) * 0.5
@@ -531,7 +553,7 @@ script EquipmentInventoryUI extends Component
         local targetY = self.InventoryPanel.UITransformComponent.anchoredPosition.y
         tooltipTransform.anchoredPosition = Vector2(targetX, targetY)
         log("[EquipmentUI] Tooltip attached side=" .. (placeLeft and "LEFT" or "RIGHT")
-            .. " source=" .. tostring(sourceSlot.Name)
+            .. " source=" .. tostring(sourceBounds.SourceName)
             .. " slotLeft=" .. tostring(slotLeft) .. " slotRight=" .. tostring(slotRight)
             .. " switchX=" .. tostring(switchX) .. " targetX=" .. tostring(targetX))
     end
@@ -594,7 +616,9 @@ script EquipmentInventoryUI extends Component
         self.SelectedItemIndex = item.Index
         local sourceButton = self:GetEquipmentSlotButton(slot)
         local sourceEntity = isvalid(sourceButton) and sourceButton.Entity or nil
-        self:ShowTooltip(item, sourceEntity)
+        local sourceBounds = self:CaptureSlotBounds(sourceEntity)
+        if sourceBounds == nil then return end
+        self:ShowTooltip(item, sourceBounds)
         self:RefreshGrid()
         self:RefreshEquipmentSlots()
     end

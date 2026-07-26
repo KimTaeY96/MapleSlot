@@ -225,6 +225,7 @@ script SlotMachineRuntime extends Logic
 
     property Entity baseBetButton = "1553c8b4-c0b7-4b0f-8e61-8e35630c0217"
     property Entity baseBetListPanel = "f82f2ae9-4a60-42f9-bb10-f33732d182a7"
+    property ScrollLayoutGroupComponent baseBetOptionsScroll = "6465b253-4965-4ddb-beea-7791ed8d1f1a"
     property Entity baseBetOptionButton1 = "e0b57329-24fa-4657-aefb-d1e435a831c1"
     property Entity baseBetOptionButton2 = "92faac72-3935-409a-96fb-3099f9968870"
     property Entity baseBetOptionButton3 = "d692b421-32ea-4cf0-8aac-7b71b90069aa"
@@ -574,6 +575,15 @@ script SlotMachineRuntime extends Logic
             self.baseBetOptionButton9,
             self.baseBetOptionButton10,
         }
+        -- Keep the BASE BET popup vertical-only. Its child width stays inside the
+        -- viewport after the vertical scrollbar reserves its own thickness.
+        if isvalid(self.baseBetOptionsScroll) then self.baseBetOptionsScroll.Type = 1 end
+        for _, button in ipairs(self.baseBetOptionButtons) do
+            if isvalid(button) and isvalid(button.UITransformComponent) then
+                local size = button.UITransformComponent.RectSize
+                button.UITransformComponent.RectSize = Vector2(math.min(size.x, 204), size.y)
+            end
+        end
         self.reelStripTransforms = {
             self.reelStripTransform1,
             self.reelStripTransform2,
@@ -754,21 +764,28 @@ script SlotMachineRuntime extends Logic
     @ExecSpace("ClientOnly")
     method table BuildBaseBetOptions()
         local rows = {
-            [1] = { bet = 1, regionName = "\237\151\164\235\132\164\236\139\156\236\138\164" },
-            [2] = { bet = 2, regionName = "\236\151\152\235\166\172\235\139\136\236\149\132" },
-            [3] = { bet = 3, regionName = "\237\142\152\235\166\172\236\152\168" },
-            [4] = { bet = 4, regionName = "\236\187\164\235\139\157\236\139\156\237\139\176" },
-            [5] = { bet = 5, regionName = "\235\166\172\236\138\164\237\149\173\234\181\172" },
-            [6] = { bet = 6, regionName = "\236\138\172\235\166\172\237\148\188\236\154\176\235\147\156" },
-            [7] = { bet = 7, regionName = "\236\152\164\235\165\180\235\185\132\236\138\164" },
-            [8] = { bet = 8, regionName = "\235\163\168\235\148\148\235\184\140\235\166\172\236\151\132" },
-            [9] = { bet = 9, regionName = "\236\149\132\236\191\160\236\149\132\235\166\172\236\155\128" },
-            [10] = { bet = 10, regionName = "\235\166\172\237\148\132\235\160\136" },
+            [1] = { bet = 10, regionName = "\237\151\164\235\132\164\236\139\156\236\138\164" },
+            [2] = { bet = 20, regionName = "\236\151\152\235\166\172\235\139\136\236\149\132" },
+            [3] = { bet = 30, regionName = "\237\142\152\235\166\172\236\152\168" },
+            [4] = { bet = 40, regionName = "\236\187\164\235\139\157\236\139\156\237\139\176" },
+            [5] = { bet = 50, regionName = "\235\166\172\236\138\164\237\149\173\234\181\172" },
+            [6] = { bet = 60, regionName = "\236\138\172\235\166\172\237\148\188\236\154\176\235\147\156" },
+            [7] = { bet = 70, regionName = "\236\152\164\235\165\180\235\185\132\236\138\164" },
+            [8] = { bet = 80, regionName = "\235\163\168\235\148\148\235\184\140\235\166\172\236\151\132" },
+            [9] = { bet = 90, regionName = "\236\149\132\236\191\160\236\149\132\235\166\172\236\155\128" },
+            [10] = { bet = 100, regionName = "\235\166\172\237\148\132\235\160\136" },
         }
         for _, row in ipairs(rows) do
             row.label = self:FormatTemplate(self.textTemplates.BaseBetLabel, { row.regionName, tostring(row.bet) })
         end
         return rows
+    end
+
+    @ExecSpace("ClientOnly")
+    method integer GetBaseBetAmount()
+        local option = self.baseBetOptions ~= nil and self.baseBetOptions[self.baseBet] or nil
+        if option ~= nil then return option.bet end
+        return math.max(1, self.baseBet) * 10
     end
 
     @ExecSpace("ClientOnly")
@@ -2719,7 +2736,7 @@ script SlotMachineRuntime extends Logic
         self:RefreshReelStripResources()
         self:RefreshAllReelPositions()
         self:RefreshBetState()
-        log("[SlotMachineRuntime] BaseBet selected: " .. tostring(self.baseBet))
+        log("[SlotMachineRuntime] BaseBet tier=" .. tostring(self.baseBet) .. " amount=" .. tostring(self:GetBaseBetAmount()))
     end
 
     @ExecSpace("ClientOnly")
@@ -2738,7 +2755,7 @@ script SlotMachineRuntime extends Logic
             return
         end
 
-        local costUnits = self.baseBet * self.multiplier * self.coinUnitPerCoin
+        local costUnits = self:GetBaseBetAmount() * self.multiplier * self.coinUnitPerCoin
         if self.premiumUnits + self.commonUnits < costUnits then
             self.statusText.Text = self.textTemplates.NotEnoughCoins
             self:HideWinResult()
@@ -3041,7 +3058,7 @@ script SlotMachineRuntime extends Logic
                 if paytableRow ~= nil then
                     rewardMultiplier = paytableRow.rewardMultiplier or 0
                     extraChance = paytableRow.extraChanceCount or 0
-                    payoutUnits = self.baseBet * self.multiplier * rewardMultiplier * self.coinUnitPerCoin
+                    payoutUnits = self:GetBaseBetAmount() * self.multiplier * rewardMultiplier * self.coinUnitPerCoin
                     totalPayoutUnits = totalPayoutUnits + payoutUnits
                     extraChanceCount = extraChanceCount + extraChance
                     chances = chances + extraChance
@@ -3994,7 +4011,7 @@ script SlotMachineRuntime extends Logic
             symbol = targetSymbol,
             runLength = runLength,
             cells = matchedCells,
-            payoutUnits = self.baseBet * self.multiplier * payoutTenths,
+            payoutUnits = self:GetBaseBetAmount() * self.multiplier * payoutTenths,
         }
     end
 
