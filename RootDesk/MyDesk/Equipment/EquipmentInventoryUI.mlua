@@ -35,6 +35,7 @@ script EquipmentInventoryUI extends Component
     @HideFromInspector property any Items = nil
     @HideFromInspector property any FilteredItems = nil
     @HideFromInspector property any SlotIndexByEntityId = nil
+    @HideFromInspector property any GridDisplayIndexByEntityId = nil
     @HideFromInspector property any GridClickBindings = nil
     @HideFromInspector property any StaticBindings = nil
     @HideFromInspector property any InventoryChangedHandler = nil
@@ -55,6 +56,7 @@ script EquipmentInventoryUI extends Component
         self.Items = {}
         self.FilteredItems = {}
         self.SlotIndexByEntityId = {}
+        self.GridDisplayIndexByEntityId = {}
         self.GridClickBindings = {}
         self.StaticBindings = {}
         self.InventoryPanel.Enable = false
@@ -376,6 +378,7 @@ script EquipmentInventoryUI extends Component
         if not isvalid(entity) then return end
         local item = self.FilteredItems[index + 1]
         self:EnsureGridClickBinding(entity)
+        self.GridDisplayIndexByEntityId[entity.Id] = index
         local icon = entity:GetChildByName("Icon")
         local quantity = entity:GetChildByName("Quantity")
         local grade = entity:GetChildByName("Grade")
@@ -410,7 +413,10 @@ script EquipmentInventoryUI extends Component
     @ExecSpace("ClientOnly")
     method void OnClearGridItem(integer index, Entity entity)
         -- Clears the recycled slot-to-item mapping when GridView releases an entity.
-        if isvalid(entity) then self.SlotIndexByEntityId[entity.Id] = 0 end
+        if isvalid(entity) then
+            self.SlotIndexByEntityId[entity.Id] = 0
+            self.GridDisplayIndexByEntityId[entity.Id] = nil
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -436,7 +442,7 @@ script EquipmentInventoryUI extends Component
         if item == nil then return end
         -- GridView recycles visible entities during Refresh. Copy the clicked cell's
         -- bounds before that happens so the tooltip never falls back to a reused cell.
-        local sourceBounds = self:CaptureSlotBounds(entity)
+        local sourceBounds = self:CaptureInventoryGridSlotBounds(entity)
         if sourceBounds == nil then
             log_warning("[EquipmentUI] Tooltip aborted because clicked inventory slot bounds were unavailable")
             return
@@ -489,6 +495,34 @@ script EquipmentInventoryUI extends Component
             self.TooltipActionButton.Entity.SpriteGUIRendererComponent.Color = Color(0.42, 0.44, 0.48, 1)
             self.TooltipActionButton.Enable = false
         end
+    end
+
+    @ExecSpace("ClientOnly")
+    method table CaptureInventoryGridSlotBounds(Entity sourceSlot)
+        -- GridView clones can retain the template transform. Derive the selected
+        -- column from the authoritative refresh index and stable grid viewport.
+        if not isvalid(sourceSlot) or self.GridDisplayIndexByEntityId == nil then return nil end
+        local displayIndex = self.GridDisplayIndexByEntityId[sourceSlot.Id]
+        if displayIndex == nil or not isvalid(self.ItemGrid) or not isvalid(self.ItemGrid.Entity) then return nil end
+        local gridTransform = self.ItemGrid.Entity.UITransformComponent
+        local parentEntity = self.TooltipPanel.Parent
+        if not isvalid(gridTransform) or not isvalid(parentEntity) or not isvalid(parentEntity.UITransformComponent) then return nil end
+        local parentTransform = parentEntity.UITransformComponent
+        local gridWorldCorners = gridTransform:GetWorldCorners()
+        if gridWorldCorners == nil or #gridWorldCorners < 4 then return nil end
+        local gridLeft = nil
+        for index = 1, 4 do
+            local worldCorner = gridWorldCorners[index]
+            local corner = parentTransform:ToLocalPoint(Vector3(worldCorner.x, worldCorner.y, 0))
+            if gridLeft == nil then gridLeft = corner.x else gridLeft = math.min(gridLeft, corner.x) end
+        end
+        local fixedCount = math.max(1, self.ItemGrid.FixedCount)
+        local column = displayIndex % fixedCount
+        local cellWidth = self.ItemGrid.CellSize.x
+        local spacingX = self.ItemGrid.Spacing.x
+        local paddingLeft = self.ItemGrid.Padding.left
+        local slotLeft = gridLeft + paddingLeft + column * (cellWidth + spacingX)
+        return { Left = slotLeft, Right = slotLeft + cellWidth, SourceName = "InventoryColumn" .. tostring(column + 1) }
     end
 
     @ExecSpace("ClientOnly")

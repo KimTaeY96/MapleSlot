@@ -1,6 +1,7 @@
 @Component
 script EquipmentInventoryComponent extends Component
     property integer PlayerInitProfileIndex = 1
+    property boolean EnableTestItemCheat = true
     @Sync property boolean Initialized = false
     @Sync property string OwnedEquipmentIndices = ""
     @Sync property string OwnedItemStacks = ""
@@ -126,6 +127,31 @@ script EquipmentInventoryComponent extends Component
         self:AddOwnedItemStack(item.InventoryItemsIndex, quantity)
         self.LastActionMessage = item.DisplayName .. " x" .. tostring(quantity) .. " 획득"
         self:PublishInventoryState("grant:" .. item.ItemKey)
+    end
+
+    @ExecSpace("Server")
+    method void RequestGrantTestItem(string itemKey, integer quantity)
+        local player = self.Entity.PlayerComponent
+        if self.EnableTestItemCheat ~= true then return end
+        if not isvalid(player) or senderUserId ~= player.UserId then return end
+        if itemKey == nil or itemKey == "" or quantity == nil or quantity < 1 or quantity > 999 or quantity ~= math.floor(quantity) then return end
+        local equipment = _CombatTableRuntime:GetEquipmentItemByKey(itemKey)
+        if equipment ~= nil then
+            self:AddOwnedEquipment(equipment.EquipmentItemsIndex)
+            self.LastActionMessage = "Cheat granted: " .. equipment.DisplayName
+            self:PublishInventoryState("cheat-equipment:" .. equipment.ItemKey)
+            log("[Equipment] Test cheat granted equipment=" .. equipment.ItemKey)
+            return
+        end
+        local item = _CombatTableRuntime:GetInventoryItemByKey(itemKey)
+        if item == nil then
+            log_warning("[Equipment] Test cheat rejected unknown item=" .. tostring(itemKey))
+            return
+        end
+        self:AddOwnedItemStack(item.InventoryItemsIndex, quantity)
+        self.LastActionMessage = "Cheat granted: " .. item.DisplayName .. " x" .. tostring(quantity)
+        self:PublishInventoryState("cheat-item:" .. item.ItemKey)
+        log("[Equipment] Test cheat granted item=" .. item.ItemKey .. " quantity=" .. tostring(quantity))
     end
 
     @ExecSpace("ServerOnly")

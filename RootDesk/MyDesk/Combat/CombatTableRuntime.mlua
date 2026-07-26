@@ -159,6 +159,15 @@ script CombatTableRuntime extends Logic
     end
 
     @ExecSpace("ServerOnly")
+    method table GetEquipmentItemByKey(string itemKey)
+        self:EnsureLoaded()
+        for _, item in pairs(self.equipmentItems) do
+            if item.Enabled and item.ItemKey == itemKey then return item end
+        end
+        return nil
+    end
+
+    @ExecSpace("ServerOnly")
     method table GetInventoryItem(integer index)
         -- Resolves one enabled non-equipment inventory definition.
         self:EnsureLoaded()

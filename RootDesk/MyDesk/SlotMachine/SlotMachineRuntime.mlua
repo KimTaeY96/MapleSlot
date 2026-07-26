@@ -2640,6 +2640,8 @@ script SlotMachineRuntime extends Logic
         return {
             [1] = { code = "777", description = "Force Wild x5 bonus entry and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
             [2] = { code = "coin 0 1000", description = "Grant coins: coin {0|1} {amount}. 0=Premium, 1=Common.", cheatType = "GRANT_COIN", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+            [3] = { code = "item RED_POTION 10", description = "Grant inventory item: item {ITEM_KEY} {amount}.", cheatType = "GRANT_ITEM", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+            [4] = { code = "item EXPLORER_STARTER_ARMOR 1", description = "Grant equipment by item key.", cheatType = "GRANT_ITEM", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
         }
     end
 
@@ -3310,6 +3312,32 @@ script SlotMachineRuntime extends Logic
     end
 
     @ExecSpace("ClientOnly")
+    method boolean TryApplyItemCheat(string code)
+        local normalizedCode = self:NormalizeCheatCode(code)
+        if normalizedCode ~= "ITEM" and string.sub(normalizedCode, 1, 5) ~= "ITEM " then return false end
+        if self:IsDevCheatRuntime() ~= true then
+            self:SetDevCheatStatus("Cheat blocked")
+            return true
+        end
+        local commandName, itemKey, quantityText = string.match(normalizedCode, "^(%S+)%s+(%S+)%s+(%S+)$")
+        local quantity = tonumber(quantityText)
+        if commandName ~= "ITEM" or itemKey == nil or quantity == nil or quantity < 1 or quantity > 999 or quantity ~= math.floor(quantity) then
+            self:SetDevCheatStatus("Usage: item {ITEM_KEY} {1-999}")
+            return true
+        end
+        local player = _UserService.LocalPlayer
+        local inventory = isvalid(player) and player:GetComponent("script.EquipmentInventoryComponent") or nil
+        if not isvalid(inventory) then
+            self:SetDevCheatStatus("Inventory not ready")
+            return true
+        end
+        inventory:RequestGrantTestItem(itemKey, quantity)
+        self:SetDevCheatStatus("Requested " .. itemKey .. " x" .. tostring(quantity))
+        log("[SlotMachineRuntime] Test item cheat requested key=" .. itemKey .. " quantity=" .. tostring(quantity))
+        return true
+    end
+
+    @ExecSpace("ClientOnly")
     method boolean ApplyCheatCommand(table command)
         if command == nil or command.enabled ~= true then
             self:SetDevCheatStatus("Cheat not found")
@@ -3355,6 +3383,10 @@ script SlotMachineRuntime extends Logic
             if self.devCheatInput ~= nil then
                 self.devCheatInput.Text = ""
             end
+            return
+        end
+        if self:TryApplyItemCheat(code) == true then
+            if self.devCheatInput ~= nil then self.devCheatInput.Text = "" end
             return
         end
         local command = self:FindCheatCommand(code)
