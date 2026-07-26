@@ -49,6 +49,8 @@ script EquipmentInventoryUI extends Component
     @HideFromInspector property integer GridRevealTimerId = 0
     @HideFromInspector property integer GridRefreshSequence = 0
     @HideFromInspector property integer AvatarRefreshTimerId = 0
+    @HideFromInspector property any OutsideTooltipClickHandler = nil
+    @HideFromInspector property number TooltipOpenedAt = -10
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
@@ -66,6 +68,7 @@ script EquipmentInventoryUI extends Component
         self.ItemGrid.ItemEntity = self.ItemTemplate
         self.ItemGrid.OnRefresh = function(index, entity) self:OnRefreshGridItem(index, entity) end
         self.ItemGrid.OnClear = function(index, entity) self:OnClearGridItem(index, entity) end
+        self.OutsideTooltipClickHandler = _InputService:ConnectEvent(ScreenTouchEvent, self.OnScreenTouch)
         self:BindStaticButtons()
         self:BindPlayerInventory()
         self:RefreshAll()
@@ -197,6 +200,33 @@ script EquipmentInventoryUI extends Component
         self.SelectedSourceBounds = nil
         self:RefreshGrid()
         if isvalid(self.InventoryComponent) then self:RefreshEquipmentSlots() end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnScreenTouch(ScreenTouchEvent event)
+        -- Closes item details only when a later pointer press lands outside the tooltip rectangle.
+        if not isvalid(self.TooltipPanel) or not self.TooltipPanel.Enable then return end
+        if _UtilLogic.ElapsedSeconds - self.TooltipOpenedAt <= 0.05 then return end
+        if self:IsScreenPointInsideTooltip(event.TouchPoint) then return end
+        log("[EquipmentUI] Tooltip closed by outside click x=" .. tostring(event.TouchPoint.x)
+            .. " y=" .. tostring(event.TouchPoint.y))
+        self:CloseTooltip()
+    end
+
+    @ExecSpace("ClientOnly")
+    method boolean IsScreenPointInsideTooltip(Vector2 screenPoint)
+        -- Converts the pointer into tooltip-local coordinates and tests its pivot-aware rectangle.
+        if not isvalid(self.TooltipPanel) or not isvalid(self.TooltipPanel.UITransformComponent) then return false end
+        local tooltipTransform = self.TooltipPanel.UITransformComponent
+        local localPoint = _UILogic:ScreenToLocalUIPosition(screenPoint, tooltipTransform)
+        local size = tooltipTransform.RectSize
+        local pivot = tooltipTransform.Pivot
+        local minX = -size.x * pivot.x
+        local maxX = size.x * (1 - pivot.x)
+        local minY = -size.y * pivot.y
+        local maxY = size.y * (1 - pivot.y)
+        return localPoint.x >= minX and localPoint.x <= maxX
+            and localPoint.y >= minY and localPoint.y <= maxY
     end
 
     @ExecSpace("ClientOnly")
@@ -458,6 +488,7 @@ script EquipmentInventoryUI extends Component
         -- Attaches the detail window to the selected slot and keeps it above the unified information group.
         if sourceBounds == nil then return end
         self.SelectedSourceBounds = sourceBounds
+        self.TooltipOpenedAt = _UtilLogic.ElapsedSeconds
         self.TooltipPanel.Enable = true
         local tooltipParent = self.TooltipPanel.Parent
         if isvalid(tooltipParent) then
@@ -904,11 +935,15 @@ script EquipmentInventoryUI extends Component
         for _, binding in pairs(self.GridClickBindings or {}) do
             if isvalid(binding.Entity) then binding.Entity:DisconnectEvent(ButtonClickEvent, binding.EventHandler) end
         end
+        if self.OutsideTooltipClickHandler ~= nil then
+            _InputService:DisconnectEvent(ScreenTouchEvent, self.OutsideTooltipClickHandler)
+        end
         if self.GridRevealTimerId ~= 0 then _TimerService:ClearTimer(self.GridRevealTimerId) end
         if self.AvatarRefreshTimerId ~= 0 then _TimerService:ClearTimer(self.AvatarRefreshTimerId) end
         self.GridRevealTimerId = 0
         self.AvatarRefreshTimerId = 0
         self.InventoryChangedHandler = nil
+        self.OutsideTooltipClickHandler = nil
         self.StaticBindings = {}
         self.GridClickBindings = {}
     end
