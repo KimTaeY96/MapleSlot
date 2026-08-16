@@ -10,6 +10,7 @@ const manifestPath = `${projectRoot}/GeneratedAssets/SlotMachineUI/msw_resource_
 const coinAnimationManifestPath = `${projectRoot}/GeneratedAssets/CoinAnimation/msw_resource_manifest.json`;
 const bonus777StructurePath = `${projectRoot}/GeneratedAssets/SlotMachineUI/bonus777/bonus777_slot_ui_structure.json`;
 const runtimePath = `${projectRoot}/RootDesk/MyDesk/SlotMachine/SlotMachineRuntime.mlua`;
+const { lintUiFile } = require(`${projectRoot}/.agents/skills/msw-ui-system/scripts/ui_lint.cjs`);
 
 const ui = JSON.parse(fs.readFileSync(uiPath, "utf8"));
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
@@ -34,7 +35,30 @@ function validateBonus777VisualSafeArea() {
   execFileSync(pythonPath, [validatorPath], { stdio: "inherit" });
 }
 
+function isIntentionalOffscreenFinding(finding) {
+  if (finding.rule !== "L013" || finding.severity !== "error") return false;
+
+  const baseReel = finding.path.match(/\/ReelColumn_C([1-5])\/ReelStrip_C([1-5])\//);
+  if (baseReel && baseReel[1] === baseReel[2]) return true;
+
+  if (/\/Mask_Bonus777Reel_([1-3])\/Panel_Bonus777ReelStrip_\1\//.test(finding.path)) return true;
+
+  return /\/Scroll_CheatCommands\/Item_CheatCommand_\d{1,2}(?:\/|$)/.test(finding.path);
+}
+
+function validateProjectUiLintPolicy() {
+  const findings = lintUiFile(uiPath);
+  const errors = findings.filter((finding) => finding.severity === "error");
+  const intentional = errors.filter(isIntentionalOffscreenFinding);
+  const unexpected = errors.filter((finding) => !isIntentionalOffscreenFinding(finding));
+  if (unexpected.length > 0) {
+    fail(`Unexpected UI lint errors:\n${unexpected.map((finding) => `${finding.rule} ${finding.path}: ${finding.message}`).join("\n")}`);
+  }
+  console.log(`UI lint policy accepted ${intentional.length} intentional offscreen finding(s) under masked reel strips or scroll content; 0 unexpected errors.`);
+}
+
 validateBonus777VisualSafeArea();
+validateProjectUiLintPolicy();
 
 function getEntity(relativePath) {
   const fullPath = `${root}/${relativePath}`;
@@ -446,7 +470,7 @@ if (getEntity("Panel_DevCheat_Hidden").enable !== false) {
 expectRect("Panel_DevCheat_Hidden/Input_CheatCode", 282, 46);
 expectRect("Panel_DevCheat_Hidden/Button_ApplyCheat", 92, 46);
 expectRect("Panel_DevCheat_Hidden/Text_Status", 380, 30);
-expectRect("Panel_DevCheat_Hidden/Panel_CheatList", 380, 410);
+expectRect("Panel_DevCheat_Hidden/Panel_CheatList", 380, 332);
 const cheatScrollTransform = getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.UITransformComponent");
 if (
   cheatScrollTransform.OffsetMin.x !== 14 || cheatScrollTransform.OffsetMin.y !== 12
@@ -461,6 +485,9 @@ if (cheatInput.LineType !== 0 || cheatInput.CharacterLimit !== 32) {
 const cheatScroll = getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.ScrollLayoutGroupComponent");
 if (cheatScroll.ScrollBarVisible !== 1 || cheatScroll.ScrollBarThickness !== 12) {
   fail("Cheat command list must expose a visible 12px scrollbar");
+}
+if (cheatScroll.VerticalScrollBarDirection !== 3) {
+  fail(`Cheat command list must use TopToBottom vertical direction (3), got ${cheatScroll.VerticalScrollBarDirection}`);
 }
 getComponent("Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands", "MOD.Core.MaskComponent");
 for (let index = 1; index <= 12; index += 1) {
@@ -767,7 +794,7 @@ if (!/BaseBetLabel\s*=\s*"\{0\}\s*-\s*\{1\}[^"]*"/.test(runtime)) {
 if (!runtime.includes("method string FormatTemplate")) {
   fail("Runtime string template formatter is missing");
 }
-if (!runtime.includes("local costUnits = self.baseBet * self.multiplier * self.coinUnitPerCoin")) {
+if (!runtime.includes("local costUnits = self:GetBaseBetAmount() * self.multiplier * self.coinUnitPerCoin")) {
   fail("Runtime spin cost must be BaseBet * Multiplier only");
 }
 if (runtime.includes("local costUnits = self.baseBet * self.multiplier * activePaylineCount * self.coinUnitPerCoin")) {
@@ -821,7 +848,7 @@ if (!runtime.includes("method table BuildBonusSlotPaytable") || !runtime.include
 if (!runtime.includes("method boolean IsBonusSlotLineTrigger") || !runtime.includes("bonusSlotTriggerLineCount")) {
   fail("Runtime does not detect Wild x5 bonus slot triggers");
 }
-if (!runtime.includes("method table ResolveBonusSlot") || !runtime.includes("self.baseBet * self.multiplier * rewardMultiplier * self.coinUnitPerCoin")) {
+if (!runtime.includes("method table ResolveBonusSlot") || !runtime.includes("self:GetBaseBetAmount() * self.multiplier * rewardMultiplier * self.coinUnitPerCoin")) {
   fail("Runtime does not resolve 777 bonus payouts from data multipliers");
 }
 if (!runtime.includes("self:ApplyBonusSlotResult(result)") || !runtime.includes("self:FormatBonusSlotStatus(result.bonusSlotResult)")) {
@@ -869,7 +896,7 @@ if (!runtime.includes("fourPlusLineWinCount") || !runtime.includes("fivePlusLine
 if (!runtime.includes("method boolean ShouldPlayScreenSprayVfx") || !runtime.includes("self:PlayScreenSprayVfxOnce()")) {
   fail("Runtime screen spray trigger flow is missing");
 }
-if (!runtime.includes('self:SetBonus777Texts("HIT "') || !runtime.includes('self:PlayScreenSprayVfxOnce()\n                wait(0.85)')) {
+if (!runtime.includes('self:SetBonus777Texts("HIT "') || !/self:PlayScreenSprayVfxOnce\(\)\s+wait\(0\.85\)/.test(runtime)) {
   fail("Runtime 777 bonus must play the screen spray once for every winning bonus spin");
 }
 if (!runtime.includes("(result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result)")) {
@@ -896,7 +923,7 @@ if (runtime.includes("method void ApplyWinVfxFrame")) {
 if (!runtime.includes("method void SetVisibleWinBaseSymbolAlpha")) {
   fail("Runtime does not expose a helper for hiding the visible base reel symbol under a winning overlay");
 }
-if (!runtime.includes("self:SetVisibleWinBaseSymbolAlpha(rowIndex, col, 0.0)")) {
+if (!runtime.includes("self:SetVisibleWinBaseSymbolAlpha(cell.rowIndex, cell.col, 0.0)")) {
   fail("Runtime does not hide the normal SymbolResourceRuid sprite for winning cells");
 }
 if (!runtime.includes("self:SetVisibleWinBaseSymbolAlpha(cell.rowIndex, cell.col, 1.0)")) {

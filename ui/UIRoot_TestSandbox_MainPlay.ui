@@ -88362,7 +88362,7 @@
               "StartCorner": 0,
               "Type": 1,
               "UseScroll": true,
-              "VerticalScrollBarDirection": 0,
+              "VerticalScrollBarDirection": 3,
               "Enable": true
             },
             {

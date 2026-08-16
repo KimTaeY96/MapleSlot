@@ -3,8 +3,7 @@
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
-const defaultProjectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
-const dependencyRoot = "C:/Users/ghddj/Documents/MSW";
+const defaultProjectRoot = path.resolve(__dirname, "..");
 let artifactToolPromise = null;
 
 function clean(value) {
@@ -27,7 +26,7 @@ function bool(value) {
 
 async function getArtifactTool() {
   if (!artifactToolPromise) {
-    const entryPath = require.resolve("@oai/artifact-tool", { paths: [dependencyRoot] });
+    const entryPath = require.resolve("@oai/artifact-tool");
     artifactToolPromise = import(pathToFileURL(entryPath).href);
   }
   return artifactToolPromise;

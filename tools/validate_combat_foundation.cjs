@@ -126,12 +126,17 @@ assert(sandboxSource.includes('AddComponent("CombatPlayerMovementDriver")'), "Co
 assert(sandboxSource.includes('AddComponent("CombatWalletBridge")'), "Combat runtime must attach the reward wallet bridge");
 
 const walletSource = fs.readFileSync(path.join(combatDir, "CombatWalletBridge.mlua"), "utf8");
-assert(walletSource.includes("DrainPendingCurrencyRewards"), "Combat wallet must consume only server-validated currency grants");
+assert(walletSource.includes("DrainPendingRewards"), "Combat wallet must consume the complete server-validated reward batch");
 assert(walletSource.includes('reward.rewardKey == "COMMON_COIN"'), "Combat wallet must explicitly validate the Common Coin key");
 assert(walletSource.includes("GrantCombatCommonCoins"), "Combat wallet must apply replicated reward deltas to the slot wallet");
+assert(walletSource.includes('reward.rewardType == "ITEM"'), "Combat wallet must route validated item grants to inventory");
+assert(walletSource.includes("GrantItemByKey"), "Combat wallet must apply item grants through the equipment inventory owner");
 
 const combatRuntimeSource = fs.readFileSync(path.join(combatDir, "CombatRuntime.mlua"), "utf8");
-assert(combatRuntimeSource.includes("self.pendingRewardsByUserId[userId] = remaining"), "Currency draining must preserve future item grants");
+assert(combatRuntimeSource.includes("method void EnqueueGrants"), "Combat runtime must expose the validated reward queue boundary");
+assert(combatRuntimeSource.includes('grant.rewardType == "CURRENCY" or grant.rewardType == "ITEM"'), "Combat runtime must reject unsupported reward types before enqueueing");
+assert(combatRuntimeSource.includes("method table DrainPendingRewards"), "Combat runtime must expose an atomic reward-batch drain");
+assert(combatRuntimeSource.includes("self.pendingRewardsByUserId[userId] = {}"), "Reward draining must clear the consumed batch exactly once");
 assert(combatRuntimeSource.includes("floorDistance * 100"), "Cross-floor targeting must prioritize the nearest lane before horizontal distance");
 assert(combatRuntimeSource.includes("CountLiveMonsterInstances"), "Combat runtime must distinguish live monsters from respawn-waiting instances");
 
