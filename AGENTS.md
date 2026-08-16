@@ -276,3 +276,9 @@ Exceptions:
 - Read-only analysis/review tasks with no repository changes do not require a commit or push.
 - Skip commit/push only when the user explicitly requests local-only work or explicitly says not to push.
 - Never force-push or rewrite remote history unless the user explicitly authorizes it.
+
+# PROJECT-LOCAL UI INFORMATION PANEL SPACING
+
+- For read-only informational text inside panel-style UI (status, stats, descriptions, summaries), keep the visible text at least **2.5 spacing units** away from the panel's inner border. The current project base unit is 4 px, so the default text inset is **10 px**.
+- Apply the inset through TextGUIRendererComponent.Padding or equivalent child layout, measured from the panel's inner border to the visible glyph area.
+- Do **not** apply this rule to ButtonComponent entities, tab labels, action-button labels, or text descendants whose role is part of a button. Window title bars are also outside this information-panel rule.

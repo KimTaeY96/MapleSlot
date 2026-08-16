@@ -1499,11 +1499,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 100,
+                "x": 108,
                 "y": 0
               },
               "OffsetMin": {
-                "x": 4,
+                "x": 20,
                 "y": -62
               },
               "Pivot": {
@@ -1511,7 +1511,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -1522,7 +1522,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 4,
+                "x": 20,
                 "y": 0
               },
               "Position": {
@@ -1757,7 +1757,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -1902,7 +1902,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -2082,7 +2082,7 @@
                 "y": 0
               },
               "OffsetMin": {
-                "x": 108,
+                "x": 116,
                 "y": -62
               },
               "Pivot": {
@@ -2090,7 +2090,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -2101,7 +2101,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 108,
+                "x": 116,
                 "y": 0
               },
               "Position": {
@@ -2336,7 +2336,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -2481,7 +2481,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -2657,7 +2657,7 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 308,
+                "x": 300,
                 "y": 0
               },
               "OffsetMin": {
@@ -2669,7 +2669,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -2915,7 +2915,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -3060,7 +3060,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -3236,11 +3236,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 412,
+                "x": 396,
                 "y": 0
               },
               "OffsetMin": {
-                "x": 316,
+                "x": 308,
                 "y": -62
               },
               "Pivot": {
@@ -3248,7 +3248,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -3259,7 +3259,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 316,
+                "x": 308,
                 "y": 0
               },
               "Position": {
@@ -3494,7 +3494,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -3639,7 +3639,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 96,
+                "x": 88,
                 "y": 62
               },
               "UIMode": 1,
@@ -5707,8 +5707,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -6329,8 +6329,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -15247,8 +15247,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -15520,8 +15520,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -15708,8 +15708,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -15981,8 +15981,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -16169,8 +16169,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -16442,8 +16442,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -16630,8 +16630,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -18127,8 +18127,8 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 10,
+                "right": 10,
                 "top": 0,
                 "bottom": 0
               },
@@ -18315,10 +18315,10 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
-                "top": 0,
-                "bottom": 0
+                "left": 10,
+                "right": 10,
+                "top": 10,
+                "bottom": 10
               },
               "SizeFit": false,
               "SortingLayer": "UI",
@@ -18648,10 +18648,10 @@
               "Overflow": 1,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
-                "top": 0,
-                "bottom": 0
+                "left": 10,
+                "right": 10,
+                "top": 10,
+                "bottom": 10
               },
               "SizeFit": false,
               "SortingLayer": "UI",
