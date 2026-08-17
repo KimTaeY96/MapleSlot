@@ -3097,7 +3097,7 @@
               "ConfineCameraArea": false,
               "ScreenOffset": {
                 "x": 0.75,
-                "y": 0.655
+                "y": 0.59
               },
               "Enable": true
             }

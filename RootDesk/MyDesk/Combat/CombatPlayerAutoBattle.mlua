@@ -7,7 +7,7 @@ script CombatPlayerAutoBattle extends AttackComponent
     @Sync property string CombatLaneKey = "CENTER"
     @Sync property boolean DisableManualControl = true
     @Sync property number CombatCameraScreenOffsetX = 0.75
-    @Sync property number CombatCameraScreenOffsetY = 0.655
+    @Sync property number CombatCameraScreenOffsetY = 0.59
     @Sync property boolean CombatCameraConfineArea = false
     @Sync property string CombatCameraAnchorKey = "CombatHarness/CameraAnchor"
     @HideFromInspector property Entity TargetEntity = nil
@@ -223,6 +223,7 @@ script CombatPlayerAutoBattle extends AttackComponent
         camera.ScreenOffset = Vector2(self.CombatCameraScreenOffsetX, self.CombatCameraScreenOffsetY)
         _CameraService:SwitchCameraTo(camera)
         self.CameraSwitched = true
+        log("[Combat] Fixed camera applied screenOffset=" .. tostring(camera.ScreenOffset))
     end
 
     @ExecSpace("ClientOnly")

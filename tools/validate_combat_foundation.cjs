@@ -161,7 +161,7 @@ assert(tableSource.includes('["DROP_SLIME_TIER1"]'), "Generated runtime must con
 assert(tableSource.includes('MinQuantity = 1') && tableSource.includes('MaxQuantity = 3'), "Generated runtime must preserve the variable Slime reward range");
 assert(tableSource.includes('RuntimeKind = "HENESYS_TILE_LANES"'), "Generated runtime must enable the Henesys lane runtime");
 assert(tableSource.includes('CombatAreaMinimumWorldX = 0') && tableSource.includes('CombatAreaMaximumWorldX = 8'), "Generated runtime must constrain combat to the screen-right world-X range");
-assert(tableSource.includes('CombatCameraScreenOffsetX = 0.75') && tableSource.includes('CombatCameraScreenOffsetY = 0.655'), "Generated runtime must frame combat in the screen-right region");
+assert(tableSource.includes('CombatCameraScreenOffsetX = 0.75') && tableSource.includes('CombatCameraScreenOffsetY = 0.59'), "Generated runtime must frame combat above the bottom HUD in the screen-right region");
 assert(tableSource.includes('CombatCameraConfineArea = false'), "Generated runtime must not recenter the camera from foothold bounds");
 assert(tableSource.includes('CombatCameraAnchorKey = "CombatHarness/CameraAnchor"'), "Generated runtime must contain the fixed combat camera anchor key");
 assert(tableSource.includes('BasicAttackLaneKey = "CENTER"'), "Generated runtime must start the player on CENTER");
@@ -216,7 +216,7 @@ if (fs.existsSync(mapPath)) {
     }
     const fixedCamera = map.component("CombatHarness/CameraAnchor", "MOD.Core.CameraComponent");
     assert.equal(fixedCamera.ConfineCameraArea, false, "Fixed combat camera must not use foothold confinement");
-    assert.deepEqual(fixedCamera.ScreenOffset, { x: 0.75, y: 0.655 }, "Fixed combat camera must use the table-backed screen offset");
+    assert.deepEqual(fixedCamera.ScreenOffset, { x: 0.75, y: 0.59 }, "Fixed combat camera must use the HUD-safe table-backed screen offset");
     assert(map.component("ladder-3", "MOD.Core.ClimbableComponent"), "Lower-center ladder must be climbable");
     assert(map.component("ladder-3_1", "MOD.Core.ClimbableComponent"), "Center-upper ladder must be climbable");
     console.log("Combat foundation valid: data runtime, scripts, model, and Henesys three-lane harness");
