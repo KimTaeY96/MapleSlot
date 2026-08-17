@@ -86,6 +86,8 @@ script CombatSandboxRuntime extends Component
                 end
                 local movementDriver = user:GetComponent("script.CombatPlayerMovementDriver")
                 if not isvalid(movementDriver) then user:AddComponent("CombatPlayerMovementDriver") end
+                local wallet = user:GetComponent("script.PlayerWalletComponent")
+                if not isvalid(wallet) then user:AddComponent("PlayerWalletComponent") end
                 local walletBridge = user:GetComponent("script.CombatWalletBridge")
                 if not isvalid(walletBridge) then user:AddComponent("CombatWalletBridge") end
             end

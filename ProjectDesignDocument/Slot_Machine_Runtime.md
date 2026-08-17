@@ -125,8 +125,8 @@ If Common Coin must later become integer-only, the paytable must be retuned or B
 7. Apply all slot winnings as Common Coin only.
 8. Premium Coin is never paid out by the slot machine.
 
-## P0 Server Authority Direction
-The current prototype may run locally for fast iteration, but production-facing slot resolution must move toward authoritative logic.
+## P0 Server Authority Contract
+Spin validation, Premium-first cost deduction, reel outcome resolution, payline evaluation, and Common Coin payout now run through the server-authoritative shared-wallet flow. The client supplies selected options and plays only the returned presentation result.
 
 Authoritative responsibilities:
 - Validate current balances and selected Base Bet / Multiplier.
@@ -372,6 +372,12 @@ Multiplier buttons must communicate selection clearly:
 - Runtime text output now uses `{0}` style 포맷 스트링 entries through `BuildTextTemplates()` and `FormatTemplate()`. `UI.xlsx/StringTemplates` is the Excel-side source for the same keys.
 - UI generation script now keeps canonical reel symbol IDs internally and maps them to short visual labels only when rendering prototype reel cell text.
 
+## Implementation Update - 2026-08-17
+- `PlayerWalletComponent` now owns the only session Common/Premium balances and target-syncs a read-only view to the owning client.
+- Slot requests are validated on the server, reject reused transaction IDs, and debit through `TryPaySlotCost` with Premium-first atomic semantics.
+- Existing reel strips, paylines, RTP, bonus rules, and reel/win presentation remain the outcome and presentation implementation; only their authority boundary changed.
+- Server-stored payouts settle through `SettleSlotPayout`, while both existing coin text bindings render synchronized wallet values through the existing format strings.
+- See `Economy_Shared_Wallet.md` for transaction receipts and the future shop purchase boundary.
 ## Open Decisions Before Production Balance
 | Topic | Current Phase 1 Decision | Later Follow-up |
 |---|---|---|
@@ -383,4 +389,4 @@ Multiplier buttons must communicate selection clearly:
 | Diagonal / V-shaped paylines | Excluded from P0.5. | Add as separate P1 feature spec only after 3 horizontal lines are balanced. |
 | Wild / Scatter | Excluded. | Add as separate feature spec after Phase 1 runtime is stable. |
 | Premium Coin replenishment | Daily UTC 00:00 grant plus idle RPG per-minute generation. | Define amounts, caps, offline rules, and abuse prevention in data. |
-| Server authority | Prototype may run local logic. | Move spin cost, RNG, payout, and reward persistence to authoritative logic before production economy testing. |
+| Server authority | Spin cost, RNG, payout, and session wallet mutation are server-authoritative. | Add DataStorage persistence and cross-session transaction durability in a later economy phase. |

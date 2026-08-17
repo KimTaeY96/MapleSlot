@@ -28,7 +28,7 @@ The placement tool then creates the player SpawnLocation, tier anchors, runtime 
 
 ## Runtime Boundary
 
-`CombatRuntime` queues typed rewards by player UserId. It intentionally does not mutate the existing slot-local wallet because that would create two competing currency authorities. The next integration step is a shared server wallet/economy service that drains these grants and publishes one Common Coin value to both slot and combat HUD.
+`CombatRuntime` queues immutable typed rewards by player UserId and assigns each grant an in-session transaction ID. `CombatWalletBridge` now settles `CURRENCY:COMMON_COIN` directly into the server-authoritative `PlayerWalletComponent`; `ITEM` rewards remain on the existing inventory boundary. Slot cost, slot payout, combat reward, and both currency displays share this one wallet. See `Economy_Shared_Wallet.md` for the API and the next shop purchase boundary.
 
 ## Playtest Checklist
 

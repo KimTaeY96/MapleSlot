@@ -1,0 +1,180 @@
+@Component
+script PlayerWalletComponent extends Component
+    @TargetUserSync property integer CommonCoinUnits = 0
+    @TargetUserSync property integer PremiumCoinUnits = 0
+    @TargetUserSync property integer CoinUnitPerCoin = 10
+    @TargetUserSync property boolean Initialized = false
+    property integer InitialCommonCoins = 0
+    property integer InitialPremiumCoins = 9999
+    @HideFromInspector property any ProcessedTransactions = nil
+    @HideFromInspector property any TransactionReceipts = nil
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        -- Initializes the session wallet once with the existing slot economy defaults.
+        self.ProcessedTransactions = {}
+        self.TransactionReceipts = {}
+        self.CommonCoinUnits = self.InitialCommonCoins * self.CoinUnitPerCoin
+        self.PremiumCoinUnits = self.InitialPremiumCoins * self.CoinUnitPerCoin
+        self.Initialized = true
+        log("[Wallet] Initialized player wallet premium=" .. tostring(self.InitialPremiumCoins)
+            .. " common=" .. tostring(self.InitialCommonCoins)
+            .. " unitsPerCoin=" .. tostring(self.CoinUnitPerCoin))
+    end
+
+    method table GetBalanceSnapshot()
+        -- Returns the local authoritative or synchronized read-only balance view.
+        return {
+            initialized = self.Initialized,
+            commonCoinUnits = self.CommonCoinUnits,
+            premiumCoinUnits = self.PremiumCoinUnits,
+            totalCoinUnits = self.CommonCoinUnits + self.PremiumCoinUnits,
+            coinUnitPerCoin = self.CoinUnitPerCoin,
+        }
+    end
+
+    method integer GetBalanceUnits(string currencyKey)
+        -- Returns one currency balance without exposing a mutation surface.
+        if currencyKey == "COMMON_COIN" then return self.CommonCoinUnits end
+        if currencyKey == "PREMIUM_COIN" then return self.PremiumCoinUnits end
+        return 0
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean GrantCurrency(string currencyKey, integer amountUnits, string transactionId, string sourceKey)
+        -- Grants one validated currency once for the supplied transaction identifier.
+        if self:CanProcessTransaction(transactionId) == false or amountUnits <= 0 then return false end
+        if currencyKey == "COMMON_COIN" then
+            self.CommonCoinUnits = self.CommonCoinUnits + amountUnits
+        elseif currencyKey == "PREMIUM_COIN" then
+            self.PremiumCoinUnits = self.PremiumCoinUnits + amountUnits
+        else
+            self:RecordTransaction(transactionId, "REJECTED_INVALID_CURRENCY", currencyKey, amountUnits, 0, 0, sourceKey)
+            log_error("[Wallet] Rejected unsupported currency key " .. tostring(currencyKey))
+            return false
+        end
+        self:RecordTransaction(transactionId, "APPLIED", currencyKey, amountUnits, 0, 0, sourceKey)
+        log("[Wallet] Grant applied tx=" .. transactionId .. " source=" .. tostring(sourceKey)
+            .. " currency=" .. currencyKey .. " units=" .. tostring(amountUnits))
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method table TrySpendCurrency(string currencyKey, integer amountUnits, string transactionId, string sourceKey)
+        -- Attempts an all-or-nothing single-currency deduction for the future shop boundary.
+        local existing = self:GetTransactionReceipt(transactionId)
+        if existing ~= nil then return existing end
+        if transactionId == nil or transactionId == "" or amountUnits <= 0 then
+            return self:BuildReceipt("REJECTED_INVALID_REQUEST", currencyKey, amountUnits, 0, 0, sourceKey)
+        end
+        local balance = self:GetBalanceUnits(currencyKey)
+        if currencyKey ~= "COMMON_COIN" and currencyKey ~= "PREMIUM_COIN" then
+            self:RecordTransaction(transactionId, "REJECTED_INVALID_CURRENCY", currencyKey, amountUnits, 0, 0, sourceKey)
+            return self.TransactionReceipts[transactionId]
+        end
+        if balance < amountUnits then
+            self:RecordTransaction(transactionId, "REJECTED_INSUFFICIENT_BALANCE", currencyKey, amountUnits, 0, 0, sourceKey)
+            log("[Wallet] Spend rejected tx=" .. transactionId .. " source=" .. tostring(sourceKey)
+                .. " reason=INSUFFICIENT_BALANCE")
+            return self.TransactionReceipts[transactionId]
+        end
+        if currencyKey == "COMMON_COIN" then
+            self.CommonCoinUnits = self.CommonCoinUnits - amountUnits
+        else
+            self.PremiumCoinUnits = self.PremiumCoinUnits - amountUnits
+        end
+        self:RecordTransaction(transactionId, "APPLIED", currencyKey, amountUnits, 0, 0, sourceKey)
+        log("[Wallet] Spend applied tx=" .. transactionId .. " source=" .. tostring(sourceKey)
+            .. " currency=" .. currencyKey .. " units=" .. tostring(amountUnits))
+        return self.TransactionReceipts[transactionId]
+    end
+
+    @ExecSpace("ServerOnly")
+    method table TryPaySlotCost(integer costUnits, string transactionId)
+        -- Atomically pays a slot cost with Premium Coin first and Common Coin second.
+        local existing = self:GetTransactionReceipt(transactionId)
+        if existing ~= nil then return existing end
+        if transactionId == nil or transactionId == "" or costUnits <= 0 then
+            return self:BuildReceipt("REJECTED_INVALID_REQUEST", "SLOT_COST", costUnits, 0, 0, "SLOT")
+        end
+        if self.PremiumCoinUnits + self.CommonCoinUnits < costUnits then
+            self:RecordTransaction(transactionId, "REJECTED_INSUFFICIENT_BALANCE", "SLOT_COST", costUnits, 0, 0, "SLOT")
+            log("[Wallet] Slot cost rejected tx=" .. transactionId .. " reason=INSUFFICIENT_BALANCE")
+            return self.TransactionReceipts[transactionId]
+        end
+        local premiumSpentUnits = math.min(self.PremiumCoinUnits, costUnits)
+        local commonSpentUnits = costUnits - premiumSpentUnits
+        self.PremiumCoinUnits = self.PremiumCoinUnits - premiumSpentUnits
+        self.CommonCoinUnits = self.CommonCoinUnits - commonSpentUnits
+        self:RecordTransaction(transactionId, "APPLIED", "SLOT_COST", costUnits,
+            premiumSpentUnits, commonSpentUnits, "SLOT")
+        log("[Wallet] Slot cost applied tx=" .. transactionId
+            .. " premiumUnits=" .. tostring(premiumSpentUnits)
+            .. " commonUnits=" .. tostring(commonSpentUnits))
+        return self.TransactionReceipts[transactionId]
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean SettleSlotPayout(integer payoutUnits, string transactionId)
+        -- Applies the server-resolved Common Coin slot payout exactly once.
+        if self:CanProcessTransaction(transactionId) == false or payoutUnits < 0 then return false end
+        if payoutUnits > 0 then self.CommonCoinUnits = self.CommonCoinUnits + payoutUnits end
+        self:RecordTransaction(transactionId, "APPLIED", "COMMON_COIN", payoutUnits, 0, 0, "SLOT_PAYOUT")
+        log("[Wallet] Slot payout settled tx=" .. transactionId .. " commonUnits=" .. tostring(payoutUnits))
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean SettleCombatReward(integer quantity, string transactionId)
+        -- Converts a typed Common Coin combat quantity and applies it exactly once.
+        if quantity <= 0 then return false end
+        return self:GrantCurrency("COMMON_COIN", quantity * self.CoinUnitPerCoin, transactionId, "COMBAT_REWARD")
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean CanProcessTransaction(string transactionId)
+        -- Rejects empty or previously completed transaction identifiers without changing balances.
+        if transactionId == nil or transactionId == "" then return false end
+        if self.ProcessedTransactions == nil then self.ProcessedTransactions = {} end
+        if self.ProcessedTransactions[transactionId] == true then
+            log("[Wallet] Duplicate transaction ignored tx=" .. transactionId)
+            return false
+        end
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method table GetTransactionReceipt(string transactionId)
+        -- Returns a prior server transaction result for idempotent request handling.
+        if transactionId == nil or transactionId == "" or self.TransactionReceipts == nil then return nil end
+        return self.TransactionReceipts[transactionId]
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RecordTransaction(string transactionId, string status, string currencyKey,
+        integer amountUnits, integer premiumSpentUnits, integer commonSpentUnits, string sourceKey)
+        -- Records one immutable in-session transaction receipt after validation completes.
+        if transactionId == nil or transactionId == "" then return end
+        if self.ProcessedTransactions == nil then self.ProcessedTransactions = {} end
+        if self.TransactionReceipts == nil then self.TransactionReceipts = {} end
+        self.ProcessedTransactions[transactionId] = true
+        local receipt = self:BuildReceipt(status, currencyKey, amountUnits,
+            premiumSpentUnits, commonSpentUnits, sourceKey)
+        receipt.transactionId = transactionId
+        self.TransactionReceipts[transactionId] = receipt
+    end
+
+    method table BuildReceipt(string status, string currencyKey, integer amountUnits,
+        integer premiumSpentUnits, integer commonSpentUnits, string sourceKey)
+        -- Builds the stable receipt shape shared by slot, combat, and the next shop MVP.
+        return {
+            success = status == "APPLIED",
+            status = status,
+            currencyKey = currencyKey,
+            amountUnits = amountUnits,
+            premiumSpentUnits = premiumSpentUnits,
+            commonSpentUnits = commonSpentUnits,
+            sourceKey = sourceKey,
+        }
+    end
+end

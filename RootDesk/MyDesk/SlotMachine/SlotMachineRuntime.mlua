@@ -470,15 +470,18 @@ script SlotMachineRuntime extends Logic
     property Entity winSymbolR3C4 = "b885ec53-4a67-4df0-a8c8-e85f2b94648a"
     property Entity winSymbolR3C5 = "3c1ac88c-c316-4909-ab02-3b26e6d7224c"
 
-    property integer premiumUnits = 0
-    property integer commonUnits = 0
     property integer coinUnitPerCoin = 10
-    property integer initialPremiumCoins = 0
-    property integer initialCommonCoins = 0
     property integer baseBet = 1
     property integer multiplier = 1
     property boolean isSpinning = false
     property boolean isBaseBetListOpen = false
+    @HideFromInspector property integer cachedPremiumUnits = -1
+    @HideFromInspector property integer cachedCommonUnits = -1
+    @HideFromInspector property number walletRefreshElapsed = 0
+    @HideFromInspector property boolean walletReadyLogged = false
+    @HideFromInspector property integer slotTransactionSerial = 0
+    @HideFromInspector property string activeSlotTransactionId = ""
+    @HideFromInspector property any pendingSpinsByUserId = nil
 
     property any baseBetHandler = nil
     property any spinHandler = nil
@@ -621,8 +624,6 @@ script SlotMachineRuntime extends Logic
         self.winVfxFrameIndex = 1
         self.winVfxTimerId = nil
         self.winBaseSymbolSwapTimerId = nil
-        self.premiumUnits = self.initialPremiumCoins * self.coinUnitPerCoin
-        self.commonUnits = self.initialCommonCoins * self.coinUnitPerCoin
         self.textTemplates = self:BuildTextTemplates()
         self.baseBetOptions = self:BuildBaseBetOptions()
         self.multiplierOptions = self:BuildMultiplierOptions()
@@ -674,8 +675,18 @@ script SlotMachineRuntime extends Logic
         self:ResetWinHighlights()
         self:RefreshReelStripResources()
         self:RefreshAllReelPositions()
+        self:RequestEnsureWallet()
         self:RefreshAll()
-        log("[SlotMachineRuntime] Initialized: true 30-cell reel strips, 3 horizontal paylines, premium=" .. tostring(self.initialPremiumCoins) .. ", common=" .. tostring(self.initialCommonCoins))
+        log("[SlotMachineRuntime] Initialized: true 30-cell reel strips, 3 horizontal paylines, shared wallet requested")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnUpdate(number delta)
+        -- Refreshes only changed synchronized wallet values at ten hertz.
+        self.walletRefreshElapsed = self.walletRefreshElapsed + delta
+        if self.walletRefreshElapsed < 0.1 then return end
+        self.walletRefreshElapsed = 0
+        self:RefreshCurrency()
     end
 
     @ExecSpace("ClientOnly")
@@ -741,7 +752,6 @@ script SlotMachineRuntime extends Logic
         end
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildTextTemplates()
         return {
             BaseBetLabel = "{0} - {1}\236\189\148\236\157\184",
@@ -749,6 +759,7 @@ script SlotMachineRuntime extends Logic
             CommonAmount = "{0}",
             WinStatus = "\235\139\185\236\178\168 {0}\235\157\188\236\157\184",
             NotEnoughCoins = "\236\189\148\236\157\184\236\157\180 \235\182\128\236\161\177\237\149\169\235\139\136\235\139\164",
+            WalletNotReady = "Wallet syncing...",
             MultiplierLabel = "x{0}",
             BaseBetConfirmLock = "Base Bet \235\179\128\234\178\189? {0} \235\143\153\236\149\136 \236\158\160\234\184\136\235\144\169\235\139\136\235\139\164.",
             WinLineFormula = "x {0}",
@@ -757,7 +768,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildBaseBetOptions()
         local rows = {
             [1] = { bet = 10, regionName = "\237\151\164\235\132\164\236\139\156\236\138\164" },
@@ -777,7 +787,6 @@ script SlotMachineRuntime extends Logic
         return rows
     end
 
-    @ExecSpace("ClientOnly")
     method integer GetBaseBetAmount()
         local option = self.baseBetOptions ~= nil and self.baseBetOptions[self.baseBet] or nil
         if option ~= nil then return option.bet end
@@ -813,7 +822,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildSlotSymbols()
         return {
             SLIME = { id = "SLIME", payout3 = 4, payout4 = 12, payout5 = 40, resourcePath = "3d49a57487b44ccab1063900cf3aa8cd", winAnimationRuid = "dc932872543f4a02bf41e977ab79e5ad", winAnimation = "BOUNCE", isWild = false },
@@ -836,7 +844,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildReelStrips()
         return {
             [1] = {
@@ -2538,7 +2545,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table GetCurrentReelStrips()
         if self.reelStrips == nil then
             return nil
@@ -2555,7 +2561,6 @@ script SlotMachineRuntime extends Logic
         return { 1, 1, 1, 1, 1 }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildPaytableTenths()
         return {
             [1] = {
@@ -2641,7 +2646,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildBonusSlotRules()
         return {
             triggerKey = "WILD_5_BONUS_SLOT",
@@ -2664,7 +2668,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildBonusSlotPaytable()
         return {
             digits = { 1, 2, 3, 4, 5, 6, 7 },
@@ -2681,7 +2684,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildPaylines()
         return {
             { id = "TOP_LINE", rowIndex = 1, enabled = true, costCountsAsLine = false },
@@ -2749,51 +2751,202 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void OnSpinClicked(ButtonClickEvent event)
-        if self.isSpinning then
+        -- Requests one server-authoritative payment and outcome without mutating local balances.
+        if self.isSpinning then return end
+        local wallet = self:GetLocalWallet()
+        if not isvalid(wallet) or wallet.Initialized ~= true then
+            self.statusText.Text = self.textTemplates.WalletNotReady
+            self:RequestEnsureWallet()
+            log("[SlotMachineRuntime] Spin rejected locally: wallet not ready")
             return
         end
 
         local costUnits = self:GetBaseBetAmount() * self.multiplier * self.coinUnitPerCoin
-        if self.premiumUnits + self.commonUnits < costUnits then
+        if wallet.PremiumCoinUnits + wallet.CommonCoinUnits < costUnits then
             self.statusText.Text = self.textTemplates.NotEnoughCoins
             self:HideWinResult()
-            log("[SlotMachineRuntime] Spin rejected: insufficient balance")
+            log("[SlotMachineRuntime] Spin rejected locally: insufficient synchronized balance")
             return
         end
 
+        self.slotTransactionSerial = self.slotTransactionSerial + 1
+        self.activeSlotTransactionId = "SLOT:" .. tostring(math.floor(_UtilLogic.ElapsedSeconds * 1000))
+            .. ":" .. tostring(self.slotTransactionSerial)
         self.isSpinning = true
         self:SetBaseBetListOpen(false)
         self:SetControlsEnabled(false)
         self:ResetWinHighlights()
         self:HideWinResult()
-
-        local premiumSpent = math.min(self.premiumUnits, costUnits)
-        self.premiumUnits = self.premiumUnits - premiumSpent
-        local commonSpent = costUnits - premiumSpent
-        if commonSpent > 0 then
-            self.commonUnits = self.commonUnits - commonSpent
-        end
-        self:RefreshCurrency()
         self.statusText.Text = ""
+        self:RequestServerSpin(self.baseBet, self.multiplier, self.activeSlotTransactionId)
+        log("[SlotMachineRuntime] Server spin requested tx=" .. self.activeSlotTransactionId
+            .. " baseBetTier=" .. tostring(self.baseBet) .. " multiplier=" .. tostring(self.multiplier))
+    end
 
+    @ExecSpace("ClientOnly")
+    method any GetLocalWallet()
+        -- Locates the owning player's synchronized wallet component for display-only reads.
+        local player = _UserService.LocalPlayer
+        if not isvalid(player) then return nil end
+        return player:GetComponent("script.PlayerWalletComponent")
+    end
+
+    @ExecSpace("Server")
+    method void RequestEnsureWallet()
+        -- Ensures the requesting player has one session wallet component.
+        local player = _UserService:GetUserEntityByUserId(senderUserId)
+        self:EnsurePlayerWallet(player)
+    end
+
+    @ExecSpace("ServerOnly")
+    method any EnsurePlayerWallet(Entity player)
+        -- Attaches the shared wallet once and returns the authoritative server component.
+        if not isvalid(player) then return nil end
+        local wallet = player:GetComponent("script.PlayerWalletComponent")
+        if not isvalid(wallet) then
+            wallet = player:AddComponent("PlayerWalletComponent")
+            if isvalid(wallet) then
+                log("[Wallet] Attached shared wallet to player userId=" .. tostring(player.PlayerComponent.UserId))
+            end
+        end
+        return wallet
+    end
+
+    @ExecSpace("ServerOnly")
+    method void EnsureServerSlotData()
+        -- Initializes the existing reel, paytable, payline, and bonus tables on the server instance.
+        if self.reelStrips ~= nil and self.paytableTenths ~= nil and self.paylines ~= nil then
+            if self.pendingSpinsByUserId == nil then self.pendingSpinsByUserId = {} end
+            return
+        end
+        self.textTemplates = self:BuildTextTemplates()
+        self.baseBetOptions = self:BuildBaseBetOptions()
+        self.slotSymbols = self:BuildSlotSymbols()
+        self.reelStrips = self:BuildReelStrips()
+        self.paytableTenths = self:BuildPaytableTenths()
+        self.bonusSlotRules = self:BuildBonusSlotRules()
+        self.bonusSlotPaytable = self:BuildBonusSlotPaytable()
+        self.bonusSlotTestCheatRemaining = 0
+        self.paylines = self:BuildPaylines()
+        self.pendingSpinsByUserId = {}
+        log("[SlotMachineRuntime] Server authority initialized with existing reel and RTP tables")
+    end
+
+    @ExecSpace("Server")
+    method void RequestServerSpin(integer requestedBaseBet, integer requestedMultiplier, string transactionId)
+        -- Validates, pays, resolves, and stores one authoritative spin before client presentation.
+        self:EnsureServerSlotData()
+        local player = _UserService:GetUserEntityByUserId(senderUserId)
+        if not isvalid(player) or transactionId == nil or transactionId == "" then
+            self:SendSpinRejection("REJECTED_INVALID_REQUEST", transactionId, senderUserId)
+            return
+        end
+        local option = self.baseBetOptions[requestedBaseBet]
+        if option == nil or requestedMultiplier < 1 or requestedMultiplier > 5 then
+            self:SendSpinRejection("REJECTED_INVALID_BET", transactionId, senderUserId)
+            return
+        end
+        if self.pendingSpinsByUserId[senderUserId] ~= nil then
+            self:SendSpinRejection("REJECTED_SPIN_BUSY", transactionId, senderUserId)
+            return
+        end
+        local wallet = self:EnsurePlayerWallet(player)
+        if isvalid(wallet) and wallet:GetTransactionReceipt(transactionId .. ":COST") ~= nil then
+            self:SendSpinRejection("REJECTED_DUPLICATE_TRANSACTION", transactionId, senderUserId)
+            return
+        end
+        if not isvalid(wallet) or wallet.Initialized ~= true then
+            self:SendSpinRejection("REJECTED_WALLET_NOT_READY", transactionId, senderUserId)
+            return
+        end
+
+        local costUnits = option.bet * requestedMultiplier * wallet.CoinUnitPerCoin
+        local costReceipt = wallet:TryPaySlotCost(costUnits, transactionId .. ":COST")
+        if costReceipt == nil or costReceipt.success ~= true then
+            local status = costReceipt ~= nil and costReceipt.status or "REJECTED_PAYMENT"
+            self:SendSpinRejection(status, transactionId, senderUserId)
+            return
+        end
+
+        local previousBaseBet = self.baseBet
+        local previousMultiplier = self.multiplier
+        self.baseBet = requestedBaseBet
+        self.multiplier = requestedMultiplier
         local spinResult = self:ResolveSpinResult()
         local result = self:EvaluatePaylines(spinResult.grid)
         self:ApplyBonusSlotResult(result)
-        log("[SlotMachineRuntime] Spin resolved first: lines=" .. tostring(result.winLineCount) .. ", payoutUnits=" .. tostring(result.payoutUnits))
+        self.baseBet = previousBaseBet
+        self.multiplier = previousMultiplier
 
-        self:PlaySpinPresentation(spinResult.stopIndexes)
+        self.pendingSpinsByUserId[senderUserId] = {
+            transactionId = transactionId,
+            payoutUnits = result.payoutUnits,
+            status = "AWAITING_PRESENTATION",
+        }
+        self:ReceiveServerSpinResult({
+            success = true,
+            status = "RESOLVED",
+            transactionId = transactionId,
+            stopIndexes = spinResult.stopIndexes,
+            result = result,
+            costUnits = costUnits,
+            premiumSpentUnits = costReceipt.premiumSpentUnits,
+            commonSpentUnits = costReceipt.commonSpentUnits,
+        }, senderUserId)
+        log("[SlotMachineRuntime] Server spin resolved tx=" .. transactionId
+            .. " payoutUnits=" .. tostring(result.payoutUnits)
+            .. " lines=" .. tostring(result.winLineCount))
+    end
 
-        self:PlayBonus777Presentation(result.bonusSlotResult)
+    @ExecSpace("ServerOnly")
+    method void SendSpinRejection(string status, string transactionId, string forUserId)
+        -- Returns a fail-closed server result without starting reel presentation.
+        self:ReceiveServerSpinResult({
+            success = false,
+            status = status,
+            transactionId = transactionId,
+        }, forUserId)
+        log("[SlotMachineRuntime] Server spin rejected tx=" .. tostring(transactionId)
+            .. " status=" .. tostring(status))
+    end
 
-        self.commonUnits = self.commonUnits + result.payoutUnits
+    @ExecSpace("Client")
+    method void ReceiveServerSpinResult(table packet)
+        -- Plays the unchanged reel and win presentation for the server-resolved result.
+        if packet == nil or packet.transactionId ~= self.activeSlotTransactionId then
+            log_warning("[SlotMachineRuntime] Ignored stale server spin result")
+            return
+        end
+        if packet.success ~= true then
+            if packet.status == "REJECTED_INSUFFICIENT_BALANCE" then
+                self.statusText.Text = self.textTemplates.NotEnoughCoins
+            else
+                self.statusText.Text = self.textTemplates.WalletNotReady
+            end
+            self.isSpinning = false
+            self.activeSlotTransactionId = ""
+            self:SetControlsEnabled(true)
+            self:RefreshCurrency()
+            return
+        end
+
+        local result = packet.result
+        log("[SlotMachineRuntime] Authoritative result received tx=" .. packet.transactionId
+            .. " lines=" .. tostring(result.winLineCount)
+            .. " payoutUnits=" .. tostring(result.payoutUnits))
         self:RefreshCurrency()
+        self:PlaySpinPresentation(packet.stopIndexes)
+        self:PlayBonus777Presentation(result.bonusSlotResult)
+        self:RequestFinalizeServerSpin(packet.transactionId)
+
         if result.payoutUnits > 0 or (result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true) then
             self:ShowWinResult(result.lineWins, result.payoutUnits)
             self:ApplyWinPresentation(result.lineWins)
             if result.bonusSlotResult ~= nil and result.bonusSlotResult.triggered == true and self.statusText ~= nil then
                 self.statusText.Text = self:FormatBonusSlotStatus(result.bonusSlotResult)
             end
-            if (result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true) and self:ShouldPlayScreenSprayVfx(result) then
+            if (result.bonusSlotResult == nil or result.bonusSlotResult.triggered ~= true)
+                and self:ShouldPlayScreenSprayVfx(result) then
                 self:PlayScreenSprayVfxOnce()
             end
         else
@@ -2804,11 +2957,101 @@ script SlotMachineRuntime extends Logic
 
         wait(0.35)
         self.isSpinning = false
+        self.activeSlotTransactionId = ""
         self:SetControlsEnabled(true)
-        log("[SlotMachineRuntime] Spin complete: premium=" .. self:FormatUnits(self.premiumUnits) .. ", common=" .. self:FormatUnits(self.commonUnits))
+        self:RefreshCurrency()
+        log("[SlotMachineRuntime] Spin presentation complete; settlement requested")
     end
 
-    @ExecSpace("ClientOnly")
+    @ExecSpace("Server")
+    method void RequestFinalizeServerSpin(string transactionId)
+        -- Settles only the payout stored by the authoritative result and ignores retries.
+        self:EnsureServerSlotData()
+        local pending = self.pendingSpinsByUserId[senderUserId]
+        if pending == nil or pending.transactionId ~= transactionId
+            or pending.status ~= "AWAITING_PRESENTATION" then
+            log("[SlotMachineRuntime] Duplicate or stale settlement ignored tx=" .. tostring(transactionId))
+            return
+        end
+        local player = _UserService:GetUserEntityByUserId(senderUserId)
+        local wallet = self:EnsurePlayerWallet(player)
+        if not isvalid(wallet) then return end
+        local applied = wallet:SettleSlotPayout(pending.payoutUnits, transactionId .. ":PAYOUT")
+        if applied ~= true then
+            log_error("[SlotMachineRuntime] Slot payout settlement failed tx=" .. transactionId)
+            return
+        end
+        pending.status = "SETTLED"
+        self.pendingSpinsByUserId[senderUserId] = nil
+        self:ReceiveSlotSettlement({
+            transactionId = transactionId,
+            payoutUnits = pending.payoutUnits,
+            status = "SETTLED",
+        }, senderUserId)
+        log("[SlotMachineRuntime] Server settlement complete tx=" .. transactionId
+            .. " payoutUnits=" .. tostring(pending.payoutUnits))
+    end
+
+    @ExecSpace("Client")
+    method void ReceiveSlotSettlement(table receipt)
+        -- Refreshes the displayed synchronized wallet after the server confirms payout.
+        if receipt == nil then return end
+        self:RefreshCurrency()
+        log("[SlotMachineRuntime] Settlement confirmed tx=" .. tostring(receipt.transactionId)
+            .. " payoutUnits=" .. tostring(receipt.payoutUnits))
+    end
+
+    @ExecSpace("Server")
+    method void RequestWalletCheat(string currencyKey, integer quantity, string transactionId)
+        -- Applies maker-only currency grants through the same authoritative wallet API.
+        self:EnsureServerSlotData()
+        if self:IsDevCheatRuntime() ~= true or quantity <= 0 then return end
+        local player = _UserService:GetUserEntityByUserId(senderUserId)
+        local wallet = self:EnsurePlayerWallet(player)
+        if not isvalid(wallet) then return end
+        local applied = wallet:GrantCurrency(
+            currencyKey,
+            quantity * wallet.CoinUnitPerCoin,
+            transactionId,
+            "DEV_CHEAT"
+        )
+        self:ReceiveWalletCheatResult({
+            success = applied,
+            transactionId = transactionId,
+            currencyKey = currencyKey,
+            quantity = quantity,
+        }, senderUserId)
+    end
+
+    @ExecSpace("Client")
+    method void ReceiveWalletCheatResult(table receipt)
+        -- Reports the authoritative developer grant and refreshes synchronized coin text.
+        if receipt == nil then return end
+        self:RefreshCurrency()
+        if receipt.success == true then
+            self:SetDevCheatStatus("Granted " .. tostring(receipt.currencyKey)
+                .. " x" .. tostring(receipt.quantity))
+            log("[SlotMachineRuntime] Server wallet cheat confirmed tx=" .. tostring(receipt.transactionId))
+        else
+            self:SetDevCheatStatus("Wallet grant rejected")
+        end
+    end
+    @ExecSpace("Server")
+    method void RequestForceBonusCheat(integer useCount, string forceResultKey)
+        -- Mirrors the maker-only forced bonus command into the authoritative spin runtime.
+        self:EnsureServerSlotData()
+        if self:IsDevCheatRuntime() ~= true then return end
+        if useCount < 1 then useCount = 1 end
+        self.bonusSlotTestCheatRemaining = useCount
+        if self.bonusSlotRules ~= nil then
+            self.bonusSlotRules.testCheatEnabled = true
+            self.bonusSlotRules.testCheatForceTrigger = true
+            self.bonusSlotRules.testCheatForceResultKey = forceResultKey
+            self.bonusSlotRules.testCheatUseCount = useCount
+        end
+        log("[SlotMachineRuntime] Server bonus cheat armed uses=" .. tostring(useCount)
+            .. " result=" .. tostring(forceResultKey))
+    end
     method table ResolveSpinResult()
         if self:IsBonusSlotTestCheatAllowed() == true and self.bonusSlotRules ~= nil and self.bonusSlotRules.testCheatForceTrigger == true then
             return self:BuildBonusSlotTestCheatSpinResult()
@@ -2831,7 +3074,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildBonusSlotTestCheatSpinResult()
         local grid = { {}, {}, {} }
         local stopIndexes = {}
@@ -2872,7 +3114,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method string GetStripSymbolAt(integer col, integer index)
         local strips = self:GetCurrentReelStrips()
         local stripLength = #strips[col]
@@ -2891,13 +3132,11 @@ script SlotMachineRuntime extends Logic
         return count
     end
 
-    @ExecSpace("ClientOnly")
     method boolean IsWildSymbol(string symbolId)
         local symbolData = self.slotSymbols[symbolId]
         return symbolData ~= nil and symbolData.isWild == true
     end
 
-    @ExecSpace("ClientOnly")
     method boolean IsBonusSlotLineTrigger(table matchedCells, integer runLength)
         local config = self.bonusSlotRules
         if config == nil or config.enabled ~= true then
@@ -2914,7 +3153,6 @@ script SlotMachineRuntime extends Logic
         return true
     end
 
-    @ExecSpace("ClientOnly")
     method table GetBonusSlotPaytableRow(integer digit)
         if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.rows == nil then
             return nil
@@ -2922,7 +3160,6 @@ script SlotMachineRuntime extends Logic
         return self.bonusSlotPaytable.rows[digit]
     end
 
-    @ExecSpace("ClientOnly")
     method integer RollBonusSlotDigit()
         if self.bonusSlotPaytable == nil or self.bonusSlotPaytable.digits == nil then
             return 0
@@ -2944,7 +3181,6 @@ script SlotMachineRuntime extends Logic
         return self.bonusSlotPaytable.digits[1] or 0
     end
 
-    @ExecSpace("ClientOnly")
     method boolean IsBonusSlotTestCheatAllowed()
         local config = self.bonusSlotRules
         if config == nil or config.testCheatEnabled ~= true then
@@ -2960,7 +3196,6 @@ script SlotMachineRuntime extends Logic
         return true
     end
 
-    @ExecSpace("ClientOnly")
     method table BuildForcedBonusSlotDigits(string resultKey)
         local config = self.bonusSlotRules
         local reelCount = 3
@@ -2979,7 +3214,6 @@ script SlotMachineRuntime extends Logic
         return digits
     end
 
-    @ExecSpace("ClientOnly")
     method string BuildBonusSlotResultKey(table digits)
         local resultKey = ""
         if digits == nil then
@@ -2991,7 +3225,6 @@ script SlotMachineRuntime extends Logic
         return resultKey
     end
 
-    @ExecSpace("ClientOnly")
     method integer GetMatchedBonusSlotDigit(table digits)
         local config = self.bonusSlotRules
         if digits == nil or config == nil then
@@ -3010,7 +3243,6 @@ script SlotMachineRuntime extends Logic
         return digit
     end
 
-    @ExecSpace("ClientOnly")
     method table ResolveBonusSlot(table result)
         local config = self.bonusSlotRules
         if result == nil or config == nil or config.enabled ~= true then
@@ -3085,7 +3317,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method void ApplyBonusSlotResult(table result)
         if result == nil then
             return
@@ -3101,7 +3332,6 @@ script SlotMachineRuntime extends Logic
         end
     end
 
-    @ExecSpace("ClientOnly")
     method boolean IsDevCheatRuntime()
         if self.bonusSlotRules == nil then
             return false
@@ -3293,17 +3523,17 @@ script SlotMachineRuntime extends Logic
             return true
         end
 
-        local grantedUnits = quantity * self.coinUnitPerCoin
+        local currencyKey = "PREMIUM_COIN"
         local coinName = "PREMIUM"
-        if coinType == 0 then
-            self.premiumUnits = self.premiumUnits + grantedUnits
-        else
+        if coinType == 1 then
+            currencyKey = "COMMON_COIN"
             coinName = "COMMON"
-            self.commonUnits = self.commonUnits + grantedUnits
         end
-        self:RefreshCurrency()
-        self:SetDevCheatStatus("Granted " .. coinName .. " x" .. tostring(quantity))
-        log("[SlotMachineRuntime] Cheat granted " .. coinName .. "_COIN x" .. tostring(quantity))
+        self.slotTransactionSerial = self.slotTransactionSerial + 1
+        local transactionId = "CHEAT_COIN:" .. tostring(math.floor(_UtilLogic.ElapsedSeconds * 1000))
+            .. ":" .. tostring(self.slotTransactionSerial)
+        self:RequestWalletCheat(currencyKey, quantity, transactionId)
+        self:SetDevCheatStatus("Requested " .. coinName .. " x" .. tostring(quantity))
         return true
     end
 
@@ -3354,6 +3584,7 @@ script SlotMachineRuntime extends Logic
             if useCount < 1 then
                 useCount = 1
             end
+            self:RequestForceBonusCheat(useCount, command.forceResultKey or "777")
             self.bonusSlotTestCheatRemaining = useCount
             if self.bonusSlotRules ~= nil then
                 self.bonusSlotRules.testCheatEnabled = true
@@ -3942,7 +4173,6 @@ script SlotMachineRuntime extends Logic
         return plans
     end
 
-    @ExecSpace("ClientOnly")
     method table EvaluatePaylines(table grid)
         local totalPayoutUnits = 0
         local winLineCount = 0
@@ -3990,7 +4220,6 @@ script SlotMachineRuntime extends Logic
         }
     end
 
-    @ExecSpace("ClientOnly")
     method table GetCurrentPaytableTenths()
         if self.paytableTenths == nil then
             return nil
@@ -4002,7 +4231,6 @@ script SlotMachineRuntime extends Logic
         return paytable
     end
 
-    @ExecSpace("ClientOnly")
     method table EvaluateLine(table row, string lineId, integer rowIndex)
         local targetSymbol = nil
         local runLength = 0
@@ -4795,17 +5023,28 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void RefreshCurrency()
-        self.premiumText.Text = self:FormatTemplate(self.textTemplates.PremiumAmount, { self:FormatUnits(self.premiumUnits) })
-        self.commonText.Text = self:FormatTemplate(self.textTemplates.CommonAmount, { self:FormatUnits(self.commonUnits) })
-    end
-
-    @ExecSpace("ClientOnly")
-    method void GrantCombatCommonCoins(integer quantity)
-        -- Applies a server-validated combat reward without resetting slot winnings.
-        if quantity <= 0 then return end
-        self.commonUnits = self.commonUnits + quantity * self.coinUnitPerCoin
-        self:RefreshCurrency()
-        log("[SlotMachineRuntime] Applied combat reward COMMON_COIN x" .. tostring(quantity))
+        -- Renders only the owning player''s synchronized shared-wallet balances.
+        local wallet = self:GetLocalWallet()
+        if not isvalid(wallet) or wallet.Initialized ~= true then return end
+        if wallet.CoinUnitPerCoin > 0 then self.coinUnitPerCoin = wallet.CoinUnitPerCoin end
+        if self.cachedPremiumUnits == wallet.PremiumCoinUnits
+            and self.cachedCommonUnits == wallet.CommonCoinUnits then
+            return
+        end
+        self.cachedPremiumUnits = wallet.PremiumCoinUnits
+        self.cachedCommonUnits = wallet.CommonCoinUnits
+        self.premiumText.Text = self:FormatTemplate(
+            self.textTemplates.PremiumAmount,
+            { self:FormatUnits(self.cachedPremiumUnits) }
+        )
+        self.commonText.Text = self:FormatTemplate(
+            self.textTemplates.CommonAmount,
+            { self:FormatUnits(self.cachedCommonUnits) }
+        )
+        if self.walletReadyLogged == false then
+            self.walletReadyLogged = true
+            log("[SlotMachineRuntime] Shared wallet display linked")
+        end
     end
 
     @ExecSpace("ClientOnly")
@@ -4881,7 +5120,6 @@ script SlotMachineRuntime extends Logic
         return tostring(whole) .. "." .. tostring(tenth)
     end
 
-    @ExecSpace("ClientOnly")
     method string FormatTemplate(string template, table args)
         local result = template
         if args == nil then

@@ -57,8 +57,8 @@ Monster controllers use `IDLE`, `WANDER`, `CHASE`, `ATTACK`, `HIT`, and `CONTACT
 3. The resolver evaluates enabled `DropEntries` for that group.
 4. Quantity is rolled inclusively from `MinQuantity` through `MaxQuantity`.
 5. Successful results become typed reward grants such as `CURRENCY:COMMON_COIN`.
-6. `CombatWalletBridge` drains each server currency entry once, validates its key, and replicates the cumulative earned Common Coin count; future item entries remain queued for the inventory boundary.
-7. The client applies only the new replicated delta to the existing slot wallet, so slot winnings and combat drops do not overwrite each other.
+6. After the pickup flight completes, `CombatRuntime` snapshots each typed grant with a unique transaction ID.
+7. `CombatWalletBridge` drains each server batch once, settles `CURRENCY:COMMON_COIN` through `PlayerWalletComponent`, and keeps `ITEM` grants on the existing inventory boundary. The bridge has no client-side balance mutation path.
 
 Initial `INDEPENDENT` mode rolls every enabled entry once. The schema reserves `WEIGHTED_ONE` for future groups but the runtime must reject unsupported modes explicitly until implemented.
 

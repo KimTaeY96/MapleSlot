@@ -1,41 +1,37 @@
 @Component
 script CombatWalletBridge extends Component
-    @Sync property integer EarnedCommonCoins = 0
-    @HideFromInspector property integer AppliedCommonCoins = 0
-
+    @ExecSpace("ServerOnly")
     method void OnUpdate(number delta)
-        -- Drains server grants and applies only the replicated delta on the owning client.
-        if self:IsClient() then
-            self:ApplyClientRewardDelta()
-            return
-        end
+        -- Drains completed pickup rewards into server-owned wallet and inventory boundaries.
         self:DrainServerRewards()
     end
 
     @ExecSpace("ServerOnly")
     method void DrainServerRewards()
-        -- Routes validated currency and item grants into the existing wallet and inventory owners exactly once.
+        -- Settles typed Common Coin rewards once while preserving item grants for inventory.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) then return end
+        local wallet = self.Entity:GetComponent("script.PlayerWalletComponent")
+        if not isvalid(wallet) then
+            wallet = self.Entity:AddComponent("PlayerWalletComponent")
+        end
+        if not isvalid(wallet) or wallet.Initialized ~= true then return end
         local rewards = _CombatRuntime:DrainPendingRewards(player.UserId)
         local inventory = self.Entity:GetComponent("script.EquipmentInventoryComponent")
         for _, reward in ipairs(rewards) do
             if reward.rewardType == "CURRENCY" and reward.rewardKey == "COMMON_COIN" then
-                self.EarnedCommonCoins = self.EarnedCommonCoins + reward.quantity
+                if isvalid(wallet) and wallet:SettleCombatReward(reward.quantity, reward.transactionId) then
+                    log("[Combat] Wallet reward settled tx=" .. tostring(reward.transactionId)
+                        .. " COMMON_COIN x" .. tostring(reward.quantity))
+                end
             elseif reward.rewardType == "ITEM" and isvalid(inventory) then
                 inventory:GrantItemByKey(reward.rewardKey, reward.quantity)
+                log("[Combat] Inventory reward delivered tx=" .. tostring(reward.transactionId)
+                    .. " " .. tostring(reward.rewardKey) .. " x" .. tostring(reward.quantity))
             else
-                log_error("[Combat] Wallet rejected reward " .. tostring(reward.rewardType) .. ":" .. tostring(reward.rewardKey))
+                log_error("[Combat] Reward boundary rejected tx=" .. tostring(reward.transactionId)
+                    .. " " .. tostring(reward.rewardType) .. ":" .. tostring(reward.rewardKey))
             end
         end
-    end
-
-    @ExecSpace("ClientOnly")
-    method void ApplyClientRewardDelta()
-        -- Adds new combat earnings without overwriting slot-machine wallet state.
-        if self.EarnedCommonCoins <= self.AppliedCommonCoins then return end
-        local quantity = self.EarnedCommonCoins - self.AppliedCommonCoins
-        self.AppliedCommonCoins = self.EarnedCommonCoins
-        _SlotMachineRuntime:GrantCombatCommonCoins(quantity)
     end
 end

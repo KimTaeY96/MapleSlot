@@ -124,11 +124,13 @@ assert(sandboxSource.includes("definition.ModelPath"), "Combat runtime must deri
 assert(sandboxSource.includes("EnsureImmediateMonsterPopulation"), "Combat runtime must immediately restore all live floor populations when empty");
 assert(sandboxSource.includes('AddComponent("CombatPlayerMovementDriver")'), "Combat runtime must attach the client player movement driver");
 assert(sandboxSource.includes('AddComponent("CombatWalletBridge")'), "Combat runtime must attach the reward wallet bridge");
+assert(sandboxSource.includes('AddComponent("PlayerWalletComponent")'), "Combat runtime must attach the shared server wallet before its reward bridge");
 
 const walletSource = fs.readFileSync(path.join(combatDir, "CombatWalletBridge.mlua"), "utf8");
 assert(walletSource.includes("DrainPendingRewards"), "Combat wallet must consume the complete server-validated reward batch");
 assert(walletSource.includes('reward.rewardKey == "COMMON_COIN"'), "Combat wallet must explicitly validate the Common Coin key");
-assert(walletSource.includes("GrantCombatCommonCoins"), "Combat wallet must apply replicated reward deltas to the slot wallet");
+assert(walletSource.includes("SettleCombatReward"), "Combat wallet must settle Common Coin through the authoritative player wallet");
+assert(!walletSource.includes("SlotMachineRuntime"), "Combat wallet must not mutate or depend on slot-local balance state");
 assert(walletSource.includes('reward.rewardType == "ITEM"'), "Combat wallet must route validated item grants to inventory");
 assert(walletSource.includes("GrantItemByKey"), "Combat wallet must apply item grants through the equipment inventory owner");
 
@@ -137,6 +139,7 @@ assert(combatRuntimeSource.includes("method void EnqueueGrants"), "Combat runtim
 assert(combatRuntimeSource.includes('grant.rewardType == "CURRENCY" or grant.rewardType == "ITEM"'), "Combat runtime must reject unsupported reward types before enqueueing");
 assert(combatRuntimeSource.includes("method table DrainPendingRewards"), "Combat runtime must expose an atomic reward-batch drain");
 assert(combatRuntimeSource.includes("self.pendingRewardsByUserId[userId] = {}"), "Reward draining must clear the consumed batch exactly once");
+assert(combatRuntimeSource.includes("transactionId = \"COMBAT:\""), "Queued combat rewards must receive stable transaction identifiers");
 assert(combatRuntimeSource.includes("floorDistance * 100"), "Cross-floor targeting must prioritize the nearest lane before horizontal distance");
 assert(combatRuntimeSource.includes("CountLiveMonsterInstances"), "Combat runtime must distinguish live monsters from respawn-waiting instances");
 

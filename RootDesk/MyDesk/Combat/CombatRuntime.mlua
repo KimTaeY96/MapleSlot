@@ -2,12 +2,14 @@
 script CombatRuntime extends Logic
     property any monstersById = nil
     property any pendingRewardsByUserId = nil
+    property integer RewardTransactionSerial = 0
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
         -- Initializes the server-side monster registry and reward queue.
         self.monstersById = {}
         self.pendingRewardsByUserId = {}
+        self.RewardTransactionSerial = 0
     end
 
     @ExecSpace("ServerOnly")
@@ -190,15 +192,27 @@ script CombatRuntime extends Logic
 
     @ExecSpace("ServerOnly")
     method void EnqueueGrants(Entity recipient, table grants)
-        -- Queues validated currency or item grants for the shared economy boundary.
+        -- Queues immutable typed grants with a unique in-session transaction identifier.
         if not isvalid(recipient) or not isvalid(recipient.PlayerComponent) then return end
         if self.pendingRewardsByUserId == nil then self.pendingRewardsByUserId = {} end
         local userId = recipient.PlayerComponent.UserId
         if self.pendingRewardsByUserId[userId] == nil then self.pendingRewardsByUserId[userId] = {} end
         for _, grant in ipairs(grants) do
             if grant.quantity > 0 and (grant.rewardType == "CURRENCY" or grant.rewardType == "ITEM") then
-                table.insert(self.pendingRewardsByUserId[userId], grant)
-                log("[Combat] Queued reward " .. grant.rewardType .. ":" .. grant.rewardKey .. " x" .. tostring(grant.quantity))
+                self.RewardTransactionSerial = self.RewardTransactionSerial + 1
+                local transactionId = grant.transactionId
+                if transactionId == nil or transactionId == "" then
+                    transactionId = "COMBAT:" .. tostring(userId) .. ":" .. tostring(self.RewardTransactionSerial)
+                end
+                local queuedGrant = {
+                    rewardType = grant.rewardType,
+                    rewardKey = grant.rewardKey,
+                    quantity = grant.quantity,
+                    transactionId = transactionId,
+                }
+                table.insert(self.pendingRewardsByUserId[userId], queuedGrant)
+                log("[Combat] Queued reward tx=" .. transactionId .. " "
+                    .. grant.rewardType .. ":" .. grant.rewardKey .. " x" .. tostring(grant.quantity))
             else
                 log_error("[Combat] Rejected invalid reward grant")
             end
