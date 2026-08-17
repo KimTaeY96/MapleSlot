@@ -14,6 +14,8 @@ script CombatDropPickupVisual extends Component
     @HideFromInspector property number Elapsed = 0
     @HideFromInspector property boolean Ready = false
     @HideFromInspector property boolean LandedLogged = false
+    @HideFromInspector property Entity SpinPivotEntity = nil
+    @HideFromInspector property Entity IconEntity = nil
 
     @ExecSpace("ServerOnly")
     method void Configure(Entity recipient, string rewardType, string rewardKey, integer quantity, string iconRuid, Vector3 landingPosition)
@@ -26,12 +28,8 @@ script CombatDropPickupVisual extends Component
         self.Elapsed = 0
         self.Ready = quantity > 0 and isvalid(recipient)
         self.LandedLogged = false
-        local renderer = self.Entity.SpriteRendererComponent
-        if isvalid(renderer) then
-            renderer.SpriteRUID = iconRuid ~= nil and iconRuid ~= "" and iconRuid or self.DefaultIconRUID
-            renderer.SortingLayer = "MapLayer0"
-            renderer.OrderInLayer = 12
-        end
+        local resolvedIconRuid = iconRuid ~= nil and iconRuid ~= "" and iconRuid or self.DefaultIconRUID
+        self:PrepareCenteredIcon(resolvedIconRuid)
         local transform = self.Entity.TransformComponent
         if isvalid(transform) then
             transform.WorldPosition = self.LandingPosition
@@ -46,24 +44,26 @@ script CombatDropPickupVisual extends Component
     method void OnUpdate(number delta)
         -- Animates launch, exact zero-degree landing, ground hold, and eased flight to the recipient.
         if self.Ready == false then return end
-        if not isvalid(self.Recipient) or not isvalid(self.Entity.TransformComponent) then
+        if not isvalid(self.Recipient) or not isvalid(self.Entity.TransformComponent)
+            or not isvalid(self.SpinPivotEntity) then
             self:CancelDrop("recipient-or-transform-invalid")
             return
         end
         self.Elapsed = self.Elapsed + delta
         local transform = self.Entity.TransformComponent
+        local spinTransform = self.SpinPivotEntity.TransformComponent
         if self.Elapsed < self.LaunchDuration then
             local t = self.Elapsed / math.max(0.01, self.LaunchDuration)
             local y = self.LandingPosition.y + math.sin(math.pi * t) * self.LaunchHeight
             transform.WorldPosition = Vector3(self.LandingPosition.x, y, self.LandingPosition.z)
-            transform.Rotation = Vector3(0, 0, self.SpinDegrees * t)
+            spinTransform.Rotation = Vector3(0, 0, self.SpinDegrees * t)
             return
         end
 
         if self.LandedLogged == false then
             self.LandedLogged = true
             transform.WorldPosition = self.LandingPosition
-            transform.Rotation = Vector3(0, 0, 0)
+            spinTransform.Rotation = Vector3(0, 0, 0)
             log("[CombatDrop] Landed rotation=0 reward=" .. self.RewardKey)
         end
 
@@ -76,10 +76,56 @@ script CombatDropPickupVisual extends Component
         local y = self.LandingPosition.y + (target.y - self.LandingPosition.y) * eased
             + math.sin(math.pi * flyRatio) * 0.28
         transform.WorldPosition = Vector3(x, y, self.LandingPosition.z)
-        transform.Rotation = Vector3(0, 0, 0)
+        spinTransform.Rotation = Vector3(0, 0, 0)
         local scale = 0.72 - 0.34 * eased
         transform.Scale = Vector3(scale, scale, 1)
         if flyRatio >= 1 then self:CompletePickup() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void PrepareCenteredIcon(string iconRuid)
+        -- Routes every drop through a centered spin wrapper and compensates native sprite pivot metadata.
+        self.SpinPivotEntity = self.Entity:GetChildByName("SpinPivot", false)
+        if not isvalid(self.SpinPivotEntity) then
+            log_error("[CombatDrop] SpinPivot child is missing")
+            return
+        end
+        self.IconEntity = self.SpinPivotEntity:GetChildByName("Icon", false)
+        if not isvalid(self.IconEntity) or not isvalid(self.IconEntity.SpriteRendererComponent)
+            or not isvalid(self.IconEntity.TransformComponent) then
+            log_error("[CombatDrop] Icon child is missing")
+            return
+        end
+
+        local renderer = self.IconEntity.SpriteRendererComponent
+        renderer.SpriteRUID = iconRuid
+        renderer.SortingLayer = "MapLayer0"
+        renderer.OrderInLayer = 12
+        local iconTransform = self.IconEntity.TransformComponent
+        iconTransform.Position = Vector3(0, 0, 0)
+        iconTransform.Rotation = Vector3(0, 0, 0)
+        iconTransform.Scale = Vector3(1, 1, 1)
+        self.SpinPivotEntity.TransformComponent.Position = Vector3(0, 0, 0)
+        self.SpinPivotEntity.TransformComponent.Rotation = Vector3(0, 0, 0)
+
+        if string.sub(iconRuid, 1, 12) == "thumbnail://" then
+            log("[CombatDrop] Center wrapper applied to generated thumbnail icon ruid=" .. iconRuid)
+            return
+        end
+
+        local sprite = _ResourceService:LoadSpriteAndWait(iconRuid)
+        if sprite == nil or sprite.IsLoadComplete == false or sprite.PixelPerUnit <= 0 then
+            log_warning("[CombatDrop] Sprite pivot metadata unavailable; center wrapper retained ruid=" .. iconRuid)
+            return
+        end
+        -- PivotPixel is an offset from the visual center, not a bottom-left pixel coordinate.
+        local offsetX = sprite.PivotPixel.x / sprite.PixelPerUnit
+        local offsetY = sprite.PivotPixel.y / sprite.PixelPerUnit
+        iconTransform.Position = Vector3(offsetX, offsetY, 0)
+        log("[CombatDrop] Pivot normalized ruid=" .. iconRuid
+            .. " size=" .. tostring(sprite.Width) .. "x" .. tostring(sprite.Height)
+            .. " pivot=" .. tostring(sprite.PivotPixel)
+            .. " offset=" .. tostring(iconTransform.Position))
     end
 
     @ExecSpace("ServerOnly")

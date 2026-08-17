@@ -44,7 +44,7 @@ function addGauge(name, x, width, fillRuid, label) {
   const root = 'HudFrame/' + name;
   b.empty(root, { anchor: 'stretch', rect_size: [1920, 110] });
   b.sprite(root + '/Fill', {
-    anchor: 'top-left', pos: [x + 10, -65], rect_size: [width - 20, 35],
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29],
     image_ruid: fillRuid, sprite_type: 0, raycast: false,
   });
   b.patchComponent(root + '/Fill', 'MOD.Core.SpriteGUIRendererComponent', {
@@ -59,14 +59,14 @@ function addGauge(name, x, width, fillRuid, label) {
 function addExpGauge(x, width, fillRuid) {
   b.empty('HudFrame/ExpGauge', { anchor: 'stretch', rect_size: [1920, 110] });
   b.sprite('HudFrame/ExpGauge/Fill', {
-    anchor: 'top-left', pos: [x + 10, -65], rect_size: [width - 20, 35],
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29],
     image_ruid: fillRuid, sprite_type: 0, raycast: false,
   });
   b.patchComponent('HudFrame/ExpGauge/Fill', 'MOD.Core.SpriteGUIRendererComponent', {
     Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
   });
   b.text('HudFrame/ExpGauge/ValueText', 'EXP 0 / 100 (0.0%)', {
-    anchor: 'top-left', pos: [x + 10, -65], rect_size: [width - 20, 35], size: 23,
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29], size: 23,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
 }
@@ -97,11 +97,11 @@ for (const path of textPaths) {
 
 b.patchComponent('HudFrame/ExpGauge/ValueText', 'MOD.Core.TextGUIRendererComponent', {
   FontColor: { r: 1, g: 1, b: 1, a: 1 },
-  OutlineColor: { r: 0, g: 0, b: 0, a: 0.95 },
-  OutlineWidth: 0.22,
+  OutlineColor: { r: 0, g: 0, b: 0, a: 1 },
+  OutlineWidth: 0.36,
   Underlay: true,
   UnderlayColor: { r: 0, g: 0, b: 0, a: 0.85 },
-  UnderlayDilate: 0.12,
+  UnderlayDilate: 0.2,
 });
 
 b.patchComponent('HudFrame/InventoryButton', 'MOD.Core.SpriteGUIRendererComponent', {

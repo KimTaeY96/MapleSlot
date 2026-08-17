@@ -1,7 +1,7 @@
 {
   "Id": "",
   "GameId": "",
-  "EntryKey": "ui://d8cca669-e03b-438e-9cbd-963ee58af6a3",
+  "EntryKey": "ui://cf128cbf-553c-4f7b-b275-5a172712d0e7",
   "ContentType": "x-mod/ui",
   "Content": "",
   "Usage": 0,
@@ -14,7 +14,7 @@
     "Use": "Binary",
     "Entities": [
       {
-        "id": "d8cca669-e03b-438e-9cbd-963ee58af6a3",
+        "id": "cf128cbf-553c-4f7b-b275-5a172712d0e7",
         "path": "/ui/ClassicPlayerHUD",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.UIGroupComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "id": "9cb8a884-0d34-46e2-8b34-df7439c7a80d",
+        "id": "5e90c7df-4698-419e-81ec-9e53a74e82d6",
         "path": "/ui/ClassicPlayerHUD/Controller",
         "componentNames": "MOD.Core.UITransformComponent,script.ClassicPlayerHUD",
         "jsonString": {
@@ -202,7 +202,7 @@
         }
       },
       {
-        "id": "3f7ee21e-8919-449c-a954-c6f966d20a95",
+        "id": "80818e28-b643-4d87-b3c2-3be6ff99d11d",
         "path": "/ui/ClassicPlayerHUD/HudFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -347,7 +347,7 @@
         }
       },
       {
-        "id": "aef74d10-9900-4173-8e45-175add756510",
+        "id": "39efdccc-2689-47d1-87a8-daada4150f37",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelLabel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -541,7 +541,7 @@
         }
       },
       {
-        "id": "f940fc7a-0a08-445d-9b38-84fde7569c82",
+        "id": "496291d0-1783-4541-aa0a-97b76ed0dc59",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -735,7 +735,7 @@
         }
       },
       {
-        "id": "56777cb7-e5ca-4a91-b7a8-211de0c3cdec",
+        "id": "e7bdd1db-219e-44be-9216-226e8688d87c",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterNameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -929,7 +929,7 @@
         }
       },
       {
-        "id": "2aa65e54-628b-46d6-9a0e-4c83056bcabe",
+        "id": "8e7ac6c3-3e82-42d9-a315-3c2b90899e22",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterSubText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1123,7 +1123,7 @@
         }
       },
       {
-        "id": "30d22935-7d6b-4a42-a27b-bba8d87231ef",
+        "id": "90577ac7-af72-457a-b34a-a204f0a1d397",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1208,7 +1208,7 @@
         }
       },
       {
-        "id": "c54073ec-7fac-4fb9-b934-f1aad0bd1d78",
+        "id": "b0d9e4c6-ad87-4124-8acd-4a466b6c1205",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1244,20 +1244,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 942,
+                "x": 936,
                 "y": -65
               },
               "OffsetMin": {
-                "x": 627,
-                "y": -100
+                "x": 633,
+                "y": -94
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 315,
-                "y": 35
+                "x": 303,
+                "y": 29
               },
               "UIMode": 1,
               "UIScale": {
@@ -1267,7 +1267,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 627,
+                "x": 633,
                 "y": -65
               },
               "Position": {
@@ -1353,7 +1353,7 @@
         }
       },
       {
-        "id": "9f766f47-aacd-4ff9-b3b4-fa8af930637f",
+        "id": "b0678e35-95c1-4aa5-8639-05905b57fa8c",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1547,7 +1547,7 @@
         }
       },
       {
-        "id": "a1fc3f7f-27d9-42e4-a42c-60c582dd74a0",
+        "id": "dac0d491-3d25-45d3-8206-532abde07cca",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1632,7 +1632,7 @@
         }
       },
       {
-        "id": "031de710-70cd-4578-8187-ec676225c793",
+        "id": "9580726a-24cc-4d49-bac3-c232d90a2a0f",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1668,20 +1668,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 1287,
+                "x": 1281,
                 "y": -65
               },
               "OffsetMin": {
-                "x": 972,
-                "y": -100
+                "x": 978,
+                "y": -94
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 315,
-                "y": 35
+                "x": 303,
+                "y": 29
               },
               "UIMode": 1,
               "UIScale": {
@@ -1691,7 +1691,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 972,
+                "x": 978,
                 "y": -65
               },
               "Position": {
@@ -1777,7 +1777,7 @@
         }
       },
       {
-        "id": "9d70de93-d924-4bf7-a374-4659cbfdd4ba",
+        "id": "6138475f-c38b-49e5-a75f-2439a5e60970",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1971,7 +1971,7 @@
         }
       },
       {
-        "id": "75fa0302-aeeb-4157-b5cd-b9e955228570",
+        "id": "038de4ce-40a1-42c3-b48c-f1e4b857803d",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -2056,7 +2056,7 @@
         }
       },
       {
-        "id": "84eb1e28-611f-42fe-bc4f-3a2d5cd56500",
+        "id": "60f8b350-0346-4e01-85b8-fd31ec7dde25",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -2092,20 +2092,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 1632,
+                "x": 1626,
                 "y": -65
               },
               "OffsetMin": {
-                "x": 1317,
-                "y": -100
+                "x": 1323,
+                "y": -94
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 315,
-                "y": 35
+                "x": 303,
+                "y": 29
               },
               "UIMode": 1,
               "UIScale": {
@@ -2115,7 +2115,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 1317,
+                "x": 1323,
                 "y": -65
               },
               "Position": {
@@ -2201,7 +2201,7 @@
         }
       },
       {
-        "id": "aeee19f3-ff52-41fb-b9f0-ca6eca0689c3",
+        "id": "73a47bfb-02dc-467e-a6f2-64c44c7d1615",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2237,20 +2237,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 1632,
+                "x": 1626,
                 "y": -65
               },
               "OffsetMin": {
-                "x": 1317,
-                "y": -100
+                "x": 1323,
+                "y": -94
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 315,
-                "y": 35
+                "x": 303,
+                "y": 29
               },
               "UIMode": 1,
               "UIScale": {
@@ -2260,7 +2260,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 1317,
+                "x": 1323,
                 "y": -65
               },
               "Position": {
@@ -2364,9 +2364,9 @@
                 "r": 0,
                 "g": 0,
                 "b": 0,
-                "a": 0.95
+                "a": 1
               },
-              "OutlineWidth": 0.22,
+              "OutlineWidth": 0.36,
               "Overflow": 0,
               "OverrideSorting": false,
               "Padding": {
@@ -2389,14 +2389,14 @@
                 "b": 0,
                 "a": 0.85
               },
-              "UnderlayDilate": 0.12
+              "UnderlayDilate": 0.2
             }
           ],
           "@version": 1
         }
       },
       {
-        "id": "9e91aa8b-b78d-48bb-b567-289472109f4b",
+        "id": "dc5e17c6-cc5e-494b-8287-2ac19b35f085",
         "path": "/ui/ClassicPlayerHUD/HudFrame/InventoryButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
