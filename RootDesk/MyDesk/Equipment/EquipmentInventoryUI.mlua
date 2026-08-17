@@ -860,7 +860,7 @@ script EquipmentInventoryUI extends Component
         if isvalid(selectedState) then selectedState.Enable = selected end
         if not isvalid(label) then return end
         if selected then
-            label.TextGUIRendererComponent.FontColor = Color(0.9569, 0.9569, 0.9647, 1)
+            label.TextGUIRendererComponent.FontColor = Color(0.08, 0.14, 0.28, 1)
         else
             label.TextGUIRendererComponent.FontColor = Color(0.08, 0.14, 0.28, 1)
         end

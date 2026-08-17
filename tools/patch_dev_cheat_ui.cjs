@@ -1,7 +1,7 @@
 const path = require("path");
-const { UIBuilder } = require("C:/Users/ghddj/Desktop/AI/MSW/.agents/skills/msw-ui-system/scripts/msw_ui_builder.cjs");
+const { UIBuilder } = require("../.agents/skills/msw-ui-system/scripts/msw_ui_builder.cjs");
 
-const projectRoot = "C:/Users/ghddj/Desktop/AI/MSW";
+const projectRoot = path.resolve(__dirname, "..");
 const uiPath = path.join(projectRoot, "ui", "UIRoot_TestSandbox_MainPlay.ui");
 const runtimePath = path.join(projectRoot, "RootDesk", "MyDesk", "SlotMachine", "SlotMachineRuntime.mlua");
 
@@ -23,6 +23,8 @@ const Z = {
 };
 
 const b = UIBuilder.load(uiPath);
+if (b.find("Button_DevCheatMenu")) b.remove("Button_DevCheatMenu");
+if (b.find("Panel_DevCheat_Hidden")) b.remove("Panel_DevCheat_Hidden");
 
 function addText(pathName, text, options = {}) {
   b.text(pathName, text, {
@@ -60,31 +62,21 @@ function addButton(pathName, text, options = {}) {
     order_in_layer: options.order_in_layer ?? Z.item,
     override_sorting: true,
   });
-  b.patchComponent(pathName, "MOD.Core.TextComponent", {
+  b.patchComponent(pathName, "MOD.Core.TextGUIRendererComponent", {
     BestFit: true,
     MinSize: options.min_size ?? 10,
     MaxSize: options.max_size ?? options.font_size ?? 18,
-    UseOutLine: true,
+    Underlay: true,
     OutlineColor: { r: 0.062745098, g: 0.094117647, b: 0.156862745, a: 1 },
     OutlineWidth: 1,
-    OutlineDistance: { x: 1, y: -1 },
-    DropShadow: true,
-    DropShadowDistance: 2,
-    DropShadowColor: { r: 0, g: 0, b: 0, a: 0.72 },
+    UnderlayColor: { r: 0, g: 0, b: 0, a: 0.72 },
+
+
+
     Overflow: 2,
   });
 }
 
-addButton("Button_DevCheatMenu", "...", {
-  anchor: "top-right",
-  pos: [-40, -40],
-  rect_size: [68, 68],
-  font_size: 30,
-  min_size: 20,
-  max_size: 30,
-  order_in_layer: Z.button,
-});
-b.upsertComponent("Button_DevCheatMenu", "MOD.Core.UITouchReceiveComponent");
 
 b.panel("Panel_DevCheat_Hidden", {
   anchor: "top-right",
@@ -119,7 +111,7 @@ b.textInput("Panel_DevCheat_Hidden/Input_CheatCode", {
   order_in_layer: Z.input,
   override_sorting: true,
 });
-b.patchComponent("Panel_DevCheat_Hidden/Input_CheatCode", "MOD.Core.TextComponent", {
+b.patchComponent("Panel_DevCheat_Hidden/Input_CheatCode", "MOD.Core.TextGUIRendererComponent", {
   Alignment: 3,
   BestFit: true,
   MinSize: 12,
@@ -155,7 +147,7 @@ addText("Panel_DevCheat_Hidden/Text_Status", "", {
 b.panel("Panel_DevCheat_Hidden/Panel_CheatList", {
   anchor: "top-center",
   pos: [0, -122],
-  rect_size: [380, 410],
+  rect_size: [380, 360],
 });
 b.sprite("Panel_DevCheat_Hidden/Panel_CheatList/Bg", {
   anchor: "stretch",
@@ -196,17 +188,27 @@ for (let index = 1; index <= 12; index += 1) {
     max_size: 14,
     order_in_layer: Z.item,
   });
-  b.patchComponent(`Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands/Item_CheatCommand_${index}`, "MOD.Core.TextComponent", {
-    Alignment: 3,
+  b.patchComponent(`Panel_DevCheat_Hidden/Panel_CheatList/Scroll_CheatCommands/Item_CheatCommand_${index}`, "MOD.Core.TextGUIRendererComponent", {
+    HorizontalAlignment: 1,
     Padding: { left: 12, right: 12, top: 0, bottom: 0 },
   });
 }
 
+addButton("Panel_DevCheat_Hidden/Button_CloseCheat", "CLOSE", {
+  anchor: "bottom-center",
+  pos: [0, 16],
+  rect_size: [96, 32],
+  font_size: 14,
+  min_size: 10,
+  max_size: 14,
+  order_in_layer: Z.item,
+});
+
 const props = {
-  devCheatButton: "/ui/UIRoot_TestSandbox_MainPlay/Button_DevCheatMenu",
   devCheatPanel: "/ui/UIRoot_TestSandbox_MainPlay/Panel_DevCheat_Hidden",
   devCheatInput: "/ui/UIRoot_TestSandbox_MainPlay/Panel_DevCheat_Hidden/Input_CheatCode",
   devCheatApplyButton: "/ui/UIRoot_TestSandbox_MainPlay/Panel_DevCheat_Hidden/Button_ApplyCheat",
+  devCheatCloseButton: "/ui/UIRoot_TestSandbox_MainPlay/Panel_DevCheat_Hidden/Button_CloseCheat",
   devCheatStatusText: "/ui/UIRoot_TestSandbox_MainPlay/Panel_DevCheat_Hidden/Text_Status",
 };
 for (let index = 1; index <= 12; index += 1) {

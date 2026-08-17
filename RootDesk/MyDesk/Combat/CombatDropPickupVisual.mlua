@@ -1,0 +1,109 @@
+@Component
+script CombatDropPickupVisual extends Component
+    property string DefaultIconRUID = "4cc5ffc272224edc809a792b8efa16e3"
+    property number LaunchDuration = 0.72
+    property number GroundHoldDuration = 0.5
+    property number FlyDuration = 0.38
+    property number LaunchHeight = 1.1
+    property number SpinDegrees = 720
+    @HideFromInspector property Entity Recipient = nil
+    @HideFromInspector property string RewardType = ""
+    @HideFromInspector property string RewardKey = ""
+    @HideFromInspector property integer Quantity = 0
+    @HideFromInspector property Vector3 LandingPosition = Vector3(0, 0, 0)
+    @HideFromInspector property number Elapsed = 0
+    @HideFromInspector property boolean Ready = false
+    @HideFromInspector property boolean LandedLogged = false
+
+    @ExecSpace("ServerOnly")
+    method void Configure(Entity recipient, string rewardType, string rewardKey, integer quantity, string iconRuid, Vector3 landingPosition)
+        -- Initializes one authoritative world drop and starts its launch-to-pickup timeline.
+        self.Recipient = recipient
+        self.RewardType = rewardType
+        self.RewardKey = rewardKey
+        self.Quantity = quantity
+        self.LandingPosition = landingPosition
+        self.Elapsed = 0
+        self.Ready = quantity > 0 and isvalid(recipient)
+        self.LandedLogged = false
+        local renderer = self.Entity.SpriteRendererComponent
+        if isvalid(renderer) then
+            renderer.SpriteRUID = iconRuid ~= nil and iconRuid ~= "" and iconRuid or self.DefaultIconRUID
+            renderer.SortingLayer = "MapLayer0"
+            renderer.OrderInLayer = 12
+        end
+        local transform = self.Entity.TransformComponent
+        if isvalid(transform) then
+            transform.WorldPosition = self.LandingPosition
+            transform.Rotation = Vector3(0, 0, 0)
+            transform.Scale = Vector3(0.72, 0.72, 1)
+        end
+        log("[CombatDrop] Spawned " .. rewardType .. ":" .. rewardKey
+            .. " x" .. tostring(quantity) .. " at=" .. tostring(self.LandingPosition))
+    end
+
+    @ExecSpace("ServerOnly")
+    method void OnUpdate(number delta)
+        -- Animates launch, exact zero-degree landing, ground hold, and eased flight to the recipient.
+        if self.Ready == false then return end
+        if not isvalid(self.Recipient) or not isvalid(self.Entity.TransformComponent) then
+            self:CancelDrop("recipient-or-transform-invalid")
+            return
+        end
+        self.Elapsed = self.Elapsed + delta
+        local transform = self.Entity.TransformComponent
+        if self.Elapsed < self.LaunchDuration then
+            local t = self.Elapsed / math.max(0.01, self.LaunchDuration)
+            local y = self.LandingPosition.y + math.sin(math.pi * t) * self.LaunchHeight
+            transform.WorldPosition = Vector3(self.LandingPosition.x, y, self.LandingPosition.z)
+            transform.Rotation = Vector3(0, 0, self.SpinDegrees * t)
+            return
+        end
+
+        if self.LandedLogged == false then
+            self.LandedLogged = true
+            transform.WorldPosition = self.LandingPosition
+            transform.Rotation = Vector3(0, 0, 0)
+            log("[CombatDrop] Landed rotation=0 reward=" .. self.RewardKey)
+        end
+
+        local flyStart = self.LaunchDuration + self.GroundHoldDuration
+        if self.Elapsed < flyStart then return end
+        local flyRatio = math.min(1, (self.Elapsed - flyStart) / math.max(0.01, self.FlyDuration))
+        local eased = 1 - math.pow(1 - flyRatio, 3)
+        local target = self.Recipient.TransformComponent.WorldPosition + Vector3(0, 0.55, 0)
+        local x = self.LandingPosition.x + (target.x - self.LandingPosition.x) * eased
+        local y = self.LandingPosition.y + (target.y - self.LandingPosition.y) * eased
+            + math.sin(math.pi * flyRatio) * 0.28
+        transform.WorldPosition = Vector3(x, y, self.LandingPosition.z)
+        transform.Rotation = Vector3(0, 0, 0)
+        local scale = 0.72 - 0.34 * eased
+        transform.Scale = Vector3(scale, scale, 1)
+        if flyRatio >= 1 then self:CompletePickup() end
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CompletePickup()
+        -- Queues the actual reward only after the visual reaches the player.
+        if self.Ready == false then return end
+        self.Ready = false
+        local grant = {
+            rewardType = self.RewardType,
+            rewardKey = self.RewardKey,
+            quantity = self.Quantity
+        }
+        _CombatRuntime:EnqueueGrants(self.Recipient, { grant })
+        log("[CombatDrop] Pickup completed and reward queued " .. self.RewardType
+            .. ":" .. self.RewardKey .. " x" .. tostring(self.Quantity))
+        self.Entity:Destroy()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void CancelDrop(string reason)
+        -- Cancels an orphaned visual without granting to an invalid recipient.
+        if self.Ready == false then return end
+        self.Ready = false
+        log_warning("[CombatDrop] Cancelled reward=" .. self.RewardKey .. " reason=" .. reason)
+        self.Entity:Destroy()
+    end
+end

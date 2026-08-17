@@ -7,7 +7,7 @@
   "Usage": 0,
   "UsePublish": 1,
   "UseService": 0,
-  "CoreVersion": "26.5.0.0",
+  "CoreVersion": "26.7.0.0",
   "StudioVersion": "0.1.0.0",
   "DynamicLoading": 0,
   "ContentProto": {
@@ -1407,8 +1407,8 @@
             {
               "@type": "MOD.Core.ScrollLayoutGroupComponent",
               "CellSize": {
-                "x": 159.5,
-                "y": 88
+                "x": 88,
+                "y": 62
               },
               "ChildAlignment": 0,
               "Constraint": 1,
@@ -1423,8 +1423,8 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "Padding": {
-                "left": 0,
-                "right": 0,
+                "left": 20,
+                "right": 20,
                 "top": 0,
                 "bottom": 0
               },
@@ -1607,37 +1607,37 @@
               "@type": "MOD.Core.ButtonComponent",
               "Colors": {
                 "NormalColor": {
-                  "r": 0.09411765,
-                  "g": 0.09803922,
-                  "b": 0.101960786,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 0.96,
+                  "b": 0.82,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.156520844,
-                  "g": 0.169693753,
-                  "b": 0.189453125,
+                  "r": 0.92,
+                  "g": 0.78,
+                  "b": 0.38,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
-                  "a": 1
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
@@ -1658,7 +1658,7 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -1795,7 +1795,7 @@
               "EndFrameIndex": 2147483647,
               "IgnoreMapLayerCheck": false,
               "ImageRUID": {
-                "DataId": "d0229394a947442a89c8f1624e1960a3"
+                "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
               },
               "LocalPosition": {
                 "x": 0,
@@ -1814,8 +1814,8 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
+                "g": 0.76,
+                "b": 0.16,
                 "a": 1
               },
               "DropShadow": false,
@@ -1837,14 +1837,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.94,
+                "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 3,
+              "OutlineWidth": 2,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -2186,37 +2186,37 @@
               "@type": "MOD.Core.ButtonComponent",
               "Colors": {
                 "NormalColor": {
-                  "r": 0.09411765,
-                  "g": 0.09803922,
-                  "b": 0.101960786,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 0.96,
+                  "b": 0.82,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.156520844,
-                  "g": 0.169693753,
-                  "b": 0.189453125,
+                  "r": 0.92,
+                  "g": 0.78,
+                  "b": 0.38,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
-                  "a": 1
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
@@ -2237,7 +2237,7 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -2374,7 +2374,7 @@
               "EndFrameIndex": 2147483647,
               "IgnoreMapLayerCheck": false,
               "ImageRUID": {
-                "DataId": "d0229394a947442a89c8f1624e1960a3"
+                "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
               },
               "LocalPosition": {
                 "x": 0,
@@ -2393,8 +2393,8 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
+                "g": 0.76,
+                "b": 0.16,
                 "a": 1
               },
               "DropShadow": false,
@@ -2416,14 +2416,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.94,
+                "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 3,
+              "OutlineWidth": 2,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -2765,37 +2765,37 @@
               "@type": "MOD.Core.ButtonComponent",
               "Colors": {
                 "NormalColor": {
-                  "r": 0.09411765,
-                  "g": 0.09803922,
-                  "b": 0.101960786,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 0.96,
+                  "b": 0.82,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.156520844,
-                  "g": 0.169693753,
-                  "b": 0.189453125,
+                  "r": 0.92,
+                  "g": 0.78,
+                  "b": 0.38,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
-                  "a": 1
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
@@ -2816,7 +2816,7 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -2953,7 +2953,7 @@
               "EndFrameIndex": 2147483647,
               "IgnoreMapLayerCheck": false,
               "ImageRUID": {
-                "DataId": "d0229394a947442a89c8f1624e1960a3"
+                "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
               },
               "LocalPosition": {
                 "x": 0,
@@ -2972,8 +2972,8 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
+                "g": 0.76,
+                "b": 0.16,
                 "a": 1
               },
               "DropShadow": false,
@@ -2995,14 +2995,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.94,
+                "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 3,
+              "OutlineWidth": 2,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -3344,37 +3344,37 @@
               "@type": "MOD.Core.ButtonComponent",
               "Colors": {
                 "NormalColor": {
-                  "r": 0.09411765,
-                  "g": 0.09803922,
-                  "b": 0.101960786,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 0.96,
+                  "b": 0.82,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.156520844,
-                  "g": 0.169693753,
-                  "b": 0.189453125,
+                  "r": 0.92,
+                  "g": 0.78,
+                  "b": 0.38,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.20784314,
-                  "g": 0.223529413,
-                  "b": 0.247058824,
-                  "a": 1
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
@@ -3395,7 +3395,7 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -3532,7 +3532,7 @@
               "EndFrameIndex": 2147483647,
               "IgnoreMapLayerCheck": false,
               "ImageRUID": {
-                "DataId": "d0229394a947442a89c8f1624e1960a3"
+                "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
               },
               "LocalPosition": {
                 "x": 0,
@@ -3551,8 +3551,8 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
+                "g": 0.76,
+                "b": 0.16,
                 "a": 1
               },
               "DropShadow": false,
@@ -3574,14 +3574,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.94,
+                "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 3,
+              "OutlineWidth": 2,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true

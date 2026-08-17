@@ -200,28 +200,28 @@ script SlotMachineRuntime extends Logic
     property Entity screenSprayVfxEntity = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
     property SpriteGUIRendererComponent screenSprayVfxRenderer = "8a927ba6-1915-4975-9e0e-8635084aa9e7"
 
-    property Entity devCheatButton = "17c3571b-ca4f-4546-a259-1a76158be284"
-    property Entity devCheatPanel = "221c8789-421d-4473-bb6c-394db532fea0"
-    property TextInputComponent devCheatInput = "3a7ce550-2a1b-4037-8c71-16e460d112bf"
-    property Entity devCheatApplyButton = "16a2c962-06d5-4d3b-b5b0-73bfd7fe64d3"
-    property Entity devCheatCloseButton = "be8fc112-1dee-4af5-a21a-b5dae3830add"
-    property TextComponent devCheatStatusText = "8f0150c3-e2dd-4783-906b-778effae5269"
-    property Entity devCheatListItem1 = "26d9e622-cee7-43d8-911c-fbb6aee8ee35"
-    property Entity devCheatListItem2 = "23953e37-49ba-4664-b713-e844761a04bf"
-    property Entity devCheatListItem3 = "4148bf8c-7862-43d6-9261-51f2976fe648"
-    property Entity devCheatListItem4 = "0b28c744-55ac-4e1c-8278-ab40134c2e70"
-    property Entity devCheatListItem5 = "bea574fa-3795-4b4b-9adc-166df3cfabb4"
-    property Entity devCheatListItem6 = "55953f19-0aaf-497f-9569-1ab3865a2a65"
-    property Entity devCheatListItem7 = "defd421c-452f-43cd-8725-66c3a3bd2f69"
-    property Entity devCheatListItem8 = "4e865e2f-ccd0-4b2a-b7a2-9603f53dc50f"
-    property Entity devCheatListItem9 = "7d6fe360-b63f-4ca0-bcf8-e5cf0fb86100"
-    property Entity devCheatListItem10 = "49fd7c40-5f84-4a4e-8d3d-cb744e7c5564"
-    property Entity devCheatListItem11 = "94f4b9cd-657f-4f54-8795-54602dfcf82a"
-    property Entity devCheatListItem12 = "cb748007-d8d1-41d7-aba2-30b7a09c028d"
+    property Entity devCheatButton = ""
+    property Entity devCheatPanel = "481b832f-a1ef-432b-bf75-8ac38b30055d"
+    property TextGUIRendererInputComponent devCheatInput = "8b861623-2bae-4425-ae9e-216719077ecc"
+    property Entity devCheatApplyButton = "fdd00f0c-c169-4a65-aa48-0d40fe0be392"
+    property Entity devCheatCloseButton = "ee72b16b-dcde-4699-bf40-b1c76674ca11"
+    property TextGUIRendererComponent devCheatStatusText = "022b567a-b538-4bff-b309-8e15f93f23d7"
+    property Entity devCheatListItem1 = "e6943374-1d01-4b5a-ab53-539cf326cddb"
+    property Entity devCheatListItem2 = "5a173401-4125-45b8-95f1-dc585ebaf7a4"
+    property Entity devCheatListItem3 = "c1e0a94d-3622-47ab-91da-15df80d2329b"
+    property Entity devCheatListItem4 = "e4f9803d-a3dd-4054-89bb-1bba51afec5b"
+    property Entity devCheatListItem5 = "3e498813-3ab3-4153-aa62-caea019d95d6"
+    property Entity devCheatListItem6 = "f55d89ff-4b0f-447a-ae6c-37fb84e207da"
+    property Entity devCheatListItem7 = "c53b5a14-f2d1-40fb-a916-747d66666724"
+    property Entity devCheatListItem8 = "f9850572-fdb9-4f9f-b055-57249b360923"
+    property Entity devCheatListItem9 = "16fd0009-5a40-4eee-a974-264f023acdc3"
+    property Entity devCheatListItem10 = "8a3875de-6227-41da-83fe-daf4a0217ed7"
+    property Entity devCheatListItem11 = "72c1dcae-c076-4aaa-9085-ea7baf024d15"
+    property Entity devCheatListItem12 = "aedf0990-f14f-45c9-ba3b-4cc1d8f60d03"
 
     property UITransformComponent topHudTransform = "b2f45edf-580b-4aef-a379-870581ccceb1"
     property UITransformComponent slotPanelTransform = "da94c227-6ceb-4737-bd9d-56fee867af02"
-    property UITransformComponent battleHudTransform = "6c9db0e9-ccfe-45f9-b12e-c812dde6b44d"
+    property UITransformComponent battleHudTransform = ""
 
     property Entity baseBetButton = "1553c8b4-c0b7-4b0f-8e61-8e35630c0217"
     property Entity baseBetListPanel = "f82f2ae9-4a60-42f9-bb10-f33732d182a7"
@@ -680,6 +680,7 @@ script SlotMachineRuntime extends Logic
 
     @ExecSpace("ClientOnly")
     method void ApplyResponsiveLayout()
+        -- Fits the slot machine above the fixed bottom player HUD at every resolution.
         if self.topHudTransform == nil or self.slotPanelTransform == nil then
             return
         end
@@ -696,25 +697,20 @@ script SlotMachineRuntime extends Logic
 
         local topBand = 18.0 + (88.0 * hudScale) + 36.0
         local leftMargin = 42.0
-        local bottomOverscan = 12.0
+        local bottomHudHeight = 110.0
+        local bottomHudGap = 16.0
         local slotWidth = 893.0
         local slotHeight = 1020.0
         local slotScaleByWidth = (screenWidth - (leftMargin * 2.0)) / slotWidth
-        local slotScaleByHeight = (screenHeight - topBand + bottomOverscan) / slotHeight
-        local slotScale = math.min(1.0, math.min(slotScaleByWidth, slotScaleByHeight))
-        slotScale = math.max(0.48, slotScale)
+        local slotScaleByHeight = (screenHeight - topBand - bottomHudHeight - bottomHudGap) / slotHeight
+        local slotScale = math.min(0.87, math.min(slotScaleByWidth, slotScaleByHeight))
+        slotScale = math.max(0.20, slotScale)
 
         self.slotPanelTransform.UIScale = Vector3(slotScale, slotScale, 1.0)
         self.slotPanelTransform.anchoredPosition = Vector2(leftMargin, -topBand)
+        log("[SlotMachineRuntime] Responsive UI: slotScale=" .. tostring(slotScale) .. ", bottomReserved=" .. tostring(bottomHudHeight + bottomHudGap))
 
-        if self.battleHudTransform ~= nil and self.battleHudTransform.Entity ~= nil then
-            local showBattleHud = screenWidth >= 1500
-            self.battleHudTransform.Entity.Enable = showBattleHud
-            if showBattleHud then
-                self.battleHudTransform.UIScale = Vector3(1.0, 1.0, 1.0)
-                self.battleHudTransform.anchoredPosition = Vector2(-240.0, -(topBand + 42.0))
-            end
-        end
+
     end
 
     @ExecSpace("ClientOnly")
@@ -3408,7 +3404,7 @@ script SlotMachineRuntime extends Logic
         self.devCheatLongPressTimerId = _TimerService:SetTimerOnce(function()
             self.devCheatLongPressTimerId = nil
             self:SetDevCheatPanelOpen(true)
-        end, 0.55)
+        end, 3.0)
     end
 
     @ExecSpace("ClientOnly")

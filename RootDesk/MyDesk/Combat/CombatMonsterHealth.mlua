@@ -6,6 +6,7 @@ script CombatMonsterHealth extends Component
     @Sync property number Hp = 30
     @Sync @HideFromInspector property boolean IsDead = false
     property string DropGroupId = "DROP_SLIME_TIER1"
+    property string DropVisualModelId = "combatdroppickupvisual"
     property number RespawnSeconds = 2
     property number DestroyDelay = 0.6
     @HideFromInspector property Vector3 SpawnWorldPosition = Vector3(0, 0, 0)
@@ -58,7 +59,13 @@ script CombatMonsterHealth extends Component
         local state = self.Entity.StateComponent
         if isvalid(state) then state:ChangeState("DEAD") end
         local grants = _CombatTableRuntime:ResolveDropGroup(self.DropGroupId)
-        _CombatRuntime:EnqueueGrants(killer, grants)
+        self:SpawnDropVisuals(killer, grants)
+        if isvalid(killer) then
+            local progression = killer:GetComponent("script.PlayerProgressionComponent")
+            if isvalid(progression) then
+                progression:AddExperience(math.max(1, math.floor(self.MaxHp * 0.5)))
+            end
+        end
         self.HideTimerId = _TimerService:SetTimerOnce(function()
             self.HideTimerId = 0
             if self.IsDead then self.Entity:SetVisible(false) end
@@ -69,6 +76,62 @@ script CombatMonsterHealth extends Component
         end, math.max(self.DestroyDelay, self.RespawnSeconds))
     end
 
+    @ExecSpace("ServerOnly")
+    method void SpawnDropVisuals(Entity recipient, table grants)
+        -- Spawns one classic Maple-style world pickup per resolved grant and falls back safely on spawn failure.
+        if not isvalid(recipient) or grants == nil or #grants == 0 then return end
+        local fallbackGrants = {}
+        local origin = self.Entity.TransformComponent.WorldPosition
+        local count = #grants
+        for index, grant in ipairs(grants) do
+            local offsetX = (index - (count + 1) * 0.5) * 0.38
+            local landingPosition = Vector3(origin.x + offsetX, origin.y, origin.z)
+            local entityName = "CombatDrop_" .. tostring(grant.rewardKey) .. "_"
+                .. tostring(math.floor(_UtilLogic.ElapsedSeconds * 1000)) .. "_" .. tostring(index)
+            local visual = _SpawnService:SpawnByModelId(
+                self.DropVisualModelId,
+                entityName,
+                landingPosition,
+                self.Entity.CurrentMap
+            )
+            if isvalid(visual) then
+                visual:AddComponent("script.CombatDropPickupVisual")
+                local pickup = visual:GetComponent("script.CombatDropPickupVisual")
+                if isvalid(pickup) then
+                    pickup:Configure(
+                        recipient,
+                        grant.rewardType,
+                        grant.rewardKey,
+                        grant.quantity,
+                        self:ResolveDropIconRUID(grant),
+                        landingPosition
+                    )
+                else
+                    visual:Destroy()
+                    table.insert(fallbackGrants, grant)
+                    log_error("[CombatDrop] Component attach failed; reward queued without visual")
+                end
+            else
+                table.insert(fallbackGrants, grant)
+                log_error("[CombatDrop] Model spawn failed; reward queued without visual")
+            end
+        end
+        if #fallbackGrants > 0 then _CombatRuntime:EnqueueGrants(recipient, fallbackGrants) end
+    end
+
+    @ExecSpace("ServerOnly")
+    method string ResolveDropIconRUID(table grant)
+        -- Resolves currency and item definitions to their registered world-renderable icon RUIDs.
+        if grant.rewardType == "CURRENCY" and grant.rewardKey == "COMMON_COIN" then
+            return "4cc5ffc272224edc809a792b8efa16e3"
+        end
+        if grant.rewardType == "ITEM" then
+            local item = _CombatTableRuntime:GetEquipmentItemByKey(grant.rewardKey)
+            if item == nil then item = _CombatTableRuntime:GetInventoryItemByKey(grant.rewardKey) end
+            if item ~= nil and item.IconRUID ~= nil and item.IconRUID ~= "" then return item.IconRUID end
+        end
+        return "4cc5ffc272224edc809a792b8efa16e3"
+    end
     @ExecSpace("ServerOnly")
     method void Respawn()
         -- Restores this monster at its original position and lane.

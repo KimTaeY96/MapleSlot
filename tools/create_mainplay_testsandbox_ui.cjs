@@ -1199,6 +1199,7 @@ label("BattleHUD_Right/Overlay_CombatPaused_Hidden/Text_Label", "COMBAT PAUSED",
 // ui_lint treats those masked strip cells as off-canvas errors, so this generator
 // uses explicit read-side checks after writing instead of builder lint.
 ensureRuntimeBindingProperties();
+b.remove("BattleHUD_Right");
 b.write(outputPath, {
   lint: false,
   strict: false,
@@ -1223,7 +1224,6 @@ b.write(outputPath, {
       winResultTotalText: "/ui/UIRoot_TestSandbox_MainPlay/Panel_LeftSlotMachine/Panel_WinResult/Text_Total",
       topHudTransform: "/ui/UIRoot_TestSandbox_MainPlay/TopHUD_Currency",
       slotPanelTransform: "/ui/UIRoot_TestSandbox_MainPlay/Panel_LeftSlotMachine",
-      battleHudTransform: "/ui/UIRoot_TestSandbox_MainPlay/BattleHUD_Right",
       baseBetButton: "/ui/UIRoot_TestSandbox_MainPlay/Panel_LeftSlotMachine/Panel_BetMultiplierRow/Dropdown_BaseBet",
       baseBetListPanel: "/ui/UIRoot_TestSandbox_MainPlay/Panel_LeftSlotMachine/Panel_BetMultiplierRow/Panel_BaseBetList_Above_Hidden",
       baseBetOptionButton1: "/ui/UIRoot_TestSandbox_MainPlay/Panel_LeftSlotMachine/Panel_BetMultiplierRow/Panel_BaseBetList_Above_Hidden/Scroll_BaseBetOptions/Item_BaseBetOption_1",

@@ -414,6 +414,8 @@ script EquipmentInventoryComponent extends Component
         self:ApplyItemBonuses(self.EquippedArmorIndex)
         self:ApplyItemBonuses(self.EquippedGlovesIndex)
         self:ApplyItemBonuses(self.EquippedShoesIndex)
+        local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+        if isvalid(progression) then self.TotalMaxHp = self.TotalMaxHp + progression:GetMaxHpBonus() end
         local weapon = _CombatTableRuntime:GetEquipmentItem(self.EquippedWeaponIndex)
         if weapon ~= nil then
             local weaponProfile = _CombatTableRuntime:GetWeaponTypeProfile(weapon.WeaponTypeEnumId)

@@ -1,0 +1,106 @@
+@Component
+script PlayerProgressionComponent extends Component
+    @Sync property integer Level = 1
+    @Sync property integer CurrentMp = 100
+    @Sync property integer MaxMp = 100
+    @Sync property integer CurrentExp = 0
+    @Sync property integer ExpToNextLevel = 100
+    @Sync property integer ProgressionRevision = 0
+    @HideFromInspector property boolean Initialized = false
+
+    @ExecSpace("ServerOnly")
+    method void OnBeginPlay()
+        -- Initializes the authoritative session progression state once per player entity.
+        self:InitializeProgression()
+    end
+
+    @ExecSpace("ServerOnly")
+    method void InitializeProgression()
+        -- Normalizes level, MP, and EXP values before combat rewards can be applied.
+        if self.Initialized then return end
+        self.Level = math.max(1, self.Level)
+        self.MaxMp = self:CalculateMaxMp(self.Level)
+        self.CurrentMp = math.min(self.MaxMp, math.max(0, self.CurrentMp))
+        self.ExpToNextLevel = self:CalculateRequiredExperience(self.Level)
+        self.CurrentExp = math.min(math.max(0, self.CurrentExp), self.ExpToNextLevel - 1)
+        self.Initialized = true
+        self.ProgressionRevision = self.ProgressionRevision + 1
+        log("[Progression] Initialized level=" .. tostring(self.Level)
+            .. " mp=" .. tostring(self.CurrentMp) .. "/" .. tostring(self.MaxMp)
+            .. " exp=" .. tostring(self.CurrentExp) .. "/" .. tostring(self.ExpToNextLevel))
+    end
+
+    @ExecSpace("ServerOnly")
+    method void AddExperience(integer amount)
+        -- Adds positive combat EXP and resolves every crossed level without dropping overflow.
+        if amount == nil or amount <= 0 then return end
+        self:InitializeProgression()
+        self.CurrentExp = self.CurrentExp + amount
+        local gainedLevels = 0
+        while self.CurrentExp >= self.ExpToNextLevel do
+            self.CurrentExp = self.CurrentExp - self.ExpToNextLevel
+            self.Level = self.Level + 1
+            gainedLevels = gainedLevels + 1
+            self.ExpToNextLevel = self:CalculateRequiredExperience(self.Level)
+        end
+        if gainedLevels > 0 then self:ApplyLevelUpStats(gainedLevels) end
+        self.ProgressionRevision = self.ProgressionRevision + 1
+        log("[Progression] Gained exp=" .. tostring(amount)
+            .. " level=" .. tostring(self.Level)
+            .. " exp=" .. tostring(self.CurrentExp) .. "/" .. tostring(self.ExpToNextLevel))
+    end
+
+    @ExecSpace("ServerOnly")
+    method void ApplyLevelUpStats(integer gainedLevels)
+        -- Increases MP and asks the equipment owner to rebuild native maximum HP with the level bonus.
+        local previousMaxMp = self.MaxMp
+        self.MaxMp = self:CalculateMaxMp(self.Level)
+        self.CurrentMp = math.min(self.MaxMp, self.CurrentMp + math.max(0, self.MaxMp - previousMaxMp))
+        local equipment = self.Entity:GetComponent("script.EquipmentInventoryComponent")
+        if isvalid(equipment) then
+            equipment:RecalculateEquipment()
+        else
+            local player = self.Entity.PlayerComponent
+            if isvalid(player) then
+                local hpGain = math.max(0, gainedLevels) * 10
+                player.MaxHp = math.max(1, player.MaxHp + hpGain)
+                player.Hp = math.min(player.MaxHp, player.Hp + hpGain)
+            end
+        end
+        log("[Progression] Level up count=" .. tostring(gainedLevels)
+            .. " level=" .. tostring(self.Level)
+            .. " hpBonus=" .. tostring(self:GetMaxHpBonus()))
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean SpendMp(integer amount)
+        -- Rejects invalid or unaffordable MP costs and subtracts an accepted cost atomically.
+        if amount == nil or amount <= 0 or self.CurrentMp < amount then return false end
+        self.CurrentMp = self.CurrentMp - amount
+        self.ProgressionRevision = self.ProgressionRevision + 1
+        return true
+    end
+
+    @ExecSpace("ServerOnly")
+    method void RestoreMp(integer amount)
+        -- Restores a positive MP amount without exceeding the synchronized maximum.
+        if amount == nil or amount <= 0 then return end
+        self.CurrentMp = math.min(self.MaxMp, self.CurrentMp + amount)
+        self.ProgressionRevision = self.ProgressionRevision + 1
+    end
+
+    method integer CalculateRequiredExperience(integer level)
+        -- Uses a readable early-game curve that increases the next requirement by fifty per level.
+        return 100 + math.max(0, level - 1) * 50
+    end
+
+    method integer CalculateMaxMp(integer level)
+        -- Grants five maximum MP for each level after level one.
+        return 100 + math.max(0, level - 1) * 5
+    end
+
+    method integer GetMaxHpBonus()
+        -- Exposes the level-derived maximum HP bonus to the equipment stat aggregator.
+        return math.max(0, self.Level - 1) * 10
+    end
+end

@@ -51,6 +51,11 @@ script CombatSandboxRuntime extends Component
         if users == nil then return end
         for _, user in pairs(users) do
             if isvalid(user) then
+                local progression = user:GetComponent("script.PlayerProgressionComponent")
+                if not isvalid(progression) then
+                    progression = user:AddComponent("PlayerProgressionComponent")
+                end
+                if isvalid(progression) then progression:InitializeProgression() end
                 local equipment = user:GetComponent("script.EquipmentInventoryComponent")
                 if not isvalid(equipment) then
                     equipment = user:AddComponent("EquipmentInventoryComponent")

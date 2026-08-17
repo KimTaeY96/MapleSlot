@@ -1,0 +1,189 @@
+@Component
+script ClassicPlayerHUD extends Component
+    property Entity HudFrame = "3f7ee21e-8919-449c-a954-c6f966d20a95"
+    property TextGUIRendererComponent LevelText = "f940fc7a-0a08-445d-9b38-84fde7569c82"
+    property TextGUIRendererComponent CharacterNameText = "56777cb7-e5ca-4a91-b7a8-211de0c3cdec"
+    property TextGUIRendererComponent CharacterSubText = "2aa65e54-628b-46d6-9a0e-4c83056bcabe"
+    property TextGUIRendererComponent HpText = "9f766f47-aacd-4ff9-b3b4-fa8af930637f"
+    property TextGUIRendererComponent MpText = "9d70de93-d924-4bf7-a374-4659cbfdd4ba"
+    property TextGUIRendererComponent ExpText = "aeee19f3-ff52-41fb-b9f0-ca6eca0689c3"
+    property SpriteGUIRendererComponent HpFill = "c54073ec-7fac-4fb9-b934-f1aad0bd1d78"
+    property SpriteGUIRendererComponent MpFill = "031de710-70cd-4578-8187-ec676225c793"
+    property SpriteGUIRendererComponent ExpFill = "84eb1e28-611f-42fe-bc4f-3a2d5cd56500"
+    property ButtonComponent InventoryButton = "9e91aa8b-b78d-48bb-b567-289472109f4b"
+    property number GaugeMaxWidth = 315
+    property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
+    property string InventoryNormalRUID = "a133768e51bc4d7caee800bffdd14944"
+    property string InventoryPressedRUID = "9c5feb02221248e7a1812578ad25181d"
+    @HideFromInspector property number RefreshElapsed = 0
+    @HideFromInspector property any InventoryClickHandler = nil
+    @HideFromInspector property any InventoryPressedHandler = nil
+    @HideFromInspector property any InventoryTouchDownHandler = nil
+    @HideFromInspector property any InventoryTouchUpHandler = nil
+    @HideFromInspector property any InventoryHoldTimerId = nil
+    @HideFromInspector property boolean InventoryLongPressTriggered = false
+    @HideFromInspector property boolean MissingProgressionLogged = false
+    @HideFromInspector property boolean GaugeLinkLogged = false
+
+    @ExecSpace("ClientOnly")
+    method void OnBeginPlay()
+        -- Binds the inventory click plus the hidden three-second developer gesture.
+        if isvalid(self.InventoryButton) then
+            self.InventoryClickHandler = self.InventoryButton.Entity:ConnectEvent(ButtonClickEvent, function()
+                if self.InventoryLongPressTriggered == true then
+                    self.InventoryLongPressTriggered = false
+                    return
+                end
+                self:OpenInventory()
+            end)
+            self.InventoryPressedHandler = self.InventoryButton.Entity:ConnectEvent(ButtonPressedEvent, function()
+                log("[ClassicHUD] Inventory button pressed feedback")
+            end)
+            self.InventoryTouchDownHandler = self.InventoryButton.Entity:ConnectEvent(UITouchDownEvent, self.OnInventoryTouchDown)
+            self.InventoryTouchUpHandler = self.InventoryButton.Entity:ConnectEvent(UITouchUpEvent, self.OnInventoryTouchUp)
+        end
+        local legacyButton = _EntityService:GetEntityByPath("/ui/EquipmentInventory/InventoryOpenButton")
+        if isvalid(legacyButton) then legacyButton.Enable = false end
+        self:RefreshHud()
+        log("[ClassicHUD] Bottom player HUD initialized")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnUpdate(number delta)
+        -- Refreshes synchronized HUD values at ten hertz while avoiding per-frame text churn.
+        self.RefreshElapsed = self.RefreshElapsed + delta
+        if self.RefreshElapsed < 0.1 then return end
+        self.RefreshElapsed = 0
+        self:RefreshHud()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshHud()
+        -- Reads native HP plus synchronized progression state and updates runtime-only labels and fills.
+        local user = _UserService.LocalPlayer
+        if not isvalid(user) or not isvalid(user.PlayerComponent) then return end
+        local player = user.PlayerComponent
+        self.CharacterNameText.Text = player.Nickname ~= nil and player.Nickname or "PLAYER"
+        self.CharacterSubText.Text = "ADVENTURER"
+        self.HpText.Text = "HP " .. tostring(player.Hp) .. " / " .. tostring(player.MaxHp)
+        self:SetGaugeWidth(self.HpFill, self:SafeRatio(player.Hp, player.MaxHp), self.GaugeMaxWidth)
+        if self.GaugeLinkLogged == false then
+            self.GaugeLinkLogged = true
+            log("[ClassicHUD] Live gauges linked hp=" .. tostring(player.Hp)
+                .. "/" .. tostring(player.MaxHp) .. " fullWidth=" .. tostring(self.GaugeMaxWidth))
+        end
+
+        local progression = user:GetComponent("script.PlayerProgressionComponent")
+        if not isvalid(progression) then
+            self.LevelText.Text = "1"
+            self.MpText.Text = "MP -- / --"
+            self.ExpText.Text = "EXP -- / -- (--.-%)"
+            self:SetGaugeWidth(self.MpFill, 0, self.GaugeMaxWidth)
+            self:SetGaugeWidth(self.ExpFill, 0, self.GaugeMaxWidth)
+            if self.MissingProgressionLogged == false then
+                self.MissingProgressionLogged = true
+                log_warning("[ClassicHUD] Waiting for PlayerProgressionComponent")
+            end
+            return
+        end
+
+        self.MissingProgressionLogged = false
+        self.LevelText.Text = tostring(progression.Level)
+        self.MpText.Text = "MP " .. tostring(progression.CurrentMp) .. " / " .. tostring(progression.MaxMp)
+        self:SetGaugeWidth(self.MpFill, self:SafeRatio(progression.CurrentMp, progression.MaxMp), self.GaugeMaxWidth)
+        local expRatio = self:SafeRatio(progression.CurrentExp, progression.ExpToNextLevel)
+        local expPercent = math.floor(expRatio * 1000) / 10
+        self.ExpText.Text = "EXP " .. tostring(progression.CurrentExp) .. " / "
+            .. tostring(progression.ExpToNextLevel) .. " (" .. tostring(expPercent) .. "%)"
+        self:SetGaugeWidth(self.ExpFill, expRatio, self.GaugeMaxWidth)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void SetGaugeWidth(SpriteGUIRendererComponent renderer, number ratio, number maxWidth)
+        -- Resizes a left-pivoted sliced fill while preserving its fixed endcaps.
+        if not isvalid(renderer) or not isvalid(renderer.Entity.UITransformComponent) then return end
+        local transform = renderer.Entity.UITransformComponent
+        local width = maxWidth * math.max(0, math.min(1, ratio))
+        transform.RectSize = Vector2(width, transform.RectSize.y)
+    end
+
+    method number SafeRatio(number currentValue, number maxValue)
+        -- Produces a clamped ratio and avoids division by zero for partially initialized state.
+        if maxValue == nil or maxValue <= 0 then return 0 end
+        return math.max(0, math.min(1, currentValue / maxValue))
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenInventory()
+        -- Routes the HUD menu action to the existing unified equipment and inventory controller.
+        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
+        log("[ClassicHUD] Inventory button click activated")
+        local controller = _EntityService:GetEntityByPath("/ui/EquipmentInventory/Controller")
+        if not isvalid(controller) then
+            log_warning("[ClassicHUD] Equipment inventory controller not found")
+            return
+        end
+        local inventoryUi = controller:GetComponent("script.EquipmentInventoryUI")
+        if not isvalid(inventoryUi) then
+            log_warning("[ClassicHUD] EquipmentInventoryUI component not found")
+            return
+        end
+        inventoryUi:ToggleUnifiedInfo()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnInventoryTouchDown(UITouchDownEvent event)
+        -- Starts the hidden developer gesture only in the test sandbox runtime.
+        self.InventoryLongPressTriggered = false
+        local sprite = self.InventoryButton.Entity.SpriteGUIRendererComponent
+        if isvalid(sprite) then sprite.ImageRUID = DataRef(self.InventoryPressedRUID) end
+        log("[ClassicHUD] Inventory touch pressed visual")
+        if _SlotMachineRuntime:IsDevCheatRuntime() ~= true then return end
+        if self.InventoryHoldTimerId ~= nil then
+            _TimerService:ClearTimer(self.InventoryHoldTimerId)
+        end
+        self.InventoryHoldTimerId = _TimerService:SetTimerOnce(function()
+            self.InventoryHoldTimerId = nil
+            self.InventoryLongPressTriggered = true
+            _SlotMachineRuntime:SetDevCheatPanelOpen(true)
+            log("[ClassicHUD] Dev cheat panel opened by 3-second inventory hold")
+        end, 3.0)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnInventoryTouchUp(UITouchUpEvent event)
+        -- Cancels an incomplete long press while preserving a completed gesture for click suppression.
+        local sprite = self.InventoryButton.Entity.SpriteGUIRendererComponent
+        if isvalid(sprite) then sprite.ImageRUID = DataRef(self.InventoryNormalRUID) end
+        if self.InventoryHoldTimerId ~= nil then
+            _TimerService:ClearTimer(self.InventoryHoldTimerId)
+            self.InventoryHoldTimerId = nil
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnEndPlay()
+        -- Disconnects inventory events and clears the long-press timer when the HUD group unloads.
+        if self.InventoryClickHandler ~= nil and isvalid(self.InventoryButton) then
+            self.InventoryButton.Entity:DisconnectEvent(ButtonClickEvent, self.InventoryClickHandler)
+        end
+        if self.InventoryPressedHandler ~= nil and isvalid(self.InventoryButton) then
+            self.InventoryButton.Entity:DisconnectEvent(ButtonPressedEvent, self.InventoryPressedHandler)
+        end
+        if self.InventoryTouchDownHandler ~= nil and isvalid(self.InventoryButton) then
+            self.InventoryButton.Entity:DisconnectEvent(UITouchDownEvent, self.InventoryTouchDownHandler)
+        end
+        if self.InventoryTouchUpHandler ~= nil and isvalid(self.InventoryButton) then
+            self.InventoryButton.Entity:DisconnectEvent(UITouchUpEvent, self.InventoryTouchUpHandler)
+        end
+        if self.InventoryHoldTimerId ~= nil then
+            _TimerService:ClearTimer(self.InventoryHoldTimerId)
+            self.InventoryHoldTimerId = nil
+        end
+        self.InventoryClickHandler = nil
+        self.InventoryPressedHandler = nil
+        self.InventoryTouchDownHandler = nil
+        self.InventoryTouchUpHandler = nil
+        self.InventoryLongPressTriggered = false
+    end
+end
