@@ -89,10 +89,12 @@ if (
   || result.hudInventoryImage !== 'a133768e51bc4d7caee800bffdd14944'
   || result.hudInventoryTransition !== 1
   || result.hudInventoryStateSpritesUseBase !== true
-  || result.hudInventoryHighlighted.r !== 0.78
-  || result.hudInventoryHighlighted.g !== 0.82
-  || result.hudInventoryPressed.b !== 1
-  || result.hudInventorySelected.b !== 1
+  || result.hudInventoryHighlighted.r !== 0.72
+  || result.hudInventoryHighlighted.g !== 0.72
+  || result.hudInventoryPressed.r !== 0.72
+  || result.hudInventoryPressed.g !== 0.72
+  || result.hudInventorySelected.r !== 1
+  || result.hudInventorySelected.g !== 1
   || result.hudInventoryRuntimeRuidSwapRemoved !== true
   || result.selectedColor.r !== 1
   || result.selectedColor.g !== 0.78

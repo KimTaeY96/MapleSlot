@@ -108,9 +108,9 @@ b.patchComponent('HudFrame/InventoryButton', 'MOD.Core.ButtonComponent', {
   Transition: 1,
   Colors: {
     NormalColor: { r: 1, g: 1, b: 1, a: 1 },
-    HighlightedColor: { r: 0.78, g: 0.82, b: 0.86, a: 1 },
-    PressedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
-    SelectedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
+    HighlightedColor: { r: 0.72, g: 0.72, b: 0.72, a: 1 },
+    PressedColor: { r: 0.72, g: 0.72, b: 0.72, a: 1 },
+    SelectedColor: { r: 1, g: 1, b: 1, a: 1 },
     DisabledColor: { r: 0.72, g: 0.72, b: 0.72, a: 0.55 },
     ColorMultiplier: 1,
     FadeDuration: 0.08,
