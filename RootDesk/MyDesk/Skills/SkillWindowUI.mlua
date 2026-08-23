@@ -1,0 +1,310 @@
+@Component
+script SkillWindowUI extends Component
+
+    @HideFromInspector property Entity MainGroup = nil
+    @HideFromInspector property Entity SlotGroup = nil
+    @HideFromInspector property Entity TooltipGroup = nil
+    @HideFromInspector property Entity SkillList = nil
+    @HideFromInspector property table Handlers = {}
+    @HideFromInspector property table RowBySkillId = {}
+    @HideFromInspector property table SlotByIndex = {}
+    @HideFromInspector property table ClientState = nil
+    @HideFromInspector property integer LastRevision = -1
+    @HideFromInspector property number RefreshElapsed = 0
+    @HideFromInspector property string HoverSkillId = ""
+    @HideFromInspector property string DragSkillId = ""
+    @HideFromInspector property integer DragSourceSlot = 0
+    @HideFromInspector property boolean DropResolved = false
+    @HideFromInspector property string LastFeedback = ""
+
+    @ExecSpace("ClientOnly")
+    method void OnBeginPlay()
+        self.MainGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup")
+        self.SlotGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/SlotGroup")
+        self.TooltipGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/TooltipGroup")
+        self.SkillList = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup/Window/SkillList")
+        self.MainGroup.Enable = false
+        self.SlotGroup.Enable = false
+        self.TooltipGroup.Enable = false
+        self:BindClick(_EntityService:GetEntityByPath("/ui/SkillWindow/OpenButton"), function() self:OpenWindow() end)
+        self:BindClick(self.MainGroup:GetChildByName("CloseButton", true), function() self:CloseWindow() end)
+        self:BindClick(self.MainGroup:GetChildByName("SlotSettingsButton", true), function() self:ToggleSlotPanel() end)
+        self:BindClick(self.MainGroup:GetChildByName("TierIButton", true), function() self:ShowFeedback("현재 1차 스킬입니다.") end)
+        for tier=2,4 do
+            local button = self.MainGroup:GetChildByName("Tier" .. tostring(tier) .. "Button", true)
+            self:BindClick(button, function() self:ShowFeedback("추후 전직에서 개방") end)
+        end
+        for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do self:BindSkillRow(definition) end
+        for slot=1,8 do self:BindSlot(slot) end
+        self:RefreshState(true)
+        log("[SkillUI] initialized rows=14 slots=8")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnUpdate(number delta)
+        self.RefreshElapsed = self.RefreshElapsed + delta
+        if self.RefreshElapsed < 0.1 then return end
+        self.RefreshElapsed = 0
+        self:RefreshState(false)
+        self:RefreshCooldowns()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OpenWindow()
+        self.MainGroup.Enable = true
+        self:RefreshState(true)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void CloseWindow()
+        self.MainGroup.Enable = false
+        self.SlotGroup.Enable = false
+        self.TooltipGroup.Enable = false
+        self.HoverSkillId = ""
+        self:ResetDrag()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ToggleSlotPanel()
+        if self.MainGroup.Enable == false then return end
+        self.SlotGroup.Enable = not self.SlotGroup.Enable
+    end
+
+    @ExecSpace("ClientOnly")
+    method any GetSkillComponent()
+        local user = _UserService.LocalPlayer
+        if not isvalid(user) then return nil end
+        return user:GetComponent("script.PlayerSkillComponent")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshState(boolean force)
+        local component = self:GetSkillComponent()
+        if not isvalid(component) or component.StateSnapshot == "" then return end
+        if force == false and component.StateRevision == self.LastRevision then return end
+        self.LastRevision = component.StateRevision
+        self.ClientState = _HttpService:JSONDecode(component.StateSnapshot)
+        if self.ClientState == nil then return end
+        local spText = self.MainGroup:GetChildByName("SkillPointText", true)
+        spText.TextGUIRendererComponent.Text = "SP " .. tostring(self.ClientState.availablePointsByTier["1"] or 0)
+        for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do
+            local row = self.RowBySkillId[definition.id]
+            local level = self.ClientState.skillLevels[definition.id] or 0
+            row:GetChildByName("LevelText", true).TextGUIRendererComponent.Text = "Lv. " .. tostring(level) .. " / " .. tostring(definition.maxLevel)
+
+        end
+        for slot=1,8 do
+            local slotEntity = self.SlotByIndex[slot]
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            local label = slotEntity:GetChildByName("IconText", true)
+            local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+            label.TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
+            slotEntity:GetChildByName("EmptyText", true).Enable = definition == nil
+        end
+        if component.FeedbackMessage ~= nil and component.FeedbackMessage ~= "" and component.FeedbackMessage ~= self.LastFeedback then
+            self:ShowFeedback(component.FeedbackMessage)
+        end
+        if self.HoverSkillId ~= "" then self:RenderTooltip(self.HoverSkillId) end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void BindSkillRow(table definition)
+        local row = self.SkillList:GetChildByName("SkillRow_" .. definition.id, true)
+        if not isvalid(row) then return end
+        self.RowBySkillId[definition.id] = row
+        self:BindClick(row:GetChildByName("PlusButton", true), function()
+            local component = self:GetSkillComponent()
+            if isvalid(component) then component:RequestLevelUpSkill(definition.id) end
+        end)
+        local icon = row:GetChildByName("IconButton", true)
+        self:AddHandler(icon, UITouchEnterEvent, function() self:ShowTooltip(definition.id) end)
+        self:AddHandler(icon, UITouchExitEvent, function() self:HideTooltip(definition.id) end)
+        self:AddHandler(icon, UITouchBeginDragEvent, function()
+            if definition.type == "passive" then
+                self:ShowFeedback("패시브 스킬은 슬롯에 장착할 수 없습니다.")
+                self:ResetDrag()
+                return
+            end
+            local level = self.ClientState ~= nil and (self.ClientState.skillLevels[definition.id] or 0) or 0
+            if level < 1 then
+                self:ShowFeedback("습득한 액티브 스킬만 장착할 수 있습니다.")
+                return
+            end
+            self.DragSkillId = definition.id
+            self.DragSourceSlot = 0
+            self.DropResolved = false
+        end)
+        self:AddHandler(icon, UITouchEndDragEvent, function() self:FinishDragOutside() end)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void BindSlot(integer slot)
+        local slotEntity = self.SlotGroup:GetChildByName("Slot_" .. tostring(slot), true)
+        self.SlotByIndex[slot] = slotEntity
+        self:AddHandler(slotEntity, UITouchBeginDragEvent, function()
+            if self.ClientState == nil then return end
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            if skillId == "" then return end
+            self.DragSkillId = skillId
+            self.DragSourceSlot = slot
+            self.DropResolved = false
+        end)
+        self:AddHandler(slotEntity, UITouchUpEvent, function() self:DropOnSlot(slot) end)
+        self:AddHandler(slotEntity, UITouchEndDragEvent, function() self:FinishDragOutside() end)
+        self:AddHandler(slotEntity, UITouchEnterEvent, function()
+            if self.ClientState == nil then return end
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            if skillId ~= "" then self:ShowTooltip(skillId) end
+        end)
+        self:AddHandler(slotEntity, UITouchExitEvent, function()
+            if self.HoverSkillId ~= "" then self:HideTooltip(self.HoverSkillId) end
+        end)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void DropOnSlot(integer targetSlot)
+        if self.DragSkillId == "" then return end
+        local component = self:GetSkillComponent()
+        if not isvalid(component) then return end
+        if self.DragSourceSlot > 0 then
+            component:RequestMoveSlot(self.DragSourceSlot, targetSlot)
+        else
+            local occupied = self.ClientState ~= nil and (self.ClientState.equippedSlots[targetSlot] or "") or ""
+            if occupied ~= "" then
+                self:ShowFeedback("스킬 목록에서는 빈 슬롯에 장착하세요.")
+                return
+            end
+            component:RequestEquipFromList(self.DragSkillId, targetSlot)
+        end
+        self.DropResolved = true
+        self:ResetDrag()
+    end
+
+    @ExecSpace("ClientOnly")
+    method void FinishDragOutside()
+        if self.DragSkillId == "" then return end
+        local sourceSlot = self.DragSourceSlot
+        _TimerService:SetTimerOnce(function()
+            if self.DropResolved == false and sourceSlot > 0 then
+                local component = self:GetSkillComponent()
+                if isvalid(component) then component:RequestClearSlot(sourceSlot) end
+            end
+            self:ResetDrag()
+        end, 0.05)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ResetDrag()
+        self.DragSkillId = ""
+        self.DragSourceSlot = 0
+        self.DropResolved = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ShowTooltip(string skillId)
+        self.HoverSkillId = skillId
+        local tooltipPanel = self.TooltipGroup:GetChildByName("Panel", true)
+        local tooltipX = _UILogic.ScreenWidth < 1500 and -510 or 510
+        tooltipPanel.UITransformComponent.anchoredPosition = Vector2(tooltipX, tooltipPanel.UITransformComponent.anchoredPosition.y)
+        self:RenderTooltip(skillId)
+        self.TooltipGroup.Enable = true
+    end
+
+    @ExecSpace("ClientOnly")
+    method void HideTooltip(string skillId)
+        if self.HoverSkillId ~= skillId then return end
+        self.HoverSkillId = ""
+        self.TooltipGroup.Enable = false
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RenderTooltip(string skillId)
+        local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+        if definition == nil then return end
+        local level = self.ClientState ~= nil and (self.ClientState.skillLevels[skillId] or 0) or 0
+        local tooltip = _SkillDefinitionRuntime:BuildTooltipData(skillId, level)
+        self.TooltipGroup:GetChildByName("TooltipIconText", true).TextGUIRendererComponent.Text = definition.icon
+        self.TooltipGroup:GetChildByName("TooltipNameText", true).TextGUIRendererComponent.Text = definition.nameKey
+        self.TooltipGroup:GetChildByName("TooltipMetaText", true).TextGUIRendererComponent.Text =
+            (definition.type == "active" and "액티브" or "패시브") .. "  ·  마스터 레벨 " .. tostring(definition.maxLevel)
+        self.TooltipGroup:GetChildByName("TooltipDescriptionText", true).TextGUIRendererComponent.Text = definition.descriptionKey
+        local currentText = self:FormatEffect("현재", tooltip.current, tooltip.status, definition)
+        self.TooltipGroup:GetChildByName("TooltipCurrentText", true).TextGUIRendererComponent.Text = currentText
+        local nextRoot = self.TooltipGroup:GetChildByName("NextSection", true)
+        nextRoot.Enable = tooltip.next ~= nil
+        if tooltip.next ~= nil then
+            nextRoot:GetChildByName("TooltipNextText", true).TextGUIRendererComponent.Text = self:FormatEffect("다음", tooltip.next, "Lv. " .. tostring(level + 1), definition)
+        end
+    end
+
+    method string FormatEffect(string section, table effect, string status, table definition)
+        if effect == nil then return "[" .. section .. " 레벨]  미습득" end
+        local parts = {}
+        if effect.damagePermille ~= nil then table.insert(parts, "피해 " .. tostring(math.floor(effect.damagePermille / 10)) .. "%") end
+        if effect.hitCount ~= nil then table.insert(parts, "타격 " .. tostring(math.floor(effect.hitCount)) .. "회") end
+        if effect.damageBuffPermille ~= nil then table.insert(parts, "피해 증가 " .. tostring(math.floor(effect.damageBuffPermille / 10)) .. "%") end
+        if effect.healPermille ~= nil then table.insert(parts, "HP 회복 " .. tostring(math.floor(effect.healPermille / 10)) .. "%") end
+        if definition.type == "active" then
+            table.insert(parts, "MP " .. tostring(effect.mpCost) .. " 소비")
+            table.insert(parts, "쿨타임 " .. tostring(effect.cooldownSeconds) .. "초")
+        end
+        local target = definition.targeting.kind == "area" and "범위 내 적" or (definition.targeting.kind == "self" and "자신" or "현재 타깃")
+        return "[" .. section .. " " .. status .. "]\n" .. table.concat(parts, "  ·  ") .. "\n대상/조건: " .. target .. " / " .. self:FormatCondition(definition.autoUseCondition)
+    end
+
+    method string FormatCondition(table condition)
+        if condition.kind == "buffMissing" then return "동일 버프가 없을 때" end
+        if condition.kind == "hpBelowPermille" then return "HP " .. tostring(condition.threshold / 10) .. "% 이하" end
+        if condition.kind == "targetHpBelowPermille" then return "대상 HP " .. tostring(condition.threshold / 10) .. "% 이하" end
+        if condition.kind == "enemiesInRange" then return "범위 안에 적 존재" end
+        if condition.kind == "passive" then return "습득 즉시 상시 적용" end
+        return "사용 가능 시"
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshCooldowns()
+        if self.ClientState == nil then return end
+        local now = DateTime.UtcNow.Elapsed
+        for slot=1,8 do
+            local slotEntity = self.SlotByIndex[slot]
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            local remaining = math.max(0, ((self.ClientState.cooldownEndTimes[skillId] or 0) - now) / 1000)
+            local shade = slotEntity:GetChildByName("CooldownShade", true)
+            shade.Enable = remaining > 0
+            shade:GetChildByName("CooldownText", true).TextGUIRendererComponent.Text = remaining > 0 and tostring(math.ceil(remaining)) or ""
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void ShowFeedback(string message)
+        self.LastFeedback = message
+        local feedback = self.MainGroup:GetChildByName("GlobalFeedbackText", true)
+        feedback.TextGUIRendererComponent.Text = message
+        feedback.Enable = true
+        _TimerService:SetTimerOnce(function()
+            if isvalid(feedback) and feedback.TextGUIRendererComponent.Text == message then feedback.Enable = false end
+        end, 1.4)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void BindClick(Entity entity, any callback)
+        if not isvalid(entity) then return end
+        self:AddHandler(entity, ButtonClickEvent, callback)
+    end
+
+    @ExecSpace("ClientOnly")
+    method void AddHandler(Entity entity, any eventType, any callback)
+        if not isvalid(entity) then return end
+        local connection = entity:ConnectEvent(eventType, callback)
+        table.insert(self.Handlers, {entity=entity,eventType=eventType,connection=connection})
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnEndPlay()
+        for _, binding in ipairs(self.Handlers) do
+            if isvalid(binding.entity) then binding.entity:DisconnectEvent(binding.eventType, binding.connection) end
+        end
+        self.Handlers = {}
+    end
+
+end

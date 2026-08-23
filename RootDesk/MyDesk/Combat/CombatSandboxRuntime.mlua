@@ -64,6 +64,11 @@ script CombatSandboxRuntime extends Component
                     equipment.PlayerInitProfileIndex = tier.PlayerInitProfileIndex
                     equipment:InitializeFromProfile(tier.PlayerInitProfileIndex)
                 end
+                local skillComponent = user:GetComponent("script.PlayerSkillComponent")
+                if not isvalid(skillComponent) then
+                    skillComponent = user:AddComponent("PlayerSkillComponent")
+                end
+                if isvalid(skillComponent) then skillComponent:LoadState() end
                 local autoBattle = user:GetComponent("script.CombatPlayerAutoBattle")
                 local newlyAttached = false
                 if not isvalid(autoBattle) then
@@ -90,6 +95,7 @@ script CombatSandboxRuntime extends Component
                 if not isvalid(wallet) then user:AddComponent("PlayerWalletComponent") end
                 local walletBridge = user:GetComponent("script.CombatWalletBridge")
                 if not isvalid(walletBridge) then user:AddComponent("CombatWalletBridge") end
+                if isvalid(skillComponent) then skillComponent:ApplyPendingOfflineReward() end
             end
         end
     end

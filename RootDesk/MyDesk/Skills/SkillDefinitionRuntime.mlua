@@ -1,0 +1,79 @@
+@Logic
+script SkillDefinitionRuntime extends Logic
+
+	property table DefinitionsById = {}
+	property table TierSkillIds = {}
+	property integer SaveVersion = 1
+	property number OfflineRewardCapSeconds = 28800
+
+	method void OnBeginPlay()
+		self:EnsureDefinitions()
+	end
+
+	method void EnsureDefinitions()
+		if self.DefinitionsById.power_slash ~= nil then return end
+		self.DefinitionsById = {}
+		self.TierSkillIds = {[1] = {}}
+
+		self:AddDefinition({id="power_slash", nameKey="파워 슬래시", descriptionKey="검에 힘을 모아 단일 적을 벤다.", icon="PS", tier=1, type="active", maxLevel=20, requiredCharacterLevel=1, prerequisites={}, mpFormula={base=5,perLevel=1}, cooldownFormula={base=2.2,perLevel=0}, castTime=0.72, targeting={kind="single",range=1.45,maxTargets=1}, effects={damagePermille={base=1200,perLevel=120},hitCount={base=1,perLevel=0}}, autoUseCondition={kind="always"}, sortOrder=10})
+		self:AddDefinition({id="double_slash", nameKey="더블 슬래시", descriptionKey="빠르게 두 번 연속으로 베어낸다.", icon="DS", tier=1, type="active", maxLevel=20, requiredCharacterLevel=5, prerequisites={{skillId="power_slash",level=3}}, mpFormula={base=8,perLevel=1}, cooldownFormula={base=3.4,perLevel=0}, castTime=0.9, targeting={kind="single",range=1.5,maxTargets=1}, effects={damagePermille={base=760,perLevel=75},hitCount={base=2,perLevel=0}}, autoUseCondition={kind="always"}, sortOrder=20})
+		self:AddDefinition({id="charge_slash", nameKey="돌진 베기", descriptionKey="적에게 파고들며 강하게 베어낸다.", icon="CB", tier=1, type="active", maxLevel=15, requiredCharacterLevel=10, prerequisites={{skillId="double_slash",level=3}}, mpFormula={base=12,perLevel=1}, cooldownFormula={base=6,perLevel=0}, castTime=0.95, targeting={kind="single",range=2.1,maxTargets=1}, effects={damagePermille={base=1550,perLevel=145},hitCount={base=1,perLevel=0}}, autoUseCondition={kind="always"}, sortOrder=30})
+		self:AddDefinition({id="whirlwind", nameKey="회전 참격", descriptionKey="주변 적들을 연속으로 휩쓴다.", icon="WT", tier=1, type="active", maxLevel=15, requiredCharacterLevel=15, prerequisites={{skillId="power_slash",level=7}}, mpFormula={base=18,perLevel=1}, cooldownFormula={base=8,perLevel=0}, castTime=1.2, targeting={kind="area",range=1.7,maxTargets=4}, effects={damagePermille={base=680,perLevel=68},hitCount={base=3,perLevel=0}}, autoUseCondition={kind="enemiesInRange",minimum=1}, sortOrder=40})
+		self:AddDefinition({id="guard_break", nameKey="가드 브레이크", descriptionKey="방어의 빈틈을 노리는 무거운 일격.", icon="GB", tier=1, type="active", maxLevel=15, requiredCharacterLevel=20, prerequisites={{skillId="double_slash",level=5}}, mpFormula={base=16,perLevel=1}, cooldownFormula={base=7,perLevel=0}, castTime=1.05, targeting={kind="single",range=1.55,maxTargets=1}, effects={damagePermille={base=1900,perLevel=175},hitCount={base=1,perLevel=0}}, autoUseCondition={kind="always"}, sortOrder=50})
+		self:AddDefinition({id="battle_cry", nameKey="전투 함성", descriptionKey="일정 시간 공격 피해를 높인다.", icon="BC", tier=1, type="active", maxLevel=10, requiredCharacterLevel=25, prerequisites={{skillId="weapon_mastery",level=5}}, mpFormula={base=20,perLevel=2}, cooldownFormula={base=22,perLevel=0}, castTime=0.65, targeting={kind="self",range=0,maxTargets=1}, effects={damageBuffPermille={base=100,perLevel=12},durationSeconds={base=8,perLevel=0.4}}, autoUseCondition={kind="buffMissing",buffId="battle_cry"}, sortOrder=60})
+		self:AddDefinition({id="emergency_heal", nameKey="응급 회복", descriptionKey="위급할 때 자신의 HP를 회복한다.", icon="EH", tier=1, type="active", maxLevel=10, requiredCharacterLevel=30, prerequisites={{skillId="vitality_training",level=5}}, mpFormula={base=24,perLevel=2}, cooldownFormula={base=18,perLevel=0}, castTime=0.8, targeting={kind="self",range=0,maxTargets=1}, effects={healPermille={base=180,perLevel=18}}, autoUseCondition={kind="hpBelowPermille",threshold=400}, sortOrder=70})
+		self:AddDefinition({id="final_blow", nameKey="최후의 일격", descriptionKey="약해진 적에게 치명적인 마무리 일격을 가한다.", icon="FB", tier=1, type="active", maxLevel=10, requiredCharacterLevel=35, prerequisites={{skillId="guard_break",level=5}}, mpFormula={base=28,perLevel=2}, cooldownFormula={base=12,perLevel=0}, castTime=1.15, targeting={kind="single",range=1.55,maxTargets=1}, effects={damagePermille={base=2800,perLevel=260},hitCount={base=1,perLevel=0}}, autoUseCondition={kind="targetHpBelowPermille",threshold=250}, sortOrder=80})
+
+		self:AddDefinition({id="weapon_mastery", nameKey="무기 숙련", descriptionKey="무기 사용에 익숙해져 공격 피해가 증가한다.", icon="WM", tier=1, type="passive", maxLevel=20, requiredCharacterLevel=1, prerequisites={}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={attackDamagePermille={base=20,perLevel=5}}, autoUseCondition={kind="passive"}, sortOrder=90})
+		self:AddDefinition({id="vitality_training", nameKey="체력 단련", descriptionKey="최대 HP가 증가한다.", icon="VT", tier=1, type="passive", maxLevel=20, requiredCharacterLevel=3, prerequisites={}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={maxHp={base=20,perLevel=12}}, autoUseCondition={kind="passive"}, sortOrder=100})
+		self:AddDefinition({id="combat_sense", nameKey="전투 감각", descriptionKey="치명타 확률이 증가한다.", icon="CS", tier=1, type="passive", maxLevel=15, requiredCharacterLevel=7, prerequisites={}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={criticalChancePermille={base=10,perLevel=5}}, autoUseCondition={kind="passive"}, sortOrder=110})
+		self:AddDefinition({id="swift_training", nameKey="신속 훈련", descriptionKey="스킬 재사용 대기시간이 감소한다.", icon="ST", tier=1, type="passive", maxLevel=15, requiredCharacterLevel=12, prerequisites={}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={cooldownReductionPermille={base=10,perLevel=4}}, autoUseCondition={kind="passive"}, sortOrder=120})
+		self:AddDefinition({id="recovery_boost", nameKey="회복력 강화", descriptionKey="회복 스킬의 효율이 증가한다.", icon="RB", tier=1, type="passive", maxLevel=15, requiredCharacterLevel=18, prerequisites={}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={healingBonusPermille={base=30,perLevel=8}}, autoUseCondition={kind="passive"}, sortOrder=130})
+		self:AddDefinition({id="elite_hunter", nameKey="정예 사냥꾼", descriptionKey="몬스터에게 주는 피해가 증가한다.", icon="EH+", tier=1, type="passive", maxLevel=15, requiredCharacterLevel=24, prerequisites={{skillId="combat_sense",level=3}}, mpFormula={base=0,perLevel=0}, cooldownFormula={base=0,perLevel=0}, castTime=0, targeting={kind="passive"}, effects={monsterDamagePermille={base=20,perLevel=6}}, autoUseCondition={kind="passive"}, sortOrder=140})
+	end
+
+	method void AddDefinition(table definition)
+		self.DefinitionsById[definition.id] = definition
+		if self.TierSkillIds[definition.tier] == nil then self.TierSkillIds[definition.tier] = {} end
+		table.insert(self.TierSkillIds[definition.tier], definition.id)
+	end
+
+	method table GetDefinition(string skillId)
+		self:EnsureDefinitions()
+		return self.DefinitionsById[skillId]
+	end
+
+	method table GetTierDefinitions(integer tier)
+		self:EnsureDefinitions()
+		local result = {}
+		local ids = self.TierSkillIds[tier] or {}
+		for _, skillId in ipairs(ids) do table.insert(result, self.DefinitionsById[skillId]) end
+		return result
+	end
+
+	method number EvaluateLinear(table formula, integer level)
+		if formula == nil or level <= 0 then return 0 end
+		return formula.base + formula.perLevel * (level - 1)
+	end
+
+	method integer EvaluateInteger(table formula, integer level)
+		return math.floor(self:EvaluateLinear(formula, level) + 0.5)
+	end
+
+	method table BuildLevelEffect(string skillId, integer level)
+		local definition = self:GetDefinition(skillId)
+		if definition == nil or level <= 0 then return nil end
+		local effect = {level=level, mpCost=self:EvaluateInteger(definition.mpFormula, level), cooldownSeconds=self:EvaluateLinear(definition.cooldownFormula, level), castTime=definition.castTime, targeting=definition.targeting}
+		for key, formula in pairs(definition.effects) do effect[key] = self:EvaluateLinear(formula, level) end
+		return effect
+	end
+
+	method table BuildTooltipData(string skillId, integer level)
+		local definition = self:GetDefinition(skillId)
+		if definition == nil then return nil end
+		local nextEffect = nil
+		if level < definition.maxLevel then nextEffect = self:BuildLevelEffect(skillId, level + 1) end
+		return {id=definition.id, name=definition.nameKey, description=definition.descriptionKey, icon=definition.icon, type=definition.type, maxLevel=definition.maxLevel, status=level <= 0 and "미습득" or (level >= definition.maxLevel and "마스터" or ("Lv. " .. tostring(level))), current=self:BuildLevelEffect(skillId, level), next=nextEffect, targeting=definition.targeting, autoUseCondition=definition.autoUseCondition}
+	end
+
+end

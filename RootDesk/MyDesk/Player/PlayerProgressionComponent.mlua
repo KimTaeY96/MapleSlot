@@ -43,7 +43,13 @@ script PlayerProgressionComponent extends Component
             gainedLevels = gainedLevels + 1
             self.ExpToNextLevel = self:CalculateRequiredExperience(self.Level)
         end
-        if gainedLevels > 0 then self:ApplyLevelUpStats(gainedLevels) end
+        if gainedLevels > 0 then
+            self:ApplyLevelUpStats(gainedLevels)
+            local skillComponent = self.Entity:GetComponent("script.PlayerSkillComponent")
+            if isvalid(skillComponent) then
+                skillComponent:GrantPointsForCharacterLevel(self.Level)
+            end
+        end
         self.ProgressionRevision = self.ProgressionRevision + 1
         log("[Progression] Gained exp=" .. tostring(amount)
             .. " level=" .. tostring(self.Level)

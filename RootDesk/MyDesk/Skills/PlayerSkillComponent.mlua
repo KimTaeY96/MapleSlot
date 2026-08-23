@@ -1,0 +1,372 @@
+@Component
+script PlayerSkillComponent extends Component
+
+	@Sync
+	property string StateSnapshot = ""
+	@Sync
+	property integer StateRevision = 0
+	@Sync
+	property string FeedbackMessage = ""
+
+	property table State = nil
+	property boolean StateLoaded = false
+	property integer SaveGeneration = 0
+	property number BattleCryEndUtcMillis = 0
+	property table PendingOfflineReward = nil
+	property string StorageKey = "SkillStateV1"
+
+	method number UtcNowMillis()
+		return tonumber(DateTime.UtcNow.Elapsed) or 0
+	end
+
+	method table CreateDefaultState()
+		local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+		local level = progression ~= nil and progression.Level or 1
+		return {
+			availablePointsByTier = {["1"]=0,["2"]=0,["3"]=0,["4"]=0},
+			skillLevels = {_kind="map"},
+			equippedSlots = {"","","","","","","",""},
+			cooldownEndTimes = {_kind="map"},
+			saveVersion = _SkillDefinitionRuntime.SaveVersion,
+			lastSaveUtcMillis = self:UtcNowMillis(),
+			lastGrantedCharacterLevel = level
+		}
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnBeginPlay()
+		self:LoadState()
+	end
+
+	@ExecSpace("ServerOnly")
+	method void OnEndPlay()
+		if self.StateLoaded == true then self:SaveStateBlocking() end
+	end
+
+	@ExecSpace("ServerOnly")
+	method void LoadState()
+		if self.StateLoaded == true then return end
+		local state = self:CreateDefaultState()
+		local storage = _DataStorageService:GetUserDataStorage(self.Entity.PlayerComponent.ProfileCode)
+		local code, raw = storage:GetAndWait(self.StorageKey)
+		if code == 0 and raw ~= nil and raw ~= "" then
+			local decoded = _HttpService:JSONDecode(raw)
+			if decoded ~= nil and decoded.saveVersion == _SkillDefinitionRuntime.SaveVersion then state = decoded end
+		end
+		self:NormalizeState(state)
+		self.State = state
+		self.StateLoaded = true
+		self:PrepareOfflineProgress()
+		self:PublishState()
+		log("[SkillSystem] state loaded user=" .. tostring(self.Entity.PlayerComponent.UserId))
+	end
+
+	method void NormalizeState(table state)
+		state.availablePointsByTier = state.availablePointsByTier or {["1"]=0,["2"]=0,["3"]=0,["4"]=0}
+		for tier=1,4 do
+			local key = tostring(tier)
+			state.availablePointsByTier[key] = math.max(0, math.floor(tonumber(state.availablePointsByTier[key]) or 0))
+		end
+		state.skillLevels = state.skillLevels or {_kind="map"}
+		for skillId, level in pairs(state.skillLevels) do if skillId ~= "_kind" then state.skillLevels[skillId] = math.max(0, math.floor(tonumber(level) or 0)) end end
+		state.equippedSlots = state.equippedSlots or {}
+		for slot=1,8 do state.equippedSlots[slot] = state.equippedSlots[slot] or "" end
+		state.cooldownEndTimes = state.cooldownEndTimes or {_kind="map"}
+		for skillId, endTime in pairs(state.cooldownEndTimes) do if skillId ~= "_kind" then state.cooldownEndTimes[skillId] = tonumber(endTime) or 0 end end
+		state.saveVersion = _SkillDefinitionRuntime.SaveVersion
+		state.lastSaveUtcMillis = tonumber(state.lastSaveUtcMillis) or self:UtcNowMillis()
+		state.lastGrantedCharacterLevel = math.max(1, math.floor(tonumber(state.lastGrantedCharacterLevel) or 1))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void PrepareOfflineProgress()
+		local now = self:UtcNowMillis()
+		local saved = self.State.lastSaveUtcMillis or now
+		local effectiveNow = math.max(now, saved)
+		local elapsed = math.min(_SkillDefinitionRuntime.OfflineRewardCapSeconds, math.max(0, (effectiveNow - saved) / 1000))
+		for skillId, endTime in pairs(self.State.cooldownEndTimes) do
+			if skillId ~= "_kind" and (tonumber(endTime) or 0) <= effectiveNow then self.State.cooldownEndTimes[skillId] = nil end
+		end
+		self.PendingOfflineReward = self:CalculateOfflineReward(elapsed)
+		self.State.lastSaveUtcMillis = effectiveNow
+	end
+
+	method table CalculateOfflineReward(number elapsedSeconds)
+		if elapsedSeconds <= 0 then return {elapsedSeconds=0,expectedDps=0,expectedKills=0} end
+		local damagePerSecond = 0
+		local mpPerSecond = 0
+		local activeCount = 0
+		for slot=1,8 do
+			local skillId = self.State.equippedSlots[slot]
+			local level = self.State.skillLevels[skillId] or 0
+			local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+			if definition ~= nil and definition.type == "active" and level > 0 then
+				local effect = _SkillDefinitionRuntime:BuildLevelEffect(skillId, level)
+				if effect.damagePermille ~= nil then
+					local cycle = math.max(effect.castTime, self:GetAdjustedCooldown(effect.cooldownSeconds))
+					local targets = definition.targeting.kind == "area" and math.min(2.5, definition.targeting.maxTargets) or 1
+					damagePerSecond = damagePerSecond + effect.damagePermille / 1000 * (effect.hitCount or 1) * targets / cycle
+					mpPerSecond = mpPerSecond + effect.mpCost / cycle
+					activeCount = activeCount + 1
+				end
+			end
+		end
+		local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+		local attackPower = 10
+		local mpSustain = 1
+		if progression ~= nil then
+			attackPower = self.Entity:GetComponent("script.EquipmentInventoryComponent") ~= nil and self.Entity:GetComponent("script.EquipmentInventoryComponent").DerivedAttackPower or 10
+			local regenPerSecond = math.max(1, progression.MaxMp * 0.02)
+			if mpPerSecond > 0 then mpSustain = math.min(1, regenPerSecond / mpPerSecond) end
+		end
+		local damageMultiplier = 1 + (self:GetPassiveValue("attackDamagePermille") + self:GetPassiveValue("monsterDamagePermille")) / 1000
+		local critChance = math.min(0.8, 0.05 + self:GetPassiveValue("criticalChancePermille") / 1000)
+		local critMultiplier = 1 + critChance * 0.5
+		local buff = self:GetLearnedEffect("battle_cry")
+		local buffUptime = 0
+		if buff ~= nil then buffUptime = math.min(1, buff.durationSeconds / math.max(0.01, self:GetAdjustedCooldown(buff.cooldownSeconds))) end
+		local buffMultiplier = 1 + buffUptime * ((buff ~= nil and buff.damageBuffPermille or 0) / 1000)
+		local expectedDps = attackPower * damagePerSecond * mpSustain * damageMultiplier * critMultiplier * buffMultiplier
+		local expectedKills = math.floor(expectedDps * elapsedSeconds / 120)
+		return {elapsedSeconds=elapsedSeconds, expectedDps=expectedDps, expectedKills=expectedKills, activeSkills=activeCount, mpSustain=mpSustain}
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ApplyPendingOfflineReward()
+		if self.PendingOfflineReward == nil then return end
+		local reward = self.PendingOfflineReward
+		self.PendingOfflineReward = nil
+		if reward.expectedKills <= 0 then return end
+		local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+		if progression ~= nil then progression:AddExperience(reward.expectedKills * 60) end
+		local wallet = self.Entity:GetComponent("script.PlayerWalletComponent")
+		if wallet ~= nil then wallet:SettleCombatReward(reward.expectedKills, "SKILL_OFFLINE_" .. tostring(math.floor(self:UtcNowMillis()))) end
+		log("[SkillSystem] offline seconds=" .. tostring(math.floor(reward.elapsedSeconds)) .. " kills=" .. tostring(reward.expectedKills))
+	end
+
+	@ExecSpace("ServerOnly")
+	method void GrantPointsForCharacterLevel(integer characterLevel)
+		if self.StateLoaded ~= true then self:LoadState() end
+		local lastLevel = self.State.lastGrantedCharacterLevel or characterLevel
+		if characterLevel <= lastLevel then return end
+		local gained = characterLevel - lastLevel
+		self.State.availablePointsByTier["1"] = self.State.availablePointsByTier["1"] + gained * 3
+		self.State.lastGrantedCharacterLevel = characterLevel
+		self:CommitMutation("LEVEL_UP_SP")
+		log("[SkillSystem] granted tier1 SP=" .. tostring(gained * 3) .. " level=" .. tostring(characterLevel))
+	end
+
+	@ExecSpace("Server")
+	method void RequestLevelUpSkill(string skillId)
+		if senderUserId ~= self.Entity.PlayerComponent.UserId then return end
+		self:TryLevelUpSkill(skillId)
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean TryLevelUpSkill(string skillId)
+		if self.StateLoaded ~= true then self:LoadState() end
+		local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+		if definition == nil or definition.tier ~= 1 then return self:Fail("잘못된 스킬입니다.") end
+		local currentLevel = self.State.skillLevels[skillId] or 0
+		if self.State.availablePointsByTier["1"] < 1 then return self:Fail("보유 SP가 부족합니다.") end
+		if currentLevel >= definition.maxLevel then return self:Fail("이미 마스터한 스킬입니다.") end
+		local characterLevel = self.Entity:GetComponent("script.PlayerProgressionComponent") ~= nil and self.Entity:GetComponent("script.PlayerProgressionComponent").Level or 1
+		if characterLevel < definition.requiredCharacterLevel then return self:Fail("요구 캐릭터 레벨이 부족합니다.") end
+		for _, prerequisite in ipairs(definition.prerequisites) do
+			if (self.State.skillLevels[prerequisite.skillId] or 0) < prerequisite.level then return self:Fail("선행 스킬 조건을 충족하지 못했습니다.") end
+		end
+		-- SP 차감, 레벨 상승, 패시브 재계산을 한 서버 메서드 안에서만 커밋한다.
+		self.State.availablePointsByTier["1"] = self.State.availablePointsByTier["1"] - 1
+		self.State.skillLevels[skillId] = currentLevel + 1
+		local equipment = self.Entity:GetComponent("script.EquipmentInventoryComponent")
+		if equipment ~= nil then equipment:RecalculateEquipment() end
+		self:CommitMutation("SKILL_LEVEL_UP")
+		return true
+	end
+
+	@ExecSpace("Server")
+	method void RequestEquipFromList(string skillId, integer targetSlot)
+		if senderUserId ~= self.Entity.PlayerComponent.UserId then return end
+		self:EquipFromList(skillId, targetSlot)
+	end
+
+	@ExecSpace("Server")
+	method void RequestMoveSlot(integer sourceSlot, integer targetSlot)
+		if senderUserId ~= self.Entity.PlayerComponent.UserId then return end
+		self:MoveSlot(sourceSlot, targetSlot)
+	end
+
+	@ExecSpace("Server")
+	method void RequestClearSlot(integer sourceSlot)
+		if senderUserId ~= self.Entity.PlayerComponent.UserId then return end
+		self:ClearSlot(sourceSlot)
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean EquipFromList(string skillId, integer targetSlot)
+		if targetSlot < 1 or targetSlot > 8 then return self:Fail("잘못된 슬롯입니다.") end
+		local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+		if definition == nil then return self:Fail("잘못된 스킬입니다.") end
+		if definition.type ~= "active" then return self:Fail("패시브 스킬은 슬롯에 장착할 수 없습니다.") end
+		if (self.State.skillLevels[skillId] or 0) < 1 then return self:Fail("습득한 액티브 스킬만 장착할 수 있습니다.") end
+		if self.State.equippedSlots[targetSlot] ~= "" then return self:Fail("스킬 목록에서는 빈 슬롯에 장착하세요.") end
+		for slot=1,8 do
+			if self.State.equippedSlots[slot] == skillId and slot ~= targetSlot then return self:Fail("동일한 액티브 스킬은 중복 장착할 수 없습니다.") end
+		end
+		self.State.equippedSlots[targetSlot] = skillId
+		self:CommitMutation("SLOT_EQUIP")
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean MoveSlot(integer sourceSlot, integer targetSlot)
+		if sourceSlot < 1 or sourceSlot > 8 or targetSlot < 1 or targetSlot > 8 then return self:Fail("잘못된 슬롯입니다.") end
+		if sourceSlot == targetSlot then return true end
+		local sourceSkill = self.State.equippedSlots[sourceSlot]
+		if sourceSkill == nil or sourceSkill == "" then return false end
+		local targetSkill = self.State.equippedSlots[targetSlot]
+		self.State.equippedSlots[targetSlot] = sourceSkill
+		self.State.equippedSlots[sourceSlot] = targetSkill or ""
+		self:CommitMutation("SLOT_MOVE")
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method void ClearSlot(integer sourceSlot)
+		if sourceSlot < 1 or sourceSlot > 8 then return end
+		if self.State.equippedSlots[sourceSlot] == "" then return end
+		self.State.equippedSlots[sourceSlot] = ""
+		self:CommitMutation("SLOT_CLEAR")
+	end
+
+	method table SelectAutoSkill(Entity target)
+		if self.StateLoaded ~= true or target == nil then return nil end
+		for slot=1,8 do
+			local skillId = self.State.equippedSlots[slot]
+			local level = self.State.skillLevels[skillId] or 0
+			local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+			if definition ~= nil and definition.type == "active" and level > 0 then
+				local effect = _SkillDefinitionRuntime:BuildLevelEffect(skillId, level)
+				if self:IsSkillReady(skillId, definition, effect, target) then return {slot=slot,skillId=skillId,definition=definition,effect=effect} end
+			end
+		end
+		return nil
+	end
+
+	method boolean IsSkillReady(string skillId, table definition, table effect, Entity target)
+		local now = self:UtcNowMillis()
+		if (self.State.cooldownEndTimes[skillId] or 0) > now then return false end
+		local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+		if progression == nil or progression.CurrentMp < effect.mpCost then return false end
+		if definition.targeting.kind ~= "self" and target == nil then return false end
+		if definition.targeting.kind ~= "self" then
+			local sourcePosition = self.Entity.TransformComponent.WorldPosition
+			local targetPosition = target.TransformComponent.WorldPosition
+			local dx = targetPosition.x - sourcePosition.x
+			local dy = targetPosition.y - sourcePosition.y
+			if dx * dx + dy * dy > definition.targeting.range * definition.targeting.range then return false end
+		end
+		local condition = definition.autoUseCondition
+		if condition.kind == "buffMissing" and self.BattleCryEndUtcMillis > now then return false end
+		if condition.kind == "hpBelowPermille" then
+			local hp = self.Entity.PlayerComponent
+			if hp == nil or hp.Hp * 1000 > hp.MaxHp * condition.threshold then return false end
+		end
+		if condition.kind == "targetHpBelowPermille" then
+			local health = target:GetComponent("script.CombatMonsterHealth")
+			if health == nil or health.Hp * 1000 > health.MaxHp * condition.threshold then return false end
+		end
+		return true
+	end
+
+	@ExecSpace("ServerOnly")
+	method boolean CommitActiveSkillUse(string skillId, Entity target)
+		local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+		local level = self.State.skillLevels[skillId] or 0
+		if definition == nil or level <= 0 then return false end
+		local effect = _SkillDefinitionRuntime:BuildLevelEffect(skillId, level)
+		if self:IsSkillReady(skillId, definition, effect, target) ~= true then return false end
+		local progression = self.Entity:GetComponent("script.PlayerProgressionComponent")
+		if progression:SpendMp(effect.mpCost) ~= true then return false end
+		self.State.cooldownEndTimes[skillId] = self:UtcNowMillis() + self:GetAdjustedCooldown(effect.cooldownSeconds) * 1000
+		if skillId == "battle_cry" then self.BattleCryEndUtcMillis = self:UtcNowMillis() + effect.durationSeconds * 1000 end
+		if skillId == "emergency_heal" then
+			local health = self.Entity.PlayerComponent
+			if health ~= nil then
+				local bonus = 1 + self:GetPassiveValue("healingBonusPermille") / 1000
+				health.Hp = math.min(health.MaxHp, health.Hp + math.floor(health.MaxHp * effect.healPermille / 1000 * bonus))
+			end
+		end
+		self:CommitMutation("SKILL_CAST")
+		return true
+	end
+
+	method number GetAdjustedCooldown(number baseCooldown)
+		return math.max(0.25, baseCooldown * (1 - math.min(0.5, self:GetPassiveValue("cooldownReductionPermille") / 1000)))
+	end
+
+	method table GetLearnedEffect(string skillId)
+		local level = self.State ~= nil and (self.State.skillLevels[skillId] or 0) or 0
+		return _SkillDefinitionRuntime:BuildLevelEffect(skillId, level)
+	end
+
+	method number GetPassiveValue(string effectKey)
+		if self.State == nil then return 0 end
+		local total = 0
+		for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do
+			if definition.type == "passive" and definition.effects[effectKey] ~= nil then
+				local level = self.State.skillLevels[definition.id] or 0
+				total = total + _SkillDefinitionRuntime:EvaluateLinear(definition.effects[effectKey], level)
+			end
+		end
+		return total
+	end
+
+	method number GetBattleDamageBonusPermille()
+		local bonus = self:GetPassiveValue("attackDamagePermille") + self:GetPassiveValue("monsterDamagePermille")
+		if self.BattleCryEndUtcMillis > self:UtcNowMillis() then
+			local effect = self:GetLearnedEffect("battle_cry")
+			if effect ~= nil then bonus = bonus + effect.damageBuffPermille end
+		end
+		return bonus
+	end
+
+	method boolean Fail(string reason)
+		self.FeedbackMessage = reason
+		self.StateRevision = self.StateRevision + 1
+		return false
+	end
+
+	@ExecSpace("ServerOnly")
+	method void CommitMutation(string reason)
+		self.FeedbackMessage = ""
+		self.State.lastSaveUtcMillis = math.max(self:UtcNowMillis(), self.State.lastSaveUtcMillis or 0)
+		self:PublishState()
+		self:SaveStateAsync()
+		log("[SkillSystem] commit=" .. reason .. " revision=" .. tostring(self.StateRevision))
+	end
+
+	method void PublishState()
+		self.StateSnapshot = _HttpService:JSONEncode(self.State)
+		self.StateRevision = self.StateRevision + 1
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SaveStateAsync()
+		self.SaveGeneration = self.SaveGeneration + 1
+		local generation = self.SaveGeneration
+		local raw = _HttpService:JSONEncode(self.State)
+		local storage = _DataStorageService:GetUserDataStorage(self.Entity.PlayerComponent.ProfileCode)
+		storage:SetAsync(self.StorageKey, raw, function(code, key)
+			if generation == self.SaveGeneration and code ~= 0 then log_error("[SkillSystem] save failed code=" .. tostring(code)) end
+		end)
+	end
+
+	@ExecSpace("ServerOnly")
+	method void SaveStateBlocking()
+		self.State.lastSaveUtcMillis = math.max(self:UtcNowMillis(), self.State.lastSaveUtcMillis or 0)
+		local storage = _DataStorageService:GetUserDataStorage(self.Entity.PlayerComponent.ProfileCode)
+		storage:SetAndWait(self.StorageKey, _HttpService:JSONEncode(self.State))
+	end
+
+end
