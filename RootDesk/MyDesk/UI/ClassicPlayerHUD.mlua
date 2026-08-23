@@ -1,20 +1,19 @@
 @Component
 script ClassicPlayerHUD extends Component
-    property Entity HudFrame = "80818e28-b643-4d87-b3c2-3be6ff99d11d"
-    property TextGUIRendererComponent LevelText = "496291d0-1783-4541-aa0a-97b76ed0dc59"
-    property TextGUIRendererComponent CharacterNameText = "e7bdd1db-219e-44be-9216-226e8688d87c"
-    property TextGUIRendererComponent CharacterSubText = "8e7ac6c3-3e82-42d9-a315-3c2b90899e22"
-    property TextGUIRendererComponent HpText = "b0678e35-95c1-4aa5-8639-05905b57fa8c"
-    property TextGUIRendererComponent MpText = "6138475f-c38b-49e5-a75f-2439a5e60970"
-    property TextGUIRendererComponent ExpText = "73a47bfb-02dc-467e-a6f2-64c44c7d1615"
-    property SpriteGUIRendererComponent HpFill = "b0d9e4c6-ad87-4124-8acd-4a466b6c1205"
-    property SpriteGUIRendererComponent MpFill = "9580726a-24cc-4d49-bac3-c232d90a2a0f"
-    property SpriteGUIRendererComponent ExpFill = "60f8b350-0346-4e01-85b8-fd31ec7dde25"
-    property ButtonComponent InventoryButton = "dc5e17c6-cc5e-494b-8287-2ac19b35f085"
+    property Entity HudFrame = "e77941d6-9588-4519-8b0a-1ba96bfc4d94"
+    property TextGUIRendererComponent LevelText = "6659f8bc-a527-47b6-a2c1-a1d2085b9213"
+    property TextGUIRendererComponent CharacterNameText = "e471722a-bfde-4eea-b68c-db73173c3ea5"
+    property TextGUIRendererComponent CharacterSubText = "8d1d34da-5cb9-4df4-9ed2-88e6ef4691fb"
+    property TextGUIRendererComponent HpText = "07819bcb-6b99-45ba-a3d6-a3603658b1e9"
+    property TextGUIRendererComponent MpText = "d9b0a23f-e37d-4055-adce-bce1bba9752d"
+    property TextGUIRendererComponent ExpText = "ff024c1e-5228-434d-ac85-0b1fcba71427"
+    property SpriteGUIRendererComponent HpFill = "57ee616a-eee5-4892-9bfc-6ad6fb54817d"
+    property SpriteGUIRendererComponent MpFill = "d3275c01-3282-4c89-8bf2-3ba4c33f0e88"
+    property SpriteGUIRendererComponent ExpFill = "a2687787-b5ff-4080-b026-1954173944c9"
+    property ButtonComponent InventoryButton = "795ef9db-c1b2-4f89-accf-829d0d7fa2c5"
     property number GaugeMaxWidth = 303
     property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
-    property string InventoryNormalRUID = "a133768e51bc4d7caee800bffdd14944"
-    property string InventoryPressedRUID = "9c5feb02221248e7a1812578ad25181d"
+
     @HideFromInspector property number RefreshElapsed = 0
     @HideFromInspector property any InventoryClickHandler = nil
     @HideFromInspector property any InventoryPressedHandler = nil
@@ -135,9 +134,7 @@ script ClassicPlayerHUD extends Component
     method void OnInventoryTouchDown(UITouchDownEvent event)
         -- Starts the hidden developer gesture only in the test sandbox runtime.
         self.InventoryLongPressTriggered = false
-        local sprite = self.InventoryButton.Entity.SpriteGUIRendererComponent
-        if isvalid(sprite) then sprite.ImageRUID = DataRef(self.InventoryPressedRUID) end
-        log("[ClassicHUD] Inventory touch pressed visual")
+        log("[ClassicHUD] Inventory touch tint feedback")
         if _SlotMachineRuntime:IsDevCheatRuntime() ~= true then return end
         if self.InventoryHoldTimerId ~= nil then
             _TimerService:ClearTimer(self.InventoryHoldTimerId)
@@ -153,8 +150,7 @@ script ClassicPlayerHUD extends Component
     @ExecSpace("ClientOnly")
     method void OnInventoryTouchUp(UITouchUpEvent event)
         -- Cancels an incomplete long press while preserving a completed gesture for click suppression.
-        local sprite = self.InventoryButton.Entity.SpriteGUIRendererComponent
-        if isvalid(sprite) then sprite.ImageRUID = DataRef(self.InventoryNormalRUID) end
+
         if self.InventoryHoldTimerId ~= nil then
             _TimerService:ClearTimer(self.InventoryHoldTimerId)
             self.InventoryHoldTimerId = nil

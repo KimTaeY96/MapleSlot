@@ -359,52 +359,44 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "c925abc0294c486288c452d42c17af62"
-                },
-                "PressedSprite": {
-                  "DataId": "c925abc0294c486288c452d42c17af62"
-                },
-                "SelectedSprite": {
-                  "DataId": "c925abc0294c486288c452d42c17af62"
-                },
-                "DisabledSprite": {
-                  "DataId": "1e226036f17f422aa7633019c0640af3"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -1228,52 +1220,44 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "8b96ffafd1b248d380952d047ece98d9"
-                },
-                "PressedSprite": {
-                  "DataId": "07313ca2fea34e798bb208611ffc5eb8"
-                },
-                "SelectedSprite": {
-                  "DataId": "8b96ffafd1b248d380952d047ece98d9"
-                },
-                "DisabledSprite": {
-                  "DataId": "ba8146bae0a84196ab549d0426d7217b"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -1613,15 +1597,15 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 1,
-                  "g": 0.96,
-                  "b": 0.82,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.92,
-                  "g": 0.78,
-                  "b": 0.38,
+                  "r": 1,
+                  "g": 0.86,
+                  "b": 0.55,
                   "a": 1
                 },
                 "SelectedColor": {
@@ -1641,18 +1625,10 @@
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "PressedSprite": {
-                  "DataId": "d0229394a947442a89c8f1624e1960a3"
-                },
-                "SelectedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "DisabledSprite": {
-                  "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
@@ -1814,9 +1790,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 0.76,
+                "g": 0.78,
                 "b": 0.16,
-                "a": 1
+                "a": 0.46
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -1837,14 +1813,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": true,
+              "Outline": false,
               "OutlineColor": {
                 "r": 1,
                 "g": 0.94,
                 "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 2,
+              "OutlineWidth": 0,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -2192,15 +2168,15 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 1,
-                  "g": 0.96,
-                  "b": 0.82,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.92,
-                  "g": 0.78,
-                  "b": 0.38,
+                  "r": 1,
+                  "g": 0.86,
+                  "b": 0.55,
                   "a": 1
                 },
                 "SelectedColor": {
@@ -2220,18 +2196,10 @@
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "PressedSprite": {
-                  "DataId": "d0229394a947442a89c8f1624e1960a3"
-                },
-                "SelectedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "DisabledSprite": {
-                  "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
@@ -2393,9 +2361,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 0.76,
+                "g": 0.78,
                 "b": 0.16,
-                "a": 1
+                "a": 0.46
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -2416,14 +2384,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": true,
+              "Outline": false,
               "OutlineColor": {
                 "r": 1,
                 "g": 0.94,
                 "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 2,
+              "OutlineWidth": 0,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -2771,15 +2739,15 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 1,
-                  "g": 0.96,
-                  "b": 0.82,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.92,
-                  "g": 0.78,
-                  "b": 0.38,
+                  "r": 1,
+                  "g": 0.86,
+                  "b": 0.55,
                   "a": 1
                 },
                 "SelectedColor": {
@@ -2799,18 +2767,10 @@
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "PressedSprite": {
-                  "DataId": "d0229394a947442a89c8f1624e1960a3"
-                },
-                "SelectedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "DisabledSprite": {
-                  "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
@@ -2972,9 +2932,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 0.76,
+                "g": 0.78,
                 "b": 0.16,
-                "a": 1
+                "a": 0.46
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -2995,14 +2955,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": true,
+              "Outline": false,
               "OutlineColor": {
                 "r": 1,
                 "g": 0.94,
                 "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 2,
+              "OutlineWidth": 0,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -3350,15 +3310,15 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 1,
-                  "g": 0.96,
-                  "b": 0.82,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.92,
-                  "g": 0.78,
-                  "b": 0.38,
+                  "r": 1,
+                  "g": 0.86,
+                  "b": 0.55,
                   "a": 1
                 },
                 "SelectedColor": {
@@ -3378,18 +3338,10 @@
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "PressedSprite": {
-                  "DataId": "d0229394a947442a89c8f1624e1960a3"
-                },
-                "SelectedSprite": {
-                  "DataId": "184896b9ff0342b6b3b2214426f202f8"
-                },
-                "DisabledSprite": {
-                  "DataId": "fab84ecbc11047c3bef60f2f9a79d9ff"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
@@ -3551,9 +3503,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 0.76,
+                "g": 0.78,
                 "b": 0.16,
-                "a": 1
+                "a": 0.46
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -3574,14 +3526,14 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": true,
+              "Outline": false,
               "OutlineColor": {
                 "r": 1,
                 "g": 0.94,
                 "b": 0.52,
                 "a": 1
               },
-              "OutlineWidth": 2,
+              "OutlineWidth": 0,
               "RaycastTarget": false,
               "Type": 1,
               "Enable": true
@@ -4935,9 +4887,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -4958,11 +4910,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -5936,52 +5888,44 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "9f58a88735dc43f1ae1e66a2f521b0fc"
-                },
-                "PressedSprite": {
-                  "DataId": "d6477b1e9e61400e8d31251732ce1171"
-                },
-                "SelectedSprite": {
-                  "DataId": "9f58a88735dc43f1ae1e66a2f521b0fc"
-                },
-                "DisabledSprite": {
-                  "DataId": "10e2e58680e84e2a8f86a26bdac2b03d"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -8119,9 +8063,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -8142,11 +8086,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -9629,9 +9573,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -9652,11 +9596,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -11224,9 +11168,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -11247,11 +11191,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -12734,9 +12678,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -12757,11 +12701,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -14244,9 +14188,9 @@
               "StartFrameIndex": 0,
               "Color": {
                 "r": 1,
-                "g": 1,
-                "b": 1,
-                "a": 1
+                "g": 0.78,
+                "b": 0.16,
+                "a": 0.28
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -14267,11 +14211,11 @@
               "FrameColumn": 1,
               "FrameRate": 0,
               "FrameRow": 1,
-              "Outline": false,
+              "Outline": true,
               "OutlineColor": {
-                "r": 0,
-                "g": 0,
-                "b": 0,
+                "r": 1,
+                "g": 0.9,
+                "b": 0.35,
                 "a": 1
               },
               "OutlineWidth": 3,
@@ -17632,52 +17576,44 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "8b96ffafd1b248d380952d047ece98d9"
-                },
-                "PressedSprite": {
-                  "DataId": "07313ca2fea34e798bb208611ffc5eb8"
-                },
-                "SelectedSprite": {
-                  "DataId": "8b96ffafd1b248d380952d047ece98d9"
-                },
-                "DisabledSprite": {
-                  "DataId": "ba8146bae0a84196ab549d0426d7217b"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {
@@ -18877,52 +18813,44 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": {
-                  "DataId": "9f58a88735dc43f1ae1e66a2f521b0fc"
-                },
-                "PressedSprite": {
-                  "DataId": "d6477b1e9e61400e8d31251732ce1171"
-                },
-                "SelectedSprite": {
-                  "DataId": "9f58a88735dc43f1ae1e66a2f521b0fc"
-                },
-                "DisabledSprite": {
-                  "DataId": "10e2e58680e84e2a8f86a26bdac2b03d"
-                }
+                "HighlightedSprite": null,
+                "PressedSprite": null,
+                "SelectedSprite": null,
+                "DisabledSprite": null
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {

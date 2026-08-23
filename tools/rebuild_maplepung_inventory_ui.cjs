@@ -41,6 +41,16 @@ function sprite(pathName, key, type = 1, raycast = false, color = C.white) {
   });
 }
 
+function selectionAccent(pathName, alpha = 0.28, outline = true) {
+  b.patchComponent(pathName, "MOD.Core.SpriteGUIRendererComponent", {
+    Color: { r: 1, g: 0.78, b: 0.16, a: alpha },
+    Outline: outline,
+    OutlineColor: { r: 1, g: 0.90, b: 0.35, a: 1 },
+    OutlineWidth: outline ? 3 : 0,
+    RaycastTarget: false,
+  });
+}
+
 function textStyle(
   pathName,
   size,
@@ -63,15 +73,25 @@ function textStyle(
   });
 }
 
-function spriteSwap(pathName, normal, hover, pressed = hover) {
+// Keeps the normal artwork stable; interaction is expressed only through tint.
+function colorTintButton(pathName, normal) {
   sprite(pathName, normal, 0, true);
   b.patchComponent(pathName, "MOD.Core.ButtonComponent", {
-    Transition: 2,
+    Transition: 1,
+    Colors: {
+      NormalColor: C.white,
+      HighlightedColor: { r: 0.78, g: 0.82, b: 0.86, a: 1 },
+      PressedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
+      SelectedColor: C.white,
+      DisabledColor: { r: 0.72, g: 0.72, b: 0.72, a: 0.55 },
+      ColorMultiplier: 1,
+      FadeDuration: 0.08,
+    },
     ImageRUIDs: {
-      HighlightedSprite: dataRef(hover),
-      PressedSprite: dataRef(pressed),
-      SelectedSprite: dataRef(hover),
-      DisabledSprite: dataRef(normal),
+      HighlightedSprite: null,
+      PressedSprite: null,
+      SelectedSprite: null,
+      DisabledSprite: null,
     },
   });
 }
@@ -156,6 +176,7 @@ function patchEquipmentCell(cellName, buttonName, x, y, label) {
     pivot: [0.5, 0.5],
   });
   sprite(`${button}/Selection`, "slot-selection", 0, false);
+  selectionAccent(`${button}/Selection`);
   b.patch(`${button}/Grade`, {
     anchor: "top-center",
     pos: [0, -4],
@@ -207,7 +228,7 @@ b.patch("InventoryOpenButton", {
   pivot: [1, 0],
   display_order: 200,
 });
-spriteSwap(
+colorTintButton(
   "InventoryOpenButton",
   "inventory-menu-normal",
   "inventory-menu-hover",
@@ -244,7 +265,7 @@ for (const [panelName, x, order] of [
     rect_size: [48, 48],
     pivot: [1, 1],
   });
-  spriteSwap(
+  colorTintButton(
     `${panelName}/Header/CloseButton`,
     "close-normal",
     "close-hover",
@@ -314,9 +335,10 @@ tabs.forEach(([tabName, label], index) => {
     rect_size: [width, 62],
     pivot: [0, 1],
   });
-  spriteSwap(tab, "tab-inactive", "tab-hover", "tab-active");
+  colorTintButton(tab, "tab-inactive", "tab-hover", "tab-active");
   b.patch(`${tab}/Selected`, { anchor: "stretch", rect_size: [width, 62] });
-  sprite(`${tab}/Selected`, "tab-active", 1, false);
+  sprite(`${tab}/Selected`, "tab-inactive", 1, false);
+  selectionAccent(`${tab}/Selected`, 0.46, false);
   b.patch(`${tab}/Label`, { anchor: "stretch", rect_size: [width, 62] });
   b.patchComponent(`${tab}/Label`, "MOD.Core.TextGUIRendererComponent", {
     Text: label,
@@ -394,6 +416,7 @@ b.patch(`${template}/Icon`, {
 });
 b.patch(`${template}/Selection`, { anchor: "stretch", rect_size: [76, 76] });
 sprite(`${template}/Selection`, "slot-selection", 0, false);
+selectionAccent(`${template}/Selection`);
 b.patch(`${template}/Grade`, {
   anchor: "top-center",
   pos: [0, -3],
@@ -493,7 +516,7 @@ b.patch("InventoryPanel/Footer/SortButton", {
   rect_size: [156, 48],
   pivot: [1, 0],
 });
-spriteSwap(
+colorTintButton(
   "InventoryPanel/Footer/SortButton",
   "action-normal",
   "action-hover",
@@ -708,7 +731,7 @@ b.patch("TooltipPanel/Header/CloseButton", {
   rect_size: [44, 44],
   pivot: [1, 1],
 });
-spriteSwap(
+colorTintButton(
   "TooltipPanel/Header/CloseButton",
   "close-normal",
   "close-hover",
@@ -825,7 +848,7 @@ b.patch("TooltipPanel/ActionButton", {
   rect_size: [210, 54],
   pivot: [0.5, 0],
 });
-spriteSwap(
+colorTintButton(
   "TooltipPanel/ActionButton",
   "action-normal",
   "action-hover",

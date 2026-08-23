@@ -7,10 +7,24 @@ const fillTransform = hud.getComponent('HudFrame/ExpGauge/Fill', 'MOD.Core.UITra
 const expTextTransform = hud.getComponent('HudFrame/ExpGauge/ValueText', 'MOD.Core.UITransformComponent');
 const expText = hud.getComponent('HudFrame/ExpGauge/ValueText', 'MOD.Core.TextGUIRendererComponent');
 const inventoryTouch = hud.getComponent('HudFrame/InventoryButton', 'MOD.Core.UITouchReceiveComponent');
+const hudInventoryButton = hud.getComponent('HudFrame/InventoryButton', 'MOD.Core.ButtonComponent');
+const hudInventorySprite = hud.getComponent('HudFrame/InventoryButton', 'MOD.Core.SpriteGUIRendererComponent');
 
 const inventory = UIBuilder.read('ui/EquipmentInventory.ui');
 const selected = inventory.getComponent(
   'InventoryPanel/TabBar/EquipmentTabButton/Selected',
+  'MOD.Core.SpriteGUIRendererComponent',
+);
+const inventoryOpenButton = inventory.getComponent(
+  'InventoryOpenButton',
+  'MOD.Core.ButtonComponent',
+);
+const equipmentTabButton = inventory.getComponent(
+  'InventoryPanel/TabBar/EquipmentTabButton',
+  'MOD.Core.ButtonComponent',
+);
+const itemSelection = inventory.getComponent(
+  'InventoryPanel/GridSection/ItemGrid/ItemTemplate/Selection',
   'MOD.Core.SpriteGUIRendererComponent',
 );
 
@@ -32,9 +46,30 @@ const result = {
     expText.OutlineWidth > 0
     && expText.FontColor.r === 1 && expText.FontColor.g === 1 && expText.FontColor.b === 1,
   inventoryTouch: inventoryTouch != null,
+  hudInventoryImage: hudInventorySprite.ImageRUID?.DataId,
+  hudInventoryTransition: hudInventoryButton.Transition,
+  hudInventoryStateSpritesUseBase: Object.values(hudInventoryButton.ImageRUIDs).every((value) => value?.DataId === hudInventorySprite.ImageRUID?.DataId),
+  hudInventoryHighlighted: hudInventoryButton.Colors.HighlightedColor,
+  hudInventoryPressed: hudInventoryButton.Colors.PressedColor,
+  hudInventorySelected: hudInventoryButton.Colors.SelectedColor,
+  hudInventoryRuntimeRuidSwapRemoved:
+    !/Inventory(?:Normal|Pressed)RUID/.test(classic)
+    && !/ImageRUID\s*=\s*DataRef\(self\.Inventory/.test(classic),
   selectedColor: selected.Color,
   selectedOutline: selected.Outline,
+  selectedOutlineWidth: selected.OutlineWidth,
   selectedImage: selected.ImageRUID?.DataId,
+  inventoryOpenTransition: inventoryOpenButton.Transition,
+  inventoryOpenSpritesCleared: Object.values(inventoryOpenButton.ImageRUIDs).every((value) => value == null),
+  inventoryOpenHighlighted: inventoryOpenButton.Colors.HighlightedColor,
+  inventoryOpenPressed: inventoryOpenButton.Colors.PressedColor,
+  equipmentTabTransition: equipmentTabButton.Transition,
+  equipmentTabSpritesCleared: Object.values(equipmentTabButton.ImageRUIDs).every((value) => value == null),
+  equipmentTabHighlighted: equipmentTabButton.Colors.HighlightedColor,
+  equipmentTabPressed: equipmentTabButton.Colors.PressedColor,
+  itemSelectionAlpha: itemSelection.Color.a,
+  itemSelectionOutline: itemSelection.Outline,
+  itemSelectionOutlineWidth: itemSelection.OutlineWidth,
   battleHudRemoved: !paths.has(`${root}/BattleHUD_Right`),
   floatingCheatRemoved: !paths.has(`${root}/Button_DevCheatMenu`),
   cheatPanelHidden: cheatPanel?.jsonString?.enable === false,
@@ -51,9 +86,31 @@ if (
   || result.expTextOverlaysFill !== true
   || result.expTextOutlined !== true
   || result.inventoryTouch !== true
+  || result.hudInventoryImage !== 'a133768e51bc4d7caee800bffdd14944'
+  || result.hudInventoryTransition !== 1
+  || result.hudInventoryStateSpritesUseBase !== true
+  || result.hudInventoryHighlighted.r !== 0.78
+  || result.hudInventoryHighlighted.g !== 0.82
+  || result.hudInventoryPressed.b !== 1
+  || result.hudInventorySelected.b !== 1
+  || result.hudInventoryRuntimeRuidSwapRemoved !== true
   || result.selectedColor.r !== 1
-  || result.selectedColor.g !== 0.76
-  || result.selectedOutline !== true
+  || result.selectedColor.g !== 0.78
+  || result.selectedColor.a !== 0.46
+  || result.selectedOutline !== false
+  || result.selectedOutlineWidth !== 0
+  || result.inventoryOpenTransition !== 1
+  || result.inventoryOpenSpritesCleared !== true
+  || result.inventoryOpenHighlighted.r !== 0.78
+  || result.inventoryOpenHighlighted.g !== 0.82
+  || result.inventoryOpenPressed.b !== 1
+  || result.equipmentTabTransition !== 1
+  || result.equipmentTabSpritesCleared !== true
+  || result.equipmentTabHighlighted.r !== 0.78
+  || result.equipmentTabPressed.g !== 0.86
+  || result.itemSelectionAlpha !== 0.28
+  || result.itemSelectionOutline !== true
+  || result.itemSelectionOutlineWidth !== 3
   || result.battleHudRemoved !== true
   || result.floatingCheatRemoved !== true
   || result.cheatPanelHidden !== true

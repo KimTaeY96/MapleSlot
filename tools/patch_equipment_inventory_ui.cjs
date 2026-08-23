@@ -43,21 +43,72 @@ for (const tabPath of selectedTabPaths) {
     Transition: 1,
     Colors: {
       NormalColor: { r: 1, g: 1, b: 1, a: 1 },
-      HighlightedColor: { r: 1, g: 0.96, b: 0.82, a: 1 },
-      PressedColor: { r: 0.92, g: 0.78, b: 0.38, a: 1 },
+      HighlightedColor: { r: 0.78, g: 0.82, b: 0.86, a: 1 },
+      PressedColor: { r: 1, g: 0.86, b: 0.55, a: 1 },
       SelectedColor: { r: 1, g: 1, b: 1, a: 1 },
       DisabledColor: { r: 0.72, g: 0.72, b: 0.72, a: 0.55 },
       ColorMultiplier: 1,
       FadeDuration: 0.08,
     },
+    ImageRUIDs: {
+      HighlightedSprite: null,
+      PressedSprite: null,
+      SelectedSprite: null,
+      DisabledSprite: null,
+    },
   });
   b.patchComponent(`${tabPath}/Selected`, 'MOD.Core.SpriteGUIRendererComponent', {
     ImageRUID: { DataId: 'fab84ecbc11047c3bef60f2f9a79d9ff' },
-    Color: { r: 1, g: 0.76, b: 0.16, a: 1 },
-    Outline: true,
-    OutlineColor: { r: 1, g: 0.94, b: 0.52, a: 1 },
-    OutlineWidth: 2,
+    Color: { r: 1, g: 0.78, b: 0.16, a: 0.46 },
+    Outline: false,
+    OutlineWidth: 0,
     Type: 1,
+    RaycastTarget: false,
+  });
+}
+
+const stableTintButtonPaths = [
+  'InventoryOpenButton',
+  'InventoryPanel/Header/CloseButton',
+  'InventoryPanel/Footer/SortButton',
+  'TooltipPanel/Header/CloseButton',
+  'TooltipPanel/ActionButton',
+];
+for (const buttonPath of stableTintButtonPaths) {
+  b.patchComponent(buttonPath, 'MOD.Core.ButtonComponent', {
+    Transition: 1,
+    Colors: {
+      NormalColor: { r: 1, g: 1, b: 1, a: 1 },
+      HighlightedColor: { r: 0.78, g: 0.82, b: 0.86, a: 1 },
+      PressedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
+      SelectedColor: { r: 1, g: 1, b: 1, a: 1 },
+      DisabledColor: { r: 0.72, g: 0.72, b: 0.72, a: 0.55 },
+      ColorMultiplier: 1,
+      FadeDuration: 0.08,
+    },
+    ImageRUIDs: {
+      HighlightedSprite: null,
+      PressedSprite: null,
+      SelectedSprite: null,
+      DisabledSprite: null,
+    },
+  });
+}
+
+const slotSelectionPaths = [
+  'InventoryPanel/GridSection/ItemGrid/ItemTemplate/Selection',
+  'EquipmentPanel/EquipmentSection/SlotGrid/Cell_Weapon/WeaponSlotButton/Selection',
+  'EquipmentPanel/EquipmentSection/SlotGrid/Cell_Helmet/HelmetSlotButton/Selection',
+  'EquipmentPanel/EquipmentSection/SlotGrid/Cell_Armor/ArmorSlotButton/Selection',
+  'EquipmentPanel/EquipmentSection/SlotGrid/Cell_Gloves/GlovesSlotButton/Selection',
+  'EquipmentPanel/EquipmentSection/SlotGrid/Cell_Shoes/ShoesSlotButton/Selection',
+];
+for (const selectionPath of slotSelectionPaths) {
+  b.patchComponent(selectionPath, 'MOD.Core.SpriteGUIRendererComponent', {
+    Color: { r: 1, g: 0.78, b: 0.16, a: 0.28 },
+    Outline: true,
+    OutlineColor: { r: 1, g: 0.90, b: 0.35, a: 1 },
+    OutlineWidth: 3,
     RaycastTarget: false,
   });
 }

@@ -1,7 +1,7 @@
 {
   "Id": "",
   "GameId": "",
-  "EntryKey": "ui://cf128cbf-553c-4f7b-b275-5a172712d0e7",
+  "EntryKey": "ui://ed13ac4c-91fd-48f1-950d-2c6c1eec2ff2",
   "ContentType": "x-mod/ui",
   "Content": "",
   "Usage": 0,
@@ -14,7 +14,7 @@
     "Use": "Binary",
     "Entities": [
       {
-        "id": "cf128cbf-553c-4f7b-b275-5a172712d0e7",
+        "id": "ed13ac4c-91fd-48f1-950d-2c6c1eec2ff2",
         "path": "/ui/ClassicPlayerHUD",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.UIGroupComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "id": "5e90c7df-4698-419e-81ec-9e53a74e82d6",
+        "id": "4f136a66-90a5-4c57-ad06-4ba559ae0fc0",
         "path": "/ui/ClassicPlayerHUD/Controller",
         "componentNames": "MOD.Core.UITransformComponent,script.ClassicPlayerHUD",
         "jsonString": {
@@ -202,7 +202,7 @@
         }
       },
       {
-        "id": "80818e28-b643-4d87-b3c2-3be6ff99d11d",
+        "id": "e77941d6-9588-4519-8b0a-1ba96bfc4d94",
         "path": "/ui/ClassicPlayerHUD/HudFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -347,7 +347,7 @@
         }
       },
       {
-        "id": "39efdccc-2689-47d1-87a8-daada4150f37",
+        "id": "c5e9292b-b653-4a8d-8f3a-eeb53668d13e",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelLabel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -541,7 +541,7 @@
         }
       },
       {
-        "id": "496291d0-1783-4541-aa0a-97b76ed0dc59",
+        "id": "6659f8bc-a527-47b6-a2c1-a1d2085b9213",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -735,7 +735,7 @@
         }
       },
       {
-        "id": "e7bdd1db-219e-44be-9216-226e8688d87c",
+        "id": "e471722a-bfde-4eea-b68c-db73173c3ea5",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterNameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -929,7 +929,7 @@
         }
       },
       {
-        "id": "8e7ac6c3-3e82-42d9-a315-3c2b90899e22",
+        "id": "8d1d34da-5cb9-4df4-9ed2-88e6ef4691fb",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterSubText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1123,7 +1123,7 @@
         }
       },
       {
-        "id": "90577ac7-af72-457a-b34a-a204f0a1d397",
+        "id": "89ba5858-d066-4550-ad81-0fe3cd38daba",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1208,7 +1208,7 @@
         }
       },
       {
-        "id": "b0d9e4c6-ad87-4124-8acd-4a466b6c1205",
+        "id": "57ee616a-eee5-4892-9bfc-6ad6fb54817d",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1353,7 +1353,7 @@
         }
       },
       {
-        "id": "b0678e35-95c1-4aa5-8639-05905b57fa8c",
+        "id": "07819bcb-6b99-45ba-a3d6-a3603658b1e9",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1547,7 +1547,7 @@
         }
       },
       {
-        "id": "dac0d491-3d25-45d3-8206-532abde07cca",
+        "id": "d8a80f4d-a46f-4eca-a582-e7afbe9097c0",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1632,7 +1632,7 @@
         }
       },
       {
-        "id": "9580726a-24cc-4d49-bac3-c232d90a2a0f",
+        "id": "d3275c01-3282-4c89-8bf2-3ba4c33f0e88",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1777,7 +1777,7 @@
         }
       },
       {
-        "id": "6138475f-c38b-49e5-a75f-2439a5e60970",
+        "id": "d9b0a23f-e37d-4055-adce-bce1bba9752d",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1971,7 +1971,7 @@
         }
       },
       {
-        "id": "038de4ce-40a1-42c3-b48c-f1e4b857803d",
+        "id": "119e6e3b-1d25-4565-ad62-b7ae9dab87b3",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -2056,7 +2056,7 @@
         }
       },
       {
-        "id": "60f8b350-0346-4e01-85b8-fd31ec7dde25",
+        "id": "a2687787-b5ff-4080-b026-1954173944c9",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -2201,7 +2201,7 @@
         }
       },
       {
-        "id": "73a47bfb-02dc-467e-a6f2-64c44c7d1615",
+        "id": "ff024c1e-5228-434d-ac85-0b1fcba71427",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2396,7 +2396,7 @@
         }
       },
       {
-        "id": "dc5e17c6-cc5e-494b-8287-2ac19b35f085",
+        "id": "795ef9db-c1b2-4f89-accf-829d0d7fa2c5",
         "path": "/ui/ClassicPlayerHUD/HudFrame/InventoryButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -2546,52 +2546,52 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.78,
+                  "g": 0.82,
+                  "b": 0.86,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.62,
+                  "g": 0.82,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
                 "HighlightedSprite": {
-                  "DataId": "4664cc83a49640e5bec64bf57ed2b51f"
+                  "DataId": "a133768e51bc4d7caee800bffdd14944"
                 },
                 "PressedSprite": {
-                  "DataId": "9c5feb02221248e7a1812578ad25181d"
+                  "DataId": "a133768e51bc4d7caee800bffdd14944"
                 },
                 "SelectedSprite": {
-                  "DataId": "4664cc83a49640e5bec64bf57ed2b51f"
+                  "DataId": "a133768e51bc4d7caee800bffdd14944"
                 },
                 "DisabledSprite": {
-                  "DataId": "5a16a754bd26461bbbadb0be8edbe65a"
+                  "DataId": "a133768e51bc4d7caee800bffdd14944"
                 }
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "SortingLayer": "UI",
-              "Transition": 2,
+              "Transition": 1,
               "Enable": true
             },
             {

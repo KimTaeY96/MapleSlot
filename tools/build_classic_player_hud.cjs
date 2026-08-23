@@ -7,9 +7,6 @@ const R = {
   mp: '101fd676b4904874a8b1a1653e99d908',
   exp: 'b302e62956f0465ca378677d031b4a54',
   hitbox: 'a133768e51bc4d7caee800bffdd14944',
-  menuHover: '4664cc83a49640e5bec64bf57ed2b51f',
-  menuPressed: '9c5feb02221248e7a1812578ad25181d',
-  menuDisabled: '5a16a754bd26461bbbadb0be8edbe65a',
 };
 
 const projectCoreVersion = JSON.parse(fs.readFileSync('Environment/config', 'utf8')).CoreVersion;
@@ -108,12 +105,21 @@ b.patchComponent('HudFrame/InventoryButton', 'MOD.Core.SpriteGUIRendererComponen
   Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
 });
 b.patchComponent('HudFrame/InventoryButton', 'MOD.Core.ButtonComponent', {
-  Transition: 2,
+  Transition: 1,
+  Colors: {
+    NormalColor: { r: 1, g: 1, b: 1, a: 1 },
+    HighlightedColor: { r: 0.78, g: 0.82, b: 0.86, a: 1 },
+    PressedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
+    SelectedColor: { r: 0.62, g: 0.82, b: 1, a: 1 },
+    DisabledColor: { r: 0.72, g: 0.72, b: 0.72, a: 0.55 },
+    ColorMultiplier: 1,
+    FadeDuration: 0.08,
+  },
   ImageRUIDs: {
-    HighlightedSprite: { DataId: R.menuHover },
-    PressedSprite: { DataId: R.menuPressed },
-    SelectedSprite: { DataId: R.menuHover },
-    DisabledSprite: { DataId: R.menuDisabled },
+    HighlightedSprite: { DataId: R.hitbox },
+    PressedSprite: { DataId: R.hitbox },
+    SelectedSprite: { DataId: R.hitbox },
+    DisabledSprite: { DataId: R.hitbox },
   },
 });
 
