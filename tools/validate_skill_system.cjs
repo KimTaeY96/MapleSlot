@@ -105,14 +105,14 @@ test('drag end resolves the hovered slot for mouse and touch',()=>{
   assert.doesNotMatch(uiSource,/FinishDragOutside/);
   assert.match(uiSource,/RequestClearSlot\(sourceSlot\)/);
 });
-test('bottom HUD has equal inventory and skill buttons after proportional shrink',()=>{
+test('bottom HUD restores original proportions and splits the menu area evenly',()=>{
   const hud=hudSnapshot.find(x=>x.path.endsWith('/HudFrame'));
   const inventory=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/InventoryButton'));
   const skill=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/SkillButton'));
-  assert.deepEqual(hud.size,[1720,98]);
-  assert.deepEqual(inventory.size,[165,98]);
-  assert.deepEqual(skill.size,[165,98]);
-  assert.equal(inventory.pos[0],-165);
+  assert.deepEqual(hud.size,[1920,110]);
+  assert.deepEqual(inventory.size,[123.5,110]);
+  assert.deepEqual(skill.size,[123.5,110]);
+  assert.equal(inventory.pos[0],-123.5);
   assert.equal(skill.pos[0],0);
   assert.match(hudSource,/method void OpenSkillWindow\(\)/);
   assert.ok(!snapshot.some(x=>x.path.endsWith('/OpenButton')));

@@ -1,18 +1,18 @@
 @Component
 script ClassicPlayerHUD extends Component
-    property Entity HudFrame = "c38513eb-8abf-4788-93f5-6c40440432ac"
-    property TextGUIRendererComponent LevelText = "dd0003f5-8f3e-4d9c-a1dd-838db35f052c"
-    property TextGUIRendererComponent CharacterNameText = "e69b3443-9f55-4cac-a593-84cc6d2d011c"
-    property TextGUIRendererComponent CharacterSubText = "5f846b1b-192f-489c-b6d7-61b3238d9d74"
-    property TextGUIRendererComponent HpText = "4c6f44b8-c7f9-407f-a29d-fcbbdd529392"
-    property TextGUIRendererComponent MpText = "01ae6864-0cb9-4481-8b2a-abbdfa5bee9b"
-    property TextGUIRendererComponent ExpText = "e1f603a4-43cd-4293-a69e-f19b0de9c4d6"
-    property SpriteGUIRendererComponent HpFill = "6766f357-176a-4522-908f-4f2209a82fef"
-    property SpriteGUIRendererComponent MpFill = "6598202e-d728-4b32-9976-1a0414530858"
-    property SpriteGUIRendererComponent ExpFill = "3b3b72e5-970c-4424-b7b6-13e193b4ea8a"
-    property ButtonComponent InventoryButton = "f0584eb5-e11c-41b5-90f3-c89dc77a12d3"
-    property ButtonComponent SkillButton = "e5149d63-0f7a-42cf-95ef-ad3de92ae8fa"
-    property number GaugeMaxWidth = 228
+    property Entity HudFrame = "12114273-555f-44e1-beed-f80594aa66ef"
+    property TextGUIRendererComponent LevelText = "5f1c5974-6848-45d9-831e-b2b1169ed2a0"
+    property TextGUIRendererComponent CharacterNameText = "17258fd7-2bde-44ce-83cd-3c8d5041aa50"
+    property TextGUIRendererComponent CharacterSubText = "cbb3c141-72c3-4047-b896-3e6ed26de7a2"
+    property TextGUIRendererComponent HpText = "28ba645d-1b69-414a-8095-551abe3e538c"
+    property TextGUIRendererComponent MpText = "dd7376c0-a4ba-4037-8c50-495c8f3f8728"
+    property TextGUIRendererComponent ExpText = "c63cb4c3-586c-4dfe-9e02-ccc467847c6d"
+    property SpriteGUIRendererComponent HpFill = "e9cca734-2085-4d70-b0a5-80a97460d458"
+    property SpriteGUIRendererComponent MpFill = "32853dbe-3c62-46fc-bb0a-591ade9cbf1d"
+    property SpriteGUIRendererComponent ExpFill = "be2b3b37-737b-45b7-b450-9aeb42bfce4d"
+    property ButtonComponent InventoryButton = "69c044e2-a94f-41f4-9e18-e7618e9f7bff"
+    property ButtonComponent SkillButton = "209e46c3-5f0d-4560-8560-9ceceac79f5f"
+    property number GaugeMaxWidth = 303
     property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
 
     @HideFromInspector property number RefreshElapsed = 0

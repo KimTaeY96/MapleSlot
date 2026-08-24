@@ -16,72 +16,72 @@ const projectCoreVersion = JSON.parse(fs.readFileSync('Environment/config', 'utf
 const b = new UIBuilder('ClassicPlayerHUD', 4, true);
 b.script('Controller', 'script.ClassicPlayerHUD', { anchor: 'stretch', rect_size: [1920, 1080] });
 b.sprite('HudFrame', {
-  anchor: 'bottom-center', pos: [0, 8], rect_size: [1720, 98],
-  image_ruid: R.hud, sprite_type: 0, preserve_aspect: false, raycast: false,
+  anchor: 'bottom-center', pos: [0, 0], rect_size: [1920, 110],
+  image_ruid: R.hud, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('HudFrame', 'MOD.Core.SpriteGUIRendererComponent', {
   Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
 });
 
 b.text('HudFrame/LevelLabel', 'LV', {
-  anchor: 'top-left', pos: [22, -15], rect_size: [52, 32], size: 25,
+  anchor: 'top-left', pos: [24, -18], rect_size: [58, 36], size: 28,
   color: '#DFF7FF', bold: true, alignment: 0,
 });
 b.text('HudFrame/LevelText', '1', {
-  anchor: 'top-left', pos: [78, -15], rect_size: [60, 32], size: 27,
+  anchor: 'top-left', pos: [88, -18], rect_size: [68, 36], size: 30,
   color: '#FFFFFF', bold: true, alignment: 0,
 });
 b.text('HudFrame/CharacterNameText', 'PLAYER', {
-  anchor: 'top-left', pos: [154, -14], rect_size: [286, 34], size: 25,
+  anchor: 'top-left', pos: [218, -17], rect_size: [350, 38], size: 28,
   color: '#FFFFFF', bold: true, alignment: 0,
 });
 b.text('HudFrame/CharacterSubText', 'ADVENTURER', {
-  anchor: 'top-left', pos: [154, -54], rect_size: [286, 28], size: 19,
+  anchor: 'top-left', pos: [218, -61], rect_size: [350, 32], size: 22,
   color: '#9EC2D3', alignment: 0,
 });
 
 function addGauge(name, x, width, fillRuid, label) {
   const root = 'HudFrame/' + name;
-  b.empty(root, { anchor: 'stretch', rect_size: [1720, 98] });
+  b.empty(root, { anchor: 'stretch', rect_size: [1920, 110] });
   b.sprite(root + '/Fill', {
-    anchor: 'top-left', pos: [x + 16, -58], rect_size: [width - 32, 26],
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29],
     image_ruid: fillRuid, sprite_type: 0, raycast: false,
   });
   b.patchComponent(root + '/Fill', 'MOD.Core.SpriteGUIRendererComponent', {
     Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
   });
   b.text(root + '/ValueText', label, {
-    anchor: 'top-left', pos: [x + 16, -14], rect_size: [width - 32, 34], size: 23,
+    anchor: 'top-left', pos: [x + 16, -17], rect_size: [width - 32, 38], size: 27,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
 }
 
 function addExpGauge(x, width, fillRuid) {
-  b.empty('HudFrame/ExpGauge', { anchor: 'stretch', rect_size: [1720, 98] });
+  b.empty('HudFrame/ExpGauge', { anchor: 'stretch', rect_size: [1920, 110] });
   b.sprite('HudFrame/ExpGauge/Fill', {
-    anchor: 'top-left', pos: [x + 16, -58], rect_size: [width - 32, 26],
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29],
     image_ruid: fillRuid, sprite_type: 0, raycast: false,
   });
   b.patchComponent('HudFrame/ExpGauge/Fill', 'MOD.Core.SpriteGUIRendererComponent', {
     Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
   });
   b.text('HudFrame/ExpGauge/ValueText', 'EXP 0 / 100 (0.0%)', {
-    anchor: 'top-left', pos: [x + 16, -58], rect_size: [width - 32, 26], size: 20,
+    anchor: 'top-left', pos: [x + 16, -65], rect_size: [width - 32, 29], size: 23,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
 }
 
-addGauge('HpGauge', 452, 260, R.hp, 'HP 100 / 100');
-addGauge('MpGauge', 722, 260, R.mp, 'MP 100 / 100');
-addExpGauge(992, 260, R.exp);
+addGauge('HpGauge', 617, 335, R.hp, 'HP 100 / 100');
+addGauge('MpGauge', 962, 335, R.mp, 'MP 100 / 100');
+addExpGauge(1307, 335, R.exp);
 
 b.button('HudFrame/InventoryButton', '인벤토리', {
-  anchor: 'top-right', pos: [-165, 0], rect_size: [165, 98],
+  anchor: 'top-right', pos: [-123.5, 0], rect_size: [123.5, 110],
   image_ruid: R.inventoryButton, sprite_type: 1, font_size: 22,
 });
 b.upsertComponent('HudFrame/InventoryButton', 'MOD.Core.UITouchReceiveComponent');
 b.button('HudFrame/SkillButton', '스킬', {
-  anchor: 'top-right', pos: [0, 0], rect_size: [165, 98],
+  anchor: 'top-right', pos: [0, 0], rect_size: [123.5, 110],
   image_ruid: R.skillButton, sprite_type: 1, font_size: 24,
 });
 b.upsertComponent('HudFrame/SkillButton', 'MOD.Core.UITouchReceiveComponent');
