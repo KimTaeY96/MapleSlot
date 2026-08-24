@@ -1,7 +1,7 @@
 {
   "Id": "",
   "GameId": "",
-  "EntryKey": "ui://9e665c81-ba80-476a-bfd0-5cdd0d182f88",
+  "EntryKey": "ui://daf062bc-5fba-4d8f-b346-805abe24c0a4",
   "ContentType": "x-mod/ui",
   "Content": "",
   "Usage": 0,
@@ -14,7 +14,7 @@
     "Use": "Binary",
     "Entities": [
       {
-        "id": "9e665c81-ba80-476a-bfd0-5cdd0d182f88",
+        "id": "daf062bc-5fba-4d8f-b346-805abe24c0a4",
         "path": "/ui/ClassicPlayerHUD",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.UIGroupComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "id": "bb033cd2-2d70-439a-af8e-5a6c5c2648e1",
+        "id": "cf11b0b2-bcd5-4b58-900a-416f5153e19c",
         "path": "/ui/ClassicPlayerHUD/Controller",
         "componentNames": "MOD.Core.UITransformComponent,script.ClassicPlayerHUD",
         "jsonString": {
@@ -202,7 +202,7 @@
         }
       },
       {
-        "id": "12114273-555f-44e1-beed-f80594aa66ef",
+        "id": "7ee13447-9444-4a5f-94c7-c9ea212b2eac",
         "path": "/ui/ClassicPlayerHUD/HudFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -347,7 +347,7 @@
         }
       },
       {
-        "id": "b48f386a-3c9e-49b9-ae6b-21b1f5852e9a",
+        "id": "815528f9-0b50-45a0-9691-6da370eddb14",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelLabel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -541,7 +541,7 @@
         }
       },
       {
-        "id": "5f1c5974-6848-45d9-831e-b2b1169ed2a0",
+        "id": "4106b2ab-260b-4bc0-bd8c-cabb672d55a8",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -735,7 +735,7 @@
         }
       },
       {
-        "id": "17258fd7-2bde-44ce-83cd-3c8d5041aa50",
+        "id": "3277ad35-d8b3-4cda-93b3-b8d11d5c1120",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterNameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -929,7 +929,7 @@
         }
       },
       {
-        "id": "cbb3c141-72c3-4047-b896-3e6ed26de7a2",
+        "id": "5b036f25-9d3e-4395-aca6-a86d40935649",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterSubText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1123,7 +1123,7 @@
         }
       },
       {
-        "id": "ae7c4890-3018-46ee-b03e-d61de689191f",
+        "id": "81a92d1b-f7c5-4a43-8cab-2b1560c26f68",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1208,7 +1208,7 @@
         }
       },
       {
-        "id": "e9cca734-2085-4d70-b0a5-80a97460d458",
+        "id": "52b2498e-a567-4942-b163-c4a4aee3c848",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1353,7 +1353,7 @@
         }
       },
       {
-        "id": "28ba645d-1b69-414a-8095-551abe3e538c",
+        "id": "7ed61021-b779-4baa-a335-5b0957cc2a27",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1547,7 +1547,7 @@
         }
       },
       {
-        "id": "a5efeaa1-778f-45cf-b433-a6b9fab26bbb",
+        "id": "0fd1ef7e-27d7-4495-87c1-d432cc6582e2",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1632,7 +1632,7 @@
         }
       },
       {
-        "id": "32853dbe-3c62-46fc-bb0a-591ade9cbf1d",
+        "id": "94d98010-c95f-4b64-a5a7-a5259ae120fc",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1777,7 +1777,7 @@
         }
       },
       {
-        "id": "dd7376c0-a4ba-4037-8c50-495c8f3f8728",
+        "id": "478643ea-f05e-44f1-8b08-6caf148fd56a",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1971,7 +1971,7 @@
         }
       },
       {
-        "id": "ad227fd0-0405-46ee-b025-3c6257df2a7e",
+        "id": "17bd15a6-2c52-4efe-8650-d360865f7c30",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -2056,7 +2056,7 @@
         }
       },
       {
-        "id": "be2b3b37-737b-45b7-b450-9aeb42bfce4d",
+        "id": "b231435a-cec6-4331-b339-8f946c03477b",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -2201,7 +2201,7 @@
         }
       },
       {
-        "id": "c63cb4c3-586c-4dfe-9e02-ccc467847c6d",
+        "id": "9eefab1c-b1c9-4c5b-bbf4-61d830540719",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2396,7 +2396,7 @@
         }
       },
       {
-        "id": "69c044e2-a94f-41f4-9e18-e7618e9f7bff",
+        "id": "a913bdfa-9896-4ad1-9457-9b521ab01840",
         "path": "/ui/ClassicPlayerHUD/HudFrame/InventoryButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -2481,7 +2481,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "6d2ff1b0948c416f8f361024908de504"
+                "DataId": "9c5feb02221248e7a1812578ad25181d"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -2575,16 +2575,16 @@
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
                 "HighlightedSprite": {
-                  "DataId": "6d2ff1b0948c416f8f361024908de504"
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
                 },
                 "PressedSprite": {
-                  "DataId": "6d2ff1b0948c416f8f361024908de504"
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
                 },
                 "SelectedSprite": {
-                  "DataId": "6d2ff1b0948c416f8f361024908de504"
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
                 },
                 "DisabledSprite": {
-                  "DataId": "6d2ff1b0948c416f8f361024908de504"
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
                 }
               },
               "KeyCode": 0,
@@ -2606,7 +2606,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 22,
+              "FontSize": 20,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -2647,7 +2647,7 @@
         }
       },
       {
-        "id": "209e46c3-5f0d-4560-8560-9ceceac79f5f",
+        "id": "0551dd2b-66ce-4e93-a191-dcdfe9807534",
         "path": "/ui/ClassicPlayerHUD/HudFrame/SkillButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -2732,7 +2732,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "3cebca63ed1d41e4be6e34ee8761172a"
+                "DataId": "9c5feb02221248e7a1812578ad25181d"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -2797,38 +2797,46 @@
                   "a": 1
                 },
                 "HighlightedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
                   "a": 1
                 },
                 "PressedColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
                   "a": 1
                 },
                 "SelectedColor": {
-                  "r": 0.9607843,
-                  "g": 0.9607843,
-                  "b": 0.9607843,
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
                   "a": 1
                 },
                 "DisabledColor": {
-                  "r": 0.784313738,
-                  "g": 0.784313738,
-                  "b": 0.784313738,
-                  "a": 0.5019608
+                  "r": 0.72,
+                  "g": 0.72,
+                  "b": 0.72,
+                  "a": 0.55
                 },
                 "ColorMultiplier": 1,
-                "FadeDuration": 0.1
+                "FadeDuration": 0.08
               },
               "IgnoreMapLayerCheck": false,
               "ImageRUIDs": {
-                "HighlightedSprite": null,
-                "PressedSprite": null,
-                "SelectedSprite": null,
-                "DisabledSprite": null
+                "HighlightedSprite": {
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
+                },
+                "PressedSprite": {
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
+                },
+                "SelectedSprite": {
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
+                },
+                "DisabledSprite": {
+                  "DataId": "9c5feb02221248e7a1812578ad25181d"
+                }
               },
               "KeyCode": 0,
               "OrderInLayer": 0,
@@ -2842,14 +2850,14 @@
               "BestFit": false,
               "ConstraintX": 100,
               "ConstraintY": 100,
-              "Font": "Maple",
+              "Font": "Default",
               "FontColor": {
                 "r": 1,
                 "g": 1,
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 20,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -2857,12 +2865,12 @@
               "MinSize": 10,
               "OrderInLayer": 0,
               "OutlineColor": {
-                "r": 0.05,
-                "g": 0.08,
-                "b": 0.12,
+                "r": 0,
+                "g": 0,
+                "b": 0,
                 "a": 1
               },
-              "OutlineWidth": 0.22,
+              "OutlineWidth": 0,
               "Overflow": 0,
               "OverrideSorting": false,
               "Padding": {
@@ -2873,13 +2881,12 @@
               },
               "SizeFit": false,
               "SortingLayer": "UI",
-              "Text": "스킬",
+              "Text": "",
               "Underlay": false,
               "UseConstraintX": false,
               "UseConstraintY": false,
               "VerticalAlignment": 512,
-              "Enable": true,
-              "Bold": true
+              "Enable": true
             },
             {
               "@type": "MOD.Core.UITouchReceiveComponent",
@@ -2890,7 +2897,152 @@
         }
       },
       {
-        "id": "7f5ef382-ceda-4f8c-b174-ad57e4470370",
+        "id": "e629fe17-8a21-43ef-9dbf-bb41f34d11f1",
+        "path": "/ui/ClassicPlayerHUD/HudFrame/SkillButton/Icon",
+        "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
+        "jsonString": {
+          "name": "Icon",
+          "path": "/ui/ClassicPlayerHUD/HudFrame/SkillButton/Icon",
+          "nameEditable": true,
+          "enable": true,
+          "visible": true,
+          "localize": true,
+          "displayOrder": 0,
+          "pathConstraints": "/////",
+          "revision": 0,
+          "origin": {
+            "type": "Model",
+            "entry_id": "UISprite",
+            "sub_entity_id": null,
+            "root_entity_id": null,
+            "replaced_model_id": null
+          },
+          "modelId": "uisprite",
+          "@components": [
+            {
+              "@type": "MOD.Core.UITransformComponent",
+              "ActivePlatform": 255,
+              "AlignmentOption": 0,
+              "AnchorsMax": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "AnchorsMin": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "MobileOnly": false,
+              "OffsetMax": {
+                "x": 43,
+                "y": 43
+              },
+              "OffsetMin": {
+                "x": -43,
+                "y": -43
+              },
+              "Pivot": {
+                "x": 0.5,
+                "y": 0.5
+              },
+              "RectSize": {
+                "x": 86,
+                "y": 86
+              },
+              "UIMode": 1,
+              "UIScale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "UIVersion": 2,
+              "anchoredPosition": {
+                "x": 0,
+                "y": 0
+              },
+              "Position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+              },
+              "QuaternionRotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+              },
+              "Scale": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "Enable": true
+            },
+            {
+              "@type": "MOD.Core.SpriteGUIRendererComponent",
+              "AnimClipPlayType": 0,
+              "EndFrameIndex": 2147483647,
+              "ImageRUID": {
+                "DataId": "2459bb7e8ca24eb3963e11a30b1c3ecd"
+              },
+              "IgnoreMapLayerCheck": false,
+              "LocalPosition": {
+                "x": 0,
+                "y": 0
+              },
+              "LocalScale": {
+                "x": 1,
+                "y": 1
+              },
+              "MaterialId": "",
+              "OrderInLayer": 0,
+              "OverrideSorting": false,
+              "PlayRate": 1,
+              "PreserveSprite": 1,
+              "SortingLayer": "UI",
+              "StartFrameIndex": 0,
+              "Color": {
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
+              },
+              "DropShadow": false,
+              "DropShadowAngle": 120,
+              "DropShadowColor": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 0.72
+              },
+              "DropShadowDistance": 3,
+              "FillAmount": 1,
+              "FillCenter": true,
+              "FillClockWise": true,
+              "FillMethod": 0,
+              "FillOrigin": 0,
+              "FlipX": false,
+              "FlipY": false,
+              "FrameColumn": 1,
+              "FrameRate": 0,
+              "FrameRow": 1,
+              "Outline": false,
+              "OutlineColor": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "OutlineWidth": 3,
+              "RaycastTarget": false,
+              "Type": 0,
+              "Enable": true
+            }
+          ],
+          "@version": 1
+        }
+      },
+      {
+        "id": "f7aea310-d541-4c56-8e3e-ec8ee7121051",
         "path": "/ui/ClassicPlayerHUD/QuickSlots",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3035,7 +3187,7 @@
         }
       },
       {
-        "id": "417b0298-7660-4d6e-ab52-c0c165eebbae",
+        "id": "a99a8292-ab34-4b84-9fe4-d4d378aebc05",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -3120,7 +3272,7 @@
         }
       },
       {
-        "id": "d816c3cb-f90f-4764-90a0-388d977ba026",
+        "id": "4ebad300-d211-4935-8f96-1038e3f2aec2",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3308,7 +3460,7 @@
         }
       },
       {
-        "id": "fdda7905-eb62-470a-b3ed-ac885e1722e0",
+        "id": "cc81e83e-1548-473b-b091-acad862975e8",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3496,7 +3648,7 @@
         }
       },
       {
-        "id": "39f078cf-b58c-4677-b1cb-ab5d540c3f70",
+        "id": "4d2f40a4-4b5c-4c6e-8795-059bafcefbb3",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3642,7 +3794,7 @@
         }
       },
       {
-        "id": "14cab2f1-9eb1-4067-862d-4c52c48ef18e",
+        "id": "aca75b89-1860-45bd-94c0-2514571d12b9",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3830,7 +3982,7 @@
         }
       },
       {
-        "id": "4577c4cb-b927-4bf5-b314-bdf5755baa1c",
+        "id": "f9040844-6700-4cfb-9f98-d1b0b2b5682f",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -3915,7 +4067,7 @@
         }
       },
       {
-        "id": "26c5bd12-ff17-4ff1-8ce8-26750401f2bc",
+        "id": "b5393e72-b5ef-4d0c-8040-cd681c4558d2",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4103,7 +4255,7 @@
         }
       },
       {
-        "id": "896f7529-e4ad-4135-a9f1-334b34449b4d",
+        "id": "71b9fb8c-d3de-44de-92de-d2d4ba65360f",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4291,7 +4443,7 @@
         }
       },
       {
-        "id": "12c2016c-40d0-4881-9978-c3498c772f1d",
+        "id": "b581628b-ebca-4e20-8787-63b03d40a103",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4437,7 +4589,7 @@
         }
       },
       {
-        "id": "4c30aa0a-a328-46ca-99ae-001b389b6b3e",
+        "id": "f411bfd8-6b83-47aa-b504-35451bf9d721",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4625,7 +4777,7 @@
         }
       },
       {
-        "id": "ede4c6fb-f975-4448-83c3-708f21045519",
+        "id": "11772187-a8cc-4be8-8022-371b7725d27c",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -4710,7 +4862,7 @@
         }
       },
       {
-        "id": "c4b124d9-4abb-45ac-aa1a-3677d6d3d599",
+        "id": "ee30dbe6-4c9b-488d-8c8b-1a37470c88d3",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4898,7 +5050,7 @@
         }
       },
       {
-        "id": "cc7da701-9d8c-47bb-9f1c-3561b0dd3d7d",
+        "id": "66caeb76-8876-4c6b-8a96-d43715f5b89f",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5086,7 +5238,7 @@
         }
       },
       {
-        "id": "70c29bfc-6a16-4733-a014-023436053444",
+        "id": "5a6d78c1-9111-4457-9a7f-0ec76491f493",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -5232,7 +5384,7 @@
         }
       },
       {
-        "id": "3f50d4e8-27c1-45c8-8556-a1de44ae603d",
+        "id": "41892692-dc55-4b3f-903c-001d42e62cee",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5420,7 +5572,7 @@
         }
       },
       {
-        "id": "634b20cf-2916-4c7c-9d96-bc146f010eff",
+        "id": "792e6904-5364-4af9-939d-5585de12914b",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -5505,7 +5657,7 @@
         }
       },
       {
-        "id": "3bec5f24-80b5-47c8-b563-5b349f198a09",
+        "id": "01bbb162-b687-42e9-b0d4-33a9974f9595",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5693,7 +5845,7 @@
         }
       },
       {
-        "id": "4868d3c8-0587-4598-bdc5-36f9fd06a6ce",
+        "id": "1225c054-3e91-411e-96de-15d6326a2fed",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_4",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5881,7 +6033,7 @@
         }
       },
       {
-        "id": "9c19b278-0d36-45b1-8406-b4903ea5e75f",
+        "id": "d1fae8fd-986f-4435-9e6a-4d43292e76a1",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6027,7 +6179,7 @@
         }
       },
       {
-        "id": "e6bc09a2-3d66-482b-bcb5-faa724772033",
+        "id": "96333b99-7066-4d16-993f-5bf1ff8c8f23",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6215,7 +6367,7 @@
         }
       },
       {
-        "id": "650c51e2-d2d0-496e-a28f-e8c0cbfba4e2",
+        "id": "20bf2c63-81c9-4b40-9e4c-cd960ed64512",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -6300,7 +6452,7 @@
         }
       },
       {
-        "id": "853c1348-01c3-4791-a4f9-846508258eb0",
+        "id": "12e80364-69de-4094-936b-f6b034867684",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6488,7 +6640,7 @@
         }
       },
       {
-        "id": "64168bd8-56a0-467c-8833-773de9047311",
+        "id": "6947f309-ef6b-47b1-a141-c8c7bb501a4b",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_5",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6676,7 +6828,7 @@
         }
       },
       {
-        "id": "94983950-d120-4f82-bffc-8dbe6e48042f",
+        "id": "31abd823-72fd-4459-b4e0-00c4837c73dd",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6822,7 +6974,7 @@
         }
       },
       {
-        "id": "6aa7faa9-1f7e-4316-8d3a-bacb47176e16",
+        "id": "f00533e1-b602-4f67-9e39-b6a302aeacea",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7010,7 +7162,7 @@
         }
       },
       {
-        "id": "01062de1-a862-4ab3-9352-1a0303217126",
+        "id": "4e0a4b5d-90e5-4542-87c5-559deebbc216",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -7095,7 +7247,7 @@
         }
       },
       {
-        "id": "daee8199-c305-4378-9143-9745325767b2",
+        "id": "b9ed0e35-6b05-405a-b260-7af39e5825ca",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7283,7 +7435,7 @@
         }
       },
       {
-        "id": "59c512a7-21cf-4ff8-8ce2-62b91d6dbeb5",
+        "id": "4db6b732-d294-4ace-bd28-ec1e5ad66213",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_6",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7471,7 +7623,7 @@
         }
       },
       {
-        "id": "b01ac21d-c26d-40cc-9868-5b98a4047c0e",
+        "id": "d236fcbf-dc35-4eec-9052-34758b594ef2",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -7617,7 +7769,7 @@
         }
       },
       {
-        "id": "1ff68100-4885-487d-9dba-eb839fa8fa2a",
+        "id": "a4321ede-4d72-45d8-8e19-ba69dd4884af",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7805,7 +7957,7 @@
         }
       },
       {
-        "id": "c4370c1f-4e0c-4646-addf-adbc59b47103",
+        "id": "957dd963-61d2-4890-9298-b94953028e5c",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -7890,7 +8042,7 @@
         }
       },
       {
-        "id": "831a98cb-8a25-43a0-8bc5-4e3d06f27d7c",
+        "id": "f806fa8a-cfcb-46f2-9dc4-9c7b02285b2c",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8078,7 +8230,7 @@
         }
       },
       {
-        "id": "5a58697f-fc28-42ed-94d7-aed340dea3c1",
+        "id": "17222395-9275-4b50-ab37-b908663e30b7",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_7",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8266,7 +8418,7 @@
         }
       },
       {
-        "id": "e6be80f0-9ce2-4917-8f05-88df89baf311",
+        "id": "a02c6bd4-3558-4f35-83e5-1b0bd7f36461",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -8412,7 +8564,7 @@
         }
       },
       {
-        "id": "6cec4a42-9723-4c74-be4b-58148ff0f7e8",
+        "id": "7827f0d4-e45d-49fe-abb4-ac7c5c59f35b",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8600,7 +8752,7 @@
         }
       },
       {
-        "id": "34ad1fad-eb2f-4c18-bd72-f421a7983fd2",
+        "id": "d04b0c4f-26ca-4d4e-8e5f-1805f6ab2888",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -8685,7 +8837,7 @@
         }
       },
       {
-        "id": "32ef7270-1054-4c7d-ac9b-485c28eb8ad8",
+        "id": "8a5f3c36-9cf3-49b5-95b9-fa04f1add990",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/IconText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8873,7 +9025,7 @@
         }
       },
       {
-        "id": "06024d5c-8969-4160-b0f7-29beef239186",
+        "id": "28cbba3e-4d5e-44a5-9ea2-158a77cec030",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_8",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -9061,7 +9213,7 @@
         }
       },
       {
-        "id": "e6484cc4-c1c9-43b1-b9ac-5cea0c03b46e",
+        "id": "57d363b8-6ba2-40fb-9e7f-ff70a5884cde",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -9207,7 +9359,7 @@
         }
       },
       {
-        "id": "18da4933-5de9-49e5-a238-670e51e933aa",
+        "id": "1b9a0b9d-33ee-4a75-97e7-dba6d5810ba2",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {

@@ -1,23 +1,26 @@
 @Component
 script ClassicPlayerHUD extends Component
-    property Entity HudFrame = "12114273-555f-44e1-beed-f80594aa66ef"
-    property TextGUIRendererComponent LevelText = "5f1c5974-6848-45d9-831e-b2b1169ed2a0"
-    property TextGUIRendererComponent CharacterNameText = "17258fd7-2bde-44ce-83cd-3c8d5041aa50"
-    property TextGUIRendererComponent CharacterSubText = "cbb3c141-72c3-4047-b896-3e6ed26de7a2"
-    property TextGUIRendererComponent HpText = "28ba645d-1b69-414a-8095-551abe3e538c"
-    property TextGUIRendererComponent MpText = "dd7376c0-a4ba-4037-8c50-495c8f3f8728"
-    property TextGUIRendererComponent ExpText = "c63cb4c3-586c-4dfe-9e02-ccc467847c6d"
-    property SpriteGUIRendererComponent HpFill = "e9cca734-2085-4d70-b0a5-80a97460d458"
-    property SpriteGUIRendererComponent MpFill = "32853dbe-3c62-46fc-bb0a-591ade9cbf1d"
-    property SpriteGUIRendererComponent ExpFill = "be2b3b37-737b-45b7-b450-9aeb42bfce4d"
-    property ButtonComponent InventoryButton = "69c044e2-a94f-41f4-9e18-e7618e9f7bff"
-    property ButtonComponent SkillButton = "209e46c3-5f0d-4560-8560-9ceceac79f5f"
+    property Entity HudFrame = "7ee13447-9444-4a5f-94c7-c9ea212b2eac"
+    property TextGUIRendererComponent LevelText = "4106b2ab-260b-4bc0-bd8c-cabb672d55a8"
+    property TextGUIRendererComponent CharacterNameText = "3277ad35-d8b3-4cda-93b3-b8d11d5c1120"
+    property TextGUIRendererComponent CharacterSubText = "5b036f25-9d3e-4395-aca6-a86d40935649"
+    property TextGUIRendererComponent HpText = "7ed61021-b779-4baa-a335-5b0957cc2a27"
+    property TextGUIRendererComponent MpText = "478643ea-f05e-44f1-8b08-6caf148fd56a"
+    property TextGUIRendererComponent ExpText = "9eefab1c-b1c9-4c5b-bbf4-61d830540719"
+    property SpriteGUIRendererComponent HpFill = "52b2498e-a567-4942-b163-c4a4aee3c848"
+    property SpriteGUIRendererComponent MpFill = "94d98010-c95f-4b64-a5a7-a5259ae120fc"
+    property SpriteGUIRendererComponent ExpFill = "b231435a-cec6-4331-b339-8f946c03477b"
+    property ButtonComponent InventoryButton = "a913bdfa-9896-4ad1-9457-9b521ab01840"
+    property ButtonComponent SkillButton = "0551dd2b-66ce-4e93-a191-dcdfe9807534"
     property number GaugeMaxWidth = 303
     property string ClickSoundRUID = "972843e759204d3e9ad84e7d3fa94f83"
 
     @HideFromInspector property number RefreshElapsed = 0
     @HideFromInspector property any InventoryClickHandler = nil
     @HideFromInspector property any SkillClickHandler = nil
+    @HideFromInspector property any SkillPressedHandler = nil
+    @HideFromInspector property any SkillTouchDownHandler = nil
+    @HideFromInspector property any SkillTouchUpHandler = nil
     @HideFromInspector property any InventoryPressedHandler = nil
     @HideFromInspector property any InventoryTouchDownHandler = nil
     @HideFromInspector property any InventoryTouchUpHandler = nil
@@ -45,6 +48,11 @@ script ClassicPlayerHUD extends Component
         end
         if isvalid(self.SkillButton) then
             self.SkillClickHandler = self.SkillButton.Entity:ConnectEvent(ButtonClickEvent, self.OpenSkillWindow)
+            self.SkillPressedHandler = self.SkillButton.Entity:ConnectEvent(ButtonPressedEvent, function()
+                log("[ClassicHUD] Skill button pressed feedback")
+            end)
+            self.SkillTouchDownHandler = self.SkillButton.Entity:ConnectEvent(UITouchDownEvent, self.OnSkillTouchDown)
+            self.SkillTouchUpHandler = self.SkillButton.Entity:ConnectEvent(UITouchUpEvent, self.OnSkillTouchUp)
         end
         local legacyButton = _EntityService:GetEntityByPath("/ui/EquipmentInventory/InventoryOpenButton")
         if isvalid(legacyButton) then legacyButton.Enable = false end
@@ -119,9 +127,7 @@ script ClassicPlayerHUD extends Component
 
     @ExecSpace("ClientOnly")
     method void OpenInventory()
-        -- Routes the HUD menu action to the existing unified equipment and inventory controller.
-        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
-        log("[ClassicHUD] Inventory button click activated")
+        -- Closes the skill window first, then mirrors the existing inventory toggle behavior.
         local controller = _EntityService:GetEntityByPath("/ui/EquipmentInventory/Controller")
         if not isvalid(controller) then
             log_warning("[ClassicHUD] Equipment inventory controller not found")
@@ -132,13 +138,19 @@ script ClassicPlayerHUD extends Component
             log_warning("[ClassicHUD] EquipmentInventoryUI component not found")
             return
         end
+        local skillController = _EntityService:GetEntityByPath("/ui/SkillWindow/Controller")
+        local skillUi = isvalid(skillController) and skillController:GetComponent("script.SkillWindowUI") or nil
+        if isvalid(skillUi) and isvalid(skillUi.MainGroup) and skillUi.MainGroup.Enable then
+            skillUi:CloseWindow()
+        end
+        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
         inventoryUi:ToggleUnifiedInfo()
+        log("[ClassicHUD] Inventory button click activated")
     end
 
     @ExecSpace("ClientOnly")
     method void OpenSkillWindow()
-        -- Opens the integrated skill window from the resized HUD button beside inventory.
-        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
+        -- Closes inventory first and then toggles the skill window with the same click behavior.
         local controller = _EntityService:GetEntityByPath("/ui/SkillWindow/Controller")
         if not isvalid(controller) then
             log_warning("[ClassicHUD] Skill window controller not found")
@@ -149,7 +161,16 @@ script ClassicPlayerHUD extends Component
             log_warning("[ClassicHUD] SkillWindowUI component not found")
             return
         end
-        skillUi:OpenWindow()
+        local inventoryController = _EntityService:GetEntityByPath("/ui/EquipmentInventory/Controller")
+        local inventoryUi = isvalid(inventoryController)
+            and inventoryController:GetComponent("script.EquipmentInventoryUI") or nil
+        if isvalid(inventoryUi) then inventoryUi:CloseUnifiedInfo() end
+        _SoundService:PlaySound(self.ClickSoundRUID, 0.65)
+        if isvalid(skillUi.MainGroup) and skillUi.MainGroup.Enable then
+            skillUi:CloseWindow()
+        else
+            skillUi:OpenWindow()
+        end
         log("[ClassicHUD] Skill button click activated")
     end
 
@@ -181,6 +202,17 @@ script ClassicPlayerHUD extends Component
     end
 
     @ExecSpace("ClientOnly")
+    method void OnSkillTouchDown(UITouchDownEvent event)
+        -- Mirrors the inventory button's immediate touch feedback without its developer long press.
+        log("[ClassicHUD] Skill touch tint feedback")
+    end
+
+    @ExecSpace("ClientOnly")
+    method void OnSkillTouchUp(UITouchUpEvent event)
+        -- Kept symmetrical with the inventory button for mouse and touch lifecycle parity.
+    end
+
+    @ExecSpace("ClientOnly")
     method void OnEndPlay()
         -- Disconnects inventory events and clears the long-press timer when the HUD group unloads.
         if self.InventoryClickHandler ~= nil and isvalid(self.InventoryButton) then
@@ -188,6 +220,15 @@ script ClassicPlayerHUD extends Component
         end
         if self.SkillClickHandler ~= nil and isvalid(self.SkillButton) then
             self.SkillButton.Entity:DisconnectEvent(ButtonClickEvent, self.SkillClickHandler)
+        end
+        if self.SkillPressedHandler ~= nil and isvalid(self.SkillButton) then
+            self.SkillButton.Entity:DisconnectEvent(ButtonPressedEvent, self.SkillPressedHandler)
+        end
+        if self.SkillTouchDownHandler ~= nil and isvalid(self.SkillButton) then
+            self.SkillButton.Entity:DisconnectEvent(UITouchDownEvent, self.SkillTouchDownHandler)
+        end
+        if self.SkillTouchUpHandler ~= nil and isvalid(self.SkillButton) then
+            self.SkillButton.Entity:DisconnectEvent(UITouchUpEvent, self.SkillTouchUpHandler)
         end
         if self.InventoryPressedHandler ~= nil and isvalid(self.InventoryButton) then
             self.InventoryButton.Entity:DisconnectEvent(ButtonPressedEvent, self.InventoryPressedHandler)
@@ -204,6 +245,9 @@ script ClassicPlayerHUD extends Component
         end
         self.InventoryClickHandler = nil
         self.SkillClickHandler = nil
+        self.SkillPressedHandler = nil
+        self.SkillTouchDownHandler = nil
+        self.SkillTouchUpHandler = nil
         self.InventoryPressedHandler = nil
         self.InventoryTouchDownHandler = nil
         self.InventoryTouchUpHandler = nil

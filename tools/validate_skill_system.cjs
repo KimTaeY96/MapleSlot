@@ -128,12 +128,22 @@ test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()
   assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/CooldownShade$/.test(x.path)).length,8);
 });
 test('imagegen-authored UI resources are project-bound and referenced by RUID',()=>{
-  for(const file of ['skill-action-button.png','inventory-menu-button.png','skill-quickslots-4x2.png','skill-cooldown-overlay.png']) {
+  for(const file of ['skill-action-button.png','skill-quickslots-4x2.png','skill-cooldown-overlay.png','skill-book-icon.png']) {
     assert.ok(fs.existsSync('Assets/UI/ClassicSilver/'+file),file);
   }
-  for(const ruid of ['3cebca63ed1d41e4be6e34ee8761172a','6d2ff1b0948c416f8f361024908de504','5e4ee74cd7d0453994d4ce6a0ed4130c','ddf8548f22114eedb558f9decec77ba4']) {
+  for(const ruid of ['3cebca63ed1d41e4be6e34ee8761172a','5e4ee74cd7d0453994d4ce6a0ed4130c','ddf8548f22114eedb558f9decec77ba4','2459bb7e8ca24eb3963e11a30b1c3ecd']) {
     assert.ok((builderSource+hudBuilderSource).includes(ruid),ruid);
   }
+  assert.ok(hudBuilderSource.includes('9c5feb02221248e7a1812578ad25181d'));
+  assert.ok(!hudBuilderSource.includes('6d2ff1b0948c416f8f361024908de504'));
+  assert.ok(!hudBuilderSource.includes('3cebca63ed1d41e4be6e34ee8761172a'));
+});
+test('inventory and skill windows are mutually exclusive toggles',()=>{
+  assert.match(hudSource,/skillUi:CloseWindow\(\)[\s\S]*inventoryUi:ToggleUnifiedInfo\(\)/);
+  assert.match(hudSource,/inventoryUi:CloseUnifiedInfo\(\)/);
+  assert.match(hudSource,/skillUi\.MainGroup\.Enable[\s\S]*skillUi:CloseWindow\(\)[\s\S]*skillUi:OpenWindow\(\)/);
+  assert.match(hudSource,/SkillPressedHandler/);
+  assert.match(hudSource,/SkillTouchDownHandler/);
 });
 test('custom style is independent from simple-black UI',()=>{
   assert.ok(!builderSource.includes('simple-black'));

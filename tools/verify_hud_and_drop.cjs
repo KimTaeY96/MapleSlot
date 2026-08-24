@@ -22,7 +22,9 @@ const inventorySprite = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.S
 const inventoryTouch = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.UITouchReceiveComponent");
 const skillTransform = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITransformComponent");
 const skillSprite = hud.getComponent("HudFrame/SkillButton", "MOD.Core.SpriteGUIRendererComponent");
+const skillButton = hud.getComponent("HudFrame/SkillButton", "MOD.Core.ButtonComponent");
 const skillTouch = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITouchReceiveComponent");
+const skillIcon = hud.getComponent("HudFrame/SkillButton/Icon", "MOD.Core.SpriteGUIRendererComponent");
 const hudPaths = UIBuilder.snapshot("ui/ClassicPlayerHUD.ui").map((entry) => entry.path);
 
 const classicSource = fs.readFileSync("RootDesk/MyDesk/UI/ClassicPlayerHUD.mlua", "utf8");
@@ -42,11 +44,12 @@ assert(expTextTransform.anchoredPosition.x === expFill.anchoredPosition.x, "EXP 
 assert(expTextTransform.RectSize.x === expFill.RectSize.x, "EXP text width does not match fill");
 assert(expText.FontColor.r === 1 && expText.FontColor.g === 1 && expText.FontColor.b === 1, "EXP text must be white");
 assert(expText.OutlineWidth >= 0.36 && expText.OutlineColor.a === 1, "EXP text requires a strong opaque black outline");
-assert(inventoryButton.Transition === 1, "Inventory button must use color-tint feedback");
+assert(inventoryButton.Transition === 1 && skillButton.Transition === 1, "Both menu buttons must use identical color-tint feedback");
 assert(inventoryTransform.RectSize.x === 123.5 && skillTransform.RectSize.x === 123.5, "Inventory and skill buttons must split the original 247px menu area evenly");
 assert(inventoryTransform.anchoredPosition.x === -123.5 && skillTransform.anchoredPosition.x === 0, "Skill button must sit immediately right of inventory");
-assert(inventorySprite.ImageRUID.DataId === "6d2ff1b0948c416f8f361024908de504", "Imagegen inventory resource mismatch");
-assert(skillSprite.ImageRUID.DataId === "3cebca63ed1d41e4be6e34ee8761172a", "Imagegen skill resource mismatch");
+assert(inventorySprite.ImageRUID.DataId === "9c5feb02221248e7a1812578ad25181d", "Original inventory button resource mismatch");
+assert(skillSprite.ImageRUID.DataId === "9c5feb02221248e7a1812578ad25181d", "Skill button must duplicate the original inventory button resource");
+assert(skillIcon.ImageRUID.DataId === "2459bb7e8ca24eb3963e11a30b1c3ecd", "Imagegen skill-book icon resource mismatch");
 assert(inventoryTouch != null && skillTouch != null, "HUD menu touch receiver is missing");
 assert(hudPaths.filter((path) => /\/QuickSlots\/Slot_[1-8]$/.test(path)).length === 8, "Persistent 4x2 quick slots are missing");
 assert(/GaugeMaxWidth = 303/.test(classicSource), "Runtime gauge max width is not 303");
