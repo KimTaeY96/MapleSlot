@@ -20,11 +20,14 @@ const inventoryButton = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.B
 const inventoryTransform = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.UITransformComponent");
 const inventorySprite = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.SpriteGUIRendererComponent");
 const inventoryTouch = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.UITouchReceiveComponent");
+const inventoryIcon = hud.getComponent("HudFrame/InventoryButton/Icon", "MOD.Core.SpriteGUIRendererComponent");
+const inventoryIconTransform = hud.getComponent("HudFrame/InventoryButton/Icon", "MOD.Core.UITransformComponent");
 const skillTransform = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITransformComponent");
 const skillSprite = hud.getComponent("HudFrame/SkillButton", "MOD.Core.SpriteGUIRendererComponent");
 const skillButton = hud.getComponent("HudFrame/SkillButton", "MOD.Core.ButtonComponent");
 const skillTouch = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITouchReceiveComponent");
 const skillIcon = hud.getComponent("HudFrame/SkillButton/Icon", "MOD.Core.SpriteGUIRendererComponent");
+const skillIconTransform = hud.getComponent("HudFrame/SkillButton/Icon", "MOD.Core.UITransformComponent");
 const hudPaths = UIBuilder.snapshot("ui/ClassicPlayerHUD.ui").map((entry) => entry.path);
 
 const classicSource = fs.readFileSync("RootDesk/MyDesk/UI/ClassicPlayerHUD.mlua", "utf8");
@@ -47,9 +50,13 @@ assert(expText.OutlineWidth >= 0.36 && expText.OutlineColor.a === 1, "EXP text r
 assert(inventoryButton.Transition === 1 && skillButton.Transition === 1, "Both menu buttons must use identical color-tint feedback");
 assert(inventoryTransform.RectSize.x === 123.5 && skillTransform.RectSize.x === 123.5, "Inventory and skill buttons must split the original 247px menu area evenly");
 assert(inventoryTransform.anchoredPosition.x === -123.5 && skillTransform.anchoredPosition.x === 0, "Skill button must sit immediately right of inventory");
-assert(inventorySprite.ImageRUID.DataId === "9c5feb02221248e7a1812578ad25181d", "Original inventory button resource mismatch");
-assert(skillSprite.ImageRUID.DataId === "9c5feb02221248e7a1812578ad25181d", "Skill button must duplicate the original inventory button resource");
+assert(inventorySprite.ImageRUID.DataId === "008c9a704d284753a32ab40da2cfbd52", "Reference inventory button resource mismatch");
+assert(skillSprite.ImageRUID.DataId === "cd1e25491fb243edba76e79613c1987a", "Skill button must use the green reference-background variant");
+assert(inventorySprite.Type === 0 && skillSprite.Type === 0, "Reference button pixels must render without nine-slice substitution");
+assert(inventoryIcon.ImageRUID.DataId === "1b0f6476f399444b9ff8f23958c447f8", "Reference bag icon resource mismatch");
+assert(inventoryIconTransform.RectSize.x === 52 && inventoryIconTransform.RectSize.y === 52, "Bag icon must render at two-thirds of its original visible size");
 assert(skillIcon.ImageRUID.DataId === "2459bb7e8ca24eb3963e11a30b1c3ecd", "Imagegen skill-book icon resource mismatch");
+assert(skillIconTransform.RectSize.x === 70 && skillIconTransform.RectSize.y === 70, "Book icon must match the reduced bag visual footprint");
 assert(inventoryTouch != null && skillTouch != null, "HUD menu touch receiver is missing");
 assert(hudPaths.filter((path) => /\/QuickSlots\/Slot_[1-8]$/.test(path)).length === 8, "Persistent 4x2 quick slots are missing");
 assert(/GaugeMaxWidth = 303/.test(classicSource), "Runtime gauge max width is not 303");

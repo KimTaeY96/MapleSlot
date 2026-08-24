@@ -6,7 +6,9 @@ const R = {
   hp: '51acb1aa892f4534a75155564f88d098',
   mp: '101fd676b4904874a8b1a1653e99d908',
   exp: 'b302e62956f0465ca378677d031b4a54',
-  menuButton: '9c5feb02221248e7a1812578ad25181d',
+  menuButtonBlue: '008c9a704d284753a32ab40da2cfbd52',
+  menuButtonGreen: 'cd1e25491fb243edba76e79613c1987a',
+  inventoryBagIcon: '1b0f6476f399444b9ff8f23958c447f8',
   skillBookIcon: '2459bb7e8ca24eb3963e11a30b1c3ecd',
   quickSlots: '5e4ee74cd7d0453994d4ce6a0ed4130c',
   cooldownOverlay: 'ddf8548f22114eedb558f9decec77ba4',
@@ -75,18 +77,25 @@ addGauge('HpGauge', 617, 335, R.hp, 'HP 100 / 100');
 addGauge('MpGauge', 962, 335, R.mp, 'MP 100 / 100');
 addExpGauge(1307, 335, R.exp);
 
-b.button('HudFrame/InventoryButton', '인벤토리', {
+b.button('HudFrame/InventoryButton', '', {
   anchor: 'top-right', pos: [-123.5, 0], rect_size: [123.5, 110],
-  image_ruid: R.menuButton, sprite_type: 1, font_size: 20,
+  image_ruid: R.menuButtonBlue, sprite_type: 0, font_size: 20,
 });
 b.upsertComponent('HudFrame/InventoryButton', 'MOD.Core.UITouchReceiveComponent');
+b.sprite('HudFrame/InventoryButton/Icon', {
+  anchor: 'middle-center', pos: [0, 0], rect_size: [52, 52],
+  image_ruid: R.inventoryBagIcon, sprite_type: 0, preserve_aspect: true, raycast: false,
+});
+b.patchComponent('HudFrame/InventoryButton/Icon', 'MOD.Core.SpriteGUIRendererComponent', {
+  Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0, RaycastTarget: false,
+});
 b.button('HudFrame/SkillButton', '', {
   anchor: 'top-right', pos: [0, 0], rect_size: [123.5, 110],
-  image_ruid: R.menuButton, sprite_type: 1, font_size: 20,
+  image_ruid: R.menuButtonGreen, sprite_type: 0, font_size: 20,
 });
 b.upsertComponent('HudFrame/SkillButton', 'MOD.Core.UITouchReceiveComponent');
 b.sprite('HudFrame/SkillButton/Icon', {
-  anchor: 'middle-center', pos: [0, 0], rect_size: [86, 86],
+  anchor: 'middle-center', pos: [0, 0], rect_size: [70, 70],
   image_ruid: R.skillBookIcon, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('HudFrame/SkillButton/Icon', 'MOD.Core.SpriteGUIRendererComponent', {
@@ -152,9 +161,12 @@ b.patchComponent('HudFrame/ExpGauge/ValueText', 'MOD.Core.TextGUIRendererCompone
   UnderlayDilate: 0.2,
 });
 
-for (const path of ['HudFrame/InventoryButton', 'HudFrame/SkillButton']) {
+for (const [path, imageRuid] of [
+  ['HudFrame/InventoryButton', R.menuButtonBlue],
+  ['HudFrame/SkillButton', R.menuButtonGreen],
+]) {
   b.patchComponent(path, 'MOD.Core.SpriteGUIRendererComponent', {
-    Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 1,
+    Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0,
   });
   b.patchComponent(path, 'MOD.Core.ButtonComponent', {
     Transition: 1,
@@ -168,17 +180,13 @@ for (const path of ['HudFrame/InventoryButton', 'HudFrame/SkillButton']) {
       FadeDuration: 0.08,
     },
     ImageRUIDs: {
-      HighlightedSprite: { DataId: R.menuButton },
-      PressedSprite: { DataId: R.menuButton },
-      SelectedSprite: { DataId: R.menuButton },
-      DisabledSprite: { DataId: R.menuButton },
+      HighlightedSprite: { DataId: imageRuid },
+      PressedSprite: { DataId: imageRuid },
+      SelectedSprite: { DataId: imageRuid },
+      DisabledSprite: { DataId: imageRuid },
     },
   });
 }
-b.patchComponent('HudFrame/InventoryButton', 'MOD.Core.TextGUIRendererComponent', {
-  Font: 'Maple', FontColor: { r: 1, g: 1, b: 1, a: 1 }, Bold: true,
-  OutlineColor: { r: 0.05, g: 0.08, b: 0.12, a: 1 }, OutlineWidth: 0.22,
-});
 
 b._data = b.build();
 b._data.CoreVersion = projectCoreVersion;
