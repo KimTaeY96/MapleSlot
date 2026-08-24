@@ -17,7 +17,13 @@ const expFill = hud.getComponent("HudFrame/ExpGauge/Fill", "MOD.Core.UITransform
 const expTextTransform = hud.getComponent("HudFrame/ExpGauge/ValueText", "MOD.Core.UITransformComponent");
 const expText = hud.getComponent("HudFrame/ExpGauge/ValueText", "MOD.Core.TextGUIRendererComponent");
 const inventoryButton = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.ButtonComponent");
+const inventoryTransform = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.UITransformComponent");
+const inventorySprite = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.SpriteGUIRendererComponent");
 const inventoryTouch = hud.getComponent("HudFrame/InventoryButton", "MOD.Core.UITouchReceiveComponent");
+const skillTransform = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITransformComponent");
+const skillSprite = hud.getComponent("HudFrame/SkillButton", "MOD.Core.SpriteGUIRendererComponent");
+const skillTouch = hud.getComponent("HudFrame/SkillButton", "MOD.Core.UITouchReceiveComponent");
+const hudPaths = UIBuilder.snapshot("ui/ClassicPlayerHUD.ui").map((entry) => entry.path);
 
 const classicSource = fs.readFileSync("RootDesk/MyDesk/UI/ClassicPlayerHUD.mlua", "utf8");
 const healthSource = fs.readFileSync("RootDesk/MyDesk/Combat/CombatMonsterHealth.mlua", "utf8");
@@ -28,18 +34,22 @@ const modelData = model.build();
 assert(coreVersion === "26.7.0.0", `Unexpected project CoreVersion: ${coreVersion}`);
 assert(hudData.CoreVersion === coreVersion, "Classic HUD CoreVersion does not match Environment/config");
 assert(modelData.CoreVersion === coreVersion, "Drop model CoreVersion does not match Environment/config");
-assert(hpFill.RectSize.x === 303 && hpFill.RectSize.y === 29, "HP fill must stay inside the frame well");
-assert(mpFill.RectSize.x === 303 && mpFill.RectSize.y === 29, "MP fill must stay inside the frame well");
-assert(expFill.RectSize.x === 303 && expFill.RectSize.y === 29, "EXP fill must equal HP/MP safe bounds");
-assert(expFill.anchoredPosition.x + expFill.RectSize.x <= 1642, "EXP fill exceeds its frame well");
+assert(hpFill.RectSize.x === 228 && hpFill.RectSize.y === 26, "HP fill must stay inside the resized frame well");
+assert(mpFill.RectSize.x === 228 && mpFill.RectSize.y === 26, "MP fill must stay inside the resized frame well");
+assert(expFill.RectSize.x === 228 && expFill.RectSize.y === 26, "EXP fill must equal HP/MP resized bounds");
+assert(expFill.anchoredPosition.x + expFill.RectSize.x <= 1252, "EXP fill exceeds its resized frame well");
 assert(expTextTransform.anchoredPosition.x === expFill.anchoredPosition.x, "EXP text is not overlaid on fill");
 assert(expTextTransform.RectSize.x === expFill.RectSize.x, "EXP text width does not match fill");
 assert(expText.FontColor.r === 1 && expText.FontColor.g === 1 && expText.FontColor.b === 1, "EXP text must be white");
 assert(expText.OutlineWidth >= 0.36 && expText.OutlineColor.a === 1, "EXP text requires a strong opaque black outline");
-assert(inventoryButton.Transition === 2, "Inventory button must use SpriteSwap feedback");
-assert(inventoryButton.ImageRUIDs.PressedSprite.DataId === "9c5feb02221248e7a1812578ad25181d", "Pressed inventory resource mismatch");
-assert(inventoryTouch != null, "Inventory button long-press receiver is missing");
-assert(/GaugeMaxWidth = 303/.test(classicSource), "Runtime gauge max width is not 303");
+assert(inventoryButton.Transition === 1, "Inventory button must use color-tint feedback");
+assert(inventoryTransform.RectSize.x === 165 && skillTransform.RectSize.x === 165, "Inventory and skill buttons must have equal 165px widths");
+assert(inventoryTransform.anchoredPosition.x === -165 && skillTransform.anchoredPosition.x === 0, "Skill button must sit immediately right of inventory");
+assert(inventorySprite.ImageRUID.DataId === "6d2ff1b0948c416f8f361024908de504", "Imagegen inventory resource mismatch");
+assert(skillSprite.ImageRUID.DataId === "3cebca63ed1d41e4be6e34ee8761172a", "Imagegen skill resource mismatch");
+assert(inventoryTouch != null && skillTouch != null, "HUD menu touch receiver is missing");
+assert(hudPaths.filter((path) => /\/QuickSlots\/Slot_[1-8]$/.test(path)).length === 8, "Persistent 4x2 quick slots are missing");
+assert(/GaugeMaxWidth = 228/.test(classicSource), "Runtime gauge max width is not 228");
 assert(/player\.Hp, player\.MaxHp/.test(classicSource), "HP gauge is not connected to live PlayerComponent HP");
 assert(/EXP .* \(%/.test(classicSource) || /tostring\(expPercent\).*%\)/s.test(classicSource), "EXP percentage is not combined with value text");
 assert(/SpawnDropVisuals\(killer, grants\)/.test(healthSource), "Monster death does not start drop visuals");
@@ -63,6 +73,8 @@ console.log(JSON.stringify({
   gaugeWidths: [hpFill.RectSize.x, mpFill.RectSize.x, expFill.RectSize.x],
   expOverlay: true,
   inventoryFeedback: inventoryButton.Transition,
+  menuButtonWidths: [inventoryTransform.RectSize.x, skillTransform.RectSize.x],
+  persistentQuickSlots: 8,
   dropModelId: model.model_id,
   groundHoldSeconds: 0.5,
 }, null, 2));

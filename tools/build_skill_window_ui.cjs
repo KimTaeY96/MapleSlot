@@ -1,15 +1,13 @@
 const fs = require('node:fs');
 const { UIBuilder } = require('../.agents/skills/msw-ui-system/scripts/msw_ui_builder.cjs');
 const RUID = '2860136c06ab075439721c027de365af';
+const ACTION_RUID = '3cebca63ed1d41e4be6e34ee8761172a';
+const COOLDOWN_RUID = 'ddf8548f22114eedb558f9decec77ba4';
 const coreVersion = JSON.parse(fs.readFileSync('Environment/config', 'utf8')).CoreVersion;
 const b = new UIBuilder('SkillWindow', 4, true);
 const C = {silver:'#B8C0C8',silverDark:'#59636F',silverLight:'#E7EDF2',navy:'#061E35',blue:'#08699D',orange:'#F59A16',ink:'#14202C',row:'#D8DEE3',rowAlt:'#C8D0D7',white:'#F7FBFF'};
 
 b.script('Controller','script.SkillWindowUI',{anchor:'stretch',rect_size:[1920,1080]});
-b.button('OpenButton','SKILL',{anchor:'bottom-right',pos:[-145,145],rect_size:[130,54],image_ruid:RUID});
-b.patchComponent('OpenButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:0.96,g:0.57,b:0.06,a:1},Type:1});
-b.patchComponent('OpenButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:24,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
-
 b.empty('MainGroup',{anchor:'stretch',rect_size:[1920,1080],enable:false});
 b.panel('MainGroup/Window',{anchor:'middle-center',pos:[0,0],rect_size:[560,880],image_ruid:RUID,color:C.silverDark});
 b.panel('MainGroup/Window/InnerFrame',{anchor:'stretch',pos:[0,0],rect_size:[544,864],image_ruid:RUID,color:C.silverLight});
@@ -23,7 +21,7 @@ const roman=['I','II','III','IV'];
 for(let i=0;i<4;i++){
   const name=i===0?'TierIButton':'Tier'+(i+1)+'Button';
   const path='MainGroup/Window/'+name;
-  b.button(path,'',{anchor:'top-left',pos:[18+i*131,-68],rect_size:[124,64],image_ruid:RUID});
+  b.button(path,'',{anchor:'top-left',pos:[18+i*131,-68],rect_size:[124,64],image_ruid:i===0?ACTION_RUID:RUID});
   b.patchComponent(path,'MOD.Core.SpriteGUIRendererComponent',{Color:i===0?{r:0.98,g:0.58,b:0.06,a:1}:{r:0.58,g:0.61,b:0.64,a:1},Type:1});
   b.text(path+'/RomanText',roman[i],{anchor:'middle-center',pos:[0,0],rect_size:[82,52],size:31,color:'#FFFFFF',bold:true,alignment:4});
   if(i>0)b.text(path+'/LockText','▣',{anchor:'middle-right',pos:[-18,-9],rect_size:[28,30],size:17,color:'#26313B',bold:true,alignment:4});
@@ -57,7 +55,7 @@ skills.forEach((s,i)=>{
 
 b.panel('MainGroup/Window/Footer',{anchor:'bottom-center',pos:[0,16],rect_size:[520,92],image_ruid:RUID,color:C.silver});
 b.text('MainGroup/Window/Footer/SkillPointText','SP 0',{anchor:'middle-left',pos:[20,0],rect_size:[245,54],size:26,color:C.ink,bold:true,alignment:0});
-b.button('MainGroup/Window/Footer/SlotSettingsButton','슬롯 설정',{anchor:'middle-right',pos:[-96,0],rect_size:[180,60],image_ruid:RUID});
+b.button('MainGroup/Window/Footer/SlotSettingsButton','슬롯 설정',{anchor:'middle-right',pos:[-96,0],rect_size:[180,60],image_ruid:ACTION_RUID});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:0.97,g:0.53,b:0.04,a:1},Type:1});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:25,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
 b.text('MainGroup/GlobalFeedbackText','',{anchor:'middle-center',pos:[0,-420],rect_size:[520,44],size:20,color:'#FFE28A',bold:true,alignment:4,enable:false});
@@ -76,7 +74,8 @@ for(let i=1;i<=8;i++){
   b.text(root+'/NumberText',String(i),{anchor:'top-center',pos:[0,22],rect_size:[48,24],size:18,color:'#27313A',bold:true,alignment:4});
   b.text(root+'/EmptyText','·',{anchor:'middle-center',pos:[0,-7],rect_size:[56,56],size:36,color:'#AEB7BF',alignment:4});
   b.text(root+'/IconText','',{anchor:'middle-center',pos:[0,-7],rect_size:[58,58],size:20,color:'#FFFFFF',bold:true,alignment:4});
-  b.panel(root+'/CooldownShade',{anchor:'middle-center',pos:[0,-7],rect_size:[58,58],image_ruid:RUID,color:'#061728',alpha:0.82,enable:false});
+  b.panel(root+'/CooldownShade',{anchor:'middle-center',pos:[0,-7],rect_size:[58,58],image_ruid:COOLDOWN_RUID,color:'#061728',alpha:0.82,enable:false});
+  b.patchComponent(root+'/CooldownShade','MOD.Core.SpriteGUIRendererComponent',{Type:3,FillMethod:4,FillOrigin:0,FillClockwise:true,FillAmount:1,RaycastTarget:false});
   b.text(root+'/CooldownShade/CooldownText','',{anchor:'middle-center',rect_size:[54,54],size:23,color:'#FFFFFF',bold:true,alignment:4});
 }
 b.text('SlotGroup/Panel/HintText','위 1–4 · 아래 5–8 · 낮은 번호 우선',{anchor:'bottom-center',pos:[0,18],rect_size:[300,38],size:17,color:'#344B5F',alignment:4});

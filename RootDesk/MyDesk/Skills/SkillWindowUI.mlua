@@ -3,17 +3,20 @@ script SkillWindowUI extends Component
 
     @HideFromInspector property Entity MainGroup = nil
     @HideFromInspector property Entity SlotGroup = nil
+    @HideFromInspector property Entity QuickSlotGroup = nil
     @HideFromInspector property Entity TooltipGroup = nil
     @HideFromInspector property Entity SkillList = nil
     @HideFromInspector property table Handlers = {}
     @HideFromInspector property table RowBySkillId = {}
     @HideFromInspector property table SlotByIndex = {}
+    @HideFromInspector property table HudSlotByIndex = {}
     @HideFromInspector property table ClientState = nil
     @HideFromInspector property integer LastRevision = -1
     @HideFromInspector property number RefreshElapsed = 0
     @HideFromInspector property string HoverSkillId = ""
     @HideFromInspector property string DragSkillId = ""
     @HideFromInspector property integer DragSourceSlot = 0
+    @HideFromInspector property integer DragHoverSlot = 0
     @HideFromInspector property boolean DropResolved = false
     @HideFromInspector property string LastFeedback = ""
 
@@ -21,12 +24,13 @@ script SkillWindowUI extends Component
     method void OnBeginPlay()
         self.MainGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup")
         self.SlotGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/SlotGroup")
+        self.QuickSlotGroup = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/QuickSlots")
         self.TooltipGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/TooltipGroup")
         self.SkillList = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup/Window/SkillList")
         self.MainGroup.Enable = false
         self.SlotGroup.Enable = false
+        self.QuickSlotGroup.Enable = true
         self.TooltipGroup.Enable = false
-        self:BindClick(_EntityService:GetEntityByPath("/ui/SkillWindow/OpenButton"), function() self:OpenWindow() end)
         self:BindClick(self.MainGroup:GetChildByName("CloseButton", true), function() self:CloseWindow() end)
         self:BindClick(self.MainGroup:GetChildByName("SlotSettingsButton", true), function() self:ToggleSlotPanel() end)
         self:BindClick(self.MainGroup:GetChildByName("TierIButton", true), function() self:ShowFeedback("현재 1차 스킬입니다.") end)
@@ -94,12 +98,9 @@ script SkillWindowUI extends Component
 
         end
         for slot=1,8 do
-            local slotEntity = self.SlotByIndex[slot]
             local skillId = self.ClientState.equippedSlots[slot] or ""
-            local label = slotEntity:GetChildByName("IconText", true)
-            local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
-            label.TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
-            slotEntity:GetChildByName("EmptyText", true).Enable = definition == nil
+            self:RefreshSlotVisual(self.SlotByIndex[slot], skillId, true)
+            self:RefreshSlotVisual(self.HudSlotByIndex[slot], skillId, false)
         end
         if component.FeedbackMessage ~= nil and component.FeedbackMessage ~= "" and component.FeedbackMessage ~= self.LastFeedback then
             self:ShowFeedback(component.FeedbackMessage)
@@ -134,13 +135,15 @@ script SkillWindowUI extends Component
             self.DragSourceSlot = 0
             self.DropResolved = false
         end)
-        self:AddHandler(icon, UITouchEndDragEvent, function() self:FinishDragOutside() end)
+        self:AddHandler(icon, UITouchEndDragEvent, function() self:FinishDrag() end)
     end
 
     @ExecSpace("ClientOnly")
     method void BindSlot(integer slot)
         local slotEntity = self.SlotGroup:GetChildByName("Slot_" .. tostring(slot), true)
+        local hudSlotEntity = self.QuickSlotGroup:GetChildByName("Slot_" .. tostring(slot), true)
         self.SlotByIndex[slot] = slotEntity
+        self.HudSlotByIndex[slot] = hudSlotEntity
         self:AddHandler(slotEntity, UITouchBeginDragEvent, function()
             if self.ClientState == nil then return end
             local skillId = self.ClientState.equippedSlots[slot] or ""
@@ -149,15 +152,19 @@ script SkillWindowUI extends Component
             self.DragSourceSlot = slot
             self.DropResolved = false
         end)
-        self:AddHandler(slotEntity, UITouchUpEvent, function() self:DropOnSlot(slot) end)
-        self:AddHandler(slotEntity, UITouchEndDragEvent, function() self:FinishDragOutside() end)
+        self:AddHandler(slotEntity, UITouchEndDragEvent, function() self:FinishDrag() end)
         self:AddHandler(slotEntity, UITouchEnterEvent, function()
+            if self.DragSkillId ~= "" then
+                self.DragHoverSlot = slot
+                return
+            end
             if self.ClientState == nil then return end
             local skillId = self.ClientState.equippedSlots[slot] or ""
             if skillId ~= "" then self:ShowTooltip(skillId) end
         end)
         self:AddHandler(slotEntity, UITouchExitEvent, function()
-            if self.HoverSkillId ~= "" then self:HideTooltip(self.HoverSkillId) end
+            if self.DragHoverSlot == slot then self.DragHoverSlot = 0 end
+            if self.DragSkillId == "" and self.HoverSkillId ~= "" then self:HideTooltip(self.HoverSkillId) end
         end)
     end
 
@@ -181,22 +188,27 @@ script SkillWindowUI extends Component
     end
 
     @ExecSpace("ClientOnly")
-    method void FinishDragOutside()
+    method void FinishDrag()
+        -- Resolves the hovered drop target because UITouchUp is delivered to the drag source on mouse and touch.
         if self.DragSkillId == "" then return end
+        local targetSlot = self.DragHoverSlot
         local sourceSlot = self.DragSourceSlot
-        _TimerService:SetTimerOnce(function()
-            if self.DropResolved == false and sourceSlot > 0 then
-                local component = self:GetSkillComponent()
-                if isvalid(component) then component:RequestClearSlot(sourceSlot) end
-            end
-            self:ResetDrag()
-        end, 0.05)
+        if targetSlot > 0 then
+            self:DropOnSlot(targetSlot)
+            return
+        end
+        if sourceSlot > 0 then
+            local component = self:GetSkillComponent()
+            if isvalid(component) then component:RequestClearSlot(sourceSlot) end
+        end
+        self:ResetDrag()
     end
 
     @ExecSpace("ClientOnly")
     method void ResetDrag()
         self.DragSkillId = ""
         self.DragSourceSlot = 0
+        self.DragHoverSlot = 0
         self.DropResolved = false
     end
 
@@ -262,16 +274,42 @@ script SkillWindowUI extends Component
     end
 
     @ExecSpace("ClientOnly")
+    method void RefreshSlotVisual(Entity slotEntity, string skillId, boolean hasEmptyMarker)
+        -- Mirrors one authoritative equipped slot into either the editor panel or the always-visible HUD.
+        if not isvalid(slotEntity) then return end
+        local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+        slotEntity:GetChildByName("IconText", true).TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
+        if hasEmptyMarker == true then
+            local empty = slotEntity:GetChildByName("EmptyText", true)
+            if isvalid(empty) then empty.Enable = definition == nil end
+        end
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshCooldownOnSlot(Entity slotEntity, number remaining, number duration)
+        -- Updates the radial shade and integer-second countdown on one slot instance.
+        if not isvalid(slotEntity) then return end
+        local shade = slotEntity:GetChildByName("CooldownShade", true)
+        if not isvalid(shade) then return end
+        shade.Enable = remaining > 0
+        shade.SpriteGUIRendererComponent.FillAmount = duration > 0 and math.max(0, math.min(1, remaining / duration)) or 0
+        shade:GetChildByName("CooldownText", true).TextGUIRendererComponent.Text = remaining > 0 and tostring(math.ceil(remaining)) or ""
+    end
+
+    @ExecSpace("ClientOnly")
     method void RefreshCooldowns()
+        -- Mirrors authoritative cooldown deadlines into the editor slots and persistent HUD slots.
         if self.ClientState == nil then return end
         local now = DateTime.UtcNow.Elapsed
         for slot=1,8 do
-            local slotEntity = self.SlotByIndex[slot]
             local skillId = self.ClientState.equippedSlots[slot] or ""
             local remaining = math.max(0, ((self.ClientState.cooldownEndTimes[skillId] or 0) - now) / 1000)
-            local shade = slotEntity:GetChildByName("CooldownShade", true)
-            shade.Enable = remaining > 0
-            shade:GetChildByName("CooldownText", true).TextGUIRendererComponent.Text = remaining > 0 and tostring(math.ceil(remaining)) or ""
+            local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+            local level = self.ClientState.skillLevels[skillId] or 0
+            local effect = definition ~= nil and _SkillDefinitionRuntime:BuildLevelEffect(skillId, level) or nil
+            local duration = effect ~= nil and effect.cooldownSeconds or 0
+            self:RefreshCooldownOnSlot(self.SlotByIndex[slot], remaining, duration)
+            self:RefreshCooldownOnSlot(self.HudSlotByIndex[slot], remaining, duration)
         end
     end
 

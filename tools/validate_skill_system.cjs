@@ -8,7 +8,10 @@ const uiSource = fs.readFileSync('RootDesk/MyDesk/Skills/SkillWindowUI.mlua','ut
 const combatSource = fs.readFileSync('RootDesk/MyDesk/Combat/CombatPlayerAutoBattle.mlua','utf8');
 const progressionSource = fs.readFileSync('RootDesk/MyDesk/Player/PlayerProgressionComponent.mlua','utf8');
 const builderSource = fs.readFileSync('tools/build_skill_window_ui.cjs','utf8');
+const hudSource = fs.readFileSync('RootDesk/MyDesk/UI/ClassicPlayerHUD.mlua','utf8');
+const hudBuilderSource = fs.readFileSync('tools/build_classic_player_hud.cjs','utf8');
 const snapshot = UIBuilder.snapshot('ui/SkillWindow.ui');
+const hudSnapshot = UIBuilder.snapshot('ui/ClassicPlayerHUD.ui');
 
 function test(name, fn) {
   try { fn(); process.stdout.write('PASS '+name+'\n'); }
@@ -93,6 +96,43 @@ test('tooltip renderers do not intercept pointer events',()=>{
     for(const component of entity.jsonString['@components']||[]){
       if(component['@type']==='MOD.Core.SpriteGUIRendererComponent' || component['@type']==='MOD.Core.TextGUIRendererComponent') assert.equal(component.RaycastTarget,false,entity.jsonString.path);
     }
+  }
+});
+test('drag end resolves the hovered slot for mouse and touch',()=>{
+  assert.match(uiSource,/DragHoverSlot/);
+  assert.match(uiSource,/UITouchEndDragEvent, function\(\) self:FinishDrag\(\) end/);
+  assert.match(uiSource,/if targetSlot > 0 then[\s\S]*self:DropOnSlot\(targetSlot\)/);
+  assert.doesNotMatch(uiSource,/FinishDragOutside/);
+  assert.match(uiSource,/RequestClearSlot\(sourceSlot\)/);
+});
+test('bottom HUD has equal inventory and skill buttons after proportional shrink',()=>{
+  const hud=hudSnapshot.find(x=>x.path.endsWith('/HudFrame'));
+  const inventory=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/InventoryButton'));
+  const skill=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/SkillButton'));
+  assert.deepEqual(hud.size,[1720,98]);
+  assert.deepEqual(inventory.size,[165,98]);
+  assert.deepEqual(skill.size,[165,98]);
+  assert.equal(inventory.pos[0],-165);
+  assert.equal(skill.pos[0],0);
+  assert.match(hudSource,/method void OpenSkillWindow\(\)/);
+  assert.ok(!snapshot.some(x=>x.path.endsWith('/OpenButton')));
+});
+test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()=>{
+  const slots=hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
+  assert.equal(slots.length,8);
+  assert.equal(new Set(slots.slice(0,4).map(x=>x.pos[1])).size,1);
+  assert.equal(new Set(slots.slice(4).map(x=>x.pos[1])).size,1);
+  assert.deepEqual(slots.slice(0,4).map(x=>x.pos[0]),slots.slice(4).map(x=>x.pos[0]));
+  assert.match(uiSource,/HudSlotByIndex/);
+  assert.match(uiSource,/RefreshCooldownOnSlot\(self\.HudSlotByIndex\[slot\]/);
+  assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/CooldownShade$/.test(x.path)).length,8);
+});
+test('imagegen-authored UI resources are project-bound and referenced by RUID',()=>{
+  for(const file of ['skill-action-button.png','inventory-menu-button.png','skill-quickslots-4x2.png','skill-cooldown-overlay.png']) {
+    assert.ok(fs.existsSync('Assets/UI/ClassicSilver/'+file),file);
+  }
+  for(const ruid of ['3cebca63ed1d41e4be6e34ee8761172a','6d2ff1b0948c416f8f361024908de504','5e4ee74cd7d0453994d4ce6a0ed4130c','ddf8548f22114eedb558f9decec77ba4']) {
+    assert.ok((builderSource+hudBuilderSource).includes(ruid),ruid);
   }
 });
 test('custom style is independent from simple-black UI',()=>{
