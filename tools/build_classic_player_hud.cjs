@@ -16,6 +16,12 @@ const R = {
 
 const projectCoreVersion = JSON.parse(fs.readFileSync('Environment/config', 'utf8')).CoreVersion;
 const b = new UIBuilder('ClassicPlayerHUD', 4, true);
+function blackOutline(path, width = 2) {
+  b.patchComponent(path, 'MOD.Core.TextGUIRendererComponent', {
+    OutlineColor: { r: 0, g: 0, b: 0, a: 1 },
+    OutlineWidth: width,
+  });
+}
 b.script('Controller', 'script.ClassicPlayerHUD', { anchor: 'stretch', rect_size: [1920, 1080] });
 b.sprite('HudFrame', {
   anchor: 'bottom-center', pos: [0, 0], rect_size: [1920, 110],
@@ -120,10 +126,12 @@ for (let i = 1; i <= 8; i += 1) {
     anchor: 'middle-center', rect_size: [72, 72], size: 22,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
+  blackOutline(root + '/IconText', 3);
   b.text('QuickSlots/SlotNumber_' + i, String(i), {
     anchor: 'middle-center', pos: [-143 + col * 95.5, 94 - row * 102], rect_size: [20, 18], size: 14,
     color: '#FFE2A1', bold: true, alignment: 4,
   });
+  blackOutline('QuickSlots/SlotNumber_' + i, 2);
   b.panel(root + '/CooldownShade', {
     anchor: 'middle-center', rect_size: [74, 74], image_ruid: R.cooldownOverlay,
     color: '#061728', alpha: 0.82, enable: false,
@@ -136,6 +144,7 @@ for (let i = 1; i <= 8; i += 1) {
     anchor: 'middle-center', rect_size: [70, 70], size: 23,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
+  blackOutline(root + '/CooldownShade/CooldownText', 3);
 }
 
 const textPaths = [

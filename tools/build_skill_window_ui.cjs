@@ -5,6 +5,12 @@ const ACTION_RUID = '3cebca63ed1d41e4be6e34ee8761172a';
 const COOLDOWN_RUID = 'ddf8548f22114eedb558f9decec77ba4';
 const coreVersion = JSON.parse(fs.readFileSync('Environment/config', 'utf8')).CoreVersion;
 const b = new UIBuilder('SkillWindow', 4, true);
+function blackOutline(path, width = 2) {
+  b.patchComponent(path, 'MOD.Core.TextGUIRendererComponent', {
+    OutlineColor: {r:0,g:0,b:0,a:1},
+    OutlineWidth: width,
+  });
+}
 const C = {silver:'#B8C0C8',silverDark:'#59636F',silverLight:'#E7EDF2',navy:'#061E35',blue:'#08699D',orange:'#F59A16',ink:'#14202C',row:'#D8DEE3',rowAlt:'#C8D0D7',white:'#F7FBFF'};
 
 b.script('Controller','script.SkillWindowUI',{anchor:'stretch',rect_size:[1920,1080]});
@@ -24,6 +30,7 @@ for(let i=0;i<4;i++){
   b.button(path,'',{anchor:'top-left',pos:[18+i*131,-68],rect_size:[124,64],image_ruid:i===0?ACTION_RUID:RUID});
   b.patchComponent(path,'MOD.Core.SpriteGUIRendererComponent',{Color:i===0?{r:0.98,g:0.58,b:0.06,a:1}:{r:0.58,g:0.61,b:0.64,a:1},Type:1});
   b.text(path+'/RomanText',roman[i],{anchor:'middle-center',pos:[0,0],rect_size:[82,52],size:31,color:'#FFFFFF',bold:true,alignment:4});
+  blackOutline(path+'/RomanText',2);
   if(i>0)b.text(path+'/LockText','▣',{anchor:'middle-right',pos:[-18,-9],rect_size:[28,30],size:17,color:'#26313B',bold:true,alignment:4});
 }
 
@@ -44,13 +51,16 @@ skills.forEach((s,i)=>{
   b.patchComponent(root+'/IconButton','MOD.Core.SpriteGUIRendererComponent',{Color:hue,Type:1,RaycastTarget:true});
   b.upsertComponent(root+'/IconButton','MOD.Core.UITouchReceiveComponent');
   b.text(root+'/IconButton/IconGlyph',s[1],{anchor:'middle-center',pos:[0,0],rect_size:[64,64],size:s[1].length>2?18:24,color:'#FFFFFF',bold:true,alignment:4});
+  blackOutline(root+'/IconButton/IconGlyph',3);
   b.panel(root+'/TypeBadge',{anchor:'middle-left',pos:[98,-22],rect_size:[30,26],image_ruid:RUID,color:s[2]==='A'?'#D26A18':'#167A50'});
   b.text(root+'/TypeBadge/BadgeText',s[2],{anchor:'middle-center',pos:[0,0],rect_size:[28,24],size:17,color:'#FFFFFF',bold:true,alignment:4});
+  blackOutline(root+'/TypeBadge/BadgeText',2);
   b.text(root+'/NameText',names[i],{anchor:'middle-left',pos:[120,15],rect_size:[270,34],size:24,color:C.ink,bold:true,alignment:0});
   b.text(root+'/LevelText','Lv. 0 / '+max[i],{anchor:'middle-left',pos:[120,-22],rect_size:[220,28],size:19,color:'#31465A',alignment:0});
   b.button(root+'/PlusButton','+',{anchor:'middle-right',pos:[-34,0],rect_size:[56,56],image_ruid:RUID});
   b.patchComponent(root+'/PlusButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:0.55,g:0.59,b:0.62,a:1},Type:1});
   b.patchComponent(root+'/PlusButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:34,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
+  blackOutline(root+'/PlusButton',2);
 });
 
 b.panel('MainGroup/Window/Footer',{anchor:'bottom-center',pos:[0,16],rect_size:[520,92],image_ruid:RUID,color:C.silver});
@@ -58,6 +68,7 @@ b.text('MainGroup/Window/Footer/SkillPointText','SP 0',{anchor:'middle-left',pos
 b.button('MainGroup/Window/Footer/SlotSettingsButton','슬롯 설정',{anchor:'middle-right',pos:[-96,0],rect_size:[180,60],image_ruid:ACTION_RUID});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:0.97,g:0.53,b:0.04,a:1},Type:1});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:25,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
+blackOutline('MainGroup/Window/Footer/SlotSettingsButton',2);
 b.text('MainGroup/GlobalFeedbackText','',{anchor:'middle-center',pos:[0,-420],rect_size:[520,44],size:20,color:'#FFE28A',bold:true,alignment:4,enable:false});
 
 b.empty('SlotGroup',{anchor:'stretch',rect_size:[1920,1080],enable:false});
@@ -74,9 +85,11 @@ for(let i=1;i<=8;i++){
   b.text(root+'/NumberText',String(i),{anchor:'top-center',pos:[0,22],rect_size:[48,24],size:18,color:'#27313A',bold:true,alignment:4});
   b.text(root+'/EmptyText','·',{anchor:'middle-center',pos:[0,-7],rect_size:[56,56],size:36,color:'#AEB7BF',alignment:4});
   b.text(root+'/IconText','',{anchor:'middle-center',pos:[0,-7],rect_size:[58,58],size:20,color:'#FFFFFF',bold:true,alignment:4});
+  blackOutline(root+'/IconText',3);
   b.panel(root+'/CooldownShade',{anchor:'middle-center',pos:[0,-7],rect_size:[58,58],image_ruid:COOLDOWN_RUID,color:'#061728',alpha:0.82,enable:false});
   b.patchComponent(root+'/CooldownShade','MOD.Core.SpriteGUIRendererComponent',{Type:3,FillMethod:4,FillOrigin:0,FillClockwise:true,FillAmount:1,RaycastTarget:false});
   b.text(root+'/CooldownShade/CooldownText','',{anchor:'middle-center',rect_size:[54,54],size:23,color:'#FFFFFF',bold:true,alignment:4});
+  blackOutline(root+'/CooldownShade/CooldownText',3);
 }
 b.text('SlotGroup/Panel/HintText','위 1–4 · 아래 5–8 · 낮은 번호 우선',{anchor:'bottom-center',pos:[0,18],rect_size:[300,38],size:17,color:'#344B5F',alignment:4});
 
@@ -85,6 +98,7 @@ b.panel('TooltipGroup/Panel',{anchor:'middle-center',pos:[510,10],rect_size:[440
 b.panel('TooltipGroup/Panel/Border',{anchor:'stretch',rect_size:[428,638],image_ruid:RUID,color:'#0B3857',alpha:0.92});
 b.panel('TooltipGroup/Panel/IconFrame',{anchor:'top-left',pos:[54,-58],rect_size:[84,84],image_ruid:RUID,color:'#2B5C80'});
 b.text('TooltipGroup/Panel/IconFrame/TooltipIconText','PS',{anchor:'middle-center',rect_size:[76,76],size:26,color:'#FFFFFF',bold:true,alignment:4});
+blackOutline('TooltipGroup/Panel/IconFrame/TooltipIconText',3);
 b.text('TooltipGroup/Panel/TooltipNameText','파워 슬래시',{anchor:'top-left',pos:[112,-34],rect_size:[300,40],size:28,color:'#FFFFFF',bold:true,alignment:0});
 b.text('TooltipGroup/Panel/TooltipMetaText','액티브 · 마스터 레벨 20',{anchor:'top-left',pos:[112,-80],rect_size:[300,32],size:18,color:'#A9DDF4',alignment:0});
 b.text('TooltipGroup/Panel/TooltipDescriptionText','검에 힘을 모아 단일 적을 벤다.',{anchor:'top-center',pos:[0,-142],rect_size:[398,76],size:20,color:'#E7F7FF',alignment:0});

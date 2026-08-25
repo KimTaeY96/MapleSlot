@@ -73,6 +73,13 @@ function textStyle(
   });
 }
 
+function blackOutline(pathName, width = 2) {
+  b.patchComponent(pathName, "MOD.Core.TextGUIRendererComponent", {
+    OutlineColor: { r: 0, g: 0, b: 0, a: 1 },
+    OutlineWidth: width,
+  });
+}
+
 // Keeps the normal artwork stable; interaction is expressed only through tint.
 function colorTintButton(pathName, normal) {
   sprite(pathName, normal, 0, true);
@@ -189,19 +196,21 @@ function patchEquipmentCell(cellName, buttonName, x, y, label) {
     pivot: [1, 0],
   });
   textStyle(`${button}/Enhancement`, 18, C.white, 4, 1024, true);
+  blackOutline(`${button}/Enhancement`, 3);
   b.patch(`${button}/Empty`, {
     anchor: "middle-center",
     pos: [0, 0],
     rect_size: [72, 28],
   });
-  textStyle(`${button}/Empty`, 17, C.mutedBlue, 2, 512, false);
+  textStyle(`${button}/Empty`, 17, C.navy, 2, 512, false);
   b.patch(`${button}/CanEquip`, {
     anchor: "top-center",
     pos: [0, -8],
     rect_size: [72, 20],
     pivot: [0.5, 1],
   });
-  textStyle(`${button}/CanEquip`, 15, { r: 0.20, g: 0.50, b: 0.82, a: 1 }, 2, 512, true);
+  textStyle(`${button}/CanEquip`, 15, C.white, 2, 512, true);
+  blackOutline(`${button}/CanEquip`, 2);
   b.patch(`${cell}/Label`, {
     anchor: "bottom-center",
     pos: [0, 0],
@@ -210,7 +219,7 @@ function patchEquipmentCell(cellName, buttonName, x, y, label) {
   b.patchComponent(`${cell}/Label`, "MOD.Core.TextGUIRendererComponent", {
     Text: label,
   });
-  textStyle(`${cell}/Label`, 18, C.mutedBlue, 2, 512, true);
+  textStyle(`${cell}/Label`, 18, C.navy, 2, 512, true);
 }
 
 // Root remains enabled so the controller's OnBeginPlay lifecycle always runs.
@@ -259,18 +268,16 @@ for (const [panelName, x, order] of [
     pivot: [0.5, 1],
   });
   sprite(`${panelName}/Header`, "title-bar", 1, false);
-  b.patch(`${panelName}/Header/CloseButton`, {
-    anchor: "top-right",
-    pos: [-4, -3],
-    rect_size: [48, 48],
-    pivot: [1, 1],
-  });
-  colorTintButton(
-    `${panelName}/Header/CloseButton`,
-    "close-normal",
-    "close-hover",
-    "close-pressed",
-  );
+  const closeButton = `${panelName}/Header/CloseButton`;
+  if (b.find(closeButton)) {
+    b.patch(closeButton, {
+      anchor: "top-right",
+      pos: [-4, -3],
+      rect_size: [48, 48],
+      pivot: [1, 1],
+    });
+    colorTintButton(closeButton, "close-normal", "close-hover", "close-pressed");
+  }
   b.patch(`${panelName}/Header/Title`, {
     anchor: "stretch",
     pos: [0, 0],
@@ -491,7 +498,7 @@ b.patch("InventoryPanel/Footer/CapacityText", {
 textStyle(
   "InventoryPanel/Footer/CapacityText",
   18,
-  C.mutedBlue,
+  C.navy,
   1,
   512,
   false,
@@ -505,7 +512,7 @@ b.patch("InventoryPanel/Footer/InventoryStatusText", {
 textStyle(
   "InventoryPanel/Footer/InventoryStatusText",
   16,
-  C.mutedBlue,
+  C.navy,
   1,
   512,
   false,
@@ -569,7 +576,7 @@ b.patchComponent(
 textStyle(
   "EquipmentPanel/EquipmentSection/SectionTitle",
   18,
-  C.mutedBlue,
+  C.navy,
   1,
   512,
   true,
