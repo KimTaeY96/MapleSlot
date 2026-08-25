@@ -710,11 +710,13 @@ script SlotMachineRuntime extends Logic
         local slotTop = topHudOffset + (88.0 * hudScale) + slotToHudGap
         local leftMargin = 42.0
         local bottomHudHeight = 110.0
-        local slotWidth = 893.0
-        local slotHeight = 1020.0
+        local slotWidth = self.slotPanelTransform.RectSize.x
+        local slotHeight = self.slotPanelTransform.RectSize.y
+        if slotWidth == nil or slotWidth <= 0 then slotWidth = 893.0 end
+        if slotHeight == nil or slotHeight <= 0 then slotHeight = 1020.0 end
         local slotScaleByWidth = (screenWidth - (leftMargin * 2.0)) / slotWidth
         local slotScaleByHeight = (screenHeight - bottomHudHeight - slotToBottomHudGap - slotTop) / slotHeight
-        local slotScale = math.min(0.87, math.min(slotScaleByWidth, slotScaleByHeight))
+        local slotScale = math.min(0.90, math.min(slotScaleByWidth, slotScaleByHeight))
         slotScale = math.max(0.20, slotScale)
 
         local slotCenterX = leftMargin + (slotWidth * slotScale * 0.5)

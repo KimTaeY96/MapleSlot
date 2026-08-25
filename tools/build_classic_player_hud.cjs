@@ -95,7 +95,7 @@ b.button('HudFrame/SkillButton', '', {
 });
 b.upsertComponent('HudFrame/SkillButton', 'MOD.Core.UITouchReceiveComponent');
 b.sprite('HudFrame/SkillButton/Icon', {
-  anchor: 'middle-center', pos: [0, 0], rect_size: [105, 105],
+  anchor: 'middle-center', pos: [0, 0], rect_size: [70, 70],
   image_ruid: R.skillBookIcon, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('HudFrame/SkillButton/Icon', 'MOD.Core.SpriteGUIRendererComponent', {

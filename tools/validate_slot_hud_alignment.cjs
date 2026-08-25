@@ -13,7 +13,7 @@ function nearlyEqual(actual, expected, epsilon, message) {
   }
 }
 
-function calculateLayout(screenWidth, screenHeight) {
+function calculateLayout(screenWidth, screenHeight, slotWidth, slotHeight) {
   const hudScale = Math.min(1, Math.max(0.72, (screenWidth - 80) / 740));
   const topHudOffset = 18;
   const slotToHudGap = 2;
@@ -21,11 +21,9 @@ function calculateLayout(screenWidth, screenHeight) {
   const slotTop = topHudOffset + (88 * hudScale) + slotToHudGap;
   const leftMargin = 42;
   const bottomHudHeight = 110;
-  const slotWidth = 893;
-  const slotHeight = 1020;
   const slotScaleByWidth = (screenWidth - (leftMargin * 2)) / slotWidth;
   const slotScaleByHeight = (screenHeight - bottomHudHeight - slotToBottomHudGap - slotTop) / slotHeight;
-  const slotScale = Math.max(0.2, Math.min(0.87, Math.min(slotScaleByWidth, slotScaleByHeight)));
+  const slotScale = Math.max(0.2, Math.min(0.90, Math.min(slotScaleByWidth, slotScaleByHeight)));
   const slotCenterX = leftMargin + (slotWidth * slotScale * 0.5);
   const topHudAnchoredX = slotCenterX - (screenWidth * 0.5);
   return {
@@ -44,6 +42,9 @@ const runtimeSource = fs.readFileSync("RootDesk/MyDesk/SlotMachine/SlotMachineRu
 for (const fragment of [
   "local slotToHudGap = 2.0",
   "local slotToBottomHudGap = 2.0",
+  "local slotWidth = self.slotPanelTransform.RectSize.x",
+  "local slotHeight = self.slotPanelTransform.RectSize.y",
+  "local slotScale = math.min(0.90",
   "local slotCenterX = leftMargin + (slotWidth * slotScale * 0.5)",
   "self.topHudTransform.anchoredPosition = Vector2(topHudAnchoredX, -topHudOffset)",
   "self.slotPanelTransform.anchoredPosition = Vector2(leftMargin, -slotTop)",
@@ -51,8 +52,10 @@ for (const fragment of [
   assert(runtimeSource.includes(fragment), "Responsive layout source missing: " + fragment);
 }
 
-const layout = calculateLayout(1920, 1080);
-nearlyEqual(layout.slotScale, 0.8431372549019608, 1e-12, "Unexpected 1920x1080 slot scale");
+const mainUi = UIBuilder.read("ui/UIRoot_TestSandbox_MainPlay.ui");
+const slotTransform = mainUi.getComponent("Panel_LeftSlotMachine", "MOD.Core.UITransformComponent");
+const layout = calculateLayout(1920, 1080, slotTransform.RectSize.x, slotTransform.RectSize.y);
+assert(layout.slotScale > 0.87 && layout.slotScale <= 0.90, "Slot must enlarge beyond the old 0.87 cap without exceeding 0.90");
 nearlyEqual(layout.slotTop - layout.topHudBottom, 2, 1e-9, "Coin HUD to slot gap must be 2px");
 nearlyEqual(layout.bottomHudTop - layout.slotBottom, 2, 1e-9, "Slot to bottom HUD gap must be 2px");
 nearlyEqual(layout.slotCenterX, layout.topHudCenterX, 1e-9, "Coin HUD must be centered over slot machine");
@@ -61,7 +64,7 @@ const hud = UIBuilder.read("ui/ClassicPlayerHUD.ui");
 const inventoryIcon = hud.getComponent("HudFrame/InventoryButton/Icon", "MOD.Core.UITransformComponent");
 const skillIcon = hud.getComponent("HudFrame/SkillButton/Icon", "MOD.Core.UITransformComponent");
 assert(inventoryIcon.RectSize.x === 78 && inventoryIcon.RectSize.y === 78, "Inventory icon rollback size must be 78x78");
-assert(skillIcon.RectSize.x === 105 && skillIcon.RectSize.y === 105, "Skill-book icon rollback size must be 105x105");
+assert(skillIcon.RectSize.x === 70 && skillIcon.RectSize.y === 70, "Skill-book icon must match the bag visible footprint at 70x70");
 
 process.stdout.write(JSON.stringify({
   screen: [1920, 1080],
