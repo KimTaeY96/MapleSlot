@@ -704,22 +704,28 @@ script SlotMachineRuntime extends Logic
 
         local hudScale = math.min(1.0, math.max(0.72, (screenWidth - 80.0) / 740.0))
         self.topHudTransform.UIScale = Vector3(hudScale, hudScale, 1.0)
-        self.topHudTransform.anchoredPosition = Vector2(0.0, -18.0)
-
-        local topBand = 18.0 + (88.0 * hudScale) + 36.0
+        local topHudOffset = 18.0
+        local slotToHudGap = 2.0
+        local slotToBottomHudGap = 2.0
+        local slotTop = topHudOffset + (88.0 * hudScale) + slotToHudGap
         local leftMargin = 42.0
         local bottomHudHeight = 110.0
-        local bottomHudGap = 16.0
         local slotWidth = 893.0
         local slotHeight = 1020.0
         local slotScaleByWidth = (screenWidth - (leftMargin * 2.0)) / slotWidth
-        local slotScaleByHeight = (screenHeight - topBand - bottomHudHeight - bottomHudGap) / slotHeight
+        local slotScaleByHeight = (screenHeight - bottomHudHeight - slotToBottomHudGap - slotTop) / slotHeight
         local slotScale = math.min(0.87, math.min(slotScaleByWidth, slotScaleByHeight))
         slotScale = math.max(0.20, slotScale)
 
+        local slotCenterX = leftMargin + (slotWidth * slotScale * 0.5)
+        local topHudAnchoredX = slotCenterX - (screenWidth * 0.5)
+        self.topHudTransform.anchoredPosition = Vector2(topHudAnchoredX, -topHudOffset)
         self.slotPanelTransform.UIScale = Vector3(slotScale, slotScale, 1.0)
-        self.slotPanelTransform.anchoredPosition = Vector2(leftMargin, -topBand)
-        log("[SlotMachineRuntime] Responsive UI: slotScale=" .. tostring(slotScale) .. ", bottomReserved=" .. tostring(bottomHudHeight + bottomHudGap))
+        self.slotPanelTransform.anchoredPosition = Vector2(leftMargin, -slotTop)
+        log("[SlotMachineRuntime] Responsive UI: slotScale=" .. tostring(slotScale)
+            .. ", topGap=" .. tostring(slotToHudGap)
+            .. ", bottomGap=" .. tostring(slotToBottomHudGap)
+            .. ", topHudX=" .. tostring(topHudAnchoredX))
 
 
     end

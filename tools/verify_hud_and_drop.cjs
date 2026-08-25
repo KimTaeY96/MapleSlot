@@ -54,9 +54,9 @@ assert(inventorySprite.ImageRUID.DataId === "008c9a704d284753a32ab40da2cfbd52", 
 assert(skillSprite.ImageRUID.DataId === "cd1e25491fb243edba76e79613c1987a", "Skill button must use the green reference-background variant");
 assert(inventorySprite.Type === 0 && skillSprite.Type === 0, "Reference button pixels must render without nine-slice substitution");
 assert(inventoryIcon.ImageRUID.DataId === "1b0f6476f399444b9ff8f23958c447f8", "Reference bag icon resource mismatch");
-assert(inventoryIconTransform.RectSize.x === 52 && inventoryIconTransform.RectSize.y === 52, "Bag icon must render at two-thirds of its original visible size");
-assert(skillIcon.ImageRUID.DataId === "2459bb7e8ca24eb3963e11a30b1c3ecd", "Imagegen skill-book icon resource mismatch");
-assert(skillIconTransform.RectSize.x === 70 && skillIconTransform.RectSize.y === 70, "Book icon must match the reduced bag visual footprint");
+assert(inventoryIconTransform.RectSize.x === 78 && inventoryIconTransform.RectSize.y === 78, "Bag icon must use its restored reference scale");
+assert(skillIcon.ImageRUID.DataId === "8252bcc8043849878cb827c45a551d05", "Imagegen skill-book icon resource mismatch");
+assert(skillIconTransform.RectSize.x === 105 && skillIconTransform.RectSize.y === 105, "Book icon must use its restored reference scale");
 assert(inventoryTouch != null && skillTouch != null, "HUD menu touch receiver is missing");
 assert(hudPaths.filter((path) => /\/QuickSlots\/Slot_[1-8]$/.test(path)).length === 8, "Persistent 4x2 quick slots are missing");
 assert(/GaugeMaxWidth = 303/.test(classicSource), "Runtime gauge max width is not 303");

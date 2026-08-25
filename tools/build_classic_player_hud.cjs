@@ -9,7 +9,7 @@ const R = {
   menuButtonBlue: '008c9a704d284753a32ab40da2cfbd52',
   menuButtonGreen: 'cd1e25491fb243edba76e79613c1987a',
   inventoryBagIcon: '1b0f6476f399444b9ff8f23958c447f8',
-  skillBookIcon: '2459bb7e8ca24eb3963e11a30b1c3ecd',
+  skillBookIcon: '8252bcc8043849878cb827c45a551d05',
   quickSlots: '5e4ee74cd7d0453994d4ce6a0ed4130c',
   cooldownOverlay: 'ddf8548f22114eedb558f9decec77ba4',
 };
@@ -83,7 +83,7 @@ b.button('HudFrame/InventoryButton', '', {
 });
 b.upsertComponent('HudFrame/InventoryButton', 'MOD.Core.UITouchReceiveComponent');
 b.sprite('HudFrame/InventoryButton/Icon', {
-  anchor: 'middle-center', pos: [0, 0], rect_size: [52, 52],
+  anchor: 'middle-center', pos: [0, 0], rect_size: [78, 78],
   image_ruid: R.inventoryBagIcon, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('HudFrame/InventoryButton/Icon', 'MOD.Core.SpriteGUIRendererComponent', {
@@ -95,7 +95,7 @@ b.button('HudFrame/SkillButton', '', {
 });
 b.upsertComponent('HudFrame/SkillButton', 'MOD.Core.UITouchReceiveComponent');
 b.sprite('HudFrame/SkillButton/Icon', {
-  anchor: 'middle-center', pos: [0, 0], rect_size: [70, 70],
+  anchor: 'middle-center', pos: [0, 0], rect_size: [105, 105],
   image_ruid: R.skillBookIcon, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('HudFrame/SkillButton/Icon', 'MOD.Core.SpriteGUIRendererComponent', {
