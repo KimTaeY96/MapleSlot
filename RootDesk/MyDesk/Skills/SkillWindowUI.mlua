@@ -19,20 +19,26 @@ script SkillWindowUI extends Component
     @HideFromInspector property integer DragHoverSlot = 0
     @HideFromInspector property boolean DropResolved = false
     @HideFromInspector property string LastFeedback = ""
+    @HideFromInspector property Entity HudTooltipDismiss = nil
+    @HideFromInspector property boolean HudTooltipPinned = false
+    @HideFromInspector property string HudTooltipSkillId = ""
 
     @ExecSpace("ClientOnly")
     method void OnBeginPlay()
         self.MainGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup")
         self.SlotGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/SlotGroup")
-        self.QuickSlotGroup = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/QuickSlots")
+        self.QuickSlotGroup = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/HudFrame/QuickSlots")
         self.TooltipGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/TooltipGroup")
+        self.HudTooltipDismiss = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/HudTooltipDismiss")
         self.SkillList = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup/Window/SkillList")
         self.MainGroup.Enable = false
         self.SlotGroup.Enable = false
-        self.QuickSlotGroup.Enable = true
+        if isvalid(self.QuickSlotGroup) then self.QuickSlotGroup.Enable = true end
         self.TooltipGroup.Enable = false
+        if isvalid(self.HudTooltipDismiss) then self.HudTooltipDismiss.Enable = false end
         self:BindClick(self.MainGroup:GetChildByName("CloseButton", true), function() self:CloseWindow() end)
         self:BindClick(self.MainGroup:GetChildByName("SlotSettingsButton", true), function() self:ToggleSlotPanel() end)
+        self:AddHandler(self.HudTooltipDismiss, UITouchDownEvent, function() self:DismissHudTooltip() end)
         self:BindClick(self.MainGroup:GetChildByName("TierIButton", true), function() self:ShowFeedback("현재 1차 스킬입니다.") end)
         for tier=2,4 do
             local button = self.MainGroup:GetChildByName("Tier" .. tostring(tier) .. "Button", true)
@@ -41,7 +47,7 @@ script SkillWindowUI extends Component
         for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do self:BindSkillRow(definition) end
         for slot=1,8 do self:BindSlot(slot) end
         self:RefreshState(true)
-        log("[SkillUI] initialized rows=14 slots=8")
+        log("[SkillUI] HUD slots linked priority=1..8 rows=bottom1-4/top5-8 anchor=HudFrame.TopRight gap=0")
     end
 
     @ExecSpace("ClientOnly")
@@ -51,6 +57,7 @@ script SkillWindowUI extends Component
         self.RefreshElapsed = 0
         self:RefreshState(false)
         self:RefreshCooldowns()
+        self:RefreshHudCombatState()
     end
 
     @ExecSpace("ClientOnly")
@@ -63,8 +70,7 @@ script SkillWindowUI extends Component
     method void CloseWindow()
         self.MainGroup.Enable = false
         self.SlotGroup.Enable = false
-        self.TooltipGroup.Enable = false
-        self.HoverSkillId = ""
+        self:DismissHudTooltip()
         self:ResetDrag()
     end
 
@@ -140,6 +146,7 @@ script SkillWindowUI extends Component
 
     @ExecSpace("ClientOnly")
     method void BindSlot(integer slot)
+        -- Slot settings owns drag mutations; the HUD only exposes read-only tooltip input.
         local slotEntity = self.SlotGroup:GetChildByName("Slot_" .. tostring(slot), true)
         local hudSlotEntity = self.QuickSlotGroup:GetChildByName("Slot_" .. tostring(slot), true)
         self.SlotByIndex[slot] = slotEntity
@@ -165,6 +172,23 @@ script SkillWindowUI extends Component
         self:AddHandler(slotEntity, UITouchExitEvent, function()
             if self.DragHoverSlot == slot then self.DragHoverSlot = 0 end
             if self.DragSkillId == "" and self.HoverSkillId ~= "" then self:HideTooltip(self.HoverSkillId) end
+        end)
+        self:AddHandler(hudSlotEntity, UITouchEnterEvent, function()
+            if self.ClientState == nil or self.HudTooltipPinned == true then return end
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            if skillId ~= "" then self:ShowHudTooltip(skillId, false) end
+        end)
+        self:AddHandler(hudSlotEntity, UITouchExitEvent, function()
+            if self.HudTooltipPinned == false and self.HudTooltipSkillId ~= "" then self:HideTooltip(self.HudTooltipSkillId) end
+        end)
+        self:AddHandler(hudSlotEntity, UITouchDownEvent, function()
+            if self.ClientState == nil then return end
+            local skillId = self.ClientState.equippedSlots[slot] or ""
+            if skillId == "" then
+                self:DismissHudTooltip()
+                return
+            end
+            self:ShowHudTooltip(skillId, true)
         end)
     end
 
@@ -214,6 +238,9 @@ script SkillWindowUI extends Component
 
     @ExecSpace("ClientOnly")
     method void ShowTooltip(string skillId)
+        self.HudTooltipPinned = false
+        self.HudTooltipSkillId = ""
+        if isvalid(self.HudTooltipDismiss) then self.HudTooltipDismiss.Enable = false end
         self.HoverSkillId = skillId
         local tooltipPanel = self.TooltipGroup:GetChildByName("Panel", true)
         local tooltipX = _UILogic.ScreenWidth < 1500 and -510 or 510
@@ -224,9 +251,31 @@ script SkillWindowUI extends Component
 
     @ExecSpace("ClientOnly")
     method void HideTooltip(string skillId)
-        if self.HoverSkillId ~= skillId then return end
+        if self.HudTooltipPinned == true or self.HoverSkillId ~= skillId then return end
+        self.HoverSkillId = ""
+        self.HudTooltipSkillId = ""
+        self.TooltipGroup.Enable = false
+    end
+
+    method void ShowHudTooltip(string skillId, boolean pinned)
+        -- Places the shared tooltip above-left of the right-edge HUD slots.
+        self.HoverSkillId = skillId
+        self.HudTooltipSkillId = skillId
+        self.HudTooltipPinned = pinned
+        local tooltipPanel = self.TooltipGroup:GetChildByName("Panel", true)
+        tooltipPanel.UITransformComponent.anchoredPosition = Vector2(330, 160)
+        self:RenderTooltip(skillId)
+        self.TooltipGroup.Enable = true
+        if isvalid(self.HudTooltipDismiss) then self.HudTooltipDismiss.Enable = pinned end
+    end
+
+    method void DismissHudTooltip()
+        -- Closes both hover and touch-pinned tooltip state without mutating a slot.
+        self.HudTooltipPinned = false
+        self.HudTooltipSkillId = ""
         self.HoverSkillId = ""
         self.TooltipGroup.Enable = false
+        if isvalid(self.HudTooltipDismiss) then self.HudTooltipDismiss.Enable = false end
     end
 
     @ExecSpace("ClientOnly")
@@ -275,30 +324,44 @@ script SkillWindowUI extends Component
 
     @ExecSpace("ClientOnly")
     method void RefreshSlotVisual(Entity slotEntity, string skillId, boolean hasEmptyMarker)
-        -- Mirrors one authoritative equipped slot into either the editor panel or the always-visible HUD.
+        -- Mirrors one authoritative equippedSlots entry into settings and HUD visuals.
         if not isvalid(slotEntity) then return end
         local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
-        slotEntity:GetChildByName("IconText", true).TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
+        local icon = slotEntity:GetChildByName("IconText", true)
+        icon.TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
+        icon.Enable = definition ~= nil
         if hasEmptyMarker == true then
             local empty = slotEntity:GetChildByName("EmptyText", true)
             if isvalid(empty) then empty.Enable = definition == nil end
         end
+        for _, childName in ipairs({"CastBorder", "MpOverlay", "CooldownShade", "DisabledOverlay"}) do
+            local child = slotEntity:GetChildByName(childName, true)
+            if isvalid(child) and definition == nil then child.Enable = false end
+        end
+        local numberText = slotEntity:GetChildByName("NumberText", true)
+        if isvalid(numberText) then numberText.Enable = true end
     end
 
     @ExecSpace("ClientOnly")
     method void RefreshCooldownOnSlot(Entity slotEntity, number remaining, number duration)
-        -- Updates the radial shade and integer-second countdown on one slot instance.
+        -- Shows tenths below ten seconds and whole seconds at ten or above.
         if not isvalid(slotEntity) then return end
         local shade = slotEntity:GetChildByName("CooldownShade", true)
         if not isvalid(shade) then return end
         shade.Enable = remaining > 0
         shade.SpriteGUIRendererComponent.FillAmount = duration > 0 and math.max(0, math.min(1, remaining / duration)) or 0
-        shade:GetChildByName("CooldownText", true).TextGUIRendererComponent.Text = remaining > 0 and tostring(math.ceil(remaining)) or ""
+        local countdown = ""
+        if remaining > 0 and remaining < 10 then
+            countdown = string.format("%.1f", remaining)
+        elseif remaining >= 10 then
+            countdown = tostring(math.ceil(remaining))
+        end
+        shade:GetChildByName("CooldownText", true).TextGUIRendererComponent.Text = countdown
     end
 
     @ExecSpace("ClientOnly")
     method void RefreshCooldowns()
-        -- Mirrors authoritative cooldown deadlines into the editor slots and persistent HUD slots.
+        -- Mirrors authoritative deadlines using the same passive cooldown adjustment as the server.
         if self.ClientState == nil then return end
         local now = DateTime.UtcNow.Elapsed
         for slot=1,8 do
@@ -307,10 +370,24 @@ script SkillWindowUI extends Component
             local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
             local level = self.ClientState.skillLevels[skillId] or 0
             local effect = definition ~= nil and _SkillDefinitionRuntime:BuildLevelEffect(skillId, level) or nil
-            local duration = effect ~= nil and effect.cooldownSeconds or 0
+            local duration = effect ~= nil and self:GetClientAdjustedCooldown(effect.cooldownSeconds) or 0
             self:RefreshCooldownOnSlot(self.SlotByIndex[slot], remaining, duration)
             self:RefreshCooldownOnSlot(self.HudSlotByIndex[slot], remaining, duration)
         end
+    end
+
+    method number GetClientAdjustedCooldown(number baseCooldown)
+        -- Repeats the server formula against the synchronized skill snapshot for radial progress only.
+        local total = 0
+        if self.ClientState ~= nil then
+            for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do
+                if definition.type == "passive" and definition.effects.cooldownReductionPermille ~= nil then
+                    local level = self.ClientState.skillLevels[definition.id] or 0
+                    total = total + _SkillDefinitionRuntime:EvaluateLinear(definition.effects.cooldownReductionPermille, level)
+                end
+            end
+        end
+        return math.max(0.25, baseCooldown * (1 - math.min(0.5, total / 1000)))
     end
 
     @ExecSpace("ClientOnly")
@@ -335,6 +412,42 @@ script SkillWindowUI extends Component
         if not isvalid(entity) then return end
         local connection = entity:ConnectEvent(eventType, callback)
         table.insert(self.Handlers, {entity=entity,eventType=eventType,connection=connection})
+    end
+
+    @ExecSpace("ClientOnly")
+    method void RefreshHudCombatState()
+        -- Separates casting, cooldown, MP shortage, empty, and stopped-auto-battle states.
+        if self.ClientState == nil then return end
+        local user = _UserService.LocalPlayer
+        local autoBattle = isvalid(user) and user:GetComponent("script.CombatPlayerAutoBattle") or nil
+        local progression = isvalid(user) and user:GetComponent("script.PlayerProgressionComponent") or nil
+        local running = isvalid(autoBattle)
+        local activeSkillId = running and autoBattle.ActiveSkillId or ""
+        local blinkOn = math.floor(_UtilLogic.ElapsedSeconds * 8) % 2 == 0
+        local now = DateTime.UtcNow.Elapsed
+        for slot=1,8 do
+            local slotEntity = self.HudSlotByIndex[slot]
+            if isvalid(slotEntity) then
+                local skillId = self.ClientState.equippedSlots[slot] or ""
+                local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+                local level = self.ClientState.skillLevels[skillId] or 0
+                local effect = definition ~= nil and _SkillDefinitionRuntime:BuildLevelEffect(skillId, level) or nil
+                local remaining = math.max(0, ((self.ClientState.cooldownEndTimes[skillId] or 0) - now) / 1000)
+                local casting = running and skillId ~= "" and activeSkillId == skillId and autoBattle.CombatState == "SKILL_CAST"
+                local cooling = definition ~= nil and remaining > 0 and casting == false
+                local mpLow = definition ~= nil and effect ~= nil and isvalid(progression) and progression.CurrentMp < effect.mpCost and cooling == false and casting == false
+                local castBorder = slotEntity:GetChildByName("CastBorder", true)
+                local cooldownShade = slotEntity:GetChildByName("CooldownShade", true)
+                local mpOverlay = slotEntity:GetChildByName("MpOverlay", true)
+                local disabledOverlay = slotEntity:GetChildByName("DisabledOverlay", true)
+                if isvalid(castBorder) then castBorder.Enable = casting and blinkOn end
+                if isvalid(cooldownShade) then cooldownShade.Enable = cooling end
+                if isvalid(mpOverlay) then mpOverlay.Enable = mpLow end
+                if isvalid(disabledOverlay) then disabledOverlay.Enable = definition ~= nil and running == false end
+                local numberText = slotEntity:GetChildByName("NumberText", true)
+                if isvalid(numberText) then numberText.Enable = true end
+            end
+        end
     end
 
     @ExecSpace("ClientOnly")

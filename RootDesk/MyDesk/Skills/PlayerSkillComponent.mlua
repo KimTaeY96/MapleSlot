@@ -62,6 +62,7 @@ script PlayerSkillComponent extends Component
 	end
 
 	method void NormalizeState(table state)
+		-- Repairs persisted slots in-place so equippedSlots remains the only slot data source.
 		state.availablePointsByTier = state.availablePointsByTier or {["1"]=0,["2"]=0,["3"]=0,["4"]=0}
 		for tier=1,4 do
 			local key = tostring(tier)
@@ -70,7 +71,18 @@ script PlayerSkillComponent extends Component
 		state.skillLevels = state.skillLevels or {_kind="map"}
 		for skillId, level in pairs(state.skillLevels) do if skillId ~= "_kind" then state.skillLevels[skillId] = math.max(0, math.floor(tonumber(level) or 0)) end end
 		state.equippedSlots = state.equippedSlots or {}
-		for slot=1,8 do state.equippedSlots[slot] = state.equippedSlots[slot] or "" end
+		local seenEquipped = {}
+		for slot=1,8 do
+			local skillId = tostring(state.equippedSlots[slot] or "")
+			local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
+			local level = state.skillLevels[skillId] or 0
+			if skillId == "" or definition == nil or definition.type ~= "active" or level < 1 or seenEquipped[skillId] == true then
+				state.equippedSlots[slot] = ""
+			else
+				state.equippedSlots[slot] = skillId
+				seenEquipped[skillId] = true
+			end
+		end
 		state.cooldownEndTimes = state.cooldownEndTimes or {_kind="map"}
 		for skillId, endTime in pairs(state.cooldownEndTimes) do if skillId ~= "_kind" then state.cooldownEndTimes[skillId] = tonumber(endTime) or 0 end end
 		state.saveVersion = _SkillDefinitionRuntime.SaveVersion
@@ -339,7 +351,9 @@ script PlayerSkillComponent extends Component
 
 	@ExecSpace("ServerOnly")
 	method void CommitMutation(string reason)
+		-- Revalidates slot ownership before every publish/save mutation.
 		self.FeedbackMessage = ""
+		self:NormalizeState(self.State)
 		self.State.lastSaveUtcMillis = math.max(self:UtcNowMillis(), self.State.lastSaveUtcMillis or 0)
 		self:PublishState()
 		self:SaveStateAsync()
