@@ -3420,7 +3420,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "5e4ee74cd7d0453994d4ce6a0ed4130c"
+                "DataId": "d81d205fe44e47319ecb13180d15674d"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -3439,10 +3439,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -3472,7 +3472,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": false,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             }
           ],
@@ -3710,7 +3710,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -3729,10 +3729,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -3762,7 +3762,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -3926,7 +3926,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_1/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -4071,7 +4071,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_1/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -5294,7 +5294,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -5313,10 +5313,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -5346,7 +5346,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -5510,7 +5510,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_2/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -5655,7 +5655,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_2/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -6878,7 +6878,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -6897,10 +6897,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -6930,7 +6930,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -7094,7 +7094,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_3/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -7239,7 +7239,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_3/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -8462,7 +8462,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -8481,10 +8481,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -8514,7 +8514,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -8678,7 +8678,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_4/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -8823,7 +8823,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_4/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -10046,7 +10046,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -10065,10 +10065,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -10098,7 +10098,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -10262,7 +10262,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_5/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -10407,7 +10407,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_5/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -11630,7 +11630,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -11649,10 +11649,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -11682,7 +11682,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -11846,7 +11846,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_6/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -11991,7 +11991,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_6/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -13214,7 +13214,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -13233,10 +13233,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -13266,7 +13266,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -13430,7 +13430,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_7/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -13575,7 +13575,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_7/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
@@ -14798,7 +14798,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "2860136c06ab075439721c027de365af"
+                "DataId": "d169d8d166614e79aa5e30380045cdc9"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -14817,10 +14817,10 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
-                "a": 0.98
+                "r": 1,
+                "g": 1,
+                "b": 1,
+                "a": 1
               },
               "DropShadow": false,
               "DropShadowAngle": 120,
@@ -14850,7 +14850,7 @@
               },
               "OutlineWidth": 3,
               "RaycastTarget": true,
-              "Type": 1,
+              "Type": 0,
               "Enable": true
             },
             {
@@ -15014,7 +15014,7 @@
           "name": "KeyFace",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_8/KeyFace",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
@@ -15159,7 +15159,7 @@
           "name": "IconWell",
           "path": "/ui/ClassicPlayerHUD/HudFrame/QuickSlots/Slot_8/IconWell",
           "nameEditable": true,
-          "enable": true,
+          "enable": false,
           "visible": true,
           "localize": true,
           "displayOrder": 2,
