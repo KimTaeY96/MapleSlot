@@ -3505,31 +3505,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 6,
+              "AlignmentOption": 0,
               "AnchorsMax": {
                 "x": 0.5,
-                "y": 0
+                "y": 0.5
               },
               "AnchorsMin": {
                 "x": 0.5,
-                "y": 0
+                "y": 0.5
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 194,
-                "y": 8
+                "x": 176,
+                "y": 86
               },
               "OffsetMin": {
-                "x": -194,
-                "y": 0
+                "x": -176,
+                "y": -86
               },
               "Pivot": {
                 "x": 0.5,
-                "y": 0
+                "y": 0.5
               },
               "RectSize": {
-                "x": 388,
-                "y": 8
+                "x": 352,
+                "y": 172
               },
               "UIMode": 1,
               "UIScale": {
@@ -3584,9 +3584,9 @@
               "SortingLayer": "UI",
               "StartFrameIndex": 0,
               "Color": {
-                "r": 0.34901960784313724,
-                "g": 0.38823529411764707,
-                "b": 0.43529411764705883,
+                "r": 0.1254901961,
+                "g": 0.1568627451,
+                "b": 0.1882352941,
                 "a": 1
               },
               "DropShadow": false,
