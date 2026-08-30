@@ -82,12 +82,14 @@ test('UI contains locked tiers, fourteen rows, eight slots and one footer button
   assert.deepEqual(footerButtons.map(x=>x.name),['SlotSettingsButton']);
   for(const tier of [2,3,4]) assert.ok(paths.some(p=>p.endsWith('/Tier'+tier+'Button/LockText')));
 });
-test('slot layout is exactly 4 by 2',()=>{
+test('slot settings layout is exactly 2 by 4 in priority order',()=>{
   const slots=snapshot.filter(x=>/\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
-  assert.equal(new Set(slots.slice(0,4).map(x=>x.pos[1])).size,1);
-  assert.equal(new Set(slots.slice(4).map(x=>x.pos[1])).size,1);
-  assert.notEqual(slots[0].pos[1],slots[4].pos[1]);
-  assert.deepEqual(slots.slice(0,4).map(x=>x.pos[0]),slots.slice(4).map(x=>x.pos[0]));
+  assert.deepEqual(slots.map(x=>x.pos),[
+    [19,-64],[97,-64],
+    [19,-142],[97,-142],
+    [19,-220],[97,-220],
+    [19,-298],[97,-298],
+  ]);
 });
 test('tooltip renderers do not intercept pointer events',()=>{
   const data=JSON.parse(fs.readFileSync('ui/SkillWindow.ui','utf8'));
@@ -117,18 +119,27 @@ test('bottom HUD restores original proportions and splits the menu area evenly',
   assert.match(hudSource,/method void OpenSkillWindow\(\)/);
   assert.ok(!snapshot.some(x=>x.path.endsWith('/OpenButton')));
 });
-test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()=>{
+test('persistent quick-slot HUD is exactly two by four and mirrors cooldowns',()=>{
   const slots=hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
   assert.equal(slots.length,8);
-  assert.equal(new Set(slots.slice(0,4).map(x=>x.pos[1])).size,1);
-  assert.equal(new Set(slots.slice(4).map(x=>x.pos[1])).size,1);
-  assert.deepEqual(slots.slice(0,4).map(x=>x.pos[0]),slots.slice(4).map(x=>x.pos[0]));
+  assert.deepEqual(slots.map(x=>x.pos),[
+    [12,-12],[104,-12],
+    [12,-104],[104,-104],
+    [12,-196],[104,-196],
+    [12,-288],[104,-288],
+  ]);
+  const panel=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/QuickSlots'));
+  const rotatedFrame=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/QuickSlots/RotatedFrame'));
+  assert.deepEqual(panel.size,[204,388]);
+  assert.deepEqual(panel.pos,[0,0]);
+  assert.deepEqual(rotatedFrame.size,[388,204]);
+  assert.deepEqual(rotatedFrame.pos,[0,0]);
   assert.match(uiSource,/HudSlotByIndex/);
   assert.match(uiSource,/RefreshCooldownOnSlot\(self\.HudSlotByIndex\[slot\]/);
   assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/CooldownShade$/.test(x.path)).length,8);
 });
-test('imagegen-authored UI resources are project-bound and referenced by RUID',()=>{
-  for(const file of ['skill-action-button.png','skill-quickslots-4x2.png','skill-cooldown-overlay.png','skill-book-icon.png','skill-book-icon-polished.png','hud-menu-button-reference.png','hud-menu-button-blue.png','hud-menu-button-green.png','hud-inventory-bag-icon.png']) {
+test('UI resources are project-bound and referenced by RUID',()=>{
+  for(const file of ['skill-action-button.png','skill-quickslots-4x2.png','skill-quickslots-2x4.png','skill-cooldown-overlay.png','skill-book-icon.png','skill-book-icon-polished.png','hud-menu-button-reference.png','hud-menu-button-blue.png','hud-menu-button-green.png','hud-inventory-bag-icon.png']) {
     assert.ok(fs.existsSync('Assets/UI/ClassicSilver/'+file),file);
   }
   for(const ruid of ['3cebca63ed1d41e4be6e34ee8761172a','5e4ee74cd7d0453994d4ce6a0ed4130c','ddf8548f22114eedb558f9decec77ba4','8252bcc8043849878cb827c45a551d05','008c9a704d284753a32ab40da2cfbd52','cd1e25491fb243edba76e79613c1987a','1b0f6476f399444b9ff8f23958c447f8']) {

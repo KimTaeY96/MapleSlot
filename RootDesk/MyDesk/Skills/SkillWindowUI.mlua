@@ -47,7 +47,7 @@ script SkillWindowUI extends Component
         for _, definition in ipairs(_SkillDefinitionRuntime:GetTierDefinitions(1)) do self:BindSkillRow(definition) end
         for slot=1,8 do self:BindSlot(slot) end
         self:RefreshState(true)
-        log("[SkillUI] HUD slots linked priority=1..8 rows=bottom1-4/top5-8 anchor=HudFrame.TopRight gap=0")
+        log("[SkillUI] HUD slots linked priority=1..8 rows=top1-2/3-4/5-6/bottom7-8 anchor=HudFrame.TopRight gap=0")
     end
 
     @ExecSpace("ClientOnly")
