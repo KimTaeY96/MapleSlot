@@ -11,14 +11,14 @@ script PlayerWalletComponent extends Component
 
     @ExecSpace("ServerOnly")
     method void OnBeginPlay()
-        -- Initializes the session wallet once with the existing slot economy defaults.
+        -- Initializes the session wallet where Premium Coin means Orb and Common Coin means Meso.
         self.ProcessedTransactions = {}
         self.TransactionReceipts = {}
         self.CommonCoinUnits = self.InitialCommonCoins * self.CoinUnitPerCoin
         self.PremiumCoinUnits = self.InitialPremiumCoins * self.CoinUnitPerCoin
         self.Initialized = true
-        log("[Wallet] Initialized player wallet premium=" .. tostring(self.InitialPremiumCoins)
-            .. " common=" .. tostring(self.InitialCommonCoins)
+        log("[Wallet] Initialized player wallet orb=" .. tostring(self.InitialPremiumCoins)
+            .. " meso=" .. tostring(self.InitialCommonCoins)
             .. " unitsPerCoin=" .. tostring(self.CoinUnitPerCoin))
     end
 
@@ -26,9 +26,10 @@ script PlayerWalletComponent extends Component
         -- Returns the local authoritative or synchronized read-only balance view.
         return {
             initialized = self.Initialized,
+            orbUnits = self.PremiumCoinUnits,
+            mesoUnits = self.CommonCoinUnits,
             commonCoinUnits = self.CommonCoinUnits,
             premiumCoinUnits = self.PremiumCoinUnits,
-            totalCoinUnits = self.CommonCoinUnits + self.PremiumCoinUnits,
             coinUnitPerCoin = self.CoinUnitPerCoin,
         }
     end
@@ -61,14 +62,14 @@ script PlayerWalletComponent extends Component
 
     @ExecSpace("ServerOnly")
     method table TrySpendCurrency(string currencyKey, integer amountUnits, string transactionId, string sourceKey)
-        -- Attempts an all-or-nothing single-currency deduction for the future shop boundary.
+        -- Preserves the legacy API as a Meso-only deduction boundary for in-game purchases.
         local existing = self:GetTransactionReceipt(transactionId)
         if existing ~= nil then return existing end
         if transactionId == nil or transactionId == "" or amountUnits <= 0 then
             return self:BuildReceipt("REJECTED_INVALID_REQUEST", currencyKey, amountUnits, 0, 0, sourceKey)
         end
         local balance = self:GetBalanceUnits(currencyKey)
-        if currencyKey ~= "COMMON_COIN" and currencyKey ~= "PREMIUM_COIN" then
+        if currencyKey ~= "COMMON_COIN" then
             self:RecordTransaction(transactionId, "REJECTED_INVALID_CURRENCY", currencyKey, amountUnits, 0, 0, sourceKey)
             return self.TransactionReceipts[transactionId]
         end
@@ -78,11 +79,7 @@ script PlayerWalletComponent extends Component
                 .. " reason=INSUFFICIENT_BALANCE")
             return self.TransactionReceipts[transactionId]
         end
-        if currencyKey == "COMMON_COIN" then
-            self.CommonCoinUnits = self.CommonCoinUnits - amountUnits
-        else
-            self.PremiumCoinUnits = self.PremiumCoinUnits - amountUnits
-        end
+        self.CommonCoinUnits = self.CommonCoinUnits - amountUnits
         self:RecordTransaction(transactionId, "APPLIED", currencyKey, amountUnits, 0, 0, sourceKey)
         log("[Wallet] Spend applied tx=" .. transactionId .. " source=" .. tostring(sourceKey)
             .. " currency=" .. currencyKey .. " units=" .. tostring(amountUnits))
@@ -91,44 +88,54 @@ script PlayerWalletComponent extends Component
 
     @ExecSpace("ServerOnly")
     method table TryPaySlotCost(integer costUnits, string transactionId)
-        -- Atomically pays a slot cost with Premium Coin first and Common Coin second.
+        -- Pays a slot cost exclusively with Orbs stored under the legacy Premium Coin key.
         local existing = self:GetTransactionReceipt(transactionId)
         if existing ~= nil then return existing end
         if transactionId == nil or transactionId == "" or costUnits <= 0 then
-            return self:BuildReceipt("REJECTED_INVALID_REQUEST", "SLOT_COST", costUnits, 0, 0, "SLOT")
+            return self:BuildReceipt("REJECTED_INVALID_REQUEST", "PREMIUM_COIN", costUnits, 0, 0, "SLOT")
         end
-        if self.PremiumCoinUnits + self.CommonCoinUnits < costUnits then
-            self:RecordTransaction(transactionId, "REJECTED_INSUFFICIENT_BALANCE", "SLOT_COST", costUnits, 0, 0, "SLOT")
-            log("[Wallet] Slot cost rejected tx=" .. transactionId .. " reason=INSUFFICIENT_BALANCE")
+        if self.PremiumCoinUnits < costUnits then
+            self:RecordTransaction(transactionId, "REJECTED_INSUFFICIENT_BALANCE", "PREMIUM_COIN", costUnits, 0, 0, "SLOT")
+            log("[Wallet] Slot cost rejected tx=" .. transactionId .. " currency=ORB reason=INSUFFICIENT_BALANCE")
             return self.TransactionReceipts[transactionId]
         end
-        local premiumSpentUnits = math.min(self.PremiumCoinUnits, costUnits)
-        local commonSpentUnits = costUnits - premiumSpentUnits
-        self.PremiumCoinUnits = self.PremiumCoinUnits - premiumSpentUnits
-        self.CommonCoinUnits = self.CommonCoinUnits - commonSpentUnits
-        self:RecordTransaction(transactionId, "APPLIED", "SLOT_COST", costUnits,
-            premiumSpentUnits, commonSpentUnits, "SLOT")
+        self.PremiumCoinUnits = self.PremiumCoinUnits - costUnits
+        self:RecordTransaction(transactionId, "APPLIED", "PREMIUM_COIN", costUnits,
+            costUnits, 0, "SLOT")
         log("[Wallet] Slot cost applied tx=" .. transactionId
-            .. " premiumUnits=" .. tostring(premiumSpentUnits)
-            .. " commonUnits=" .. tostring(commonSpentUnits))
+            .. " orbUnits=" .. tostring(costUnits)
+            .. " mesoUnits=0")
         return self.TransactionReceipts[transactionId]
     end
 
     @ExecSpace("ServerOnly")
     method boolean SettleSlotPayout(integer payoutUnits, string transactionId)
-        -- Applies the server-resolved Common Coin slot payout exactly once.
+        -- Applies the server-resolved slot payout exclusively as Meso under the legacy Common Coin key.
         if self:CanProcessTransaction(transactionId) == false or payoutUnits < 0 then return false end
         if payoutUnits > 0 then self.CommonCoinUnits = self.CommonCoinUnits + payoutUnits end
         self:RecordTransaction(transactionId, "APPLIED", "COMMON_COIN", payoutUnits, 0, 0, "SLOT_PAYOUT")
-        log("[Wallet] Slot payout settled tx=" .. transactionId .. " commonUnits=" .. tostring(payoutUnits))
+        log("[Wallet] Slot payout settled tx=" .. transactionId .. " mesoUnits=" .. tostring(payoutUnits))
         return true
     end
 
     @ExecSpace("ServerOnly")
     method boolean SettleCombatReward(integer quantity, string transactionId)
-        -- Converts a typed Common Coin combat quantity and applies it exactly once.
+        -- Converts every monster currency drop into Orbs under the legacy Premium Coin key.
         if quantity <= 0 then return false end
-        return self:GrantCurrency("COMMON_COIN", quantity * self.CoinUnitPerCoin, transactionId, "COMBAT_REWARD")
+        return self:GrantCurrency("PREMIUM_COIN", quantity * self.CoinUnitPerCoin, transactionId, "COMBAT_REWARD")
+    end
+
+    @ExecSpace("ServerOnly")
+    method boolean SettleCashShopOrbPurchase(integer quantity, string transactionId)
+        -- Grants only Orbs for a completed cash-shop purchase.
+        if quantity <= 0 then return false end
+        return self:GrantCurrency("PREMIUM_COIN", quantity * self.CoinUnitPerCoin, transactionId, "CASH_SHOP")
+    end
+
+    @ExecSpace("ServerOnly")
+    method table TrySpendMeso(integer amountUnits, string transactionId, string sourceKey)
+        -- Exposes the Meso-only spending boundary for future in-game shops and item purchases.
+        return self:TrySpendCurrency("COMMON_COIN", amountUnits, transactionId, sourceKey)
     end
 
     @ExecSpace("ServerOnly")

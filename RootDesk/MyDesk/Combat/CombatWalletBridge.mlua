@@ -8,7 +8,7 @@ script CombatWalletBridge extends Component
 
     @ExecSpace("ServerOnly")
     method void DrainServerRewards()
-        -- Settles typed Common Coin rewards once while preserving item grants for inventory.
+        -- Settles monster currency rewards only as Orbs while preserving item grants for inventory.
         local player = self.Entity.PlayerComponent
         if not isvalid(player) then return end
         local wallet = self.Entity:GetComponent("script.PlayerWalletComponent")
@@ -19,10 +19,10 @@ script CombatWalletBridge extends Component
         local rewards = _CombatRuntime:DrainPendingRewards(player.UserId)
         local inventory = self.Entity:GetComponent("script.EquipmentInventoryComponent")
         for _, reward in ipairs(rewards) do
-            if reward.rewardType == "CURRENCY" and reward.rewardKey == "COMMON_COIN" then
+            if reward.rewardType == "CURRENCY" and reward.rewardKey == "PREMIUM_COIN" then
                 if isvalid(wallet) and wallet:SettleCombatReward(reward.quantity, reward.transactionId) then
                     log("[Combat] Wallet reward settled tx=" .. tostring(reward.transactionId)
-                        .. " COMMON_COIN x" .. tostring(reward.quantity))
+                        .. " ORB(PREMIUM_COIN) x" .. tostring(reward.quantity))
                 end
             elseif reward.rewardType == "ITEM" and isvalid(inventory) then
                 inventory:GrantItemByKey(reward.rewardKey, reward.quantity)

@@ -84,6 +84,10 @@ script CombatMonsterHealth extends Component
         local origin = self.Entity.TransformComponent.WorldPosition
         local count = #grants
         for index, grant in ipairs(grants) do
+            if grant.rewardType == "CURRENCY" then
+                grant.rewardKey = "PREMIUM_COIN"
+                log("[CombatDrop] Monster currency normalized to ORB(PREMIUM_COIN)")
+            end
             local offsetX = (index - (count + 1) * 0.5) * 0.38
             local landingPosition = Vector3(origin.x + offsetX, origin.y, origin.z)
             local entityName = "CombatDrop_" .. tostring(grant.rewardKey) .. "_"
@@ -121,16 +125,16 @@ script CombatMonsterHealth extends Component
 
     @ExecSpace("ServerOnly")
     method string ResolveDropIconRUID(table grant)
-        -- Resolves currency and item definitions to their registered world-renderable icon RUIDs.
-        if grant.rewardType == "CURRENCY" and grant.rewardKey == "COMMON_COIN" then
-            return "4cc5ffc272224edc809a792b8efa16e3"
+        -- Resolves monster currency drops to the Orb icon and item drops to their registered icons.
+        if grant.rewardType == "CURRENCY" and grant.rewardKey == "PREMIUM_COIN" then
+            return "9f4a925aa417482c82e2c683e6d863b9"
         end
         if grant.rewardType == "ITEM" then
             local item = _CombatTableRuntime:GetEquipmentItemByKey(grant.rewardKey)
             if item == nil then item = _CombatTableRuntime:GetInventoryItemByKey(grant.rewardKey) end
             if item ~= nil and item.IconRUID ~= nil and item.IconRUID ~= "" then return item.IconRUID end
         end
-        return "4cc5ffc272224edc809a792b8efa16e3"
+        return "9f4a925aa417482c82e2c683e6d863b9"
     end
     @ExecSpace("ServerOnly")
     method void Respawn()

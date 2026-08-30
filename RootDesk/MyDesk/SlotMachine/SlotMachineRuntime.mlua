@@ -761,12 +761,13 @@ script SlotMachineRuntime extends Logic
     end
 
     method table BuildTextTemplates()
+        -- Builds slot text where spins cost Orbs and payouts award Meso.
         return {
-            BaseBetLabel = "{0} - {1}\236\189\148\236\157\184",
+            BaseBetLabel = "{0} - {1}\234\181\172\236\138\172",
             PremiumAmount = "{0}",
             CommonAmount = "{0}",
             WinStatus = "\235\139\185\236\178\168 {0}\235\157\188\236\157\184",
-            NotEnoughCoins = "\236\189\148\236\157\184\236\157\180 \235\182\128\236\161\177\237\149\169\235\139\136\235\139\164",
+            NotEnoughCoins = "\234\181\172\236\138\172\236\157\180 \235\182\128\236\161\177\237\149\169\235\139\136\235\139\164",
             WalletNotReady = "Wallet syncing...",
             MultiplierLabel = "x{0}",
             BaseBetConfirmLock = "Base Bet \235\179\128\234\178\189? {0} \235\143\153\236\149\136 \236\158\160\234\184\136\235\144\169\235\139\136\235\139\164.",
@@ -2648,7 +2649,7 @@ script SlotMachineRuntime extends Logic
     method table BuildCheatCommands()
         return {
             [1] = { code = "777", description = "Force Wild x5 bonus entry and first 777 result once.", cheatType = "FORCE_777_BONUS_ONCE", targetKey = "WILD_5_BONUS_SLOT", forceResultKey = "777", useCount = 1, requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
-            [2] = { code = "coin 0 1000", description = "Grant coins: coin {0|1} {amount}. 0=Premium, 1=Common.", cheatType = "GRANT_COIN", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
+            [2] = { code = "coin 0 1000", description = "Grant currency: coin {0|1} {amount}. 0=Orb, 1=Meso.", cheatType = "GRANT_COIN", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
             [3] = { code = "item RED_POTION 10", description = "Grant inventory item: item {ITEM_KEY} {amount}.", cheatType = "GRANT_ITEM", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
             [4] = { code = "item EXPLORER_STARTER_ARMOR 1", description = "Grant equipment by item key.", cheatType = "GRANT_ITEM", requiredRuntimeKind = "TEST_SANDBOX", enabled = true },
         }
@@ -2770,10 +2771,10 @@ script SlotMachineRuntime extends Logic
         end
 
         local costUnits = self:GetBaseBetAmount() * self.multiplier * self.coinUnitPerCoin
-        if wallet.PremiumCoinUnits + wallet.CommonCoinUnits < costUnits then
+        if wallet.PremiumCoinUnits < costUnits then
             self.statusText.Text = self.textTemplates.NotEnoughCoins
             self:HideWinResult()
-            log("[SlotMachineRuntime] Spin rejected locally: insufficient synchronized balance")
+            log("[SlotMachineRuntime] Spin rejected locally: insufficient Orb balance")
             return
         end
 
@@ -3532,10 +3533,10 @@ script SlotMachineRuntime extends Logic
         end
 
         local currencyKey = "PREMIUM_COIN"
-        local coinName = "PREMIUM"
+        local coinName = "ORB"
         if coinType == 1 then
             currencyKey = "COMMON_COIN"
-            coinName = "COMMON"
+            coinName = "MESO"
         end
         self.slotTransactionSerial = self.slotTransactionSerial + 1
         local transactionId = "CHEAT_COIN:" .. tostring(math.floor(_UtilLogic.ElapsedSeconds * 1000))
