@@ -64,7 +64,7 @@ function patchHud() {
     const x = 12 + col * 92;
     const y = -12 - row * 92;
     const slotPath = QUICK_ROOT + '/Slot_' + i;
-    b.patch(slotPath, { display_order: i + 1 });
+    b.patch(slotPath, { display_order: 100 + i });
     b.patchComponent(slotPath, 'MOD.Core.UITransformComponent', {
       AnchorsMin: { x: 0, y: 1 },
       AnchorsMax: { x: 0, y: 1 },
@@ -74,6 +74,16 @@ function patchHud() {
       OffsetMin: { x, y: y - 88 },
       OffsetMax: { x: x + 88, y },
     });
+  }
+
+  // MSW also respects serialized sibling order when flattening nested UI.
+  // Keep the background/frame before every slot subtree so all slot visuals
+  // and their icon, number, and state children are rendered in front.
+  const frameIndex = b.entities.findIndex((entity) => entity.path === ROTATED_FRAME);
+  const firstSlotIndex = b.entities.findIndex((entity) => entity.path === QUICK_ROOT + '/Slot_1');
+  if (frameIndex > firstSlotIndex) {
+    const [frameEntity] = b.entities.splice(frameIndex, 1);
+    b.entities.splice(firstSlotIndex, 0, frameEntity);
   }
 
   b.write(HUD_FILE, { lint_verbose: true });

@@ -12,6 +12,7 @@ const hudSource = fs.readFileSync('RootDesk/MyDesk/UI/ClassicPlayerHUD.mlua','ut
 const hudBuilderSource = fs.readFileSync('tools/build_classic_player_hud.cjs','utf8');
 const snapshot = UIBuilder.snapshot('ui/SkillWindow.ui');
 const hudSnapshot = UIBuilder.snapshot('ui/ClassicPlayerHUD.ui');
+const hudBuilder = UIBuilder.read('ui/ClassicPlayerHUD.ui');
 
 function test(name, fn) {
   try { fn(); process.stdout.write('PASS '+name+'\n'); }
@@ -134,6 +135,14 @@ test('persistent quick-slot HUD is exactly two by four and mirrors cooldowns',()
   assert.deepEqual(panel.pos,[0,0]);
   assert.deepEqual(rotatedFrame.size,[388,204]);
   assert.deepEqual(rotatedFrame.pos,[0,0]);
+  const frameEntityIndex=hudBuilder.entities.findIndex(x=>x.path.endsWith('/QuickSlots/RotatedFrame'));
+  const firstSlotIndex=hudBuilder.entities.findIndex(x=>x.path.endsWith('/QuickSlots/Slot_1'));
+  assert.ok(frameEntityIndex < firstSlotIndex);
+  assert.equal(hudBuilder.entities[frameEntityIndex].jsonString.displayOrder,1);
+  for(const slot of slots) {
+    const entity=hudBuilder.find(slot.path);
+    assert.ok(entity.jsonString.displayOrder > 1,slot.path);
+  }
   assert.match(uiSource,/HudSlotByIndex/);
   assert.match(uiSource,/RefreshCooldownOnSlot\(self\.HudSlotByIndex\[slot\]/);
   assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/CooldownShade$/.test(x.path)).length,8);
