@@ -98,34 +98,48 @@ script CombatDropPickupVisual extends Component
         end
 
         local renderer = self.IconEntity.SpriteRendererComponent
-        renderer.SpriteRUID = iconRuid
+        local isThumbnail = string.sub(iconRuid, 1, 12) == "thumbnail://"
+        local displayRuid = iconRuid
+        if isThumbnail == false then displayRuid = "thumbnail://" .. iconRuid end
+        renderer.SpriteRUID = displayRuid
         renderer.SortingLayer = "MapLayer0"
         renderer.OrderInLayer = 12
         local iconTransform = self.IconEntity.TransformComponent
         iconTransform.Position = Vector3(0, 0, 0)
         iconTransform.Rotation = Vector3(0, 0, 0)
         iconTransform.Scale = Vector3(1, 1, 1)
-        self.SpinPivotEntity.TransformComponent.Position = Vector3(0, 0, 0)
-        self.SpinPivotEntity.TransformComponent.Rotation = Vector3(0, 0, 0)
+        local spinTransform = self.SpinPivotEntity.TransformComponent
+        spinTransform.Position = Vector3(0, 0, 0)
+        spinTransform.Rotation = Vector3(0, 0, 0)
 
-        if string.sub(iconRuid, 1, 12) == "thumbnail://" then
-            log("[CombatDrop] Center wrapper applied to generated thumbnail icon ruid=" .. iconRuid)
+        local thumbnailWorldSize = 0.64
+        if isThumbnail then
+            iconTransform.Scale = Vector3(1, 1, 1)
+            spinTransform.Position = Vector3(0, thumbnailWorldSize * 0.5, 0)
+            log("[CombatDrop] Existing centered thumbnail ruid=" .. iconRuid
+                .. " displayPivot=(32,32) groundToCenterY=0.32")
             return
         end
 
-        local sprite = _ResourceService:LoadSpriteAndWait(iconRuid)
-        if sprite == nil or sprite.IsLoadComplete == false or sprite.PixelPerUnit <= 0 then
-            log_warning("[CombatDrop] Sprite pivot metadata unavailable; center wrapper retained ruid=" .. iconRuid)
+        local sourceSprite = _ResourceService:LoadSpriteAndWait(iconRuid)
+        if sourceSprite == nil or sourceSprite.IsLoadComplete == false or sourceSprite.PixelPerUnit <= 0 then
+            iconTransform.Scale = Vector3(1, 1, 1)
+            spinTransform.Position = Vector3(0, thumbnailWorldSize * 0.5, 0)
+            log_warning("[CombatDrop] Source metadata unavailable; centered thumbnail fallback ruid=" .. iconRuid)
             return
         end
-        -- Moves the image midpoint onto SpinPivot, accounting for pivots authored outside the sprite bounds.
-        local centerOffsetX = (sprite.Width * 0.5 - sprite.PivotPixel.x) / sprite.PixelPerUnit
-        local centerOffsetY = (sprite.Height * 0.5 - sprite.PivotPixel.y) / sprite.PixelPerUnit
-        iconTransform.Position = Vector3(centerOffsetX, centerOffsetY, 0)
-        log("[CombatDrop] Pivot normalized ruid=" .. iconRuid
-            .. " size=" .. tostring(sprite.Width) .. "x" .. tostring(sprite.Height)
-            .. " pivot=" .. tostring(sprite.PivotPixel)
-            .. " centerOffset=" .. tostring(iconTransform.Position))
+        local sourceMaxPixels = math.max(sourceSprite.Width, sourceSprite.Height)
+        local sourceWorldSize = sourceMaxPixels / sourceSprite.PixelPerUnit
+        local displayScale = sourceWorldSize / thumbnailWorldSize
+        local groundToCenterY = sourceSprite.Height * 0.5 / sourceSprite.PixelPerUnit
+        iconTransform.Scale = Vector3(displayScale, displayScale, 1)
+        spinTransform.Position = Vector3(0, groundToCenterY, 0)
+        log("[CombatDrop] Centered thumbnail ruid=" .. iconRuid
+            .. " sourceSize=" .. tostring(sourceSprite.Width) .. "x" .. tostring(sourceSprite.Height)
+            .. " sourcePivot=" .. tostring(sourceSprite.PivotPixel)
+            .. " displayPivot=(32,32)"
+            .. " scale=" .. tostring(displayScale)
+            .. " groundToCenterY=" .. tostring(groundToCenterY))
     end
 
     @ExecSpace("ServerOnly")
