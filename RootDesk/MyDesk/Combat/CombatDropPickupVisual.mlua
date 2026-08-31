@@ -118,14 +118,14 @@ script CombatDropPickupVisual extends Component
             log_warning("[CombatDrop] Sprite pivot metadata unavailable; center wrapper retained ruid=" .. iconRuid)
             return
         end
-        -- PivotPixel is an offset from the visual center, not a bottom-left pixel coordinate.
-        local offsetX = sprite.PivotPixel.x / sprite.PixelPerUnit
-        local offsetY = sprite.PivotPixel.y / sprite.PixelPerUnit
-        iconTransform.Position = Vector3(offsetX, offsetY, 0)
+        -- Counter-translates the authored sprite pivot so its visual center sits on SpinPivot's origin.
+        local centerOffsetX = -sprite.PivotPixel.x / sprite.PixelPerUnit
+        local centerOffsetY = -sprite.PivotPixel.y / sprite.PixelPerUnit
+        iconTransform.Position = Vector3(centerOffsetX, centerOffsetY, 0)
         log("[CombatDrop] Pivot normalized ruid=" .. iconRuid
             .. " size=" .. tostring(sprite.Width) .. "x" .. tostring(sprite.Height)
             .. " pivot=" .. tostring(sprite.PivotPixel)
-            .. " offset=" .. tostring(iconTransform.Position))
+            .. " centerOffset=" .. tostring(iconTransform.Position))
     end
 
     @ExecSpace("ServerOnly")
