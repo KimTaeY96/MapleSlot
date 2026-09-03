@@ -1,7 +1,7 @@
 {
   "Id": "",
   "GameId": "",
-  "EntryKey": "ui://b6ca6610-6811-405a-85a7-43526d024e10",
+  "EntryKey": "ui://6855f5b3-fe87-4b1f-b8ff-1da179cfe676",
   "ContentType": "x-mod/ui",
   "Content": "",
   "Usage": 0,
@@ -14,7 +14,7 @@
     "Use": "Binary",
     "Entities": [
       {
-        "id": "b6ca6610-6811-405a-85a7-43526d024e10",
+        "id": "6855f5b3-fe87-4b1f-b8ff-1da179cfe676",
         "path": "/ui/ClassicPlayerHUD",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.UIGroupComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "id": "11f3c9d9-82f9-4c87-8c59-117f3eb4e077",
+        "id": "bc375974-b3aa-45ec-af20-1d3aafd23d0c",
         "path": "/ui/ClassicPlayerHUD/Controller",
         "componentNames": "MOD.Core.UITransformComponent,script.ClassicPlayerHUD",
         "jsonString": {
@@ -202,7 +202,7 @@
         }
       },
       {
-        "id": "7900f2be-4bcc-412d-b5ff-7e7711202207",
+        "id": "0f3c7a39-b7b0-4a1c-8e85-44d903865eaf",
         "path": "/ui/ClassicPlayerHUD/HudFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -347,7 +347,7 @@
         }
       },
       {
-        "id": "35149a6c-3e21-4002-97a6-8a4376818c8e",
+        "id": "6927dcd3-f195-4266-893e-dae9422f20cc",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelLabel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -541,7 +541,7 @@
         }
       },
       {
-        "id": "c7d47065-642b-4b61-afa0-e1b09fb2dcba",
+        "id": "0e8e37ba-a37c-4e61-971c-0d3ed9c08404",
         "path": "/ui/ClassicPlayerHUD/HudFrame/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -735,7 +735,7 @@
         }
       },
       {
-        "id": "93920ec7-2cdd-497e-b7bd-ba22ac1c0a45",
+        "id": "0dd74bc1-4fa2-412e-bc53-f88a9786232e",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterNameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -929,7 +929,7 @@
         }
       },
       {
-        "id": "8a80a0cb-0c9f-487b-a6d1-00e130ff4ac6",
+        "id": "f84a6783-4e04-4f05-a6c6-6989dc5c2318",
         "path": "/ui/ClassicPlayerHUD/HudFrame/CharacterSubText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1123,7 +1123,7 @@
         }
       },
       {
-        "id": "2e15998a-94f7-4e65-89c2-ac6276cc784b",
+        "id": "f56891bc-9dc9-4fd7-bbef-ba60f38f47d7",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1208,7 +1208,7 @@
         }
       },
       {
-        "id": "df070502-514e-4fc7-9a66-0cec84c9fc71",
+        "id": "32d952cf-b208-43e3-8799-0e0c3b4ac725",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1353,7 +1353,7 @@
         }
       },
       {
-        "id": "afdbecc1-0ba5-4a41-9462-5f8c7720a81f",
+        "id": "965e7c7c-8287-436c-95aa-c0b2869eb140",
         "path": "/ui/ClassicPlayerHUD/HudFrame/HpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1547,7 +1547,7 @@
         }
       },
       {
-        "id": "9247f8b6-295c-4b28-bf4b-ca799f8fa1c4",
+        "id": "cdc41568-3524-4716-bf6c-9da041e7987b",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -1632,7 +1632,7 @@
         }
       },
       {
-        "id": "b183a893-8035-433f-ba1a-e98f8ab296c9",
+        "id": "8470a961-50be-4312-8123-5912ae822f27",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -1777,7 +1777,7 @@
         }
       },
       {
-        "id": "81700b0c-c25e-47b0-957b-b70ce40c9e60",
+        "id": "cb417076-9105-4599-8002-4058ad72acd3",
         "path": "/ui/ClassicPlayerHUD/HudFrame/MpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1971,7 +1971,7 @@
         }
       },
       {
-        "id": "1c843b4a-ec33-454f-9e47-41dd8606342e",
+        "id": "04af24e2-b6fe-4b92-a567-cf40fb834fb7",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -2056,7 +2056,7 @@
         }
       },
       {
-        "id": "07d16d95-c8a2-401a-864c-bfcfeb53077e",
+        "id": "f3ea33c2-ca55-41fc-91d9-42555306cfa8",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/Fill",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -2201,7 +2201,7 @@
         }
       },
       {
-        "id": "5f26aad1-f95d-447c-b64f-ce6b29e46da5",
+        "id": "513bea3f-c8e2-465f-adae-8286dd720f6f",
         "path": "/ui/ClassicPlayerHUD/HudFrame/ExpGauge/ValueText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2396,7 +2396,7 @@
         }
       },
       {
-        "id": "d9e6a7bf-fa98-4645-8b37-e45f0b2c3157",
+        "id": "4811ebe7-accb-4ff2-8e76-733dcfad31b0",
         "path": "/ui/ClassicPlayerHUD/HudFrame/InventoryButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -2646,7 +2646,7 @@
         }
       },
       {
-        "id": "0038d147-b6b4-45ab-ae3a-c68639e26323",
+        "id": "3a010793-a9fb-4d86-8246-46e841556b71",
         "path": "/ui/ClassicPlayerHUD/HudFrame/InventoryButton/Icon",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -2791,7 +2791,7 @@
         }
       },
       {
-        "id": "e17fd7f6-023e-40b5-b092-3cbe15eae9ac",
+        "id": "04981f06-7698-469c-b789-7b4d732927ef",
         "path": "/ui/ClassicPlayerHUD/HudFrame/SkillButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -3041,7 +3041,7 @@
         }
       },
       {
-        "id": "de1c9007-81e6-4ec4-8fb6-51a1cb9419e5",
+        "id": "bce7f283-0a54-4b13-a031-0238429df3a1",
         "path": "/ui/ClassicPlayerHUD/HudFrame/SkillButton/Icon",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3186,7 +3186,7 @@
         }
       },
       {
-        "id": "9e2cecdc-c674-404f-bf62-5e5fb4e66734",
+        "id": "279af854-c347-4924-b3cb-b050ab6614e1",
         "path": "/ui/ClassicPlayerHUD/QuickSlots",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3223,10 +3223,10 @@
               "MobileOnly": false,
               "OffsetMax": {
                 "x": -24,
-                "y": 338
+                "y": 538
               },
               "OffsetMin": {
-                "x": -464,
+                "x": -244,
                 "y": 118
               },
               "Pivot": {
@@ -3234,8 +3234,8 @@
                 "y": 0
               },
               "RectSize": {
-                "x": 440,
-                "y": 220
+                "x": 220,
+                "y": 420
               },
               "UIMode": 1,
               "UIScale": {
@@ -3271,7 +3271,7 @@
               "AnimClipPlayType": 0,
               "EndFrameIndex": 2147483647,
               "ImageRUID": {
-                "DataId": "5e4ee74cd7d0453994d4ce6a0ed4130c"
+                "DataId": "03786623d9874ad192f330665e3148ae"
               },
               "IgnoreMapLayerCheck": false,
               "LocalPosition": {
@@ -3331,7 +3331,7 @@
         }
       },
       {
-        "id": "c3803524-aca4-4279-bda9-cd4afb3e0596",
+        "id": "896bbc2f-113f-484b-936d-f47107876171",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -3356,31 +3356,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -99,
-                "y": 95
+                "x": 112,
+                "y": -36
               },
               "OffsetMin": {
-                "x": -187,
-                "y": 7
+                "x": 38,
+                "y": -110
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -3390,8 +3390,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -143,
-                "y": 51
+                "x": 38,
+                "y": -36
               },
               "Position": {
                 "x": 0,
@@ -3416,7 +3416,7 @@
         }
       },
       {
-        "id": "c7c45ce7-0031-43b8-97cd-f19a3c431dbe",
+        "id": "d55d2e74-dc01-4115-84f6-24c90d022834",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3452,20 +3452,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -3561,18 +3561,18 @@
         }
       },
       {
-        "id": "960d0195-7052-4a87-804a-009daa476947",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_1",
+        "id": "9deb3e9c-392e-4922-89df-67d0c31cfd7f",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_1",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_1",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
           "displayOrder": 1,
-          "pathConstraints": "////",
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -3586,30 +3586,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -133,
-                "y": 103
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": -153,
-                "y": 85
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -3620,8 +3620,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -143,
-                "y": 94
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -3709,11 +3709,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -3749,7 +3749,7 @@
         }
       },
       {
-        "id": "fefbace7-9be2-4120-9910-694216801531",
+        "id": "837deb0e-5b9f-4855-8dec-048da930beaa",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3759,7 +3759,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -3785,20 +3785,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -3895,7 +3895,7 @@
         }
       },
       {
-        "id": "7d77824c-617f-4821-9cea-a75784402fe5",
+        "id": "683ce696-4337-4d05-a789-eb267e79c8f2",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_1/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3931,20 +3931,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -4047,7 +4047,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -4083,7 +4083,7 @@
         }
       },
       {
-        "id": "14c4ce8e-1381-4895-936d-9f71bad35189",
+        "id": "f54aa239-b5c3-4eed-84e3-71d930a92fb8",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -4093,7 +4093,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 2,
+          "displayOrder": 1,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -4108,31 +4108,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -3.5,
-                "y": 95
+                "x": 194,
+                "y": -36
               },
               "OffsetMin": {
-                "x": -91.5,
-                "y": 7
+                "x": 120,
+                "y": -110
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -4142,8 +4142,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -47.5,
-                "y": 51
+                "x": 120,
+                "y": -36
               },
               "Position": {
                 "x": 0,
@@ -4168,7 +4168,7 @@
         }
       },
       {
-        "id": "3f1a4e48-0d00-4446-975a-ba84196e7926",
+        "id": "75402e84-2054-4a57-afa0-c6e33859b4f3",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4204,20 +4204,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -4313,18 +4313,18 @@
         }
       },
       {
-        "id": "1f1e4d61-ee68-4dcd-840a-9b7837c808cb",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_2",
+        "id": "3df92fc6-0955-4d04-9f90-0d48e2ee7cb9",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_2",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_2",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 3,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -4338,30 +4338,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -37.5,
-                "y": 103
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": -57.5,
-                "y": 85
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -4372,8 +4372,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -47.5,
-                "y": 94
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -4461,11 +4461,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -4501,7 +4501,7 @@
         }
       },
       {
-        "id": "d0165bbc-ce24-4bb3-8f11-ed92b35fdf34",
+        "id": "309da711-5cbe-499e-ae84-805e060fb573",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4511,7 +4511,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -4537,20 +4537,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -4647,7 +4647,7 @@
         }
       },
       {
-        "id": "b848f8b9-f705-48d5-91ab-af475074cbbc",
+        "id": "fbcd0d62-bb38-42d5-b274-47a50005eca0",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_2/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4683,20 +4683,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -4799,7 +4799,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -4835,7 +4835,7 @@
         }
       },
       {
-        "id": "e37708e7-d014-44d1-8a9f-04219e24a34f",
+        "id": "c028053e-64f0-42ee-a774-6546d62a4b11",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -4845,7 +4845,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 4,
+          "displayOrder": 2,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -4860,31 +4860,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 92,
-                "y": 95
+                "x": 112,
+                "y": -117
               },
               "OffsetMin": {
-                "x": 4,
-                "y": 7
+                "x": 38,
+                "y": -191
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -4894,8 +4894,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 48,
-                "y": 51
+                "x": 38,
+                "y": -117
               },
               "Position": {
                 "x": 0,
@@ -4920,7 +4920,7 @@
         }
       },
       {
-        "id": "5bc18f6a-0d77-4a13-b67d-a04ce34d4d2a",
+        "id": "ea139450-0cf1-487e-9274-7009a56649a4",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4956,20 +4956,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -5065,18 +5065,18 @@
         }
       },
       {
-        "id": "4edb8d72-479e-4fdd-9873-0bde711ce288",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_3",
+        "id": "0a83b9c3-9f7f-4f98-a390-41ce0636fc7f",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_3",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_3",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 5,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -5090,30 +5090,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 58,
-                "y": 103
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": 38,
-                "y": 85
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -5124,8 +5124,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 48,
-                "y": 94
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -5213,11 +5213,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -5253,7 +5253,7 @@
         }
       },
       {
-        "id": "c09c633e-2067-410c-b10c-33e9b0be99e6",
+        "id": "97aba94f-0047-4112-918b-4f42b6fe2914",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -5263,7 +5263,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -5289,20 +5289,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -5399,7 +5399,7 @@
         }
       },
       {
-        "id": "c6e53dab-3a07-4ca5-9b50-6866005a320b",
+        "id": "4fcf6a90-999f-4cf2-a8ac-6cc628350f75",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_3/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5435,20 +5435,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -5551,7 +5551,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -5587,7 +5587,7 @@
         }
       },
       {
-        "id": "7aa7ee66-8012-4a97-baba-55de36373fe0",
+        "id": "485f089d-aebb-4ffd-a929-3ca9c61e1bc4",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -5597,7 +5597,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 6,
+          "displayOrder": 3,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -5612,31 +5612,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 187.5,
-                "y": 95
+                "x": 194,
+                "y": -117
               },
               "OffsetMin": {
-                "x": 99.5,
-                "y": 7
+                "x": 120,
+                "y": -191
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -5646,8 +5646,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 143.5,
-                "y": 51
+                "x": 120,
+                "y": -117
               },
               "Position": {
                 "x": 0,
@@ -5672,7 +5672,7 @@
         }
       },
       {
-        "id": "766d7ffb-916e-42e7-af08-86ba46725646",
+        "id": "d497e889-fa89-4920-b0f2-0da4a6be20d0",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -5708,20 +5708,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -5817,18 +5817,18 @@
         }
       },
       {
-        "id": "53c23b94-e569-4792-a507-2302e19a0348",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_4",
+        "id": "6183cf80-c832-4c77-8682-3dbc4dbef00d",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_4",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_4",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 7,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -5842,30 +5842,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 153.5,
-                "y": 103
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": 133.5,
-                "y": 85
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -5876,8 +5876,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 143.5,
-                "y": 94
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -5965,11 +5965,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -6005,7 +6005,7 @@
         }
       },
       {
-        "id": "8b77b88e-2130-4e03-8759-b644dde9f109",
+        "id": "15f1ceb6-8e6e-4855-b06e-1645eaa8e77b",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6015,7 +6015,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -6041,20 +6041,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -6151,7 +6151,7 @@
         }
       },
       {
-        "id": "302eec7a-7c43-40c4-9085-9cfdd307bfd8",
+        "id": "a574443c-fa5e-4016-9913-f78c6aa07946",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_4/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6187,20 +6187,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -6303,7 +6303,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -6339,7 +6339,7 @@
         }
       },
       {
-        "id": "2644971e-8bf7-4cc1-bc20-55ecef5f1650",
+        "id": "915f2f4e-12c8-43f8-ac3b-b32e8bfe613a",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -6349,7 +6349,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 8,
+          "displayOrder": 4,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -6364,31 +6364,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -99,
-                "y": -7
+                "x": 112,
+                "y": -198
               },
               "OffsetMin": {
-                "x": -187,
-                "y": -95
+                "x": 38,
+                "y": -272
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -6398,8 +6398,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -143,
-                "y": -51
+                "x": 38,
+                "y": -198
               },
               "Position": {
                 "x": 0,
@@ -6424,7 +6424,7 @@
         }
       },
       {
-        "id": "e119a1e6-2739-4c8f-aa5e-42e32b817601",
+        "id": "e0aaed22-7c05-483a-9ede-aa363ff211a3",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6460,20 +6460,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -6569,18 +6569,18 @@
         }
       },
       {
-        "id": "4f0174cc-7548-46cb-b6eb-981ea00c262a",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_5",
+        "id": "736cfc0a-0aa1-4f17-97b7-bf41ae047411",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_5",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_5",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 9,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -6594,30 +6594,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -133,
-                "y": 1
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": -153,
-                "y": -17
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -6628,8 +6628,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -143,
-                "y": -8
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -6717,11 +6717,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -6757,7 +6757,7 @@
         }
       },
       {
-        "id": "d4551a5d-f83b-416c-8b80-73a80f4cb3c3",
+        "id": "4cade9c3-5b5d-4318-b415-11afd51e6781",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6767,7 +6767,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -6793,20 +6793,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -6903,7 +6903,7 @@
         }
       },
       {
-        "id": "eccdbed2-d83b-413d-9d97-06ee331844ac",
+        "id": "48dbf248-5d12-4e28-8705-e0da83d27795",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_5/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6939,20 +6939,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -7055,7 +7055,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -7091,7 +7091,7 @@
         }
       },
       {
-        "id": "713e6531-bcec-4a80-b49b-d01a50dbae82",
+        "id": "fe4219a4-d2d6-4104-afb9-13b00593a04f",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -7101,7 +7101,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 10,
+          "displayOrder": 5,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -7116,31 +7116,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -3.5,
-                "y": -7
+                "x": 194,
+                "y": -198
               },
               "OffsetMin": {
-                "x": -91.5,
-                "y": -95
+                "x": 120,
+                "y": -272
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -7150,8 +7150,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -47.5,
-                "y": -51
+                "x": 120,
+                "y": -198
               },
               "Position": {
                 "x": 0,
@@ -7176,7 +7176,7 @@
         }
       },
       {
-        "id": "9c52b7b7-c331-4b59-8c45-453a56d370fd",
+        "id": "18539440-947c-4f75-bee9-e6d624971ed5",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -7212,20 +7212,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -7321,18 +7321,18 @@
         }
       },
       {
-        "id": "7c883cdb-ba47-4be9-82e3-4221d66b3a74",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_6",
+        "id": "d5da0546-1469-41bd-a398-8e793e3cd125",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_6",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_6",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 11,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -7346,30 +7346,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -37.5,
-                "y": 1
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": -57.5,
-                "y": -17
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -7380,8 +7380,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -47.5,
-                "y": -8
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -7469,11 +7469,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -7509,7 +7509,7 @@
         }
       },
       {
-        "id": "2559cb8b-a207-4116-8680-a8c6445d9084",
+        "id": "2987e04c-05c4-4c78-a1e9-53dea60b141f",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -7519,7 +7519,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -7545,20 +7545,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -7655,7 +7655,7 @@
         }
       },
       {
-        "id": "e04180d7-1737-4c62-90a9-5728c5f818a3",
+        "id": "fce180f7-9199-4212-b3ac-9e23be9bea60",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_6/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7691,20 +7691,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -7807,7 +7807,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -7843,7 +7843,7 @@
         }
       },
       {
-        "id": "4b7360c3-de99-46cf-a6a6-6a0a96f66a73",
+        "id": "97695eb6-afac-484b-b9f9-3f81fe29674c",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -7853,7 +7853,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 12,
+          "displayOrder": 6,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -7868,31 +7868,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 92,
-                "y": -7
+                "x": 112,
+                "y": -279
               },
               "OffsetMin": {
-                "x": 4,
-                "y": -95
+                "x": 38,
+                "y": -353
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -7902,8 +7902,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 48,
-                "y": -51
+                "x": 38,
+                "y": -279
               },
               "Position": {
                 "x": 0,
@@ -7928,7 +7928,7 @@
         }
       },
       {
-        "id": "93396386-9774-447c-b79c-513845c3a5b6",
+        "id": "191d1945-d441-42c3-a33a-ad86113dc287",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -7964,20 +7964,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -8073,18 +8073,18 @@
         }
       },
       {
-        "id": "209976b8-d133-4d14-a487-621a69cf42c5",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_7",
+        "id": "c75a1248-fe19-4589-a2a3-1dbc1f94cf9a",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_7",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_7",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 13,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -8098,30 +8098,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 58,
-                "y": 1
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": 38,
-                "y": -17
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -8132,8 +8132,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 48,
-                "y": -8
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -8221,11 +8221,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -8261,7 +8261,7 @@
         }
       },
       {
-        "id": "9885e255-6936-418a-ad8c-e39d20736530",
+        "id": "d2ef36b5-d0b1-4a5c-b007-45f13ed32801",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -8271,7 +8271,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -8297,20 +8297,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -8407,7 +8407,7 @@
         }
       },
       {
-        "id": "aa250da3-96aa-4597-b2c3-496184ae6db7",
+        "id": "c53241eb-b002-443f-9b4c-328bc213ab22",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_7/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8443,20 +8443,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -8559,7 +8559,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -8595,7 +8595,7 @@
         }
       },
       {
-        "id": "b94cdee5-f8dc-4913-9d2b-11475bd9db67",
+        "id": "62adefac-dbbc-487e-87fa-ab97bb707f9e",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -8605,7 +8605,7 @@
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 14,
+          "displayOrder": 7,
           "pathConstraints": "////",
           "revision": 0,
           "origin": {
@@ -8620,31 +8620,31 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 187.5,
-                "y": -7
+                "x": 194,
+                "y": -279
               },
               "OffsetMin": {
-                "x": 99.5,
-                "y": -95
+                "x": 120,
+                "y": -353
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 88,
-                "y": 88
+                "x": 74,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -8654,8 +8654,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 143.5,
-                "y": -51
+                "x": 120,
+                "y": -279
               },
               "Position": {
                 "x": 0,
@@ -8680,7 +8680,7 @@
         }
       },
       {
-        "id": "7a636a65-5b68-46fc-b6d3-0ec90d601d70",
+        "id": "9f87ded5-d756-4a70-a034-3d42c3a23e1e",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -8716,20 +8716,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 36,
-                "y": 36
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -36,
-                "y": -36
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 72,
-                "y": 72
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -8825,18 +8825,18 @@
         }
       },
       {
-        "id": "a9774951-5fd0-45b1-bf2b-4521178a50af",
-        "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_8",
+        "id": "0e429e12-088b-447f-8e93-f572f88089ed",
+        "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/SlotNumber",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
-          "name": "SlotNumber_8",
-          "path": "/ui/ClassicPlayerHUD/QuickSlots/SlotNumber_8",
+          "name": "SlotNumber",
+          "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/SlotNumber",
           "nameEditable": true,
           "enable": true,
           "visible": true,
           "localize": true,
-          "displayOrder": 15,
-          "pathConstraints": "////",
+          "displayOrder": 1,
+          "pathConstraints": "/////",
           "revision": 0,
           "origin": {
             "type": "Model",
@@ -8850,30 +8850,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 0,
+              "AlignmentOption": 4,
               "AnchorsMax": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "AnchorsMin": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 153.5,
-                "y": 1
+                "x": 23,
+                "y": -4
               },
               "OffsetMin": {
-                "x": 133.5,
-                "y": -17
+                "x": 5,
+                "y": -22
               },
               "Pivot": {
-                "x": 0.5,
-                "y": 0.5
+                "x": 0,
+                "y": 1
               },
               "RectSize": {
-                "x": 20,
+                "x": 18,
                 "y": 18
               },
               "UIMode": 1,
@@ -8884,8 +8884,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 143.5,
-                "y": -8
+                "x": 5,
+                "y": -4
               },
               "Position": {
                 "x": 0,
@@ -8973,11 +8973,11 @@
               "Font": "Default",
               "FontColor": {
                 "r": 1,
-                "g": 0.8862745098039215,
-                "b": 0.6313725490196078,
+                "g": 1,
+                "b": 1,
                 "a": 1
               },
-              "FontSize": 14,
+              "FontSize": 13,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -9013,7 +9013,7 @@
         }
       },
       {
-        "id": "1d079341-d814-4646-b93c-7909b8151549",
+        "id": "16321f35-4d87-475c-b6ba-9b89e8b81d6d",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -9023,7 +9023,7 @@
           "enable": false,
           "visible": true,
           "localize": true,
-          "displayOrder": 1,
+          "displayOrder": 2,
           "pathConstraints": "/////",
           "revision": 0,
           "origin": {
@@ -9049,20 +9049,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 37,
-                "y": 37
+                "x": 32,
+                "y": 32
               },
               "OffsetMin": {
-                "x": -37,
-                "y": -37
+                "x": -32,
+                "y": -32
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 74,
-                "y": 74
+                "x": 64,
+                "y": 64
               },
               "UIMode": 1,
               "UIScale": {
@@ -9159,7 +9159,7 @@
         }
       },
       {
-        "id": "226acebb-470f-4edb-b754-5734558a186f",
+        "id": "48a05b79-6b8f-46c7-bef1-e868d82098b6",
         "path": "/ui/ClassicPlayerHUD/QuickSlots/Slot_8/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -9195,20 +9195,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 35,
-                "y": 35
+                "x": 30,
+                "y": 30
               },
               "OffsetMin": {
-                "x": -35,
-                "y": -35
+                "x": -30,
+                "y": -30
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 70,
-                "y": 70
+                "x": 60,
+                "y": 60
               },
               "UIMode": 1,
               "UIScale": {
@@ -9311,7 +9311,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 23,
+              "FontSize": 21,
               "FontStyle": 1,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,

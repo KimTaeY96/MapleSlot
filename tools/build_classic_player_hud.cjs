@@ -11,7 +11,6 @@ const R = {
   menuButtonGreen: 'cd1e25491fb243edba76e79613c1987a',
   inventoryBagIcon: '1b0f6476f399444b9ff8f23958c447f8',
   skillBookIcon: '8252bcc8043849878cb827c45a551d05',
-  quickSlots: '5e4ee74cd7d0453994d4ce6a0ed4130c',
   cooldownOverlay: 'ddf8548f22114eedb558f9decec77ba4',
 };
 
@@ -110,31 +109,31 @@ b.patchComponent('HudFrame/SkillButton/Icon', 'MOD.Core.SpriteGUIRendererCompone
 });
 
 b.sprite('QuickSlots', {
-  anchor: 'bottom-right', pos: [-24, 118], rect_size: [440, 220],
-  image_ruid: R.quickSlots, sprite_type: 0, preserve_aspect: true, raycast: false,
+  anchor: 'bottom-right', pos: [-24, 118], rect_size: [220, 420],
+  image_ruid: SKILL_UI.skins.skillQuickSlots2x4, sprite_type: 0, preserve_aspect: true, raycast: false,
 });
 b.patchComponent('QuickSlots', 'MOD.Core.SpriteGUIRendererComponent', {
   Color: { r: 1, g: 1, b: 1, a: 1 }, Type: 0, RaycastTarget: false,
 });
 for (let i = 1; i <= 8; i += 1) {
-  const col = (i - 1) % 4;
-  const row = Math.floor((i - 1) / 4);
+  const col = (i - 1) % 2;
+  const row = Math.floor((i - 1) / 2);
   const root = `QuickSlots/Slot_${i}`;
   b.empty(root, {
-    anchor: 'middle-center', pos: [-143 + col * 95.5, 51 - row * 102], rect_size: [88, 88],
+    anchor: 'top-left', pos: [38 + col * 82, -36 - row * 81], rect_size: [74, 74],
   });
   b.sprite(root + '/IconSprite', {
-    anchor: 'middle-center', rect_size: [72, 72],
+    anchor: 'middle-center', rect_size: [64, 64],
     image_ruid: SKILL_UI.skillIcons.power_slash, sprite_type: 0,
     preserve_aspect: true, raycast: false, enable: false,
   });
-  b.text('QuickSlots/SlotNumber_' + i, String(i), {
-    anchor: 'middle-center', pos: [-143 + col * 95.5, 94 - row * 102], rect_size: [20, 18], size: 14,
-    color: '#FFE2A1', bold: true, alignment: 4,
+  b.text(root + '/SlotNumber', String(i), {
+    anchor: 'top-left', pos: [5, -4], rect_size: [18, 18], size: 13,
+    color: '#FFFFFF', bold: true, alignment: 4,
   });
-  blackOutline('QuickSlots/SlotNumber_' + i, 2);
+  blackOutline(root + '/SlotNumber', 2);
   b.panel(root + '/CooldownShade', {
-    anchor: 'middle-center', rect_size: [74, 74], image_ruid: R.cooldownOverlay,
+    anchor: 'middle-center', rect_size: [64, 64], image_ruid: R.cooldownOverlay,
     color: '#061728', alpha: 0.82, enable: false,
   });
   b.patchComponent(root + '/CooldownShade', 'MOD.Core.SpriteGUIRendererComponent', {
@@ -142,7 +141,7 @@ for (let i = 1; i <= 8; i += 1) {
     RaycastTarget: false,
   });
   b.text(root + '/CooldownShade/CooldownText', '', {
-    anchor: 'middle-center', rect_size: [70, 70], size: 23,
+    anchor: 'middle-center', rect_size: [60, 60], size: 21,
     color: '#FFFFFF', bold: true, alignment: 4,
   });
   blackOutline(root + '/CooldownShade/CooldownText', 3);

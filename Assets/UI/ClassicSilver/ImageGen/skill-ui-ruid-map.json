@@ -5,7 +5,8 @@
   "skins": {
     "skillWindowMain": "a9b738ae61514bbab1561510ca3f1d9d",
     "skillSlotPanel": "d8fa2aea569c46728d40b8de493a0ddd",
-    "skillTooltip": "26794fd09f494d26a3b330e4e925ca2f"
+    "skillTooltip": "26794fd09f494d26a3b330e4e925ca2f",
+    "skillQuickSlots2x4": "03786623d9874ad192f330665e3148ae"
   },
   "skillIcons": {
     "power_slash": "63e390e7b6864529bb7eeed2334427f0",

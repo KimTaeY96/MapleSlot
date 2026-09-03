@@ -20,9 +20,9 @@ const C = {silver:'#B8C0C8',silverDark:'#59636F',silverLight:'#E7EDF2',navy:'#06
 
 b.script('Controller','script.SkillWindowUI',{anchor:'stretch',rect_size:[1920,1080]});
 b.empty('MainGroup',{anchor:'stretch',rect_size:[1920,1080],enable:false});
-b.panel('MainGroup/Window',{anchor:'middle-center',pos:[0,0],rect_size:[560,880],image_ruid:MAIN_RUID,color:'#FFFFFF'});
-b.panel('MainGroup/Window/InnerFrame',{anchor:'stretch',pos:[0,0],rect_size:[544,864],image_ruid:RUID,color:C.silverLight,alpha:0});
-b.panel('MainGroup/Window/TitleBar',{anchor:'top-center',pos:[0,-10],rect_size:[536,52],image_ruid:RUID,color:'#293441',alpha:0});
+b.panel('MainGroup/Window',{anchor:'middle-center',pos:[0,0],rect_size:[550,880],image_ruid:MAIN_RUID,color:'#FFFFFF'});
+b.panel('MainGroup/Window/InnerFrame',{anchor:'stretch',pos:[0,0],rect_size:[534,864],image_ruid:RUID,color:C.silverLight,alpha:0});
+b.panel('MainGroup/Window/TitleBar',{anchor:'top-center',pos:[0,-10],rect_size:[526,52],image_ruid:RUID,color:'#293441',alpha:0});
 b.text('MainGroup/Window/TitleBar/TitleText','SKILL',{anchor:'middle-center',pos:[0,0],rect_size:[340,44],size:26,color:'#FFD54A',bold:true,alignment:4});
 b.button('MainGroup/Window/TitleBar/CloseButton','×',{anchor:'middle-right',pos:[-26,0],rect_size:[44,44],image_ruid:RUID});
 b.patchComponent('MainGroup/Window/TitleBar/CloseButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:1,g:1,b:1,a:0},Type:1});
@@ -32,41 +32,41 @@ const roman=['I','II','III','IV'];
 for(let i=0;i<4;i++){
   const name=i===0?'TierIButton':'Tier'+(i+1)+'Button';
   const path='MainGroup/Window/'+name;
-  b.button(path,'',{anchor:'top-left',pos:[18+i*131,-68],rect_size:[124,64],image_ruid:i===0?ACTION_RUID:RUID});
+  b.button(path,'',{anchor:'top-left',pos:[39+i*119,-68],rect_size:[116,48],image_ruid:i===0?ACTION_RUID:RUID});
   b.patchComponent(path,'MOD.Core.SpriteGUIRendererComponent',{Color:{r:1,g:1,b:1,a:0},Type:1});
   b.text(path+'/RomanText',roman[i],{anchor:'middle-center',pos:[0,0],rect_size:[82,52],size:31,color:'#FFFFFF',bold:true,alignment:4});
   blackOutline(path+'/RomanText',2);
   if(i>0)b.text(path+'/LockText','▣',{anchor:'middle-right',pos:[-18,-9],rect_size:[28,30],size:17,color:'#26313B',bold:true,alignment:4});
 }
 
-b.panel('MainGroup/Window/JobHeader',{anchor:'top-center',pos:[0,-140],rect_size:[520,72],image_ruid:RUID,color:C.blue,alpha:0});
+b.panel('MainGroup/Window/JobHeader',{anchor:'top-center',pos:[0,-122],rect_size:[468,62],image_ruid:RUID,color:C.blue,alpha:0});
 b.sprite('MainGroup/Window/JobHeader/Emblem',{anchor:'middle-left',pos:[44,0],rect_size:[58,58],image_ruid:ICONS.weapon_mastery,sprite_type:0,preserve_aspect:true,raycast:false});
 b.text('MainGroup/Window/JobHeader/JobText','1차 모험가',{anchor:'middle-center',pos:[20,0],rect_size:[390,56],size:30,color:C.white,bold:true,alignment:4});
 
-b.scrollLayout('MainGroup/Window/SkillList',{anchor:'top-center',pos:[0,-220],rect_size:[520,526],layout_type:1,spacing:6,cell_size:[500,88],use_scroll:true,padding:[8,8,8,8]});
+b.scrollLayout('MainGroup/Window/SkillList',{anchor:'top-center',pos:[0,-200],rect_size:[470,540],layout_type:1,spacing:4,cell_size:[438,80],use_scroll:true,padding:[2,2,2,2]});
 const skills=[['power_slash','PS','A'],['double_slash','DS','A'],['charge_slash','CB','A'],['whirlwind','WT','A'],['guard_break','GB','A'],['battle_cry','BC','A'],['emergency_heal','EH','A'],['final_blow','FB','A'],['weapon_mastery','WM','P'],['vitality_training','VT','P'],['combat_sense','CS','P'],['swift_training','ST','P'],['recovery_boost','RB','P'],['elite_hunter','EH+','P']];
 const names=['파워 슬래시','더블 슬래시','돌진 베기','회전 참격','가드 브레이크','전투 함성','응급 회복','최후의 일격','무기 숙련','체력 단련','전투 감각','신속 훈련','회복력 강화','정예 사냥꾼'];
 const max=[20,20,15,15,15,10,10,10,20,20,15,15,15,15];
 skills.forEach((s,i)=>{
   const root='MainGroup/Window/SkillList/SkillRow_'+s[0];
-  b.panel(root,{anchor:'middle-center',rect_size:[500,88],image_ruid:RUID,color:i%2===0?C.row:C.rowAlt,alpha:0});
+  b.panel(root,{anchor:'middle-center',rect_size:[438,80],image_ruid:RUID,color:i%2===0?C.row:C.rowAlt,alpha:0});
   b.button(root+'/IconButton','',{anchor:'middle-left',pos:[48,0],rect_size:[72,72],image_ruid:ICONS[s[0]]});
   b.patchComponent(root+'/IconButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:1,g:1,b:1,a:1},Type:0,RaycastTarget:true,PreserveAspect:true});
   b.upsertComponent(root+'/IconButton','MOD.Core.UITouchReceiveComponent');
-  b.panel(root+'/TypeBadge',{anchor:'middle-left',pos:[98,-22],rect_size:[30,26],image_ruid:RUID,color:s[2]==='A'?'#D26A18':'#167A50'});
+  b.panel(root+'/TypeBadge',{anchor:'middle-left',pos:[86,-20],rect_size:[30,26],image_ruid:RUID,color:s[2]==='A'?'#D26A18':'#167A50'});
   b.text(root+'/TypeBadge/BadgeText',s[2],{anchor:'middle-center',pos:[0,0],rect_size:[28,24],size:17,color:'#FFFFFF',bold:true,alignment:4});
   blackOutline(root+'/TypeBadge/BadgeText',2);
-  b.text(root+'/NameText',names[i],{anchor:'middle-left',pos:[120,15],rect_size:[270,34],size:24,color:C.ink,bold:true,alignment:0});
-  b.text(root+'/LevelText','Lv. 0 / '+max[i],{anchor:'middle-left',pos:[120,-22],rect_size:[220,28],size:19,color:'#31465A',alignment:0});
-  b.button(root+'/PlusButton','+',{anchor:'middle-right',pos:[-34,0],rect_size:[56,56],image_ruid:RUID});
+  b.text(root+'/NameText',names[i],{anchor:'middle-left',pos:[132,14],rect_size:[240,32],size:22,color:C.ink,bold:true,alignment:0});
+  b.text(root+'/LevelText','Lv. 0 / '+max[i],{anchor:'middle-left',pos:[132,-20],rect_size:[205,27],size:18,color:'#31465A',alignment:0});
+  b.button(root+'/PlusButton','+',{anchor:'middle-right',pos:[-1,0],rect_size:[46,46],image_ruid:RUID});
   b.patchComponent(root+'/PlusButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:1,g:1,b:1,a:0},Type:1});
-  b.patchComponent(root+'/PlusButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:34,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
+  b.patchComponent(root+'/PlusButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:30,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
   blackOutline(root+'/PlusButton',2);
 });
 
-b.panel('MainGroup/Window/Footer',{anchor:'bottom-center',pos:[0,16],rect_size:[520,92],image_ruid:RUID,color:C.silver,alpha:0});
-b.text('MainGroup/Window/Footer/SkillPointText','SP 0',{anchor:'middle-left',pos:[20,0],rect_size:[245,54],size:26,color:C.ink,bold:true,alignment:0});
-b.button('MainGroup/Window/Footer/SlotSettingsButton','슬롯 설정',{anchor:'middle-right',pos:[-96,0],rect_size:[180,60],image_ruid:ACTION_RUID});
+b.panel('MainGroup/Window/Footer',{anchor:'bottom-center',pos:[0,50],rect_size:[468,74],image_ruid:RUID,color:C.silver,alpha:0});
+b.text('MainGroup/Window/Footer/SkillPointText','SP 0',{anchor:'middle-left',pos:[12,0],rect_size:[210,54],size:24,color:C.ink,bold:true,alignment:0});
+b.button('MainGroup/Window/Footer/SlotSettingsButton','슬롯 설정',{anchor:'middle-left',pos:[278,0],rect_size:[185,60],image_ruid:ACTION_RUID});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.SpriteGUIRendererComponent',{Color:{r:1,g:1,b:1,a:0},Type:1});
 b.patchComponent('MainGroup/Window/Footer/SlotSettingsButton','MOD.Core.TextGUIRendererComponent',{Font:'Maple',FontSize:25,FontColor:{r:1,g:1,b:1,a:1},Bold:true});
 blackOutline('MainGroup/Window/Footer/SlotSettingsButton',2);

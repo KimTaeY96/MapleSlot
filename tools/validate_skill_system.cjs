@@ -85,6 +85,22 @@ test('UI contains locked tiers, fourteen rows, eight slots and one footer button
   assert.deepEqual(footerButtons.map(x=>x.name),['SlotSettingsButton']);
   for(const tier of [2,3,4]) assert.ok(paths.some(p=>p.endsWith('/Tier'+tier+'Button/LockText')));
 });
+test('skill window controls align to the ImageGen frame guides',()=>{
+  const find=suffix=>snapshot.find(x=>x.path.endsWith(suffix));
+  assert.deepEqual(find('/MainGroup/Window').size,[550,880]);
+  assert.deepEqual(['TierIButton','Tier2Button','Tier3Button','Tier4Button'].map(name=>find('/MainGroup/Window/'+name).pos),[
+    [39,-68],[158,-68],[277,-68],[396,-68],
+  ]);
+  assert.deepEqual(find('/MainGroup/Window/JobHeader').pos,[0,-122]);
+  assert.deepEqual(find('/MainGroup/Window/JobHeader').size,[468,62]);
+  assert.deepEqual(find('/MainGroup/Window/SkillList').pos,[0,-200]);
+  assert.deepEqual(find('/MainGroup/Window/SkillList').size,[470,540]);
+  assert.deepEqual(find('/MainGroup/Window/Footer').pos,[0,50]);
+  assert.deepEqual(find('/MainGroup/Window/Footer').size,[468,74]);
+  assert.deepEqual(find('/MainGroup/Window/Footer/SlotSettingsButton').pos,[278,0]);
+  assert.deepEqual(find('/SkillRow_power_slash/NameText').pos,[132,14]);
+  assert.deepEqual(find('/SkillRow_power_slash/PlusButton').pos,[-1,0]);
+});
 test('slot settings layout is exactly 4 by 2 in priority order',()=>{
   const slots=snapshot.filter(x=>/\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
   assert.deepEqual(slots.map(x=>x.pos),[
@@ -122,15 +138,17 @@ test('bottom HUD restores original proportions and splits the menu area evenly',
   assert.match(hudSource,/method void OpenSkillWindow\(\)/);
   assert.ok(!snapshot.some(x=>x.path.endsWith('/OpenButton')));
 });
-test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()=>{
+test('persistent quick-slot HUD is exactly two by four and mirrors cooldowns',()=>{
   const slots=hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
   assert.equal(slots.length,8);
   assert.deepEqual(slots.map(x=>x.pos),[
-    [-143,51],[-47.5,51],[48,51],[143.5,51],
-    [-143,-51],[-47.5,-51],[48,-51],[143.5,-51],
+    [38,-36],[120,-36],
+    [38,-117],[120,-117],
+    [38,-198],[120,-198],
+    [38,-279],[120,-279],
   ]);
   const panel=hudSnapshot.find(x=>x.path.endsWith('/QuickSlots'));
-  assert.deepEqual(panel.size,[440,220]);
+  assert.deepEqual(panel.size,[220,420]);
   assert.deepEqual(panel.pos,[-24,118]);
   assert.match(uiSource,/HudSlotByIndex/);
   assert.match(uiSource,/\/ui\/ClassicPlayerHUD\/QuickSlots/);
@@ -140,10 +158,10 @@ test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()
 });
 
 test('plain ImageGen UI resources are project-bound and referenced by RUID',()=>{
-  const expectedFiles=['skill-window-main.png','skill-slot-panel.png','skill-tooltip.png','power_slash.png','double_slash.png','charge_slash.png','whirlwind_slash.png','guard_break.png','battle_cry.png','emergency_heal.png','final_blow.png','weapon_mastery.png','vitality_training.png','combat_sense.png','swift_training.png','recovery_boost.png','elite_hunter.png'];
+  const expectedFiles=['skill-quickslots-2x4-plain.png','skill-window-main.png','skill-slot-panel.png','skill-tooltip.png','power_slash.png','double_slash.png','charge_slash.png','whirlwind_slash.png','guard_break.png','battle_cry.png','emergency_heal.png','final_blow.png','weapon_mastery.png','vitality_training.png','combat_sense.png','swift_training.png','recovery_boost.png','elite_hunter.png'];
   for(const file of expectedFiles) assert.ok(fs.existsSync('Assets/UI/ClassicSilver/ImageGen/'+file),file);
   assert.equal(Object.keys(assetMap.skillIcons).length,14);
-  assert.equal(Object.keys(assetMap.skins).length,3);
+  assert.equal(Object.keys(assetMap.skins).length,4);
   for(const ruid of [...Object.values(assetMap.skins),...Object.values(assetMap.skillIcons)]) {
     assert.match(ruid,/^[0-9a-f]{32}$/);
     assert.ok((builderSource+hudBuilderSource+definitionSource+JSON.stringify(assetMap)).includes(ruid),ruid);
@@ -160,6 +178,7 @@ test('plain ImageGen UI resources are project-bound and referenced by RUID',()=>
   assert.equal(imageRuid(main),assetMap.skins.skillWindowMain);
   assert.equal(imageRuid(slot),assetMap.skins.skillSlotPanel);
   assert.equal(imageRuid(tip),assetMap.skins.skillTooltip);
+  assert.equal(imageRuid(hudBuilder.find('/ui/ClassicPlayerHUD/QuickSlots')),assetMap.skins.skillQuickSlots2x4);
 });
 
 test('inventory and skill windows are mutually exclusive toggles',()=>{

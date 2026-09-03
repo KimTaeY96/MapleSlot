@@ -1,7 +1,7 @@
 {
   "Id": "",
   "GameId": "",
-  "EntryKey": "ui://37bcb668-94e0-4cc9-a52c-23a91cf76c3a",
+  "EntryKey": "ui://d0d09484-e9d1-4508-a414-9ec5deb00bc6",
   "ContentType": "x-mod/ui",
   "Content": "",
   "Usage": 0,
@@ -14,7 +14,7 @@
     "Use": "Binary",
     "Entities": [
       {
-        "id": "37bcb668-94e0-4cc9-a52c-23a91cf76c3a",
+        "id": "d0d09484-e9d1-4508-a414-9ec5deb00bc6",
         "path": "/ui/SkillWindow",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.UIGroupComponent,MOD.Core.CanvasGroupComponent",
         "jsonString": {
@@ -113,7 +113,7 @@
         }
       },
       {
-        "id": "b2d48173-3d7b-48f3-8703-7b815497fdec",
+        "id": "01dbfcbb-d306-4ef4-975c-c83b50e97bdd",
         "path": "/ui/SkillWindow/Controller",
         "componentNames": "MOD.Core.UITransformComponent,script.SkillWindowUI",
         "jsonString": {
@@ -202,7 +202,7 @@
         }
       },
       {
-        "id": "6cb559ff-fa09-4c9c-a19b-38b81bef0788",
+        "id": "03411ce3-6ce3-4606-a699-90731073066b",
         "path": "/ui/SkillWindow/MainGroup",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -287,7 +287,7 @@
         }
       },
       {
-        "id": "b6970f6a-5400-4e3f-9c9b-fa7236c94e3a",
+        "id": "3d0d731f-2f3c-48e4-a43b-b0a7e398daaf",
         "path": "/ui/SkillWindow/MainGroup/Window",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -323,11 +323,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 280,
+                "x": 275,
                 "y": 440
               },
               "OffsetMin": {
-                "x": -280,
+                "x": -275,
                 "y": -440
               },
               "Pivot": {
@@ -335,7 +335,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 560,
+                "x": 550,
                 "y": 880
               },
               "UIMode": 1,
@@ -433,7 +433,7 @@
         }
       },
       {
-        "id": "36b24099-43d3-42df-9e0e-f7015874388a",
+        "id": "e846b206-3301-4007-a52e-688b0b9af611",
         "path": "/ui/SkillWindow/MainGroup/Window/InnerFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -481,7 +481,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 544,
+                "x": 534,
                 "y": 864
               },
               "UIMode": 1,
@@ -578,7 +578,7 @@
         }
       },
       {
-        "id": "a75e5120-fb3c-4f1b-83b5-9338a717bd09",
+        "id": "739950b4-ae12-4fad-a547-89777f6331ad",
         "path": "/ui/SkillWindow/MainGroup/Window/TitleBar",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -614,11 +614,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 268,
+                "x": 263,
                 "y": -10
               },
               "OffsetMin": {
-                "x": -268,
+                "x": -263,
                 "y": -62
               },
               "Pivot": {
@@ -626,7 +626,7 @@
                 "y": 1
               },
               "RectSize": {
-                "x": 536,
+                "x": 526,
                 "y": 52
               },
               "UIMode": 1,
@@ -723,7 +723,7 @@
         }
       },
       {
-        "id": "f3b281ee-c3ae-4b7e-8e23-04a3bebdea5f",
+        "id": "9d8966be-ec01-4b7d-a112-51df3de79d7b",
         "path": "/ui/SkillWindow/MainGroup/Window/TitleBar/TitleText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -911,7 +911,7 @@
         }
       },
       {
-        "id": "9e3c8f79-fc89-4317-b674-41aa6240de4a",
+        "id": "384a0b31-071b-4a40-8a4a-5e6cc1d4835c",
         "path": "/ui/SkillWindow/MainGroup/Window/TitleBar/CloseButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1150,7 +1150,7 @@
         }
       },
       {
-        "id": "3a320c3d-5a8f-481f-842e-438c35b33c39",
+        "id": "5f2c1f7a-c08a-4f97-bb37-46bc9b60a5ab",
         "path": "/ui/SkillWindow/MainGroup/Window/TierIButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1186,20 +1186,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 142,
+                "x": 155,
                 "y": -68
               },
               "OffsetMin": {
-                "x": 18,
-                "y": -132
+                "x": 39,
+                "y": -116
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 124,
-                "y": 64
+                "x": 116,
+                "y": 48
               },
               "UIMode": 1,
               "UIScale": {
@@ -1209,7 +1209,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 18,
+                "x": 39,
                 "y": -68
               },
               "Position": {
@@ -1388,7 +1388,7 @@
         }
       },
       {
-        "id": "9b2ff945-7d93-4465-add8-9c61c913396f",
+        "id": "31ee7c85-9a6a-4171-920a-31bc5649116f",
         "path": "/ui/SkillWindow/MainGroup/Window/TierIButton/RomanText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1576,7 +1576,7 @@
         }
       },
       {
-        "id": "be3b488a-d6bd-4fb5-bae0-a4efd5b512f1",
+        "id": "a60a8d36-1304-4162-9b5a-32face2e6f9e",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier2Button",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -1612,20 +1612,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 273,
+                "x": 274,
                 "y": -68
               },
               "OffsetMin": {
-                "x": 149,
-                "y": -132
+                "x": 158,
+                "y": -116
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 124,
-                "y": 64
+                "x": 116,
+                "y": 48
               },
               "UIMode": 1,
               "UIScale": {
@@ -1635,7 +1635,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 149,
+                "x": 158,
                 "y": -68
               },
               "Position": {
@@ -1814,7 +1814,7 @@
         }
       },
       {
-        "id": "ae1eb321-19e9-43c7-bcf1-7a01a66311ca",
+        "id": "b4d7faa2-98a9-4d85-83ab-ce26ba222f8c",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier2Button/RomanText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2002,7 +2002,7 @@
         }
       },
       {
-        "id": "6047fcc4-b5f8-4d89-91f9-110d83c7d7f8",
+        "id": "3907d789-5b8c-4065-9733-e6643292d175",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier2Button/LockText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2190,7 +2190,7 @@
         }
       },
       {
-        "id": "9da6f7ef-f081-4ab0-b8c1-32e1d953dfee",
+        "id": "06216988-2810-41fe-b031-26f9d79644ca",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier3Button",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2226,20 +2226,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 404,
+                "x": 393,
                 "y": -68
               },
               "OffsetMin": {
-                "x": 280,
-                "y": -132
+                "x": 277,
+                "y": -116
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 124,
-                "y": 64
+                "x": 116,
+                "y": 48
               },
               "UIMode": 1,
               "UIScale": {
@@ -2249,7 +2249,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 280,
+                "x": 277,
                 "y": -68
               },
               "Position": {
@@ -2428,7 +2428,7 @@
         }
       },
       {
-        "id": "11c3c70a-7be7-4e83-9222-5b4be9814da0",
+        "id": "db707497-8e4d-4790-9f0b-6b66148d7511",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier3Button/RomanText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2616,7 +2616,7 @@
         }
       },
       {
-        "id": "a65df404-27e9-464d-9802-ae3dd7913f00",
+        "id": "0e43b95f-c090-49b9-98a3-4a1f6dcd4ae3",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier3Button/LockText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2804,7 +2804,7 @@
         }
       },
       {
-        "id": "4cd8b884-f06b-4854-aeb3-1cfc1c269558",
+        "id": "5cea3be8-96a6-4825-a38d-d80b41c464fa",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier4Button",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -2840,20 +2840,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 535,
+                "x": 512,
                 "y": -68
               },
               "OffsetMin": {
-                "x": 411,
-                "y": -132
+                "x": 396,
+                "y": -116
               },
               "Pivot": {
                 "x": 0,
                 "y": 1
               },
               "RectSize": {
-                "x": 124,
-                "y": 64
+                "x": 116,
+                "y": 48
               },
               "UIMode": 1,
               "UIScale": {
@@ -2863,7 +2863,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 411,
+                "x": 396,
                 "y": -68
               },
               "Position": {
@@ -3042,7 +3042,7 @@
         }
       },
       {
-        "id": "b986c952-1c10-4ab2-887b-5cd84631ff61",
+        "id": "94a31924-c715-4c6c-9caf-652088749e14",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier4Button/RomanText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3230,7 +3230,7 @@
         }
       },
       {
-        "id": "dfd55c66-fc2b-44b3-a484-b168958a6497",
+        "id": "364dbe9b-8949-462f-b7de-0c6068a2a7f9",
         "path": "/ui/SkillWindow/MainGroup/Window/Tier4Button/LockText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3418,7 +3418,7 @@
         }
       },
       {
-        "id": "777ead83-39b6-4a02-aa1d-e8ef4f3efadc",
+        "id": "0136f3a6-1699-4b60-be51-3a7d9c06d4de",
         "path": "/ui/SkillWindow/MainGroup/Window/JobHeader",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3454,20 +3454,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 260,
-                "y": -140
+                "x": 234,
+                "y": -122
               },
               "OffsetMin": {
-                "x": -260,
-                "y": -212
+                "x": -234,
+                "y": -184
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 1
               },
               "RectSize": {
-                "x": 520,
-                "y": 72
+                "x": 468,
+                "y": 62
               },
               "UIMode": 1,
               "UIScale": {
@@ -3478,7 +3478,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -140
+                "y": -122
               },
               "Position": {
                 "x": 0,
@@ -3563,7 +3563,7 @@
         }
       },
       {
-        "id": "bf852f29-c8ae-49a8-9a51-ff6649b9df19",
+        "id": "ab5fb4a1-3c18-4ee9-ab86-baa280100ce9",
         "path": "/ui/SkillWindow/MainGroup/Window/JobHeader/Emblem",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -3708,7 +3708,7 @@
         }
       },
       {
-        "id": "98554179-e247-47ca-90a6-0321d6ca983d",
+        "id": "fd3cfb19-b374-4cc2-ab7e-6f84586bea2a",
         "path": "/ui/SkillWindow/MainGroup/Window/JobHeader/JobText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -3896,7 +3896,7 @@
         }
       },
       {
-        "id": "90c7a5a0-036f-44e6-942e-141ccb63689b",
+        "id": "a7a57936-b6a9-4acd-8c22-97f63b3fed6f",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.ScrollLayoutGroupComponent",
         "jsonString": {
@@ -3932,20 +3932,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 260,
-                "y": -220
+                "x": 235,
+                "y": -200
               },
               "OffsetMin": {
-                "x": -260,
-                "y": -746
+                "x": -235,
+                "y": -740
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 1
               },
               "RectSize": {
-                "x": 520,
-                "y": 526
+                "x": 470,
+                "y": 540
               },
               "UIMode": 1,
               "UIScale": {
@@ -3956,7 +3956,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": -220
+                "y": -200
               },
               "Position": {
                 "x": 0,
@@ -3979,8 +3979,8 @@
             {
               "@type": "MOD.Core.ScrollLayoutGroupComponent",
               "CellSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "ChildAlignment": 0,
               "Constraint": 0,
@@ -3995,10 +3995,10 @@
               "OrderInLayer": 0,
               "OverrideSorting": false,
               "Padding": {
-                "left": 8,
-                "right": 8,
-                "top": 8,
-                "bottom": 8
+                "left": 2,
+                "right": 2,
+                "top": 2,
+                "bottom": 2
               },
               "ReverseArrangement": false,
               "ScrollBarBackgroundColor": {
@@ -4022,7 +4022,7 @@
               "ScrollBarThickness": 20,
               "ScrollBarVisible": 0,
               "SortingLayer": "UI",
-              "Spacing": 6,
+              "Spacing": 4,
               "StartAxis": 0,
               "StartCorner": 0,
               "Type": 1,
@@ -4035,7 +4035,7 @@
         }
       },
       {
-        "id": "52b79cf3-bd13-48a3-841f-2caab66be6e4",
+        "id": "9d142bb0-1cd5-4081-a5e1-dd052e661cc6",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4071,20 +4071,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -4180,7 +4180,7 @@
         }
       },
       {
-        "id": "98a23855-ec72-405c-ae9a-8a7e740ed21f",
+        "id": "36d80f6b-bc06-41d3-8d72-72c0276afca5",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -4423,7 +4423,7 @@
         }
       },
       {
-        "id": "5cbaea7c-6f71-49e9-a4b2-4ba97bb076b0",
+        "id": "139ec9c5-ade7-4312-a4ba-5f231819d2e5",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -4459,12 +4459,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -4482,8 +4482,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -4568,7 +4568,7 @@
         }
       },
       {
-        "id": "bd7e0b07-4877-4f50-96bc-2c68092c6ee4",
+        "id": "138e3c77-922c-482c-994e-158b4c1f8997",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4756,7 +4756,7 @@
         }
       },
       {
-        "id": "93a10941-5398-4b32-8d89-27aea4ee58cb",
+        "id": "5d6e41b4-0398-4ffd-9847-41e3af7b3c5a",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4792,11 +4792,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -4804,8 +4804,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -4815,8 +4815,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -4908,7 +4908,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -4944,7 +4944,7 @@
         }
       },
       {
-        "id": "ae7e7b74-68f2-4ade-a2cd-7fbf1b4f5d52",
+        "id": "cad55126-62f1-4baa-96d4-4aee88188aa8",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -4980,20 +4980,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -5003,8 +5003,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -5096,7 +5096,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -5132,7 +5132,7 @@
         }
       },
       {
-        "id": "4ab763f9-c999-4b3d-8249-bf2a299ee708",
+        "id": "3b5d74f4-8ab0-46dd-ace2-624aa3f21792",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_power_slash/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -5168,20 +5168,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -5191,7 +5191,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -5334,7 +5334,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -5371,7 +5371,7 @@
         }
       },
       {
-        "id": "99b537d6-bc7d-4674-8c62-be5251b0995c",
+        "id": "f6e05fbe-9f24-44d9-95cc-fabe17ee1058",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -5407,20 +5407,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -5516,7 +5516,7 @@
         }
       },
       {
-        "id": "85f19a3c-19ee-42bb-b351-8af9fb148e0e",
+        "id": "ade7a5c0-cde1-4273-b337-6379267c71c7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -5759,7 +5759,7 @@
         }
       },
       {
-        "id": "dd464f65-fd56-46a0-ae09-e1a9395d1ca5",
+        "id": "4c1fb019-9785-41c8-8454-f890eeb9583f",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -5795,12 +5795,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -5818,8 +5818,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -5904,7 +5904,7 @@
         }
       },
       {
-        "id": "e9b20370-2519-4d90-8c83-e175b0724239",
+        "id": "b1ab981a-1058-4e36-98ee-dacb16443707",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6092,7 +6092,7 @@
         }
       },
       {
-        "id": "2b4ace0a-a656-4d44-9f37-3117feb52918",
+        "id": "15108c71-605a-4aa4-9886-d3c9b4474b92",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6128,11 +6128,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -6140,8 +6140,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -6151,8 +6151,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -6244,7 +6244,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -6280,7 +6280,7 @@
         }
       },
       {
-        "id": "d2c5ce68-1747-484c-be15-f6ae2f32a9dd",
+        "id": "ca0fc24a-6ca5-4d4b-aff1-4ab058a167e7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6316,20 +6316,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -6339,8 +6339,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -6432,7 +6432,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -6468,7 +6468,7 @@
         }
       },
       {
-        "id": "a7a0c5bd-b90d-4b71-b1dc-83ab61f9617e",
+        "id": "d3cffe73-0b2f-459f-b23b-0577a69a69f3",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_double_slash/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -6504,20 +6504,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -6527,7 +6527,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -6670,7 +6670,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -6707,7 +6707,7 @@
         }
       },
       {
-        "id": "677d1b1a-a15c-4def-b986-277a062a3e5c",
+        "id": "80bd65dd-6ce3-437f-a595-9132c1db82a7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -6743,20 +6743,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -6852,7 +6852,7 @@
         }
       },
       {
-        "id": "bd52d386-40f7-47a6-9a25-02900a1331a2",
+        "id": "d98cf58c-a794-424a-ae8a-64fe96be3dca",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -7095,7 +7095,7 @@
         }
       },
       {
-        "id": "d70774a3-43e8-45af-86e9-d728775825cf",
+        "id": "16e238ec-dc31-4fe3-9479-88403bbf4d5c",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -7131,12 +7131,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -7154,8 +7154,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -7240,7 +7240,7 @@
         }
       },
       {
-        "id": "5fe7f791-816e-486e-b867-cb736cdd2a3d",
+        "id": "99acb5f0-cd4c-417e-ae96-6b4d9f485418",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7428,7 +7428,7 @@
         }
       },
       {
-        "id": "fab9a150-0dd4-415f-93b1-208785030a03",
+        "id": "9a086e4a-abb1-4f38-8bd0-716ca225b890",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7464,11 +7464,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -7476,8 +7476,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -7487,8 +7487,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -7580,7 +7580,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -7616,7 +7616,7 @@
         }
       },
       {
-        "id": "6938a9cf-86b2-4e93-9b22-573c8ecd4a91",
+        "id": "2d9039cf-4ae6-4ac5-909f-2214c2761e65",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7652,20 +7652,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -7675,8 +7675,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -7768,7 +7768,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -7804,7 +7804,7 @@
         }
       },
       {
-        "id": "ae6cda64-990a-489e-9147-e8359631043b",
+        "id": "686b9588-512d-4367-8d2a-e42de9ae640f",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_charge_slash/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -7840,20 +7840,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -7863,7 +7863,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -8006,7 +8006,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -8043,7 +8043,7 @@
         }
       },
       {
-        "id": "06713299-2dad-486d-ab43-effe718fb3af",
+        "id": "43fcc27a-a7f1-41fa-b043-e7be827fcee8",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -8079,20 +8079,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -8188,7 +8188,7 @@
         }
       },
       {
-        "id": "af5f7aea-5181-4419-a1d6-5a0900cb9498",
+        "id": "db8269cc-a119-4eb7-9072-42d2ff585f49",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -8431,7 +8431,7 @@
         }
       },
       {
-        "id": "2d337b39-8f1b-4f22-bb2a-d4e9b46811a5",
+        "id": "6e6676e3-a919-456c-875a-4166849eec82",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -8467,12 +8467,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -8490,8 +8490,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -8576,7 +8576,7 @@
         }
       },
       {
-        "id": "cd658bc2-184f-43b9-8730-0ee5faf27054",
+        "id": "aa5a995d-9f02-4c5e-852f-62abd03929f7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8764,7 +8764,7 @@
         }
       },
       {
-        "id": "86fc6861-9356-48f2-9abe-967ef2e8eb88",
+        "id": "584f21a1-e848-4955-8c1e-ca41f26823bc",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8800,11 +8800,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -8812,8 +8812,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -8823,8 +8823,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -8916,7 +8916,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -8952,7 +8952,7 @@
         }
       },
       {
-        "id": "e16eb73a-d904-4641-8cba-61623066ba42",
+        "id": "55169ede-e36a-426f-bdbc-cbac14218d22",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -8988,20 +8988,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -9011,8 +9011,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -9104,7 +9104,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -9140,7 +9140,7 @@
         }
       },
       {
-        "id": "16681170-b417-44ff-a761-84127743c92b",
+        "id": "0fb5b209-93ee-4b39-b26f-fe886ddcab65",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_whirlwind/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -9176,20 +9176,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -9199,7 +9199,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -9342,7 +9342,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -9379,7 +9379,7 @@
         }
       },
       {
-        "id": "dad82e6e-49a1-4e6d-853b-ce0097460a0d",
+        "id": "f4aeabf3-bd82-4860-ba96-0d6903b3abe7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -9415,20 +9415,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -9524,7 +9524,7 @@
         }
       },
       {
-        "id": "4b7d8ef0-127a-4d32-877d-e922e28d04fe",
+        "id": "c9031556-1dcf-4e7f-989d-3003fa0317bd",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -9767,7 +9767,7 @@
         }
       },
       {
-        "id": "7e44229e-af0f-4394-8dd0-e40c24ca06a8",
+        "id": "a365c471-d15c-4551-b982-ec13167480fa",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -9803,12 +9803,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -9826,8 +9826,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -9912,7 +9912,7 @@
         }
       },
       {
-        "id": "4abe3e48-d399-4829-897a-49846756d0f8",
+        "id": "375bc7d1-3dee-4078-8b59-ab9bb5f1105e",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -10100,7 +10100,7 @@
         }
       },
       {
-        "id": "bb643dba-cadf-438d-85de-1d8d521c662d",
+        "id": "848235b9-5fb8-4ac5-afb8-fabd95296e03",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -10136,11 +10136,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -10148,8 +10148,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -10159,8 +10159,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -10252,7 +10252,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -10288,7 +10288,7 @@
         }
       },
       {
-        "id": "a65168cd-0a93-48b6-95c4-6de0e7e6a684",
+        "id": "438a7eb5-07e5-4893-9913-dca7cd487633",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -10324,20 +10324,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -10347,8 +10347,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -10440,7 +10440,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -10476,7 +10476,7 @@
         }
       },
       {
-        "id": "69fe562e-7328-4fcc-b9e0-e2fe31205c89",
+        "id": "057fa62f-e694-4d25-bf12-6047e755b745",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_guard_break/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -10512,20 +10512,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -10535,7 +10535,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -10678,7 +10678,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -10715,7 +10715,7 @@
         }
       },
       {
-        "id": "1a889f27-7efc-4135-b7c1-ba1e1b089e8d",
+        "id": "f635cad4-dde2-41dd-ab60-db895bc8aa48",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -10751,20 +10751,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -10860,7 +10860,7 @@
         }
       },
       {
-        "id": "a5a3e78d-5822-4053-b9d2-8a6441c06f7c",
+        "id": "e5754180-5c95-4af2-8380-96899255c8a7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -11103,7 +11103,7 @@
         }
       },
       {
-        "id": "c1158467-78b0-4246-9f2e-0e2588ed9feb",
+        "id": "dd06c213-36eb-43d1-9ee8-57adcc97d4e1",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -11139,12 +11139,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -11162,8 +11162,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -11248,7 +11248,7 @@
         }
       },
       {
-        "id": "f7f9d82f-9862-4820-bc30-17ad321cb62d",
+        "id": "7816cef8-7515-4dc8-863d-e181f0424e96",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -11436,7 +11436,7 @@
         }
       },
       {
-        "id": "e3fc4bb0-78f2-40b0-879b-6920d2fa2499",
+        "id": "23eb8cb0-6a5e-4a79-8b97-8ba1252dfb2e",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -11472,11 +11472,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -11484,8 +11484,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -11495,8 +11495,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -11588,7 +11588,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -11624,7 +11624,7 @@
         }
       },
       {
-        "id": "b7c29fd4-7214-47aa-82d6-75207e7a0970",
+        "id": "80eba11b-6a8a-4d7b-a4ea-7966eeb626b4",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -11660,20 +11660,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -11683,8 +11683,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -11776,7 +11776,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -11812,7 +11812,7 @@
         }
       },
       {
-        "id": "5c999ebd-9828-476d-9765-5f60804a5dbc",
+        "id": "9c19dfec-0f25-4198-8094-6dd1ee52449a",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_battle_cry/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -11848,20 +11848,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -11871,7 +11871,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -12014,7 +12014,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -12051,7 +12051,7 @@
         }
       },
       {
-        "id": "a346a2ce-50cd-4d0b-a2b0-c3ee8ef61011",
+        "id": "f369c814-4ffd-4e36-964b-a96c19ba0875",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -12087,20 +12087,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -12196,7 +12196,7 @@
         }
       },
       {
-        "id": "5bb8c41d-efba-42bc-8d1b-339e5c493ad8",
+        "id": "1431ff99-8797-44ba-beb7-bec35023cc44",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -12439,7 +12439,7 @@
         }
       },
       {
-        "id": "5b4c54ae-f658-470e-a87c-8468f7108958",
+        "id": "3f3ef6fc-1372-44d5-9742-19ac391e7fe2",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -12475,12 +12475,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -12498,8 +12498,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -12584,7 +12584,7 @@
         }
       },
       {
-        "id": "3f73c142-eea0-4b35-9c5c-69e6d59d9ecf",
+        "id": "05549375-1c3d-43d6-975a-9e1d40a508ba",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -12772,7 +12772,7 @@
         }
       },
       {
-        "id": "ba367a83-7b4f-4f0c-a057-81d2771cd9d5",
+        "id": "67caeee8-db5e-431d-a7f7-5e8b994f5e14",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -12808,11 +12808,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -12820,8 +12820,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -12831,8 +12831,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -12924,7 +12924,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -12960,7 +12960,7 @@
         }
       },
       {
-        "id": "45328e17-9fbc-4041-b2aa-18c1afc6e701",
+        "id": "4560ef8f-9d5f-443c-b89c-ddc405d41482",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -12996,20 +12996,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -13019,8 +13019,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -13112,7 +13112,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -13148,7 +13148,7 @@
         }
       },
       {
-        "id": "4b66e736-2c7a-43b9-a3c6-737dbb8d73af",
+        "id": "a8122228-c9f2-4232-b309-cb53e98b8047",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_emergency_heal/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -13184,20 +13184,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -13207,7 +13207,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -13350,7 +13350,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -13387,7 +13387,7 @@
         }
       },
       {
-        "id": "abed3d60-761d-4fbe-919c-4550e93c2e1f",
+        "id": "5e4bd85e-a958-478e-9410-eb9be7690864",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -13423,20 +13423,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -13532,7 +13532,7 @@
         }
       },
       {
-        "id": "5bcf2a47-d836-4a4f-ba0b-781df18dc25c",
+        "id": "7c23d22d-382d-48fe-a3b4-520c4141d28b",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -13775,7 +13775,7 @@
         }
       },
       {
-        "id": "cf573a46-24f0-43cf-af2f-8bffce1d43e0",
+        "id": "7643f541-b666-43c7-813f-ffaba785727a",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -13811,12 +13811,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -13834,8 +13834,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -13920,7 +13920,7 @@
         }
       },
       {
-        "id": "f24eab02-6f56-4b27-a20f-ca1bb00ed29d",
+        "id": "7ca40c39-856a-48d1-96c7-1362b270b3a1",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -14108,7 +14108,7 @@
         }
       },
       {
-        "id": "274a653b-60f4-4258-9619-8d3d2ec8bff8",
+        "id": "92b1fb03-973e-4e7d-8a85-9507622598a0",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -14144,11 +14144,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -14156,8 +14156,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -14167,8 +14167,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -14260,7 +14260,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -14296,7 +14296,7 @@
         }
       },
       {
-        "id": "7b83a84f-4009-4541-adbe-9b653379bddb",
+        "id": "c642464e-818a-4302-bf5a-709ea2d53166",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -14332,20 +14332,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -14355,8 +14355,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -14448,7 +14448,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -14484,7 +14484,7 @@
         }
       },
       {
-        "id": "270a8d4a-1bdb-4890-a6fb-8089be05f062",
+        "id": "11ee4b01-c7dc-4d8e-8ca2-66335a6c1c06",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_final_blow/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -14520,20 +14520,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -14543,7 +14543,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -14686,7 +14686,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -14723,7 +14723,7 @@
         }
       },
       {
-        "id": "8a2ce219-e313-48cf-a8c1-1b0a39df9b75",
+        "id": "59543811-c73a-4cd4-abea-29268b9d0696",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -14759,20 +14759,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -14868,7 +14868,7 @@
         }
       },
       {
-        "id": "e017b4b2-2067-49db-a9d3-a94e2792e145",
+        "id": "971bd9d4-ebcb-4fda-82b1-7689e817150b",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -15111,7 +15111,7 @@
         }
       },
       {
-        "id": "313f4d14-fc07-402e-9524-63399698e16d",
+        "id": "b98ff8ab-72aa-4980-a67e-7d93eef14027",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -15147,12 +15147,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -15170,8 +15170,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -15256,7 +15256,7 @@
         }
       },
       {
-        "id": "96337d2b-85c2-4291-9c3e-3e57e5958ec2",
+        "id": "2cab978b-37e6-4a99-939f-6fb4b7165ec6",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -15444,7 +15444,7 @@
         }
       },
       {
-        "id": "ba93531e-3a34-41d9-b695-a7e95f66986c",
+        "id": "41123ea7-9e81-4b17-a20f-97f13154c1e6",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -15480,11 +15480,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -15492,8 +15492,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -15503,8 +15503,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -15596,7 +15596,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -15632,7 +15632,7 @@
         }
       },
       {
-        "id": "8496f438-3cdf-4195-9546-db80a22f8671",
+        "id": "31ec6f62-da06-4eef-b241-66c5c1323beb",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -15668,20 +15668,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -15691,8 +15691,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -15784,7 +15784,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -15820,7 +15820,7 @@
         }
       },
       {
-        "id": "f2d79f70-ed15-4dbb-85a4-498d8f0a352d",
+        "id": "735cb423-9b02-4d6e-a9f1-0e803cce39e6",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_weapon_mastery/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -15856,20 +15856,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -15879,7 +15879,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -16022,7 +16022,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -16059,7 +16059,7 @@
         }
       },
       {
-        "id": "865203ab-a61e-49bb-a51e-300619b98253",
+        "id": "98487af9-9cf6-4c4f-a8c3-cfb82d889798",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -16095,20 +16095,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -16204,7 +16204,7 @@
         }
       },
       {
-        "id": "4a99d5f2-ee1e-4971-9522-b3cac93e8988",
+        "id": "1432c352-2aae-410d-bee9-26f983b51030",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -16447,7 +16447,7 @@
         }
       },
       {
-        "id": "a58bcd19-f489-4ce0-a483-44ddd5c6a349",
+        "id": "d046d7bb-dd8c-409a-b97b-47f40357a8d9",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -16483,12 +16483,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -16506,8 +16506,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -16592,7 +16592,7 @@
         }
       },
       {
-        "id": "35b01686-aee7-4d2c-a112-ac328c815fe2",
+        "id": "ca74e6fb-b611-40a8-b65e-ab1b6f3fd79e",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -16780,7 +16780,7 @@
         }
       },
       {
-        "id": "36eec44a-24fd-4ad2-99ac-05c83311ba9d",
+        "id": "1e89c5f3-88db-4746-a396-5ec305215d30",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -16816,11 +16816,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -16828,8 +16828,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -16839,8 +16839,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -16932,7 +16932,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -16968,7 +16968,7 @@
         }
       },
       {
-        "id": "9374b76d-a43c-4f7c-bb6d-16aa893167e5",
+        "id": "47e03ae1-164f-4164-8569-bed8d42c01b7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -17004,20 +17004,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -17027,8 +17027,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -17120,7 +17120,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -17156,7 +17156,7 @@
         }
       },
       {
-        "id": "35419568-2528-467f-811d-ffe570d96d5e",
+        "id": "39507574-20a9-4287-b38e-5c66e7ff6f7f",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_vitality_training/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -17192,20 +17192,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -17215,7 +17215,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -17358,7 +17358,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -17395,7 +17395,7 @@
         }
       },
       {
-        "id": "7494421a-166b-427f-be20-e411f1f4edaa",
+        "id": "08e0080b-94f5-4450-8170-4029b6a72223",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -17431,20 +17431,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -17540,7 +17540,7 @@
         }
       },
       {
-        "id": "c7a45c88-7ff7-4bfa-a022-aad88e4f2e8f",
+        "id": "568a4026-070a-4869-983a-b80d9f7d4e5e",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -17783,7 +17783,7 @@
         }
       },
       {
-        "id": "e25d786a-d25b-4a85-b37d-3982173ed443",
+        "id": "c11b9902-35f8-43a4-bff0-eebfe1c74248",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -17819,12 +17819,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -17842,8 +17842,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -17928,7 +17928,7 @@
         }
       },
       {
-        "id": "1557f123-3f00-4b6a-b0d8-0c444e1d430f",
+        "id": "c3216e89-6bcd-4974-b812-ff0d81898376",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -18116,7 +18116,7 @@
         }
       },
       {
-        "id": "1c8d2e5f-8aac-4b5e-84c4-d1b5229d1c2a",
+        "id": "c0bddf65-7c35-407f-9c43-8573b6a2f7e2",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -18152,11 +18152,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -18164,8 +18164,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -18175,8 +18175,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -18268,7 +18268,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -18304,7 +18304,7 @@
         }
       },
       {
-        "id": "1319189f-86d6-4f12-ab1d-9b871661964b",
+        "id": "c3f307e9-0a0a-4ba0-9c8c-66bd071c78d1",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -18340,20 +18340,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -18363,8 +18363,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -18456,7 +18456,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -18492,7 +18492,7 @@
         }
       },
       {
-        "id": "68de0c52-a2d1-493f-8797-49205c4c01b4",
+        "id": "2118e7cb-8b91-4a32-b400-c8fc9dcb6d60",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_combat_sense/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -18528,20 +18528,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -18551,7 +18551,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -18694,7 +18694,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -18731,7 +18731,7 @@
         }
       },
       {
-        "id": "8fd01721-d2c0-4473-af69-62973c593752",
+        "id": "90a51b24-d5ef-4c41-b15e-7d31218e371c",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -18767,20 +18767,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -18876,7 +18876,7 @@
         }
       },
       {
-        "id": "5fe7faef-fc0a-460c-b6ad-b2c6c235e79f",
+        "id": "24abe5f5-86dc-4810-ada3-7f5562eb256d",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -19119,7 +19119,7 @@
         }
       },
       {
-        "id": "94c500e1-b50f-4afc-9a98-07eea02da54c",
+        "id": "0104ef2e-7775-47b4-bf14-d7f46dd1a661",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -19155,12 +19155,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -19178,8 +19178,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -19264,7 +19264,7 @@
         }
       },
       {
-        "id": "e820cbd7-c650-471c-b938-03d4b93efc83",
+        "id": "5e5c0e78-7bc4-4004-87ea-73986629b5f9",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -19452,7 +19452,7 @@
         }
       },
       {
-        "id": "da78dbda-875a-4952-bd9c-f68bcae7d7bc",
+        "id": "53230639-e635-4bb4-b26a-98e644c2f80b",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -19488,11 +19488,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -19500,8 +19500,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -19511,8 +19511,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -19604,7 +19604,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -19640,7 +19640,7 @@
         }
       },
       {
-        "id": "df8d3442-0537-4d22-a915-d4a8534d8ef6",
+        "id": "20483a5e-48f4-4ebb-9b55-08db03901f1c",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -19676,20 +19676,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -19699,8 +19699,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -19792,7 +19792,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -19828,7 +19828,7 @@
         }
       },
       {
-        "id": "c0d08cc2-a35a-4311-a504-e345ff8b100d",
+        "id": "14938cf0-777f-413b-b606-8dbdfc4a1d60",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_swift_training/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -19864,20 +19864,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -19887,7 +19887,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -20030,7 +20030,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -20067,7 +20067,7 @@
         }
       },
       {
-        "id": "ebec0af1-c253-41fd-b4e8-663694dafe90",
+        "id": "a390073b-65b6-43e7-9580-52040ebeb4b4",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -20103,20 +20103,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -20212,7 +20212,7 @@
         }
       },
       {
-        "id": "b24e443e-1186-445f-bea5-5d8f5fb573db",
+        "id": "86c219ef-09be-483c-aba3-6ab71d29090b",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -20455,7 +20455,7 @@
         }
       },
       {
-        "id": "d6ad36d2-23d5-40ce-9361-a42120918bf1",
+        "id": "d65f9526-fdc2-4965-be53-b06abfbf7178",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -20491,12 +20491,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -20514,8 +20514,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -20600,7 +20600,7 @@
         }
       },
       {
-        "id": "095bea03-b1b6-4944-a8ae-0c05de15603c",
+        "id": "3e554a43-1ef2-4075-996c-6c2e395e003b",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -20788,7 +20788,7 @@
         }
       },
       {
-        "id": "b006d085-c3dd-44d6-b4e6-650c3f13ec15",
+        "id": "a5eecd0f-ae04-4829-93b7-b8f12bfc949c",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -20824,11 +20824,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -20836,8 +20836,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -20847,8 +20847,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -20940,7 +20940,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -20976,7 +20976,7 @@
         }
       },
       {
-        "id": "35fe87bc-c288-404f-bce4-a0bb0567f366",
+        "id": "8f3e432a-5a57-4622-b75c-bbed85bc7889",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -21012,20 +21012,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -21035,8 +21035,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -21128,7 +21128,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -21164,7 +21164,7 @@
         }
       },
       {
-        "id": "454f2c12-66b9-491c-a591-ce31faaa10d5",
+        "id": "12cf2207-3bc9-4675-b16f-c36829b75597",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_recovery_boost/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -21200,20 +21200,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -21223,7 +21223,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -21366,7 +21366,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -21403,7 +21403,7 @@
         }
       },
       {
-        "id": "adc97665-1794-4427-9665-a4e2b7f9f8fd",
+        "id": "30f7e40e-9e08-4c7d-9d89-ac11b5db1b25",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -21439,20 +21439,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 250,
-                "y": 44
+                "x": 219,
+                "y": 40
               },
               "OffsetMin": {
-                "x": -250,
-                "y": -44
+                "x": -219,
+                "y": -40
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 500,
-                "y": 88
+                "x": 438,
+                "y": 80
               },
               "UIMode": 1,
               "UIScale": {
@@ -21548,7 +21548,7 @@
         }
       },
       {
-        "id": "4f7027f3-969f-4fc1-9168-78b50af8fe76",
+        "id": "8e3336b7-7acf-4c4c-b4c0-2840bd90c2b6",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/IconButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -21791,7 +21791,7 @@
         }
       },
       {
-        "id": "8ca7b5c8-7ac5-47ff-9f03-9627cc151a93",
+        "id": "e14e3698-3488-4a79-be5a-8961d3c9c5a7",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/TypeBadge",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -21827,12 +21827,12 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 128,
-                "y": -9
+                "x": 116,
+                "y": -7
               },
               "OffsetMin": {
-                "x": 98,
-                "y": -35
+                "x": 86,
+                "y": -33
               },
               "Pivot": {
                 "x": 0,
@@ -21850,8 +21850,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 98,
-                "y": -22
+                "x": 86,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -21936,7 +21936,7 @@
         }
       },
       {
-        "id": "76898557-5691-4f76-a507-fc3a814b04e0",
+        "id": "cd06e684-2e21-4f44-b862-8c887458d03f",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/TypeBadge/BadgeText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -22124,7 +22124,7 @@
         }
       },
       {
-        "id": "7506b7ac-0ded-4e12-83a1-2cd7824d35ce",
+        "id": "c1274c0a-6bd5-41a1-898e-8876ddb563fe",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/NameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -22160,11 +22160,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 390,
-                "y": 32
+                "x": 372,
+                "y": 30
               },
               "OffsetMin": {
-                "x": 120,
+                "x": 132,
                 "y": -2
               },
               "Pivot": {
@@ -22172,8 +22172,8 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 270,
-                "y": 34
+                "x": 240,
+                "y": 32
               },
               "UIMode": 1,
               "UIScale": {
@@ -22183,8 +22183,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": 15
+                "x": 132,
+                "y": 14
               },
               "Position": {
                 "x": 0,
@@ -22276,7 +22276,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 24,
+              "FontSize": 22,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -22312,7 +22312,7 @@
         }
       },
       {
-        "id": "2c0dc2d0-d568-42f3-8dd8-d7faff16d117",
+        "id": "50fbd3a7-5585-4cfa-985c-5edfd078698d",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/LevelText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -22348,20 +22348,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 340,
-                "y": -8
+                "x": 337,
+                "y": -6.5
               },
               "OffsetMin": {
-                "x": 120,
-                "y": -36
+                "x": 132,
+                "y": -33.5
               },
               "Pivot": {
                 "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 220,
-                "y": 28
+                "x": 205,
+                "y": 27
               },
               "UIMode": 1,
               "UIScale": {
@@ -22371,8 +22371,8 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 120,
-                "y": -22
+                "x": 132,
+                "y": -20
               },
               "Position": {
                 "x": 0,
@@ -22464,7 +22464,7 @@
                 "b": 0.35294117647058826,
                 "a": 1
               },
-              "FontSize": 19,
+              "FontSize": 18,
               "FontStyle": 0,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -22500,7 +22500,7 @@
         }
       },
       {
-        "id": "0d9ebc8f-84f9-43a4-a0b2-d3e12d1e0ea5",
+        "id": "5cc3d611-e1cf-4e85-9974-20186d81240d",
         "path": "/ui/SkillWindow/MainGroup/Window/SkillList/SkillRow_elite_hunter/PlusButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -22536,20 +22536,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -34,
-                "y": 28
+                "x": -1,
+                "y": 23
               },
               "OffsetMin": {
-                "x": -90,
-                "y": -28
+                "x": -47,
+                "y": -23
               },
               "Pivot": {
                 "x": 1,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 56,
-                "y": 56
+                "x": 46,
+                "y": 46
               },
               "UIMode": 1,
               "UIScale": {
@@ -22559,7 +22559,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -34,
+                "x": -1,
                 "y": 0
               },
               "Position": {
@@ -22702,7 +22702,7 @@
                 "b": 1,
                 "a": 1
               },
-              "FontSize": 34,
+              "FontSize": 30,
               "FontStyle": 0,
               "HorizontalAlignment": 2,
               "IgnoreMapLayerCheck": false,
@@ -22739,7 +22739,7 @@
         }
       },
       {
-        "id": "1520fa2b-8781-4709-8d04-c69c1e967ad6",
+        "id": "97aca43f-d9c1-4e38-b28c-1fc601b17d78",
         "path": "/ui/SkillWindow/MainGroup/Window/Footer",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -22775,20 +22775,20 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 260,
-                "y": 108
+                "x": 234,
+                "y": 124
               },
               "OffsetMin": {
-                "x": -260,
-                "y": 16
+                "x": -234,
+                "y": 50
               },
               "Pivot": {
                 "x": 0.5,
                 "y": 0
               },
               "RectSize": {
-                "x": 520,
-                "y": 92
+                "x": 468,
+                "y": 74
               },
               "UIMode": 1,
               "UIScale": {
@@ -22799,7 +22799,7 @@
               "UIVersion": 2,
               "anchoredPosition": {
                 "x": 0,
-                "y": 16
+                "y": 50
               },
               "Position": {
                 "x": 0,
@@ -22884,7 +22884,7 @@
         }
       },
       {
-        "id": "61e08910-20c8-4362-9eb5-516728e19b2c",
+        "id": "b30e466b-b3c5-465d-b7f9-ec98668845de",
         "path": "/ui/SkillWindow/MainGroup/Window/Footer/SkillPointText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -22920,11 +22920,11 @@
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": 265,
+                "x": 222,
                 "y": 27
               },
               "OffsetMin": {
-                "x": 20,
+                "x": 12,
                 "y": -27
               },
               "Pivot": {
@@ -22932,7 +22932,7 @@
                 "y": 0.5
               },
               "RectSize": {
-                "x": 245,
+                "x": 210,
                 "y": 54
               },
               "UIMode": 1,
@@ -22943,7 +22943,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": 20,
+                "x": 12,
                 "y": 0
               },
               "Position": {
@@ -23036,7 +23036,7 @@
                 "b": 0.17254901960784313,
                 "a": 1
               },
-              "FontSize": 26,
+              "FontSize": 24,
               "FontStyle": 1,
               "HorizontalAlignment": 1,
               "IgnoreMapLayerCheck": false,
@@ -23072,7 +23072,7 @@
         }
       },
       {
-        "id": "fffd7f3a-72af-4f80-8e94-f0c82673a078",
+        "id": "c38c50cb-4932-4fa8-a1ca-a6337ba627df",
         "path": "/ui/SkillWindow/MainGroup/Window/Footer/SlotSettingsButton",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -23097,30 +23097,30 @@
             {
               "@type": "MOD.Core.UITransformComponent",
               "ActivePlatform": 255,
-              "AlignmentOption": 2,
+              "AlignmentOption": 1,
               "AnchorsMax": {
-                "x": 1,
+                "x": 0,
                 "y": 0.5
               },
               "AnchorsMin": {
-                "x": 1,
+                "x": 0,
                 "y": 0.5
               },
               "MobileOnly": false,
               "OffsetMax": {
-                "x": -96,
+                "x": 463,
                 "y": 30
               },
               "OffsetMin": {
-                "x": -276,
+                "x": 278,
                 "y": -30
               },
               "Pivot": {
-                "x": 1,
+                "x": 0,
                 "y": 0.5
               },
               "RectSize": {
-                "x": 180,
+                "x": 185,
                 "y": 60
               },
               "UIMode": 1,
@@ -23131,7 +23131,7 @@
               },
               "UIVersion": 2,
               "anchoredPosition": {
-                "x": -96,
+                "x": 278,
                 "y": 0
               },
               "Position": {
@@ -23311,7 +23311,7 @@
         }
       },
       {
-        "id": "556b0657-165d-4023-b644-3bffd2f346f3",
+        "id": "219a34bc-d5a3-405d-9e6e-b60e846d445e",
         "path": "/ui/SkillWindow/MainGroup/GlobalFeedbackText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -23499,7 +23499,7 @@
         }
       },
       {
-        "id": "303bf3b3-e228-42b0-93b8-fd07cbdcc753",
+        "id": "53e66a65-0378-49df-a018-037bdaa961a6",
         "path": "/ui/SkillWindow/SlotGroup",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -23584,7 +23584,7 @@
         }
       },
       {
-        "id": "5a77b774-2920-4a04-b25a-3a3d946a5f35",
+        "id": "985077d8-e1b4-480e-86d1-6aac2b60ddda",
         "path": "/ui/SkillWindow/SlotGroup/Panel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -23730,7 +23730,7 @@
         }
       },
       {
-        "id": "c21830eb-823b-424e-91fa-1915b26f2050",
+        "id": "11314090-f276-4a59-9c1e-baa02076dba8",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Inner",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -23875,7 +23875,7 @@
         }
       },
       {
-        "id": "8e9784ce-7533-4c93-a30f-9619db9fefc3",
+        "id": "cce14b3f-0bb1-470f-8aad-259617e93b8e",
         "path": "/ui/SkillWindow/SlotGroup/Panel/TitleBar",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -24020,7 +24020,7 @@
         }
       },
       {
-        "id": "93340cb4-fdf5-4c34-9fbb-38c469df5f29",
+        "id": "7d4f9aa7-7a8f-4fb1-ac4b-eb0fd40fc1c2",
         "path": "/ui/SkillWindow/SlotGroup/Panel/TitleBar/Title",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -24208,7 +24208,7 @@
         }
       },
       {
-        "id": "eb8e3065-7c3a-4831-98c0-3ecd6f95aa01",
+        "id": "6395d304-ac59-41a2-aad4-80831f994349",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -24450,7 +24450,7 @@
         }
       },
       {
-        "id": "f67a7f22-5607-43dd-97a5-4e9bd68d5587",
+        "id": "c121d192-a731-4d4d-aa2a-be158f2b4045",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -24638,7 +24638,7 @@
         }
       },
       {
-        "id": "5d10fcbe-a9be-4366-a25e-130f5b3d42dc",
+        "id": "810a38f7-a386-4928-89fa-428365fc9aef",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -24826,7 +24826,7 @@
         }
       },
       {
-        "id": "26e5cbc7-eb3c-461d-9bfa-4549f462e43a",
+        "id": "14038019-13c1-42b1-857b-90ce0aeec6a5",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -24971,7 +24971,7 @@
         }
       },
       {
-        "id": "9c9663ca-2971-4e7e-aced-ea8151e50331",
+        "id": "eba76e7f-9cd3-45a0-8e37-3571417df0d9",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -25117,7 +25117,7 @@
         }
       },
       {
-        "id": "7fb9c9e3-c190-4b64-a7cd-f15ac96eece7",
+        "id": "7ef0a199-5874-4259-bc53-9ef2751d3ea6",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_1/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -25305,7 +25305,7 @@
         }
       },
       {
-        "id": "dbd9bf66-45ea-485b-90b2-6a48c5d0988b",
+        "id": "3fbcc571-5dd1-4acc-b96f-c47c9b09021f",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -25547,7 +25547,7 @@
         }
       },
       {
-        "id": "28501790-0d84-45c6-8d77-8a5ac9d21811",
+        "id": "1a4e684b-eef3-4797-be12-d178a95d9d63",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -25735,7 +25735,7 @@
         }
       },
       {
-        "id": "b4034a0d-71e7-4647-a028-0b0b673272fe",
+        "id": "e2088b04-f53a-4cb3-a442-269cd3d61bed",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -25923,7 +25923,7 @@
         }
       },
       {
-        "id": "75e1795b-9417-46cf-b6fe-5668089a15d2",
+        "id": "b8f17e96-2408-4002-8e2f-3daa469cd943",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -26068,7 +26068,7 @@
         }
       },
       {
-        "id": "7ac4a4e9-f02b-48f8-9cfe-8e2440ba5977",
+        "id": "22bc69d5-b1db-405d-89a8-f7f9dc9da029",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -26214,7 +26214,7 @@
         }
       },
       {
-        "id": "8f8f4e1f-320c-4090-b31c-55e1fb3fdf68",
+        "id": "34572624-e073-4355-8789-0d370062acf4",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_2/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -26402,7 +26402,7 @@
         }
       },
       {
-        "id": "d9047b12-6ccf-4bd6-9105-5c564df2195f",
+        "id": "3ba9ba57-d6cf-4995-ade0-a0fe1f478935",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -26644,7 +26644,7 @@
         }
       },
       {
-        "id": "96c52784-ebdc-46e7-b1ad-a5a9f9c213ae",
+        "id": "91c79150-19fc-43bb-bdd2-c2551b148325",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -26832,7 +26832,7 @@
         }
       },
       {
-        "id": "d9152f65-7338-4588-8478-4002654141ce",
+        "id": "b4b6fbfe-2ec1-4627-8269-8743210b551c",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -27020,7 +27020,7 @@
         }
       },
       {
-        "id": "999444d4-8bad-4131-b6e3-f46f03569bd2",
+        "id": "3035f93c-903f-44d2-ba9c-e2dfecba5f18",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -27165,7 +27165,7 @@
         }
       },
       {
-        "id": "d8661620-5da2-4494-b146-7155432ba193",
+        "id": "b163bbe1-f1a7-4657-8bcb-639085c49f07",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -27311,7 +27311,7 @@
         }
       },
       {
-        "id": "cfed57aa-e160-46af-be3c-73aa08ef00b4",
+        "id": "a579ebce-cbfa-4623-b3da-f4a999e71447",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_3/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -27499,7 +27499,7 @@
         }
       },
       {
-        "id": "bf80da34-b845-4103-b676-c395dcd8f0a8",
+        "id": "28e4f7b4-0434-401a-803e-b1442c60b957",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -27741,7 +27741,7 @@
         }
       },
       {
-        "id": "63449b57-133e-442a-952b-b8d736bd96f4",
+        "id": "6012f49e-e952-4ea7-b054-f09362bd7aff",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -27929,7 +27929,7 @@
         }
       },
       {
-        "id": "410c575d-5991-4ea5-ba4b-94bc1f8a6b9c",
+        "id": "c38ecb3f-2dbe-42bd-8f9d-90392df212a4",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -28117,7 +28117,7 @@
         }
       },
       {
-        "id": "11b1b137-7a91-4cd5-be4e-068d230551f5",
+        "id": "3c9593a8-1b32-4fcb-8739-d650c70ab9af",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -28262,7 +28262,7 @@
         }
       },
       {
-        "id": "08a59bec-6c70-446f-9f46-a13e6c76102f",
+        "id": "91104d3e-dc07-4561-8610-bafb0056d59f",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -28408,7 +28408,7 @@
         }
       },
       {
-        "id": "fdeedec4-6525-446c-9b88-07296e03adb0",
+        "id": "1f708063-bff4-42f5-ad49-cb9c9800e6a7",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_4/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -28596,7 +28596,7 @@
         }
       },
       {
-        "id": "99650982-5a5b-4956-a100-0b98b472b1f7",
+        "id": "67921f2d-1a22-47aa-bc67-ff2840c50b4b",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -28838,7 +28838,7 @@
         }
       },
       {
-        "id": "f9afa3cd-8d4d-45c1-9bea-9de29db2e881",
+        "id": "f61ea9b7-9c0b-4cce-a5cf-6e9ff707299e",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -29026,7 +29026,7 @@
         }
       },
       {
-        "id": "aa5c0024-ea64-4bbe-9815-b1482192bab6",
+        "id": "cb58101b-2e15-47d5-8b7f-a5287fbc14c6",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -29214,7 +29214,7 @@
         }
       },
       {
-        "id": "f4ad84ad-4982-4db8-aafa-57343985d044",
+        "id": "eb8cf10a-6512-4bde-875c-834517ade4e6",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -29359,7 +29359,7 @@
         }
       },
       {
-        "id": "f9dbf628-a5d6-435a-a120-f92458f142d4",
+        "id": "14f9769d-0e58-4fec-bbd0-faee00cb6d58",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -29505,7 +29505,7 @@
         }
       },
       {
-        "id": "e1ecb3da-4cd7-4522-9fdd-9b7711336290",
+        "id": "663f208a-31c4-4dad-b728-68cd300d1bda",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_5/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -29693,7 +29693,7 @@
         }
       },
       {
-        "id": "6d5de150-fa77-4c55-a6b0-a9ee3903a74e",
+        "id": "98547749-bc7b-4258-95dc-fb31c5070311",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -29935,7 +29935,7 @@
         }
       },
       {
-        "id": "5aef0157-ad8a-492f-9a62-d45570dde8bf",
+        "id": "3bd8a8db-a4b8-4e55-8aa8-e257703a1f6e",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -30123,7 +30123,7 @@
         }
       },
       {
-        "id": "6703ee7a-896b-4ecc-97a1-5b06ff35a774",
+        "id": "b79981b2-0953-46bc-8ecf-59aa3ee0e6b4",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -30311,7 +30311,7 @@
         }
       },
       {
-        "id": "305fe4de-536b-4ff5-8c88-31a528188f4f",
+        "id": "0e3f64a5-0e93-4613-be46-b3be4b6043b9",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -30456,7 +30456,7 @@
         }
       },
       {
-        "id": "f2ac233f-2fb5-4977-a637-3a0d42d37cd1",
+        "id": "6948f33a-04e5-4f96-b0dc-ca54049b99a7",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -30602,7 +30602,7 @@
         }
       },
       {
-        "id": "c7e3e657-b86b-46e9-9c49-47ebbd053ac6",
+        "id": "34c9d7ac-1599-4eb2-b4fd-b34df66f1fa4",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_6/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -30790,7 +30790,7 @@
         }
       },
       {
-        "id": "1000e1ed-542a-4f6d-9452-052402a1393d",
+        "id": "6ba8612e-881f-42a1-bce1-e749720a7e7b",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -31032,7 +31032,7 @@
         }
       },
       {
-        "id": "cef982b1-e63f-4d99-8b23-4277cb55a743",
+        "id": "e49e96c1-f0c7-448a-b49e-a121ee472a99",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -31220,7 +31220,7 @@
         }
       },
       {
-        "id": "97763a09-ca66-41b5-b569-0d99bab9b6d0",
+        "id": "613ad934-1e85-4e23-a53d-a53562375a25",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -31408,7 +31408,7 @@
         }
       },
       {
-        "id": "86311b99-6fe8-4d7f-8d51-f2c946a7ab1f",
+        "id": "f5bca58a-a1cc-4307-a174-c0f43eceac2a",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -31553,7 +31553,7 @@
         }
       },
       {
-        "id": "0f5a5518-0145-4e15-bb2f-96c2e72e2c94",
+        "id": "531908ea-a1e5-4ca9-91bc-335b45a26696",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -31699,7 +31699,7 @@
         }
       },
       {
-        "id": "d0ba0950-9b8c-42d8-90c8-89f813542c7b",
+        "id": "280627c8-bd71-4392-b21d-e05e39d77a01",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_7/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -31887,7 +31887,7 @@
         }
       },
       {
-        "id": "5b3b25b9-68b5-4fd6-9f00-5c8a247dbd81",
+        "id": "8ca3da73-f9e4-4bb0-b0a3-0293d6bdcc30",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.ButtonComponent,MOD.Core.TextGUIRendererComponent,MOD.Core.UITouchReceiveComponent",
         "jsonString": {
@@ -32129,7 +32129,7 @@
         }
       },
       {
-        "id": "94856594-eb1e-44b4-a8f2-050156583683",
+        "id": "473e5aa3-c114-48fd-a9a9-2bd03a1d3e7a",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8/NumberText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -32317,7 +32317,7 @@
         }
       },
       {
-        "id": "59188e4f-3489-43ca-a107-5fcd5ea83fac",
+        "id": "e85de38f-4467-4d7d-a713-b1cc0052448e",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8/EmptyText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -32505,7 +32505,7 @@
         }
       },
       {
-        "id": "35f901b9-1012-4d17-8d4e-6c3a4929d51d",
+        "id": "9c0d152b-e741-492f-81ff-90d2c570a552",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8/IconSprite",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -32650,7 +32650,7 @@
         }
       },
       {
-        "id": "247a3205-cfb9-4552-8bbc-b769f291e3e3",
+        "id": "312f90e0-e6fe-4402-a578-fd7997b868e0",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8/CooldownShade",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -32796,7 +32796,7 @@
         }
       },
       {
-        "id": "bb37dad9-c76d-4d60-818c-cbfaf9bf959b",
+        "id": "c5bf8101-ed29-46e5-8bf5-f2e98c6ad88e",
         "path": "/ui/SkillWindow/SlotGroup/Panel/Slot_8/CooldownShade/CooldownText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -32984,7 +32984,7 @@
         }
       },
       {
-        "id": "e19498fe-f329-4489-bfa9-d351c5f578ee",
+        "id": "b3dac296-9d1b-4f74-9077-411a282f7eca",
         "path": "/ui/SkillWindow/SlotGroup/Panel/HintText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -33172,7 +33172,7 @@
         }
       },
       {
-        "id": "b86ac68a-908d-4600-b65e-db62794ce41c",
+        "id": "0f502fe5-2bb2-4a61-9dee-55fa197b72f3",
         "path": "/ui/SkillWindow/TooltipGroup",
         "componentNames": "MOD.Core.UITransformComponent",
         "jsonString": {
@@ -33257,7 +33257,7 @@
         }
       },
       {
-        "id": "7bea42d0-56ab-4e10-842e-973cacafdf95",
+        "id": "265098d7-5279-4323-a025-1e0493b8fb29",
         "path": "/ui/SkillWindow/TooltipGroup/Panel",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -33403,7 +33403,7 @@
         }
       },
       {
-        "id": "43ad2f11-d3e5-49d6-bed2-da1365264b2c",
+        "id": "90e77db1-1993-46cc-945e-0d171d16b09c",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/Border",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -33548,7 +33548,7 @@
         }
       },
       {
-        "id": "5f019db4-ef98-4ea6-b16c-f1f8292f73a5",
+        "id": "d264d4f1-8f21-44ff-9609-4b7445b9f188",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/IconFrame",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -33693,7 +33693,7 @@
         }
       },
       {
-        "id": "2afb83fe-4d79-4a0e-9117-e57f36cf532b",
+        "id": "95348fb8-0cfd-4ddd-bb5a-0a518925853b",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/TooltipIcon",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -33838,7 +33838,7 @@
         }
       },
       {
-        "id": "15b4635a-86ba-41c6-bc76-7fa74850afc7",
+        "id": "797d728c-d4c0-4d9a-a64e-e7b1d68faca6",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/TooltipNameText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -34027,7 +34027,7 @@
         }
       },
       {
-        "id": "050c315d-db9d-4a0e-952d-559ccbcb64d8",
+        "id": "e490f669-7ab0-4585-9c87-615016a8250f",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/TooltipMetaText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -34216,7 +34216,7 @@
         }
       },
       {
-        "id": "0c561abd-7e8e-492a-b3e8-f80cd6f50623",
+        "id": "b7c8a7f6-f0b1-4def-9930-1db4886ebe3a",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/TooltipDescriptionText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -34405,7 +34405,7 @@
         }
       },
       {
-        "id": "ec92464c-e7f3-482f-ac34-c39d47e7593e",
+        "id": "45469f7e-aceb-43cf-a5bd-3dfb495d5f1d",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/Divider",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -34550,7 +34550,7 @@
         }
       },
       {
-        "id": "573e6e2f-7bad-4fc4-91f4-c6d73bf987dd",
+        "id": "a9c3498c-42aa-4236-934c-6fd317b04c81",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/TooltipCurrentText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
@@ -34739,7 +34739,7 @@
         }
       },
       {
-        "id": "85cc9bd6-b7fa-4bc8-9d5a-b6b1c04d2975",
+        "id": "6f7dd794-a217-4678-8b07-2043786f941d",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/NextSection",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent",
         "jsonString": {
@@ -34884,7 +34884,7 @@
         }
       },
       {
-        "id": "361fc9c3-d2e5-4f0d-aadb-3d92bb6d41e8",
+        "id": "16a13564-8eb8-4b9d-9ad1-ec27e062f198",
         "path": "/ui/SkillWindow/TooltipGroup/Panel/NextSection/TooltipNextText",
         "componentNames": "MOD.Core.UITransformComponent,MOD.Core.SpriteGUIRendererComponent,MOD.Core.TextGUIRendererComponent",
         "jsonString": {
