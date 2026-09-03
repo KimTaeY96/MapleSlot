@@ -13,6 +13,8 @@ const hudBuilderSource = fs.readFileSync('tools/build_classic_player_hud.cjs','u
 const snapshot = UIBuilder.snapshot('ui/SkillWindow.ui');
 const hudSnapshot = UIBuilder.snapshot('ui/ClassicPlayerHUD.ui');
 const hudBuilder = UIBuilder.read('ui/ClassicPlayerHUD.ui');
+const skillBuilder = UIBuilder.read('ui/SkillWindow.ui');
+const assetMap = JSON.parse(fs.readFileSync('Assets/UI/ClassicSilver/ImageGen/skill-ui-ruid-map.json','utf8'));
 
 function test(name, fn) {
   try { fn(); process.stdout.write('PASS '+name+'\n'); }
@@ -83,15 +85,15 @@ test('UI contains locked tiers, fourteen rows, eight slots and one footer button
   assert.deepEqual(footerButtons.map(x=>x.name),['SlotSettingsButton']);
   for(const tier of [2,3,4]) assert.ok(paths.some(p=>p.endsWith('/Tier'+tier+'Button/LockText')));
 });
-test('slot settings layout is exactly 2 by 4 in priority order',()=>{
+test('slot settings layout is exactly 4 by 2 in priority order',()=>{
   const slots=snapshot.filter(x=>/\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
   assert.deepEqual(slots.map(x=>x.pos),[
-    [19,-64],[97,-64],
-    [19,-142],[97,-142],
-    [19,-220],[97,-220],
-    [19,-298],[97,-298],
+    [74,-125],[171,-125],[268,-125],[365,-125],
+    [74,-222],[171,-222],[268,-222],[365,-222],
   ]);
+  assert.equal(snapshot.filter(x=>/\/Slot_[1-8]\/IconSprite$/.test(x.path)).length,8);
 });
+
 test('tooltip renderers do not intercept pointer events',()=>{
   const data=JSON.parse(fs.readFileSync('ui/SkillWindow.ui','utf8'));
   const tooltipEntities=data.ContentProto.Entities.filter(e=>(e.jsonString.path||'').includes('/TooltipGroup/'));
@@ -120,47 +122,46 @@ test('bottom HUD restores original proportions and splits the menu area evenly',
   assert.match(hudSource,/method void OpenSkillWindow\(\)/);
   assert.ok(!snapshot.some(x=>x.path.endsWith('/OpenButton')));
 });
-test('persistent quick-slot HUD is exactly two by four and mirrors cooldowns',()=>{
+test('persistent quick-slot HUD is exactly four by two and mirrors cooldowns',()=>{
   const slots=hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]$/.test(x.path)).sort((a,b)=>Number(a.name.slice(5))-Number(b.name.slice(5)));
   assert.equal(slots.length,8);
   assert.deepEqual(slots.map(x=>x.pos),[
-    [12,-12],[104,-12],
-    [12,-104],[104,-104],
-    [12,-196],[104,-196],
-    [12,-288],[104,-288],
+    [-143,51],[-47.5,51],[48,51],[143.5,51],
+    [-143,-51],[-47.5,-51],[48,-51],[143.5,-51],
   ]);
-  const panel=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/QuickSlots'));
-  const rotatedFrame=hudSnapshot.find(x=>x.path.endsWith('/HudFrame/QuickSlots/RotatedFrame'));
-  assert.deepEqual(panel.size,[204,388]);
-  assert.deepEqual(panel.pos,[0,0]);
-  assert.deepEqual(rotatedFrame.size,[388,204]);
-  assert.deepEqual(rotatedFrame.pos,[0,0]);
-  const frameEntityIndex=hudBuilder.entities.findIndex(x=>x.path.endsWith('/QuickSlots/RotatedFrame'));
-  const firstSlotIndex=hudBuilder.entities.findIndex(x=>x.path.endsWith('/QuickSlots/Slot_1'));
-  assert.ok(frameEntityIndex < firstSlotIndex);
-  assert.equal(hudBuilder.entities[frameEntityIndex].jsonString.displayOrder,1);
-  for(const slot of slots) {
-    const entity=hudBuilder.find(slot.path);
-    assert.ok(entity.jsonString.displayOrder > 1,slot.path);
-  }
+  const panel=hudSnapshot.find(x=>x.path.endsWith('/QuickSlots'));
+  assert.deepEqual(panel.size,[440,220]);
+  assert.deepEqual(panel.pos,[-24,118]);
   assert.match(uiSource,/HudSlotByIndex/);
+  assert.match(uiSource,/\/ui\/ClassicPlayerHUD\/QuickSlots/);
   assert.match(uiSource,/RefreshCooldownOnSlot\(self\.HudSlotByIndex\[slot\]/);
   assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/CooldownShade$/.test(x.path)).length,8);
+  assert.equal(hudSnapshot.filter(x=>/\/QuickSlots\/Slot_[1-8]\/IconSprite$/.test(x.path)).length,8);
 });
-test('UI resources are project-bound and referenced by RUID',()=>{
-  for(const file of ['skill-action-button.png','skill-quickslots-4x2.png','skill-quickslots-2x4.png','skill-cooldown-overlay.png','skill-book-icon.png','skill-book-icon-polished.png','hud-menu-button-reference.png','hud-menu-button-blue.png','hud-menu-button-green.png','hud-inventory-bag-icon.png']) {
-    assert.ok(fs.existsSync('Assets/UI/ClassicSilver/'+file),file);
+
+test('plain ImageGen UI resources are project-bound and referenced by RUID',()=>{
+  const expectedFiles=['skill-window-main.png','skill-slot-panel.png','skill-tooltip.png','power_slash.png','double_slash.png','charge_slash.png','whirlwind_slash.png','guard_break.png','battle_cry.png','emergency_heal.png','final_blow.png','weapon_mastery.png','vitality_training.png','combat_sense.png','swift_training.png','recovery_boost.png','elite_hunter.png'];
+  for(const file of expectedFiles) assert.ok(fs.existsSync('Assets/UI/ClassicSilver/ImageGen/'+file),file);
+  assert.equal(Object.keys(assetMap.skillIcons).length,14);
+  assert.equal(Object.keys(assetMap.skins).length,3);
+  for(const ruid of [...Object.values(assetMap.skins),...Object.values(assetMap.skillIcons)]) {
+    assert.match(ruid,/^[0-9a-f]{32}$/);
+    assert.ok((builderSource+hudBuilderSource+definitionSource+JSON.stringify(assetMap)).includes(ruid),ruid);
   }
-  for(const ruid of ['3cebca63ed1d41e4be6e34ee8761172a','5e4ee74cd7d0453994d4ce6a0ed4130c','ddf8548f22114eedb558f9decec77ba4','8252bcc8043849878cb827c45a551d05','008c9a704d284753a32ab40da2cfbd52','cd1e25491fb243edba76e79613c1987a','1b0f6476f399444b9ff8f23958c447f8']) {
-    assert.ok((builderSource+hudBuilderSource).includes(ruid),ruid);
-  }
-  assert.ok(hudBuilderSource.includes('008c9a704d284753a32ab40da2cfbd52'));
-  assert.ok(hudBuilderSource.includes('cd1e25491fb243edba76e79613c1987a'));
-  assert.ok(hudBuilderSource.includes('1b0f6476f399444b9ff8f23958c447f8'));
-  assert.ok(!hudBuilderSource.includes('9c5feb02221248e7a1812578ad25181d'));
-  assert.ok(!hudBuilderSource.includes('6d2ff1b0948c416f8f361024908de504'));
-  assert.ok(!hudBuilderSource.includes('3cebca63ed1d41e4be6e34ee8761172a'));
+  assert.match(definitionSource,/iconRuid=/);
+  assert.equal((definitionSource.match(/iconRuid="[0-9a-f]{32}"/g)||[]).length,14);
+  assert.doesNotMatch(definitionSource,/icon="[A-Z+]+"/);
+  assert.ok(!builderSource.includes('IconGlyph'));
+  assert.ok(!uiSource.includes('IconText'));
+  const main=skillBuilder.find('/ui/SkillWindow/MainGroup/Window');
+  const slot=skillBuilder.find('/ui/SkillWindow/SlotGroup/Panel');
+  const tip=skillBuilder.find('/ui/SkillWindow/TooltipGroup/Panel');
+  const imageRuid=e=>{ const value=e.jsonString['@components'].find(c=>c['@type']==='MOD.Core.SpriteGUIRendererComponent').ImageRUID; return value.DataId || value; };
+  assert.equal(imageRuid(main),assetMap.skins.skillWindowMain);
+  assert.equal(imageRuid(slot),assetMap.skins.skillSlotPanel);
+  assert.equal(imageRuid(tip),assetMap.skins.skillTooltip);
 });
+
 test('inventory and skill windows are mutually exclusive toggles',()=>{
   assert.match(hudSource,/skillUi:CloseWindow\(\)[\s\S]*inventoryUi:ToggleUnifiedInfo\(\)/);
   assert.match(hudSource,/inventoryUi:CloseUnifiedInfo\(\)/);

@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const { UIBuilder } = require('../.agents/skills/msw-ui-system/scripts/msw_ui_builder.cjs');
 
+const SKILL_UI = JSON.parse(fs.readFileSync('Assets/UI/ClassicSilver/ImageGen/skill-ui-ruid-map.json', 'utf8'));
 const R = {
   hud: '2f078b8c944d49b5b3cafef5a5b2d0fe',
   hp: '51acb1aa892f4534a75155564f88d098',
@@ -122,11 +123,11 @@ for (let i = 1; i <= 8; i += 1) {
   b.empty(root, {
     anchor: 'middle-center', pos: [-143 + col * 95.5, 51 - row * 102], rect_size: [88, 88],
   });
-  b.text(root + '/IconText', '', {
-    anchor: 'middle-center', rect_size: [72, 72], size: 22,
-    color: '#FFFFFF', bold: true, alignment: 4,
+  b.sprite(root + '/IconSprite', {
+    anchor: 'middle-center', rect_size: [72, 72],
+    image_ruid: SKILL_UI.skillIcons.power_slash, sprite_type: 0,
+    preserve_aspect: true, raycast: false, enable: false,
   });
-  blackOutline(root + '/IconText', 3);
   b.text('QuickSlots/SlotNumber_' + i, String(i), {
     anchor: 'middle-center', pos: [-143 + col * 95.5, 94 - row * 102], rect_size: [20, 18], size: 14,
     color: '#FFE2A1', bold: true, alignment: 4,

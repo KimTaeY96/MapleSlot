@@ -1,0 +1,26 @@
+{
+  "style": "plain-classic-silver",
+  "source": "ImageGen",
+  "ornamentPolicy": "No gemstones, spikes, crests, wings, or decorative corner pieces in normal in-game UI.",
+  "skins": {
+    "skillWindowMain": "a9b738ae61514bbab1561510ca3f1d9d",
+    "skillSlotPanel": "d8fa2aea569c46728d40b8de493a0ddd",
+    "skillTooltip": "26794fd09f494d26a3b330e4e925ca2f"
+  },
+  "skillIcons": {
+    "power_slash": "63e390e7b6864529bb7eeed2334427f0",
+    "double_slash": "4fadfbe4af18484c904ccf78bc327c5a",
+    "charge_slash": "56b0c30aae3f451eaddf5dd14f925360",
+    "whirlwind": "9947088472764a678f5a5022e5d16305",
+    "guard_break": "500bc224926a466bb2addb20f7b459fd",
+    "battle_cry": "cb2ada44c9994ee5844f06c221e1c519",
+    "emergency_heal": "312cee232b864c54a16b759f2c33ed0f",
+    "final_blow": "4cbc8e947c2e4f0c98428fb408f89bd5",
+    "weapon_mastery": "1276da476a5d4ca49dec495f105652bf",
+    "vitality_training": "31c29b5d33bc492db23098d7bc84431b",
+    "combat_sense": "55db7abb8cd74dd09ea0d7f2bc4cbaca",
+    "swift_training": "8027a24e0681410c8e95a84088e435b9",
+    "recovery_boost": "ea22433b3d484240b33e34b6d1d0d4b0",
+    "elite_hunter": "5bf5d2f4729147f691c2ab747bdd0dbe"
+  }
+}

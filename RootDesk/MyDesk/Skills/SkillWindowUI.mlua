@@ -27,7 +27,7 @@ script SkillWindowUI extends Component
     method void OnBeginPlay()
         self.MainGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup")
         self.SlotGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/SlotGroup")
-        self.QuickSlotGroup = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/HudFrame/QuickSlots")
+        self.QuickSlotGroup = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/QuickSlots")
         self.TooltipGroup = _EntityService:GetEntityByPath("/ui/SkillWindow/TooltipGroup")
         self.HudTooltipDismiss = _EntityService:GetEntityByPath("/ui/ClassicPlayerHUD/HudTooltipDismiss")
         self.SkillList = _EntityService:GetEntityByPath("/ui/SkillWindow/MainGroup/Window/SkillList")
@@ -284,7 +284,8 @@ script SkillWindowUI extends Component
         if definition == nil then return end
         local level = self.ClientState ~= nil and (self.ClientState.skillLevels[skillId] or 0) or 0
         local tooltip = _SkillDefinitionRuntime:BuildTooltipData(skillId, level)
-        self.TooltipGroup:GetChildByName("TooltipIconText", true).TextGUIRendererComponent.Text = definition.icon
+        local tooltipIcon = self.TooltipGroup:GetChildByName("TooltipIcon", true)
+        tooltipIcon.SpriteGUIRendererComponent.ImageRUID = DataRef(definition.iconRuid)
         self.TooltipGroup:GetChildByName("TooltipNameText", true).TextGUIRendererComponent.Text = definition.nameKey
         self.TooltipGroup:GetChildByName("TooltipMetaText", true).TextGUIRendererComponent.Text =
             (definition.type == "active" and "액티브" or "패시브") .. "  ·  마스터 레벨 " .. tostring(definition.maxLevel)
@@ -327,8 +328,8 @@ script SkillWindowUI extends Component
         -- Mirrors one authoritative equippedSlots entry into settings and HUD visuals.
         if not isvalid(slotEntity) then return end
         local definition = _SkillDefinitionRuntime:GetDefinition(skillId)
-        local icon = slotEntity:GetChildByName("IconText", true)
-        icon.TextGUIRendererComponent.Text = definition ~= nil and definition.icon or ""
+        local icon = slotEntity:GetChildByName("IconSprite", true)
+        if definition ~= nil then icon.SpriteGUIRendererComponent.ImageRUID = DataRef(definition.iconRuid) end
         icon.Enable = definition ~= nil
         if hasEmptyMarker == true then
             local empty = slotEntity:GetChildByName("EmptyText", true)
